@@ -3,17 +3,19 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class WorkStation {
+public class Workstation {
 
 	private int id;
 	private ArrayList<String> taskTypes;
 	private User carMechanic;
-	private Queue<AssemblyTask> pendingTasks;
+	private ArrayList<AssemblyTask> allTasks;
+	private AssemblyTask activeTask;
 
-	public WorkStation(int id, ArrayList<String> taskTypes) {
+	public Workstation(int id, ArrayList<String> taskTypes) {
 		this.setId(id);
 		this.setTaskTypes(taskTypes);
-		this.pendingTasks = new LinkedList<AssemblyTask>();
+		this.allTasks = new ArrayList<AssemblyTask>();
+		this.activeTask = null;
 	}
 	
 	public int getId() {
@@ -33,9 +35,10 @@ public class WorkStation {
 		this.taskTypes = taskTypes;
 	}
 	
-	public Queue<AssemblyTask> getPendingTasks() {
-		// clone
-		return this.pendingTasks;
+	public ArrayList<AssemblyTask> getPendingTasks(User user) {
+		// check user
+		// TODO clone
+		return this.allTasks;
 	}
 	
 	public User getCarMechanic() {
@@ -51,10 +54,55 @@ public class WorkStation {
 	}
 	
 	public void match(User user, AssemblyTask task) throws Exception {
-		// check user
+		// TODO check user
 		if (this.taskTypes.contains(task.getType()))
-			this.pendingTasks.add(task);
+			this.allTasks.add(task);
 		else
 			throw new Exception("This assembly task can't be assigned to this workstation");
+	}
+	
+	public void selectTask(User user, AssemblyTask task) throws Exception {
+		// TODO check user
+		if (this.activeTask == null)
+			this.activeTask = task;
+		else
+			throw new Exception("Another assemly task is still in progress");
+	}
+	
+	public void completeTask(User user) {
+		// check user
+		this.activeTask.completeTask();
+		this.activeTask = null;
+	}
+	
+	public ArrayList<AssemblyTask> getAllPendingTasks(User user) {
+		// check user
+		ArrayList<AssemblyTask> allPendingTasks = new ArrayList<AssemblyTask>();
+		for (AssemblyTask task : this.allTasks)
+			if (!task.isCompleted())
+				allPendingTasks.add(task);
+		return allPendingTasks;
+	}
+	
+	public ArrayList<AssemblyTask> getAllCompletedTasks(User user) {
+		// check user
+		ArrayList<AssemblyTask> allCompletedTasks = new ArrayList<AssemblyTask>();
+		for (AssemblyTask task : this.allTasks)
+			if (task.isCompleted())
+				allCompletedTasks.add(task);
+		return allCompletedTasks;
+	}
+	
+	public ArrayList<AssemblyTask> getAllTasks(User user) {
+		// check user
+		return this.allTasks;
+	}
+	
+	public boolean allTasksCompleted(User user) {
+		// check user
+		for (AssemblyTask task : this.allTasks)
+			if (!task.isCompleted())
+				return false;
+		return true;
 	}
 }

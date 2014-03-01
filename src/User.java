@@ -1,10 +1,14 @@
+import java.util.ArrayList;
+
 
 public class User {
 	
 	private int id;
+	ArrayList<String> approvedMethods;
 	
 	public User(int id) {
 		this.setId(id);
+		approvedMethods = new ArrayList<String>();
 	}
 	
 	private void setId(int id) {
@@ -16,7 +20,7 @@ public class User {
 	}
 	
 	public boolean canPerform(String methodName) {
-		return true;
+		return false;
 	}
 
 }

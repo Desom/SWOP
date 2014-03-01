@@ -3,14 +3,14 @@ import java.util.LinkedList;
 import java.util.Queue;
 
 
-public class Workstation {
+public class WorkStation {
 
 	private int id;
 	private ArrayList<String> taskTypes;
 	private User carMechanic;
 	private Queue<AssemblyTask> pendingTasks;
 
-	public Workstation(int id, ArrayList<String> taskTypes) {
+	public WorkStation(int id, ArrayList<String> taskTypes) {
 		this.setId(id);
 		this.setTaskTypes(taskTypes);
 		this.pendingTasks = new LinkedList<AssemblyTask>();

@@ -35,12 +35,6 @@ public class Workstation {
 		this.taskTypes = taskTypes;
 	}
 	
-	public ArrayList<AssemblyTask> getPendingTasks(User user) {
-		// check user
-		// TODO clone
-		return this.allTasks;
-	}
-	
 	public User getCarMechanic() {
 		return carMechanic;
 	}
@@ -53,8 +47,9 @@ public class Workstation {
 			throw new Exception("There already has been assigned a car mechanic to this workstation");
 	}
 	
+	// Wie voert deze methode uit?
 	public void match(User user, AssemblyTask task) throws Exception {
-		// TODO check user
+		this.checkUser(user, "match");
 		if (this.taskTypes.contains(task.getType()))
 			this.allTasks.add(task);
 		else
@@ -62,47 +57,64 @@ public class Workstation {
 	}
 	
 	public void selectTask(User user, AssemblyTask task) throws Exception {
-		// TODO check user
+		this.checkUser(user, "selectTask");
 		if (this.activeTask == null)
 			this.activeTask = task;
 		else
 			throw new Exception("Another assemly task is still in progress");
 	}
 	
-	public void completeTask(User user) {
-		// check user
+	public void completeTask(User user) throws Exception {
+		this.checkUser(user, "completeTask");
 		this.activeTask.completeTask();
 		this.activeTask = null;
 	}
 	
-	public ArrayList<AssemblyTask> getAllPendingTasks(User user) {
-		// check user
+	public ArrayList<AssemblyTask> getAllPendingTasks(User user) throws Exception {
+		this.checkUser(user, "getAllPendingTasks");
 		ArrayList<AssemblyTask> allPendingTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
 			if (!task.isCompleted())
 				allPendingTasks.add(task);
-		return allPendingTasks;
+		return (ArrayList<AssemblyTask>) allPendingTasks.clone();
 	}
 	
-	public ArrayList<AssemblyTask> getAllCompletedTasks(User user) {
-		// check user
+	public ArrayList<AssemblyTask> getAllCompletedTasks(User user) throws Exception {
+		this.checkUser(user, "getAllCompletedTasks");
 		ArrayList<AssemblyTask> allCompletedTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
 			if (task.isCompleted())
 				allCompletedTasks.add(task);
-		return allCompletedTasks;
+		return (ArrayList<AssemblyTask>) allCompletedTasks.clone();
 	}
 	
-	public ArrayList<AssemblyTask> getAllTasks(User user) {
-		// check user
-		return this.allTasks;
+	public ArrayList<AssemblyTask> getAllTasks(User user) throws Exception {
+		this.checkUser(user, "getAllTasks");
+		return (ArrayList<AssemblyTask>) this.allTasks.clone();
 	}
 	
-	public boolean allTasksCompleted(User user) {
-		// check user
+	public boolean hasAllTasksCompleted(User user) throws Exception {
+		this.checkUser(user, "hasAllTasksCompleted");
 		for (AssemblyTask task : this.allTasks)
 			if (!task.isCompleted())
 				return false;
 		return true;
+	}
+	
+	// Niet in klasse diagram, maar nodig in use case
+	public ArrayList<String> getActiveTaskInformation(User user) throws Exception {
+		this.checkUser(user, "match");
+		if (this.activeTask == null)
+			throw new Exception("There is no active task at this moment");
+		ArrayList<String> information = new ArrayList<String>();
+		information.add(this.activeTask.getType());
+		for (String action : this.activeTask.getActions())
+			information.add(action);
+		return information;
+	}
+	
+	private void checkUser(User user, String methodString) throws Exception {
+		if (!user.canPerform(methodString))
+			throw new Exception("User is not authorized for this action");
 	}
 }

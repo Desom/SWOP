@@ -8,12 +8,11 @@ public class CarMechanic extends User {
 		initializeApprovedMethods();
 	}
 	
-	public boolean canPerform(String methodName) {
-		return this.approvedMethods.contains(methodName);
-	}
-	
 	private void initializeApprovedMethods() {
-		this.approvedMethods.add("completeTask");
+		this.approvedMethods.add("selectWorkstation");
+		this.approvedMethods.add("getAllPendingTasks");
 		this.approvedMethods.add("selectTask");
+		this.approvedMethods.add("getActiveTaskInformation");
+		this.approvedMethods.add("completeTask");
 	}
 }

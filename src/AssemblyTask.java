@@ -19,7 +19,9 @@ public class AssemblyTask {
 		this.type = type;
 	}
 	
-	private String[] getActions() {
+	// public omdat Workstation deze methode nodig heeft (zie use case Car Mechanic)
+	// parameter user toevoegen?
+	public String[] getActions() {
 		return actions.clone();
 	}
 

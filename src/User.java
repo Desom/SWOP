@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
-
 public class User {
 	
+	// Vraag: wat als twee methodes hetzelfde heten?
 	private int id;
 	ArrayList<String> approvedMethods;
 	
@@ -20,7 +20,6 @@ public class User {
 	}
 	
 	public boolean canPerform(String methodName) {
-		return false;
+		return this.approvedMethods.contains(methodName);
 	}
-
 }

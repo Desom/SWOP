@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
@@ -53,7 +54,7 @@ public class OrderManager {
 	}
 
 	// TODO kies het type voor tijd
-	public Time2 completionEstimate(User user, CarOrder order){
+	public GregorianCalendar completionEstimate(User user, CarOrder order) throws Exception{
 		if(user.canPerform("completionEstimate"))
 		{
 			return this.getProductionSchedule().completionEstimateCarOrder(order);
@@ -98,8 +99,8 @@ public class OrderManager {
 			// 0 : orderId
 			// 1 : garageHolderId
 			// 2 : isDelivered -> Boolean
-			// 3 : orderedTime -> Time2
-			// 4 : deliveryTime -> Time2
+			// 3 : orderedTime -> GregorianCalendar
+			// 4 : deliveryTime -> GregorianCalendar
 			// 5 : modelId -> CarModel (we hebben hiervoor de Catalog nodig, hoe komen we daar aan?)
 			// 6 : options -> Options[] of List (ook Catalog nodig)
 		}

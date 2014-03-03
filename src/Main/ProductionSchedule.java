@@ -10,7 +10,7 @@ import java.util.Queue;
 
 
 public class ProductionSchedule {
-	
+	//TODO protected
 	private static final int ASSEMBLY_DURATION = 3;
 	private static final int WORKSTATION_DURATION = 1;
 	private static final int BEGIN_WORKDAY = 6;

@@ -1,4 +1,5 @@
 package Main;
+import java.io.IOException;
 import java.util.LinkedList;
 
 
@@ -12,12 +13,13 @@ public class Company {
 	 * Constructor for the company class.
 	 * This constructor is also responsible for the creation of 1 or more assemblyLines.
 	 * This constructor is also responsible for the creation of the cat model catalog.
+	 * @throws inconsistent_state_Exception 
+	 * @throws IOException 
 	 */
-	public Company(){
+	public Company() throws IOException, inconsistent_state_Exception{ // catalog exception
 		this.assemblyLine = new AssemblyLine();
 		this.catalog = new CarModelCatalog();
 		this.orderManager = new OrderManager();
-		// Is dit niet wat jullie bedoelden met de methode CreateWorld()?
 	}
 	
 	/**
@@ -39,8 +41,9 @@ public class Company {
 	 * 
 	 * @param user The user that wants to be added to the given workstation.
 	 * @param workStation_id The id of the workstation the user wants to be added to.
+	 * @throws Exception 
 	 */
-	public void selectWorkStation(User user, int workStation_id){
+	public void selectWorkStation(User user, int workStation_id) throws Exception{
 		if(user.canPerform("selectWorkStation")){
 			assemblyLine.selectWorkStation(user, workStation_id);
 		}

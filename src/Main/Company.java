@@ -1,3 +1,4 @@
+package Main;
 import java.util.LinkedList;
 
 
@@ -25,7 +26,7 @@ public class Company {
 	 * @param user The user requesting this information
 	 * @return Returns the list of all workstations if the specified user is allowed to access this information. Otherwise it returns null
 	 */
-	public LinkedList<WorkStation> getAllWorkStations(User user){
+	public LinkedList<Workstation> getAllWorkStations(User user){
 		if(user.canPerform("getAllWorkStations")){
 			return assemblyLine.getAllWorkStations(); //moet dit een kopie zijn ivm beveiliging?
 		}else{

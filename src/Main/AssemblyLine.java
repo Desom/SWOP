@@ -1,9 +1,10 @@
+package Main;
 import java.util.LinkedList;
 
 
 public class AssemblyLine {
 
-	private LinkedList<WorkStation> workStations = null;
+	private LinkedList<Workstation> workStations = null;
 	
 	/**
 	 * Constructor for the assembly line class.
@@ -17,7 +18,7 @@ public class AssemblyLine {
 	 * 
 	 * @return A linked list containing all the workStations.
 	 */
-	public LinkedList<WorkStation> getAllWorkStations(){
+	public LinkedList<Workstation> getAllWorkStations(){
 		return workStations;
 	}
 	
@@ -29,7 +30,7 @@ public class AssemblyLine {
 	 */
 	public void selectWorkStation(User user, int workStation_id){
 		try {
-			WorkStation selected = selectWorkStationId(workStation_id);
+			Workstation selected = selectWorkStationId(workStation_id);
 			selected.addCarMechanic(user);
 		} catch (Exception e) {
 			System.err.println("Could not appoint specified user to specified workstation");
@@ -44,9 +45,9 @@ public class AssemblyLine {
 	 * @return The workstation that matches the specified ID
 	 * @throws Exception when no workstation with the specified ID exists.
 	 */
-	public WorkStation selectWorkStationId(int id) throws Exception{
-		WorkStation selected = null;
-		for(WorkStation w : getAllWorkStations()){
+	public Workstation selectWorkStationId(int id) throws Exception{
+		Workstation selected = null;
+		for(Workstation w : getAllWorkStations()){
 			if(w.getId() == id)
 				selected = w;
 		}
@@ -59,9 +60,9 @@ public class AssemblyLine {
 	 * This method creates 3 workstations, specifies their ID's and the respective assembly tasks those workstations can perform.
 	 */
 	public void createWorkStations(){
-		WorkStation workStation1 = new WorkStation(1, null); // null moet een lijst van alle mogelijke tasks worden (als String)
-		WorkStation workStation2 = new WorkStation(2, null); // null moet een lijst van alle mogelijke tasks worden (als String)
-		WorkStation workStation3 = new WorkStation(3, null); // null moet een lijst van alle mogelijke tasks worden (als String)
+		Workstation workStation1 = new Workstation(1, null); // null moet een lijst van alle mogelijke tasks worden (als String)
+		Workstation workStation2 = new Workstation(2, null); // null moet een lijst van alle mogelijke tasks worden (als String)
+		Workstation workStation3 = new Workstation(3, null); // null moet een lijst van alle mogelijke tasks worden (als String)
 		this.workStations.add(workStation1);
 		this.workStations.add(workStation2);
 		this.workStations.add(workStation3);

@@ -6,6 +6,7 @@ public class AssemblyTask {
 	private String type;
 	private boolean isCompleted;
 
+	// TODO string array naar arraylist of linked
 	public AssemblyTask(String[] actions, String type) {
 		this.setActions(actions);
 		this.setType(type);
@@ -20,8 +21,7 @@ public class AssemblyTask {
 		this.type = type;
 	}
 	
-	// public omdat Workstation deze methode nodig heeft (zie use case Car Mechanic)
-	// parameter user toevoegen?
+	// public want strings vast datatype
 	public String[] getActions() {
 		return actions.clone();
 	}

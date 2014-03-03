@@ -31,7 +31,7 @@ public class Workstation {
 		return (ArrayList<String>) taskTypes.clone();
 	}
 
-	// Public omdat task type nog gewijzigd zou kunnen worden?
+	// niet public, final
 	public void setTaskTypes(ArrayList<String> taskTypes) {
 		this.taskTypes = taskTypes;
 	}
@@ -49,6 +49,8 @@ public class Workstation {
 	}
 	
 	// Wie voert deze methode uit?
+	// bij het creeeren
+	// rename
 	public void match(User user, AssemblyTask task) throws Exception {
 		this.checkUser(user, "match");
 		if (this.taskTypes.contains(task.getType()))
@@ -103,6 +105,7 @@ public class Workstation {
 	}
 	
 	// Niet in klasse diagram, maar nodig in use case
+	// TODO Formaat nog verbeteren
 	public ArrayList<String> getActiveTaskInformation(User user) throws Exception {
 		this.checkUser(user, "match");
 		if (this.activeTask == null)

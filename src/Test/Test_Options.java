@@ -1,10 +1,12 @@
-package Main;
+package Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
 import org.junit.Test;
 
+import Main.Option;
+import Main.inconsistent_state_Exception;
 import OptionSubTypes.Color;
 
 

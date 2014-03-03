@@ -1,4 +1,4 @@
-package Main;
+package Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import Main.CarModel;
+import Main.Option;
+import Main.inconsistent_state_Exception;
 import OptionSubTypes.*;
 
 

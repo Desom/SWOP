@@ -93,4 +93,8 @@ public class CarModelCatalog {
 		if(user.canPerform("getAllModels"))	return (CarModel[]) ((HashMap<String,CarModel>)All_CarModels.clone()).values().toArray();
 		else throw new inconsistent_state_Exception("user has no rights for getAllModels");
 	}
+	
+	// description-> option
+	
+	// name-> model
 }

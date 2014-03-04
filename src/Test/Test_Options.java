@@ -6,14 +6,14 @@ import java.util.ArrayList;
 import org.junit.Test;
 
 import Main.Option;
-import Main.inconsistent_state_Exception;
+import Main.CarModelCatalogException;
 import OptionSubTypes.Color;
 
 
 public class Test_Options {
 
 	@Test
-	public void testcreate() throws inconsistent_state_Exception {
+	public void testcreate() throws CarModelCatalogException {
 		ArrayList<Option> a = new ArrayList<Option>();
 		ArrayList<Option> b = new ArrayList<Option>();
 		Option opt = new Color("green", a, b);
@@ -30,38 +30,38 @@ public class Test_Options {
 		try {
 			 new Color("red", null , a);
 			 fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.GetMessage());
 		}
 		try {
 			 new Color("green", a , null);
 			 fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.GetMessage());
 		}
 		try {
 			 new Color(null, a , a);
 			 fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.GetMessage());
 		}
 	}
 	
 	@Test
-	public void paradoxtest() throws inconsistent_state_Exception{
+	public void paradoxtest() throws CarModelCatalogException{
 		ArrayList<Option> a = new ArrayList<Option>();
 		ArrayList<Option> b = new ArrayList<Option>();
 		b.add(new Color("blue", a, a));
 		try {
 			 new Color("red", b , b);
 			 fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			assertEquals("Option is both Compatible and incompatiblle with another option at the same type" , e.GetMessage());
 		}
 	}
 	
 	@Test
-	public void testconflictsWith_False() throws inconsistent_state_Exception {
+	public void testconflictsWith_False() throws CarModelCatalogException {
 		ArrayList<Option> a = new ArrayList<Option>();
 		Option opt = new Color("green", new ArrayList<Option>(), new ArrayList<Option>());
 		a.add(opt);
@@ -71,7 +71,7 @@ public class Test_Options {
 	}
 
 	@Test
-	public void testconflictsWith_True() throws inconsistent_state_Exception {
+	public void testconflictsWith_True() throws CarModelCatalogException {
 		ArrayList<Option> a = new ArrayList<Option>();
 		Option opt = new Color("green", new ArrayList<Option>(), new ArrayList<Option>());
 		a.add(opt);

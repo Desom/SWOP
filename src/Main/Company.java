@@ -13,10 +13,10 @@ public class Company {
 	 * Constructor for the company class.
 	 * This constructor is also responsible for the creation of 1 or more assemblyLines.
 	 * This constructor is also responsible for the creation of the cat model catalog.
-	 * @throws inconsistent_state_Exception 
+	 * @throws CarModelCatalogException 
 	 * @throws IOException 
 	 */
-	public Company() throws IOException, inconsistent_state_Exception{ // catalog exception
+	public Company() throws IOException, CarModelCatalogException{ // catalog exception
 		this.assemblyLine = new AssemblyLine();
 		this.catalog = new CarModelCatalog();
 		this.orderManager = new OrderManager();

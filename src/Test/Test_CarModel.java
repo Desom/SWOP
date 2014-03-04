@@ -8,7 +8,7 @@ import org.junit.Test;
 
 import Main.CarModel;
 import Main.Option;
-import Main.inconsistent_state_Exception;
+import Main.CarModelCatalogException;
 import OptionSubTypes.*;
 
 
@@ -36,7 +36,7 @@ public class Test_CarModel {
 	}
 
 	@Test
-	public void testconstructer() throws inconsistent_state_Exception {
+	public void testconstructer() throws CarModelCatalogException {
 		CarModel car = new CarModel(Name,a,A,B,C,E,G,S,W);
 		assertEquals(Name, car.getName());
 		assertEquals(a, car.getOptions());
@@ -54,69 +54,69 @@ public class Test_CarModel {
 		try {
 			new CarModel(null,a,A,B,C,E,G,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,null,A,B,C,E,G,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,a,null,B,C,E,G,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,a,A,null,C,E,G,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,a,A,B,null,E,G,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,a,A,B,C,null,G,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,a,A,B,C,null,G,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,a,A,B,C,E,null,S,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");		}
 		try {
 			new CarModel(Name,a,A,B,C,E,G,null,W);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,a,A,B,C,E,G,S,null);
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}

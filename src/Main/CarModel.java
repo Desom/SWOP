@@ -14,11 +14,11 @@ public class CarModel {
 	private final Gearbox Default_Gearbox;
 	private final Seats Default_Seats;
 	private final Wheels Default_Wheels;
-	public CarModel(String Name,ArrayList<Option> OptionList,Airco Default_Airco,Body Default_Body,Color Default_Color,Engine Default_Engine,Gearbox Default_Gearbox,Seats Default_Seats,Wheels Default_Wheels ) throws inconsistent_state_Exception{
+	public CarModel(String Name,ArrayList<Option> OptionList,Airco Default_Airco,Body Default_Body,Color Default_Color,Engine Default_Engine,Gearbox Default_Gearbox,Seats Default_Seats,Wheels Default_Wheels ) throws CarModelCatalogException{
 		if(Name == null || OptionList == null || Default_Airco ==null  
 				|| Default_Body ==null || Default_Color ==null 
 				|| Default_Engine ==null || Default_Gearbox==null 
-				|| Default_Seats ==null || Default_Wheels ==null ) throw new inconsistent_state_Exception("null in non null value of Model");
+				|| Default_Seats ==null || Default_Wheels ==null ) throw new CarModelCatalogException("null in non null value of Model");
 		PossibleOptions = OptionList;
 		this.Name=Name;
 		this.Default_Airco=Default_Airco;

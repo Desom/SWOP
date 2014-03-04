@@ -8,13 +8,13 @@ import java.io.IOException;
 import org.junit.Test;
 
 import Main.CarModelCatalog;
-import Main.inconsistent_state_Exception;
+import Main.CarModelCatalogException;
 
 
 public class Test_CarModelCatalog {
 
 	@Test
-	public void testcreate() throws IOException, inconsistent_state_Exception {
+	public void testcreate() throws IOException, CarModelCatalogException {
 		new CarModelCatalog();
 	}
 	@Test
@@ -25,7 +25,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("test_options.txt","test_models.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("Option: wrong input format: a;Body",e.GetMessage());
 		}
@@ -39,7 +39,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("test_options.txt","test_models.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("Option already exists: a",e.GetMessage());
 		}
@@ -53,7 +53,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("test_options.txt","test_models.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("Option does not exists: b",e.GetMessage());
 		}
@@ -67,7 +67,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("test_options.txt","test_models.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("no valid type: fake",e.GetMessage());
 		}
@@ -80,7 +80,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("options.txt","test_model.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("Model: wrong input format: a;Body;,",e.GetMessage());
 		}
@@ -94,7 +94,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("options.txt","test_model.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("Model name already exists: a",e.GetMessage());
 		}
@@ -107,7 +107,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("options.txt","test_model.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("Option does not exists: ,",e.GetMessage());
 		}
@@ -120,7 +120,7 @@ public class Test_CarModelCatalog {
 		try {
 			new CarModelCatalog("options.txt","test_model.txt");
 			fail();
-		} catch (inconsistent_state_Exception e) {
+		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals("Wrong Option Type in form: a;sedan;sedan;red;standard 2l 4 cilinders;6 speed manual;leather black;comfort;,",e.GetMessage());
 		}

@@ -8,9 +8,9 @@ public abstract class Option {
 	 private ArrayList<Option> incompatibles;
 	 
 
-	public Option(String description, ArrayList<Option> compatibles, ArrayList<Option> incompatibles ) throws inconsistent_state_Exception{
-		 if(description == null || compatibles==null || incompatibles==null) throw new inconsistent_state_Exception("null in non null value of Option");
-		 if( hascommonElement(compatibles,incompatibles)) throw new inconsistent_state_Exception("Option is both Compatible and incompatiblle with another option at the same type" );
+	public Option(String description, ArrayList<Option> compatibles, ArrayList<Option> incompatibles ) throws CarModelCatalogException{
+		 if(description == null || compatibles==null || incompatibles==null) throw new CarModelCatalogException("null in non null value of Option");
+		 if( hascommonElement(compatibles,incompatibles)) throw new CarModelCatalogException("Option is both Compatible and incompatiblle with another option at the same type" );
 		 this.compatibles =compatibles;
 		 this.incompatibles =incompatibles;
 		 this.description =description;

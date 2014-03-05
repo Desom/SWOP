@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class Workstation {
 
 	private int id;
-	private final ArrayList<String> taskTypes;
+	private final ArrayList<String> taskTypes; // DEZE MOETEN OVEREEN KOMEN MET ASSEMBLYTASK SETTYPE
 	private User carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
@@ -49,6 +49,7 @@ public class Workstation {
 	 * 
 	 * @return A copy of all possible types of the tasks this Workstation can perform.
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<String> getTaskTypes() {
 		return (ArrayList<String>) taskTypes.clone();
 	}

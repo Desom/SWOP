@@ -60,4 +60,8 @@ public class CarModel {
 		return Name;
 	}
 	
+	public String toString(){
+		return "Model : " + Name;
+	}
+	
 }

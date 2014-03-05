@@ -38,7 +38,7 @@ public class AssemblyTask {
 	 * @param	type
 	 * 			The string that indicates the type of this AssemblyTask.
 	 */
-	private void setType(String type) {
+	private void setType(String type) { // DEZE MOETEN OVEREEN KOMEN MET WORKSTATION
 		this.type = type;
 	}
 	

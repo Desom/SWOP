@@ -3,7 +3,7 @@ import java.util.ArrayList;
 
 
 public abstract class Option {
-	 private String description;
+	 private String description; // 
 	 private ArrayList<Option> compatibles;
 	 private ArrayList<Option> incompatibles;
 	 
@@ -40,6 +40,11 @@ public abstract class Option {
 		if(this.getCompatibles().contains(opt)) return false;
 		return opt.conflictsWith(this);
 	}
+	
+	public String toString(){
+		return description;
+	}
+	
 	
 }
 

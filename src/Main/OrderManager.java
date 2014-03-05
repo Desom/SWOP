@@ -40,7 +40,7 @@ public class OrderManager {
 		}
 	}
 
-	public void placeOrder(User user, CarModel model, Option[] options) throws Exception{
+	public void placeOrder(User user, CarModel model, ArrayList<Option> options) throws Exception{
 		if(user.canPerform("placeOrder"))
 		{
 			CarOrder newOrder = new CarOrder(user,model,options);
@@ -116,7 +116,7 @@ public class OrderManager {
 		this.getCarOrdersPerId().get(newOrder.getUserId()).add(newOrder);
 	}
 
-	private ProductionSchedule getProductionSchedule() {
+	protected ProductionSchedule getProductionSchedule() {
 		return productionSchedule;
 	}
 

@@ -4,18 +4,54 @@ import static org.junit.Assert.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import Main.CarModelCatalog;
 import Main.CarModelCatalogException;
+import Main.Option;
+import OptionSubTypes.Airco;
+import OptionSubTypes.Body;
+import OptionSubTypes.Color;
+import OptionSubTypes.Engine;
+import OptionSubTypes.Gearbox;
+import OptionSubTypes.Seats;
+import OptionSubTypes.Wheels;
 
 
 public class Test_CarModelCatalog {
-
+	@Before
+	public void setUp() throws Exception {
+		BufferedWriter write = new BufferedWriter(new FileWriter("test_option.txt"));
+		write.write("sedan;Body;,\n");
+		write.write("break;Body;,\n");
+		write.write("red;Color;,\n");
+		write.write("blue;Color;,\n");
+		write.write("black;Color;,\n");
+		write.write("white;Color;,\n");
+		write.write("standard 2l 4 cilinders;Engine;,\n");
+		write.write("performance 2.5l 6 cilinders;Engine;,\n");
+		write.write("6 speed manual;Gearbox;,\n");
+		write.write("5 speed automatic;Gearbox;,\n");
+		write.write("leather black;Seats;,\n");
+		write.write("leather white;Seats;,\n");
+		write.write("vinyl grey;Seats;,\n");
+		write.write("manual;Airco;,\n");
+		write.write("automatic climate control;Airco;,\n");
+		write.write("comfort;Wheels;,\n");
+		write.write("sports (low profle);Wheels;,\n");
+		write.close();
+		BufferedWriter write2 = new BufferedWriter(new FileWriter("init_model.txt"));
+		write2.write("Ford;manual;sedan;red;performance 2.5l 6 cilinders;6 speed manual;leather black;comfort;black,blue");
+		write2.close();
+	}
 	@Test
 	public void testcreate() throws IOException, CarModelCatalogException {
-		new CarModelCatalog();
+		CarModelCatalog catalog =new CarModelCatalog("test_option.txt","init_model.txt");
+		assertTrue(catalog.getOption("red").conflictsWith(catalog.getOption("blue")));
+		assertFalse(catalog.getOption("manual").conflictsWith(catalog.getOption("blue")));
 	}
 	@Test
 	public void test_option_wrongsize() throws IOException {
@@ -78,7 +114,7 @@ public class Test_CarModelCatalog {
 		write.write("a;Body;,");
 		write.close();
 		try {
-			new CarModelCatalog("options.txt","test_model.txt");
+			new CarModelCatalog("test_option.txt","test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -92,7 +128,7 @@ public class Test_CarModelCatalog {
 		write.write("a;,;,;,;,;,;,;,;,");
 		write.close();
 		try {
-			new CarModelCatalog("options.txt","test_model.txt");
+			new CarModelCatalog("test_option.txt","test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -105,7 +141,7 @@ public class Test_CarModelCatalog {
 		write.write("a;,;,;,;,;,;,;,;,");
 		write.close();
 		try {
-			new CarModelCatalog("options.txt","test_model.txt");
+			new CarModelCatalog("test_option.txt","test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -118,7 +154,7 @@ public class Test_CarModelCatalog {
 		write.write("a;sedan;sedan;red;standard 2l 4 cilinders;6 speed manual;leather black;comfort;,\n");
 		write.close();
 		try {
-			new CarModelCatalog("options.txt","test_model.txt");
+			new CarModelCatalog("test_option.txt","test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block

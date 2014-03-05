@@ -10,7 +10,7 @@ public class Color extends Option {
 	public Color(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
 			throws CarModelCatalogException {
-		super(description, compatibles, incompatibles);
+		super(description, compatibles, incompatibles, "Color");
 		// TODO Auto-generated constructor stub
 	}
 		

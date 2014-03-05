@@ -10,7 +10,7 @@ public class Engine extends Option {
 	public Engine(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
 			throws CarModelCatalogException {
-		super(description, compatibles, incompatibles);
+		super(description, compatibles, incompatibles, "Engine");
 		// TODO Auto-generated constructor stub
 	}
 

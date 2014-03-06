@@ -6,22 +6,66 @@ import java.util.GregorianCalendar;
 
 public class CarOrder {
 	
+	private final int carOrderID;
+	private final int userID;
+	private final GregorianCalendar orderedTime;
+	private GregorianCalendar deliveredTime;
+
 	private final Car car;
-	private final int UserID;
-	private final GregorianCalendar time;
-
+	
 	public CarOrder(User user, CarModel model, ArrayList<Option> options) {
+		this.carOrderID = 0; //FIXME hoe gaan we met carOrderID's werken? of gewoon geen ID's?
 		this.car = new Car(model, options);
-		this.UserID = user.getId();
-		this.time = new GregorianCalendar(); // dit geeft de tijd op het moment van constructie.
+		this.userID = user.getId();
+		this.orderedTime = new GregorianCalendar(); // dit geeft de tijd op het moment van constructie.
 	}
 
-	public Object getUserId() {
-		return this.UserID;
+	public CarOrder(int orderId, int garageHolderId,
+			GregorianCalendar orderedCalendar,
+			GregorianCalendar deliveredCalendar, CarModel model,
+			ArrayList<Option> optionsList) {
+		this.carOrderID = orderId;
+		this.userID = garageHolderId;
+		this.orderedTime = (GregorianCalendar) orderedCalendar.clone();
+		boolean isDelivered;
+		if(deliveredCalendar != null){
+			this.deliveredTime = (GregorianCalendar) deliveredCalendar.clone();
+			isDelivered = true;
+		}
+		else{
+			this.deliveredTime = null;
+			isDelivered = false;
+		}
+
+		this.car = new Car(model, optionsList, isDelivered);//TODO hoe maken we een geleverde auto.
 	}
 
-	public Calendar getOrderedTime() {
-		return (Calendar) this.time.clone();
+	private void setDeliveredTime(GregorianCalendar deliveredTime) {
+		this.deliveredTime = deliveredTime;
+	}
+
+	public int getCarOrderID() {
+		return carOrderID;
+	}
+
+	public int getUserID() {
+		return userID;
+	}
+
+	public GregorianCalendar getDeliveredTime() {
+		return (GregorianCalendar) deliveredTime.clone();
+	}
+
+	public Car getCar() {
+		return car;
+	}
+
+	public int getUserId() {
+		return this.userID;
+	}
+
+	public GregorianCalendar getOrderedTime() {
+		return (GregorianCalendar) this.orderedTime.clone();
 	}
 
 }

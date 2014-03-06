@@ -6,7 +6,6 @@ import java.util.GregorianCalendar;
 
 public class CarOrder {
 	
-	private final int carOrderID;
 	private final int userID;
 	private final GregorianCalendar orderedTime;
 	private GregorianCalendar deliveredTime;
@@ -14,17 +13,15 @@ public class CarOrder {
 	private final Car car;
 	
 	public CarOrder(User user, CarModel model, ArrayList<Option> options) {
-		this.carOrderID = 0; //FIXME hoe gaan we met carOrderID's werken? of gewoon geen ID's?
 		this.car = new Car(model, options);
 		this.userID = user.getId();
 		this.orderedTime = new GregorianCalendar(); // dit geeft de tijd op het moment van constructie.
 	}
 
-	public CarOrder(int orderId, int garageHolderId,
+	public CarOrder(int garageHolderId,
 			GregorianCalendar orderedCalendar,
 			GregorianCalendar deliveredCalendar, CarModel model,
 			ArrayList<Option> optionsList) {
-		this.carOrderID = orderId;
 		this.userID = garageHolderId;
 		this.orderedTime = (GregorianCalendar) orderedCalendar.clone();
 		boolean isDelivered;
@@ -42,10 +39,6 @@ public class CarOrder {
 
 	private void setDeliveredTime(GregorianCalendar deliveredTime) {
 		this.deliveredTime = deliveredTime;
-	}
-
-	public int getCarOrderID() {
-		return carOrderID;
 	}
 
 	public int getUserID() {

@@ -1,6 +1,6 @@
 Begin_CarOrderInfo(carOrderId....orderedById....delivered?....orderTime....deliveryTime(unDelivered=(00-00-0000*00-00-00)....modelName....{optionType=optionId}&...):
-00001....001....1....26-02-2014*12:30:05....28-02-2014*14:02:50....Ford....blue{&}manual{&}sedan{&}6 speed manual
-00002....002....0....27-02-2014*14:05:29....00-00-0000*00:00:00....Ford....black{&}performance 2.5l 6 cilinders{&}sedan
-00003....002....0....27-02-2014*18:56:15....00-00-0000*00:00:00....Ford....blue{&}leather black
-00004....001....0....28-02-2014*09:06:08....00-00-0000*00:00:00....Ford....black
+001....1....26-02-2014*12:30:05....28-02-2014*14:02:50....Ford....blue{&}manual{&}sedan{&}6 speed manual
+002....0....27-02-2014*14:05:29....00-00-0000*00:00:00....Ford....black{&}performance 2.5l 6 cilinders{&}sedan
+002....0....27-02-2014*18:56:15....00-00-0000*00:00:00....Ford....blue{&}leather black
+001....0....28-02-2014*09:06:08....00-00-0000*00:00:00....Ford....black
 End_CarOrderInfo

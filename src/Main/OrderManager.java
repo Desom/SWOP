@@ -145,33 +145,31 @@ public class OrderManager {
 		for(String orderStr: allCarOrderInfo){
 			String[] orderPieces = orderStr.split("....");
 			// String omvormen naar objecten
-		// 0 : orderId
-			int orderId = Integer.parseInt(orderPieces[0]);
-		// 1 : garageHolderId
-			int garageHolderId = Integer.parseInt(orderPieces[1]);
-		// 2 : isDelivered -> Boolean
+		// 0 : garageHolderId
+			int garageHolderId = Integer.parseInt(orderPieces[0]);
+		// 1 : isDelivered -> Boolean
 			boolean isDelivered = false;
-			if(orderPieces[2] == "1"){
+			if(orderPieces[1] == "1"){
 				isDelivered = true;
 			}
 			
-		// 3 : orderedTime -> GregorianCalendar
-			GregorianCalendar orderedCalendar = this.createCalendarFor(orderPieces[3]);
-		// 4 : deliveryTime -> GregorianCalendar
+		// 2 : orderedTime -> GregorianCalendar
+			GregorianCalendar orderedCalendar = this.createCalendarFor(orderPieces[2]);
+		// 3 : deliveryTime -> GregorianCalendar
 			GregorianCalendar deliveredCalendar = null;
 			if(isDelivered){
-				deliveredCalendar = this.createCalendarFor(orderPieces[4]);
+				deliveredCalendar = this.createCalendarFor(orderPieces[3]);
 			}
-		// 5 : modelId -> CarModel (we hebben hiervoor de Catalog nodig, hoe komen we daar aan?)
-			CarModel model = catalog.getCarModel(orderPieces[5]);
-		// 6 : options -> ArrayList<Option> (ook Catalog nodig)
+		// 4 : modelId -> CarModel (we hebben hiervoor de Catalog nodig, hoe komen we daar aan?)
+			CarModel model = catalog.getCarModel(orderPieces[4]);
+		// 5 : options -> ArrayList<Option> (ook Catalog nodig)
 			ArrayList<Option> optionsList = new ArrayList<Option>();
-			String[] optionStr = orderPieces[6].split("{&}");
+			String[] optionStr = orderPieces[5].split("{&}");
 			for(String optionDescr: optionStr){
 				optionsList.add(catalog.getOption(optionDescr));
 			}
 			
-			allCarOrders.add(new CarOrder(orderId, garageHolderId, orderedCalendar, deliveredCalendar, model, optionsList));
+			allCarOrders.add(new CarOrder(garageHolderId, orderedCalendar, deliveredCalendar, model, optionsList));
 		}
 		
 		return allCarOrders;

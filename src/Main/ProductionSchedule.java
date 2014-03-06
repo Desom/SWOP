@@ -17,10 +17,10 @@ public class ProductionSchedule {
 	private static final int END_WORKDAY = 22;
 	private static final int AMOUNT_WORKSTATIONS = 3;
 	
-	//TODO is er een beter queue? 
 	private LinkedList<CarOrder> scheduleQueue;
 	private ArrayList<Integer> timeHistory;
-	private int overTime; //TODO hoe overTime te weten komen? zelf counter bijhouden?
+	private int overTime;
+	private int endOfDayCounter;
 	
 	/**
 	 * The constructor for the ProductionSchedule class.
@@ -39,6 +39,7 @@ public class ProductionSchedule {
 		};
 		Collections.sort(carOrderList, comparatorFIFO);
 		this.setScheduleQueue(new LinkedList<CarOrder>(carOrderList));
+		this.resetEndOfDayCounter();
 	}
 	/**
 	 * Calculates an estimated completion date for a specific CarOrder and returns it.
@@ -106,7 +107,12 @@ public class ProductionSchedule {
 	public CarOrder getNextCarOrder(int time){
 		this.getTimeHistory().add(time);
 		if(this.checkTimeRequirement()){
+			this.resetEndOfDayCounter();
 			return this.getScheduleQueue().remove();
+		}
+		this.incEndOfDayCounter();
+		if(this.getEndOfDayCounter() == AMOUNT_WORKSTATIONS){
+			this.calculateOverTime();
 		}
 		return null;
 	}
@@ -132,7 +138,30 @@ public class ProductionSchedule {
 	}
 
 	private void setOverTime(int overTime) {
-		this.overTime = overTime;
+		if(overTime > 0)
+			this.overTime = overTime;
+		else 
+			this.overTime = 0;
 	}
-
+	private void calculateOverTime() {
+		int time = new GregorianCalendar().get(GregorianCalendar.HOUR_OF_DAY) - END_WORKDAY + this.overTime;
+		if(time > 0){
+			this.setOverTime(time);
+		}
+		else{
+			this.setOverTime(0);
+		}
+	}
+	
+	private int getEndOfDayCounter() {
+		return endOfDayCounter;
+	}
+	
+	private void incEndOfDayCounter() {
+		this.endOfDayCounter = this.endOfDayCounter + 1;
+	}
+	
+	private void resetEndOfDayCounter() {
+		this.endOfDayCounter = 0;
+	}
 }

@@ -4,6 +4,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 import OptionSubTypes.*;
@@ -13,12 +14,20 @@ import OptionSubTypes.*;
 public class CarModelCatalog {
 	private HashMap<String,Option> All_Options;
 	private HashMap<String,CarModel> All_CarModels;
-
+	public LinkedList<String> All_Optiontypes;
 	public CarModelCatalog(String Optionfile, String Modelfile) throws IOException, CarModelCatalogException{
 		All_Options = new HashMap<String,Option>();
 		All_CarModels= new HashMap<String,CarModel>();
 		createOptions(Optionfile);
 		createModels(Modelfile);
+		All_Optiontypes = new LinkedList<String>();
+		All_Optiontypes.add("Color");
+		All_Optiontypes.add("Body");
+		All_Optiontypes.add("Engine");
+		All_Optiontypes.add("Gearbox");
+		All_Optiontypes.add("Airco");
+		All_Optiontypes.add("Wheels");
+		All_Optiontypes.add("Seats");
 	}
 	public CarModelCatalog() throws IOException, CarModelCatalogException{
 		this("options.txt", "models.txt");
@@ -123,5 +132,9 @@ public class CarModelCatalog {
 	public Option getOption(String description){
 		return this.All_Options.get(description);
 
+	}
+	@SuppressWarnings("unchecked")
+	public LinkedList<String> getAllOptionTypes(){
+		return (LinkedList<String>) this.getAllOptionTypes().clone();
 	}
 }

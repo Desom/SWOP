@@ -69,10 +69,10 @@ public class OrderManager {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void placeOrder(User user, CarModel model, ArrayList<Option> options) throws UserAccessException{
+	public void placeOrder(User user, OrderForm order) throws UserAccessException{
 		if(user.canPerform("placeOrder"))
 		{
-			CarOrder newOrder = new CarOrder(user,model,options);
+			CarOrder newOrder = new CarOrder(user,order.getModel(),order.getOptions());
 			this.addCarOrder(newOrder);
 			this.getProductionSchedule().addOrder(newOrder);
 		}
@@ -81,7 +81,6 @@ public class OrderManager {
 			throw new UserAccessException(user, "completionEstimate");
 		}
 	}
-	
 	/**
 	 * Calculates an estimated completion date for a specific CarOrder and returns it.
 	 * 

@@ -16,5 +16,9 @@ public class Car {
 		this(model,options, false);
 	}
 	
+	protected CarAssemblyProcess getAssemblyprocess(){
+		return this.getAssemblyprocess();
+	}
+	
 
 }

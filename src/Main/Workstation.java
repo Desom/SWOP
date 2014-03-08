@@ -7,6 +7,15 @@ public class Workstation {
 
 	private int id;
 	private final ArrayList<String> taskTypes; // DEZE MOETEN OVEREEN KOMEN MET ASSEMBLYTASK SETTYPE
+	/* mogelijke types
+	 * -Body
+	 * -Color
+	 * -Engine
+	 * -GearBox
+	 * -Seats
+	 * -Airco
+	 * -Wheels
+	 */
 	private User carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
@@ -90,12 +99,13 @@ public class Workstation {
 	 * 			If task does not match with the task types list.
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void addAssemblyTask(User user, AssemblyTask task) throws Exception {
+	public void addAssemblyTask(User user, AssemblyTask task)  {
 		this.checkUser(user, "match");
 		if (this.taskTypes.contains(task.getType()))
 			this.allTasks.add(task);
 		else
 			throw new Exception("This assembly task can't be assigned to this workstation");
+		// geen ruwe exceptions meer gooien, maak een klasse aan
 	}
 	
 	/**
@@ -219,6 +229,9 @@ public class Workstation {
 		return information;
 	}
 	
+	/*
+	 * NIET GEBRUIKEN, GEBRUIK EEN USER ACCESS EXCEPTION MET DE METHODE NAAM WAAR DE EXCEPTION GEBEURD.
+	 * 
 	/**
 	 * Checks if the give user can perform the given method (defined by a string). 
 	 * 
@@ -228,9 +241,9 @@ public class Workstation {
 	 * 			The string that defines the method.
 	 * @throws	Exception
 	 * 			If the user is not authorized to call the given method.
-	 */
+	 
 	private void checkUser(User user, String methodString) throws Exception {
 		if (!user.canPerform(methodString))
-			throw new Exception("This user is not authorized for this action");
-	}
+			throw new UserAccessException("This user is not authorized for this action");
+	}*/
 }

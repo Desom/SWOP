@@ -1,4 +1,5 @@
 package Main;
+import java.util.ArrayList;
 import java.util.LinkedList;
 
 
@@ -30,10 +31,37 @@ public class AssemblyLine {
 		}
 	}
 	
-	public void advanceLine(User user, int time) throws UserAccessException{
+	/**
+	 * 
+	 * @param user The user trying to advance the line
+	 * @param time The time of the previous iteration. (eg the last work took 45 min instead of an hour)
+	 * @throws UserAccessException
+	 * @throws DoesNotExistException
+	 * @throws CannotAdvanceException if there are workstations that are blocking the assembly line.
+	 */
+	public void advanceLine(User user, int time) throws UserAccessException, DoesNotExistException, CannotAdvanceException{
 		if(user.canPerform("advanceLine")){
-			//schedule.getNextCarOrder(time);
-			System.out.println("DUMMY METHODE");
+			// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
+			boolean isReady = true;
+			CannotAdvanceException cannotAdvance = new CannotAdvanceException();
+			for(Workstation w : getAllWorkStations(user)){
+				if(!w.hasAllTasksCompleted(user)){
+					isReady = false;
+					cannotAdvance.addBlockingWorkstation(w);
+				}
+			}
+			if(isReady){
+				// move huidige cars 1 plek
+				
+				//voeg nieuwe car toe.
+				CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
+				Workstation workstation1 = selectWorkStationId(1, user);
+				for(AssemblyTask t : newCar.compatibleWith(workstation1)){
+					workstation1.addAssemblyTask(user, t);
+				}
+			}else{
+				throw cannotAdvance;
+			}
 		}else{
 			throw new UserAccessException(user, "advanceLine");
 		}
@@ -60,9 +88,10 @@ public class AssemblyLine {
 	 * 
 	 * @param id The ID of the desired workstation
 	 * @return The workstation that matches the specified ID
-	 * @throws Exception when no workstation with the specified ID exists.
+	 * @throws DoesNotExistException when no workstation with the specified ID exists.
+	 * @throws UserAccessException 
 	 */
-	protected Workstation selectWorkStationId(int id, User user) throws Exception{
+	protected Workstation selectWorkStationId(int id, User user) throws DoesNotExistException, UserAccessException{
 		if(user.canPerform("selectWorkStation")){
 			Workstation selected = null;
 			for(Workstation w : getAllWorkStations(user)){
@@ -70,7 +99,7 @@ public class AssemblyLine {
 					selected = w;
 			}
 			if(selected == null)
-				throw new Exception("No workstation exists with ID: " + id);
+				throw new DoesNotExistException("No workstation exists with ID: " + id);
 			return selected;
 		}else{
 			throw new UserAccessException(user, "selectWorkStation");
@@ -81,9 +110,22 @@ public class AssemblyLine {
 	 * This method creates 3 workstations, specifies their ID's and the respective assembly tasks those workstations can perform.
 	 */
 	private void createWorkStations(){
-		Workstation workStation1 = new Workstation(1, null); // null moet een lijst van alle mogelijke tasks worden (als String)
-		Workstation workStation2 = new Workstation(2, null); // null moet een lijst van alle mogelijke tasks worden (als String)
-		Workstation workStation3 = new Workstation(3, null); // null moet een lijst van alle mogelijke tasks worden (als String)
+		ArrayList<String> taskTypes1 = new ArrayList<String>();
+		taskTypes1.add("Body");
+		taskTypes1.add("Color");
+		Workstation workStation1 = new Workstation(1, taskTypes1);
+		
+		ArrayList<String> taskTypes2 = new ArrayList<String>();
+		taskTypes2.add("Engine");
+		taskTypes2.add("GearBox");
+		Workstation workStation2 = new Workstation(2, taskTypes2);
+		
+		ArrayList<String> taskTypes3 = new ArrayList<String>();
+		taskTypes3.add("Seats");
+		taskTypes3.add("Airco");
+		taskTypes3.add("Wheels");
+		Workstation workStation3 = new Workstation(3, taskTypes3);
+		
 		this.workStations.add(workStation1);
 		this.workStations.add(workStation2);
 		this.workStations.add(workStation3);

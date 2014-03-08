@@ -9,9 +9,10 @@ public class CarAssemblyProcess {
 	public CarAssemblyProcess(ArrayList<Option> options){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
 		for(Option o : options){
-			//voeg tasks toe (elke option is gerelateerd met 1 asemblyTask
+			ArrayList<String> actions = new ArrayList<String>();
+			actions.add("dummy action");
+			tasks.add(new AssemblyTask(actions, o.getType()));
 		}
-		
 		this.tasks = tasks;
 	}
 	

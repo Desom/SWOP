@@ -6,22 +6,25 @@ import java.util.GregorianCalendar;
 
 public class CarOrder {
 	
+	private final int carOrderID;
 	private final int userID;
 	private final GregorianCalendar orderedTime;
 	private GregorianCalendar deliveredTime;
 
 	private final Car car;
 	
-	public CarOrder(User user, CarModel model, ArrayList<Option> options) {
+	public CarOrder(int carOrderId, User user, CarModel model, ArrayList<Option> options) {
+		this.carOrderID = carOrderId;
 		this.car = new Car(model, options);
 		this.userID = user.getId();
 		this.orderedTime = new GregorianCalendar(); // dit geeft de tijd op het moment van constructie.
 	}
 
-	public CarOrder(int garageHolderId,
+	public CarOrder(int carOrderId, int garageHolderId,
 			GregorianCalendar orderedCalendar,
 			GregorianCalendar deliveredCalendar, CarModel model,
 			ArrayList<Option> optionsList) {
+		this.carOrderID = carOrderId;
 		this.userID = garageHolderId;
 		this.orderedTime = (GregorianCalendar) orderedCalendar.clone();
 		boolean isDelivered;
@@ -39,6 +42,10 @@ public class CarOrder {
 
 	private void setDeliveredTime(GregorianCalendar deliveredTime) {
 		this.deliveredTime = deliveredTime;
+	}
+
+	private int getCarOrderID() {
+		return carOrderID;
 	}
 
 	public int getUserID() {

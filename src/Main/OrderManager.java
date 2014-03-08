@@ -15,6 +15,7 @@ public class OrderManager {
 
 	private ProductionSchedule productionSchedule;
 	private final HashMap<Integer,ArrayList<CarOrder>> carOrdersPerId;
+	private int highestCarOrderID;
 
 	/**
 	 * Constructor for the OrderManager class.
@@ -72,7 +73,8 @@ public class OrderManager {
 	public void placeOrder(User user, OrderForm order) throws UserAccessException{
 		if(user.canPerform("placeOrder"))
 		{
-			CarOrder newOrder = new CarOrder(user,order.getModel(),order.getOptions());
+			int carOrderId = this.getUniqueCarOrderId();
+			CarOrder newOrder = new CarOrder(carOrderId, user,order.getModel(),order.getOptions());
 			this.addCarOrder(newOrder);
 			this.getProductionSchedule().addOrder(newOrder);
 		}
@@ -81,6 +83,8 @@ public class OrderManager {
 			throw new UserAccessException(user, "completionEstimate");
 		}
 	}
+
+
 	/**
 	 * Calculates an estimated completion date for a specific CarOrder and returns it.
 	 * 
@@ -140,36 +144,41 @@ public class OrderManager {
 		} catch (IOException e) {
 			return null;
 		}
-		
+		int highestID = 0;
 		for(String orderStr: allCarOrderInfo){
 			String[] orderPieces = orderStr.split("....");
 			// String omvormen naar objecten
-		// 0 : garageHolderId
-			int garageHolderId = Integer.parseInt(orderPieces[0]);
-		// 1 : isDelivered -> Boolean
+		// 0 : carOrderId
+			int carOrderId = Integer.parseInt(orderPieces[0]);
+			if(carOrderId > highestID)
+				highestID = carOrderId;
+		// 1 : garageHolderId
+			int garageHolderId = Integer.parseInt(orderPieces[1]);
+		// 2 : isDelivered -> Boolean
 			boolean isDelivered = false;
-			if(orderPieces[1] == "1"){
+			if(orderPieces[2] == "1"){
 				isDelivered = true;
 			}
 			
-		// 2 : orderedTime -> GregorianCalendar
-			GregorianCalendar orderedCalendar = this.createCalendarFor(orderPieces[2]);
-		// 3 : deliveryTime -> GregorianCalendar
+		// 3 : orderedTime -> GregorianCalendar
+			GregorianCalendar orderedCalendar = this.createCalendarFor(orderPieces[3]);
+		// 4 : deliveryTime -> GregorianCalendar
 			GregorianCalendar deliveredCalendar = null;
 			if(isDelivered){
-				deliveredCalendar = this.createCalendarFor(orderPieces[3]);
+				deliveredCalendar = this.createCalendarFor(orderPieces[4]);
 			}
-		// 4 : modelId -> CarModel (we hebben hiervoor de Catalog nodig, hoe komen we daar aan?)
-			CarModel model = catalog.getCarModel(orderPieces[4]);
-		// 5 : options -> ArrayList<Option> (ook Catalog nodig)
+		// 5 : modelId -> CarModel (we hebben hiervoor de Catalog nodig, hoe komen we daar aan?)
+			CarModel model = catalog.getCarModel(orderPieces[5]);
+		// 6 : options -> ArrayList<Option> (ook Catalog nodig)
 			ArrayList<Option> optionsList = new ArrayList<Option>();
-			String[] optionStr = orderPieces[5].split("{&}");
+			String[] optionStr = orderPieces[6].split("{&}");
 			for(String optionDescr: optionStr){
 				optionsList.add(catalog.getOption(optionDescr));
 			}
-			
-			allCarOrders.add(new CarOrder(garageHolderId, orderedCalendar, deliveredCalendar, model, optionsList));
+			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, model, optionsList));
 		}
+
+		this.highestCarOrderID = highestID;
 		
 		return allCarOrders;
 	}
@@ -208,6 +217,11 @@ public class OrderManager {
 		this.getCarOrdersPerId().get(newOrder.getUserId()).add(newOrder);
 	}
 
+	private int getUniqueCarOrderId() {
+		this.highestCarOrderID += 1;
+		return this.highestCarOrderID;
+	}
+	
 	protected ProductionSchedule getProductionSchedule() {
 		return productionSchedule;
 	}

@@ -8,7 +8,7 @@ public class Configuration {
 	private final CarModel model;
 	private final HashMap<String,Option> options;
 	
-	public Configuration(CarModel model, ArrayList<Option> options){
+	public Configuration(CarModel model, ArrayList<Option> options) throws Exception{
 		this.model = model;
 		this.options = new HashMap<String,Option>();
 		addall(this.options, options);
@@ -28,7 +28,7 @@ public class Configuration {
 	}
 
 	private void addall(HashMap<String, Option> optionmap,
-			ArrayList<Option> optionlist)  {
+			ArrayList<Option> optionlist) throws Exception  {
 		for(int i=0; i< optionlist.size();i++){
 			for(int j= i+1; j<optionlist.size();j++){
 				if(optionlist.get(i).conflictsWith(optionlist.get(j))){

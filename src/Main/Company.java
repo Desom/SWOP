@@ -96,6 +96,15 @@ public class Company {
 	}
 	
 	
+	public AssemblyLine getAssemblyLine(User user) throws UserAccessException{
+		if(user.canPerform("getAssemblyLine")){
+			return this.assemblyLine;
+		}else{
+			throw new UserAccessException(user, "getAssemblyLine");
+		}
+	}
+	
+	
 	/*
 	 * ASSEMBLY LINE STATUS EN FUTURE STATUS
 	 * 

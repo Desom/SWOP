@@ -6,6 +6,7 @@ import Main.CarModelCatalogException;
 
 
 public class Color extends Option {
+	public static String type = "Color";
 
 	public Color(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)

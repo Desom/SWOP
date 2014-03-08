@@ -1,0 +1,89 @@
+package Main;
+
+import java.util.ArrayList;
+
+public class Controller {
+	//TODO betere namen voor methodes...
+	private UI ui;
+	private Company company;
+
+	public void run(){
+
+	}
+
+	public void managerCase(User user) throws UserAccessException{
+		AssemblyLine assembly = this.company.getAssemblyLine(user);
+
+		//1. The user indicates he wants to advance the assembly line.
+		while(true){
+			String actionRequest = "What do you want to do?";
+			ArrayList<String> actionPoss = new ArrayList<String>();
+			actionPoss.add("advanceLine");
+			actionPoss.add("quit");
+			
+			String action = ui.askWithPossibilities(actionRequest, actionPoss);
+			if("advanceLine".equals(action))
+				this.advandeLine(user, assembly);
+			if("quit".equals(action))
+				return;
+		}
+	}
+
+	private void advandeLine(User user, AssemblyLine assembly) throws UserAccessException{
+		while(true){
+		//2. The system presents an overview of the current assembly line status,
+		//as well as a view of the future assembly line status (as it would be after
+		//completing this use case), including pending and finished tasks at each
+		//work post.
+			returnType currentStatus = assembly.getCurrentAssemblyLineStatus(user); // Of iets dergelijks
+			AssemblyStatusView currentStatusView = new AssemblyStatusView("Current assembly line status", currentStatus);
+			ui.showAssemblyLineStatus(currentStatusView);
+	
+			returnType futureStatus = assembly.getFutureAssemblyLineStatus(user); // Of iets dergelijks
+			AssemblyStatusView futureStatusView = new AssemblyStatusView("Future assembly line status", currentStatus);
+			ui.showAssemblyLineStatus(futureStatusView);
+	
+		//3. The user confirms the decision to move the assembly line forward,
+		//and enters the time that was spent during the current phase (e.g. 45
+		//minutes instead of the scheduled hour).
+			boolean doAdvance = ui.askYesNoQuestion("Do you want to advance the assembly line?");
+			if(!doAdvance){
+				return;
+			}
+			int timeSpent = ui.askForInteger("Give the time spent during the current phase. (minutes)", 0);
+		
+			try{
+			//4. The system moves the assembly line forward one work post according
+			//to the scheduling rules.
+				assembly.advanceLine(user, timeSpent);	
+				
+			//5. The system presents an overview of the new assembly line status.
+				returnType newCurrentStatus = assembly.getCurrentAssemblyLineStatus(); // Of iets dergelijks
+				AssemblyStatusView newCurrentStatusView = new AssemblyStatusView("Current assembly line status", newCurrentStatus);
+				ui.showAssemblyLineStatus(newCurrentStatusView);
+			}
+			catch(CannotAdvanceException cae){
+			//4. (a) The assembly line can not be moved forward due to a work post
+			//with unfinished tasks.
+				
+			//5. The system shows a message to the user, indicating which work post(s)
+			//are preventing the assembly line from moving forward.
+				ui.display(cae.getMessage());
+			//6. The use case continues in step 6.
+			}
+		//6. The user indicates he is done viewing the status.
+			boolean repeat = ui.askYesNoQuestion("Do you want to view the new future status?");
+			if(!repeat){
+				return;
+			}
+		}
+	}
+
+	public void garageHolderCase(){
+
+	}
+
+	public void mechanicCase(){
+
+	}
+}

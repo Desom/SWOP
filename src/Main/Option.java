@@ -43,6 +43,8 @@ public abstract class Option {
 	public String toString(){
 		return description;
 	}
+
+	public abstract String getType();
 	
 }
 

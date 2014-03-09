@@ -25,6 +25,11 @@ public class Car {
 	protected CarAssemblyProcess getAssemblyprocess(){
 		return this.process;
 	}
+
+	public Boolean IsCompleted() {
+		
+		return this.getAssemblyprocess().IsCompleted();
+	}
 	
 
 }

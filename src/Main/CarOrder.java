@@ -68,4 +68,9 @@ public class CarOrder {
 		return (GregorianCalendar) this.orderedTime.clone();
 	}
 
+	public Boolean IsCompleted() {
+		// TODO Auto-generated method stub
+		return this.getCar().IsCompleted();
+	}
+
 }

@@ -35,4 +35,13 @@ public class CarAssemblyProcess {
 		return compatibleTypes;
 	}
 
+
+	public Boolean IsCompleted() {
+		boolean status = true;
+		for(AssemblyTask i: tasks){
+			status = status && i.isCompleted();
+		}
+		return status;
+	}
+
 }

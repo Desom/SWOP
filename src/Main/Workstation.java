@@ -214,7 +214,6 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	public ArrayList<AssemblyTask> getAllTasks(User user) throws UserAccessException {
-
 		this.checkUser(user, "getAllTasks");
 		return (ArrayList<AssemblyTask>) this.allTasks.clone();
 	}

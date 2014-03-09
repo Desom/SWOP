@@ -25,14 +25,18 @@ public class OrderManager {
 	 * @param 	catalog
 	 * 			The CarModelCatalog necessary for finding the Options and CarModel Objects of all CarOrders
 	 */
-	public OrderManager(CarModelCatalog catalog) {
-		ArrayList<CarOrder> allCarOrders = this.createOrderList(catalog);
+	public OrderManager(String dataFilePath, CarModelCatalog catalog) {
+		ArrayList<CarOrder> allCarOrders = this.createOrderList(dataFilePath,catalog);
 		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
 		for(CarOrder order : allCarOrders) {
 			this.addCarOrder(order);
 		}
 		
 		this.createProductionSchedule(allCarOrders);
+	}
+	
+	public OrderManager(CarModelCatalog catalog){
+		this("carOrderData.txt", catalog);
 	}
 	
 	/**
@@ -99,6 +103,7 @@ public class OrderManager {
 	 * @throws 	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
+	//TODO controleer ofdat de order al klaar is?
 	public GregorianCalendar completionEstimate(User user, CarOrder order) throws UserAccessException{
 		if(user.canPerform("completionEstimate"))
 		{
@@ -127,11 +132,11 @@ public class OrderManager {
 	 * 			The CarModelCatalog used to convert Strings to Option and CarModel objects.
 	 * @return	A list of all the placed CarOrders.
 	 */
-	private ArrayList<CarOrder> createOrderList(CarModelCatalog catalog){
+	private ArrayList<CarOrder> createOrderList(String dataFile, CarModelCatalog catalog){
 		ArrayList<CarOrder> allCarOrders = new ArrayList<CarOrder>();
 		ArrayList<String> allCarOrderInfo = new ArrayList<String>();
 		try {
-			FileInputStream fStream = new FileInputStream("carOrderData.txt");
+			FileInputStream fStream = new FileInputStream(dataFile);
 			DataInputStream dinStream = new DataInputStream(fStream);
 			InputStreamReader insReader = new InputStreamReader(dinStream);
 			BufferedReader bReader = new BufferedReader(insReader);
@@ -149,7 +154,7 @@ public class OrderManager {
 		}
 		int highestID = 0;
 		for(String orderStr: allCarOrderInfo){
-			String[] orderPieces = orderStr.split("....");
+			String[] orderPieces = orderStr.split(",,,,");
 			// String omvormen naar objecten
 		// 0 : carOrderId
 			int carOrderId = Integer.parseInt(orderPieces[0]);
@@ -174,7 +179,7 @@ public class OrderManager {
 			CarModel model = catalog.getCarModel(orderPieces[5]);
 		// 6 : options -> ArrayList<Option> (ook Catalog nodig)
 			ArrayList<Option> optionsList = new ArrayList<Option>();
-			String[] optionStr = orderPieces[6].split("{&}");
+			String[] optionStr = orderPieces[6].split(";-;");
 			for(String optionDescr: optionStr){
 				optionsList.add(catalog.getOption(optionDescr));
 			}
@@ -194,9 +199,9 @@ public class OrderManager {
 	 * @return	A GregorianCalendar
 	 */
 	private GregorianCalendar createCalendarFor(String info) {
-		String[] dateTime = info.split("*");
+		String[] dateTime = info.split("==");
 		String[] dateStr = dateTime[0].split("-");
-		String[] timeStr = dateTime[0].split(":");
+		String[] timeStr = dateTime[0].split("-");
 		int[] dateInt = new int[3];
 		int[] timeInt = new int[3];
 		for(int i = 0; i < 3;i++){

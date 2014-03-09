@@ -15,7 +15,7 @@ public class Wheels extends Option {
 		super(description, compatibles, incompatibles);
 	}
 	
-	public static String getType() {
+	public String getType() {
 		return type;
 	}
 }

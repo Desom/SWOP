@@ -15,7 +15,7 @@ public class Gearbox extends Option {
 		super(description, compatibles, incompatibles);
 		// TODO Auto-generated constructor stub
 	}
-	public static String getType() {
+	public String getType() {
 		return type;
 	}
 }

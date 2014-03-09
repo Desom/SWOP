@@ -24,7 +24,7 @@ public class CarAssemblyProcess {
 	}
 	
 	
-	protected ArrayList<AssemblyTask> compatibleWith(Workstation station){
+	public ArrayList<AssemblyTask> compatibleWith(Workstation station){
 		ArrayList<String> acceptedTypes = station.getTaskTypes();
 		ArrayList<AssemblyTask> compatibleTypes = new ArrayList<AssemblyTask>();
 		for(AssemblyTask t : this.tasks){

@@ -15,7 +15,7 @@ public class Airco extends Option {
 		super(description, compatibles, incompatibles);
 	}
 	
-	public String getType() {
+	public static String getType() {
 		return type;
 	}
 

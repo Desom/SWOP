@@ -44,5 +44,9 @@ public abstract class Option {
 		return description;
 	}
 	
+	public static String getType() {
+		throw new IllegalStateException("This option is not defined");
+	}
+	
 }
 

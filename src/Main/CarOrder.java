@@ -15,7 +15,7 @@ public class CarOrder {
 	
 	public CarOrder(int carOrderId, User user, CarModel model, ArrayList<Option> options) {
 		this.carOrderID = carOrderId;
-		this.car = new Car(model, options);
+		this.car = new Car(this, model, options);
 		this.userID = user.getId();
 		this.orderedTime = new GregorianCalendar(); // dit geeft de tijd op het moment van constructie.
 	}
@@ -37,7 +37,7 @@ public class CarOrder {
 			isDelivered = false;
 		}
 
-		this.car = new Car(model, optionsList, isDelivered);//TODO hoe maken we een geleverde auto.
+		this.car = new Car(this, model, optionsList, isDelivered);//TODO hoe maken we een geleverde auto.
 	}
 
 	private void setDeliveredTime(GregorianCalendar deliveredTime) {

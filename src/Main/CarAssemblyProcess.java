@@ -5,8 +5,14 @@ import java.util.ArrayList;
 public class CarAssemblyProcess {
 	
 	private final ArrayList<AssemblyTask> tasks;
+	private final Car car;
 	
-	public CarAssemblyProcess(ArrayList<Option> options){
+	protected Car getCar() {
+		return car;
+	}
+
+
+	public CarAssemblyProcess(Car car, ArrayList<Option> options){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
 		for(Option o : options){
 			ArrayList<String> actions = new ArrayList<String>();
@@ -14,6 +20,7 @@ public class CarAssemblyProcess {
 			tasks.add(new AssemblyTask(actions, o.getType()));
 		}
 		this.tasks = tasks;
+		this.car = car;
 	}
 	
 	

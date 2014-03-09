@@ -1,31 +1,72 @@
 package Main;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+
 public class AssemblyStatusView {
-	
+
 	private String header;
-	private returnType status;
-	public AssemblyStatusView(String header, returnType status){
+	//private returnType status;
+	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
+	public AssemblyStatusView(ArrayList<Workstation> stations, String header){
 		this.header = header;
-		this.status = status;
+		//this.status = status;
+		this.workstations = stations;
 	}
-	
+
+	/**
+	 * 
+	 * @return an array of integers representing the ID's of the workstations
+	 */
 	public int[] getAllWorkstationIds(){
-		throw new UnsupportedOperationException();
+		int[] IDs = new int[workstations.size()];
+		int i = 0;
+		for(Workstation w : workstations){
+			IDs[i] = w.getId();
+			i++;
+		}
+		return IDs;
 	}
-	
-	public int getCarOrderIdAt(int workstationId){
-		throw new UnsupportedOperationException();
+
+	public int getCarOrderIdAt(int workstationId) throws DoesNotExistException{
+		Workstation w = getWorkstation(workstationId);
+		return w.getCurrentCar().getCar().getOrder().getCarOrderID();
 	}
-	
-	public String[] getAllTasksAt(int workstationId){
-		throw new UnsupportedOperationException();
+
+	public LinkedList<String> getAllTasksAt(int workstationId) throws UserAccessException, DoesNotExistException{
+		LinkedList<String> tasks = new LinkedList<String>();
+		Workstation w = getWorkstation(workstationId);
+		for(AssemblyTask t : w.getAllTasks()){
+			//tasks.add("Type: " + t.getType() + "  -  Completed: " + t.isCompleted());
+			tasks.add(t.getType());
+		}
+		return tasks;
 	}
-	
-	public boolean taskIsDoneAt(String task,int workstationId){
-		throw new UnsupportedOperationException();
+
+	public boolean taskIsDoneAt(String task,int workstationId) throws UserAccessException, DoesNotExistException{
+		Workstation w = getWorkstation(workstationId);
+		for(AssemblyTask t : w.getAllTasks()){
+			if(t.getType().compareToIgnoreCase(task) == 0){
+				return t.isCompleted();
+			}
+		}
+		throw new DoesNotExistException("The workstation with ID " + workstationId + " does not have a task with type " + task);
 	}
 
 	public String getHeader() {
 		return header;
+	}
+	
+	private Workstation getWorkstation(int ID) throws DoesNotExistException{
+		Workstation found = null;
+		for(Workstation w : workstations){
+			if(w.getId() == ID){
+				found = w;
+			}
+		}
+		if(found == null){
+			throw new DoesNotExistException("There is no workstation with ID: " + ID);
+		}
+		return found;
 	}
 }

@@ -6,14 +6,20 @@ public class Car {
 	
 	private final Configuration configuration;
 	private final CarAssemblyProcess process;
+	private final CarOrder order;
 	
-	public Car(CarModel model, ArrayList<Option> options, boolean isDelivered){
-		this.configuration = new Configuration(model, options);
-		this.process = new CarAssemblyProcess(this.configuration.getAllOptions());
+	protected CarOrder getOrder() {
+		return order;
 	}
 
-	public Car(CarModel model, ArrayList<Option> options) {
-		this(model,options, false);
+	public Car(CarOrder order, CarModel model, ArrayList<Option> options, boolean isDelivered){
+		this.configuration = new Configuration(model, options);
+		this.process = new CarAssemblyProcess(this, this.configuration.getAllOptions());
+		this.order = order;
+	}
+
+	public Car(CarOrder order, CarModel model, ArrayList<Option> options) {
+		this(order, model,options, false);
 	}
 	
 	protected CarAssemblyProcess getAssemblyprocess(){

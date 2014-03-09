@@ -225,7 +225,7 @@ public class OrderManager {
 		return this.highestCarOrderID;
 	}
 	
-	protected ProductionSchedule getProductionSchedule() {
+	public ProductionSchedule getProductionSchedule() {
 		return productionSchedule;
 	}
 
@@ -235,6 +235,24 @@ public class OrderManager {
 
 	private HashMap<Integer, ArrayList<CarOrder>> getCarOrdersPerId() {
 		return carOrdersPerId;
+	}
+
+	public ArrayList<String> getPendingOrders(User user) throws UserAccessException {
+		
+		return GetOrdersWithStatus(user,false);
+	}
+
+	public ArrayList<String> getCompletedOrders(User user) throws UserAccessException {
+		// TODO Auto-generated method stub
+		return GetOrdersWithStatus(user,true);
+	}
+
+	private ArrayList<String> GetOrdersWithStatus(User user, boolean b) throws UserAccessException {
+		ArrayList<String> result = new ArrayList<String>();
+		for(CarOrder i : this.getOrders(user)){
+			if(i.IsCompleted().equals("b")) result.add(i.toString());
+		}
+		return result;
 	}
 
 }

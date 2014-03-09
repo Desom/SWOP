@@ -16,7 +16,7 @@ public class Body extends Option {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String getType() {
+	public static String getType() {
 		return type;
 	}
 }

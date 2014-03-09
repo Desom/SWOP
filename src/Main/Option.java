@@ -43,6 +43,12 @@ public abstract class Option {
 	public String toString(){
 		return description;
 	}
+
+	public abstract String getType();
+	
+	public static String getType() {
+		throw new IllegalStateException("This option is not defined");
+	}
 	
 }
 

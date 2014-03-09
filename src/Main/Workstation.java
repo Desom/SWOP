@@ -32,7 +32,7 @@ public class Workstation {
 	 * 
 	 * @return The assemblyprocess of the car this workstation is currently working on.
 	 */
-	protected CarAssemblyProcess getCurrentCar() {
+	public CarAssemblyProcess getCurrentCar() {
 		return currentCar;
 	}
 

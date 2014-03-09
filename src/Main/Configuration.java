@@ -8,14 +8,29 @@ public class Configuration {
 	private final CarModel model;
 	private final HashMap<String,Option> options;
 	
-	public Configuration(CarModel model, ArrayList<Option> options) throws Exception{
+	/**
+	 * Constructor of Configuration.
+	 * 
+	 * @param	model
+	 * 			The car model used for this configuration
+	 * @param	options
+	 * 			The options used for this configuration
+	 * @throws	Exception
+	 * 			If the given options are conflicting with each other
+	 */
+	public Configuration(CarModel model, ArrayList<Option> options) {
 		this.model = model;
 		this.options = new HashMap<String,Option>();
-		addall(this.options, options);
+		addall(options);
 		addmissingoptions();
 		
 	}
 	
+	/**
+	 * Fills the hashmap options with all options of this configuration and adds the default options for that car model
+	 * 		if the option is missing.
+	 */
+	@SuppressWarnings("static-access")
 	private void addmissingoptions() {
 		if(!options.containsKey("Color"))options.put(model.getDefault_Color().getType(),model.getDefault_Color());
 		if(!options.containsKey("Body"))options.put(model.getDefault_Body().getType(),model.getDefault_Body());
@@ -27,27 +42,49 @@ public class Configuration {
 		
 	}
 
-	private void addall(HashMap<String, Option> optionmap,
-			ArrayList<Option> optionlist) throws Exception  {
+	/**
+	 * Adds all options to this configuration and checks for conflicting options.
+	 * 
+	 * @param	optionlist
+	 * 			The list of all options to be added to this configuration
+	 * @throws	Exception
+	 * 			If there are conflicting options to be added
+	 */
+	@SuppressWarnings("static-access")
+	private void addall(ArrayList<Option> optionlist) throws IllegalArgumentException {
 		for(int i=0; i< optionlist.size();i++){
 			for(int j= i+1; j<optionlist.size();j++){
 				if(optionlist.get(i).conflictsWith(optionlist.get(j))){
-					throw new Exception("error conflicting types");
+					throw new IllegalArgumentException("There are conflicting options");
 				}
 			}
-			optionmap.put(optionlist.get(i).getType(), optionlist.get(i));
+			options.put(optionlist.get(i).getType(), optionlist.get(i));
 			}
 		}
 
+	/**
+	 * Gives the option corresponding to the option type.
+	 * 
+	 * @param	optionType
+	 * 			The string that specifies the option type
+	 * @return	the options that corresponds to the option type
+	 */
 	protected Option getOption(String optionType){
 		return options.get(optionType);
 	}
 	
-	@SuppressWarnings("unchecked")
+	/**
+	 * Returns all options of this configuration.
+	 * 
+	 * @return	the list of all options of the configuration
+	 */
 	protected ArrayList<Option> getAllOptions(){
 		return new ArrayList<Option>(options.values());
 	}
 	
+	/**
+	 * Returns the string that represents this configuration.
+	 */
 	public String toString(){
 		String s = model.toString() + "\n Options: \n";
 		for(Option o: options.values()){

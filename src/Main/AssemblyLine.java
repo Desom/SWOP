@@ -23,7 +23,7 @@ public class AssemblyLine {
 	 * @throws UserAccessException If this user is not allowed to execute this method.
 	 */
 	@SuppressWarnings("unchecked")
-	protected LinkedList<Workstation> getAllWorkStations(User user) throws UserAccessException{
+	public LinkedList<Workstation> getAllWorkStations(User user) throws UserAccessException{
 		if(user.canPerform("getAllWorkStations")){
 			return (LinkedList<Workstation>) workStations.clone();
 		}else{
@@ -83,9 +83,11 @@ public class AssemblyLine {
 	 * 
 	 * @param user The user that is to be added to the workstation
 	 * @param workStation_id The ID of the workstation the user should be added to.
+	 * @throws UserAccessException 
+	 * @throws DoesNotExistException 
 	 * @throws Exception If the Carmechanic could not be appointed to the workstation.
 	 */
-	protected void selectWorkStation(User user, int workStation_id) throws Exception{
+	public void selectWorkStation(User user, int workStation_id) throws UserAccessException, DoesNotExistException {
 		if(user.canPerform("selectWorkStation")){
 			Workstation selected = selectWorkStationId(workStation_id, user);
 			selected.addCarMechanic(user);
@@ -102,7 +104,7 @@ public class AssemblyLine {
 	 * @throws DoesNotExistException when no workstation with the specified ID exists.
 	 * @throws UserAccessException 
 	 */
-	protected Workstation selectWorkStationId(int id, User user) throws DoesNotExistException, UserAccessException{
+	public Workstation selectWorkStationId(int id, User user) throws DoesNotExistException, UserAccessException{
 		if(user.canPerform("selectWorkStation")){
 			Workstation selected = null;
 			for(Workstation w : getAllWorkStations(user)){
@@ -171,7 +173,7 @@ public class AssemblyLine {
 	 * @throws DoesNotExistException If a workstation with a non existing ID is requested
 	 */
 	public AssemblyStatusView futureStatus(User user) throws UserAccessException, DoesNotExistException{
-		if(user.canPerform("currentStatus")){
+		if(user.canPerform("futureStatus")){
 			// check if the line can advance
 			boolean isReady = true;
 			for(Workstation w : getAllWorkStations(user)){

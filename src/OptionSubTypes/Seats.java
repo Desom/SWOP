@@ -15,5 +15,7 @@ public class Seats extends Option {
 		super(description, compatibles, incompatibles);
 	}
 	
-	
+	public static String getType() {
+		return type;
+	}
 }

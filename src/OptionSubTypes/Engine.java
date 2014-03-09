@@ -15,7 +15,7 @@ public class Engine extends Option {
 		super(description, compatibles, incompatibles);
 		// TODO Auto-generated constructor stub
 	}
-	public String getType() {
+	public static String getType() {
 		return type;
 	}
 }

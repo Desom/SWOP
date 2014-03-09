@@ -14,7 +14,8 @@ public class Wheels extends Option {
 			throws CarModelCatalogException {
 		super(description, compatibles, incompatibles);
 	}
-	public String getType() {
+	
+	public static String getType() {
 		return type;
 	}
 }

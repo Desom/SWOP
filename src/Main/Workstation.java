@@ -77,17 +77,17 @@ public class Workstation {
 	 * 
 	 * @param	carMechanic
 	 * 			The desired car mechanic to operate at this Workstation.
-	 * @throws 	Exception
+	 * @throws 	IllegalStateException
 	 * 			If there is already a car mechanic operating at this Workstation.
 	 */
-	public void addCarMechanic(User carMechanic) throws Exception {
+	public void addCarMechanic(User carMechanic) throws IllegalStateException {
+		// TODO checken als carMechanic wel een car mechanic is.
 		if (this.carMechanic == null)
 			this.carMechanic = carMechanic;
 		else
-			throw new Exception("There already has been assigned a car mechanic to this workstation");
+			throw new IllegalStateException("There already has been assigned a car mechanic to this workstation");
 	}
 	
-	// TODO welke user is authorized?
 	/**
 	 * Adds an assembly task to this workstation.
 	 * 
@@ -95,17 +95,17 @@ public class Workstation {
 	 * 			The User that wants to call this method.
 	 * @param	task
 	 * 			The AssemblyTask that will be added.
-	 * @throws	Exception
+	 * @throws	IllegalArgumentException
 	 * 			If task does not match with the task types list.
+	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void addAssemblyTask(User user, AssemblyTask task)  {
+	public void addAssemblyTask(User user, AssemblyTask task) throws UserAccessException, IllegalArgumentException {
 		this.checkUser(user, "match");
 		if (this.taskTypes.contains(task.getType()))
 			this.allTasks.add(task);
 		else
-			throw new Exception("This assembly task can't be assigned to this workstation");
-		// geen ruwe exceptions meer gooien, maak een klasse aan
+			throw new IllegalArgumentException("This assembly task can't be assigned to this workstation");
 	}
 	
 	/**
@@ -115,16 +115,17 @@ public class Workstation {
 	 * 			The user that wants to call this method.
 	 * @param	task
 	 * 			The task that the user wants to work on.
-	 * @throws	Exception
+	 * @throws	IllegalStateException
 	 * 			If another task is still in progress.
+	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void selectTask(User user, AssemblyTask task) throws Exception {
+	public void selectTask(User user, AssemblyTask task) throws UserAccessException, IllegalStateException {
 		this.checkUser(user, "selectTask");
 		if (this.activeTask == null)
 			this.activeTask = task;
 		else
-			throw new Exception("Another assembly task is still in progress");
+			throw new IllegalStateException("Another assembly task is still in progress");
 	}
 	
 	/**
@@ -132,10 +133,10 @@ public class Workstation {
 	 * 
 	 * @param	user
 	 * 			The user that wants to call this method.
-	 * @throws	Exception
+	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void completeTask(User user) throws Exception {
+	public void completeTask(User user) throws UserAccessException {
 		this.checkUser(user, "completeTask");
 		this.activeTask.completeTask();
 		this.activeTask = null;
@@ -147,10 +148,10 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A copy of the list of all pending assembly tasks.
-	 * @throws	Exception
+	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public ArrayList<AssemblyTask> getAllPendingTasks(User user) throws Exception {
+	public ArrayList<AssemblyTask> getAllPendingTasks(User user) throws UserAccessException {
 		this.checkUser(user, "getAllPendingTasks");
 		ArrayList<AssemblyTask> allPendingTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
@@ -165,10 +166,10 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A copy of the list of all completed assembly tasks.
-	 * @throws Exception
+	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public ArrayList<AssemblyTask> getAllCompletedTasks(User user) throws Exception {
+	public ArrayList<AssemblyTask> getAllCompletedTasks(User user) throws UserAccessException {
 		this.checkUser(user, "getAllCompletedTasks");
 		ArrayList<AssemblyTask> allCompletedTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
@@ -183,10 +184,10 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A copy of the list of all assembly tasks.
-	 * @throws	Exception
+	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public ArrayList<AssemblyTask> getAllTasks(User user) throws Exception {
+	public ArrayList<AssemblyTask> getAllTasks(User user) throws UserAccessException {
 		this.checkUser(user, "getAllTasks");
 		return (ArrayList<AssemblyTask>) this.allTasks.clone();
 	}
@@ -197,10 +198,10 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	True if all assembly tasks are completed, otherwise false.
-	 * @throws	Exception
+	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public boolean hasAllTasksCompleted(User user) throws Exception {
+	public boolean hasAllTasksCompleted(User user) throws UserAccessException {
 		this.checkUser(user, "hasAllTasksCompleted");
 		for (AssemblyTask task : this.allTasks)
 			if (!task.isCompleted())
@@ -214,14 +215,15 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A list with on the first line the task type of the active assembly task. The following lines indicate the actions needed to complete this task.
-	 * @throws	Exception
+	 * @throws	UserAccessException
 	 * 			If there is no active assembly task.
+	 * @throws	IllegalStateException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public ArrayList<String> getActiveTaskInformation(User user) throws Exception {
+	public ArrayList<String> getActiveTaskInformation(User user) throws UserAccessException, IllegalStateException {
 		this.checkUser(user, "match");
 		if (this.activeTask == null)
-			throw new Exception("There is no active task at this moment");
+			throw new IllegalStateException("There is no active task at this moment");
 		ArrayList<String> information = new ArrayList<String>();
 		information.add(this.activeTask.getType());
 		for (String action : this.activeTask.getActions())
@@ -239,11 +241,11 @@ public class Workstation {
 	 * 			The user that wants to call the given method.
 	 * @param	methodString
 	 * 			The string that defines the method.
-	 * @throws	Exception
-	 * 			If the user is not authorized to call the given method.
-	 
-	private void checkUser(User user, String methodString) throws Exception {
+	 * @throws	UserAccessException
+	 *			If the user is not authorized to call the given method.
+	 */
+	private void checkUser(User user, String methodString) throws UserAccessException {
 		if (!user.canPerform(methodString))
-			throw new UserAccessException("This user is not authorized for this action");
-	}*/
+			throw new UserAccessException(user, methodString);
+	}
 }

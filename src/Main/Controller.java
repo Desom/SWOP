@@ -107,10 +107,12 @@ public class Controller {
 	public void carMechanicCase(User carMechanic){
 		ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkStations(carMechanic).toArray());
 		Workstation workstation;
-		ui.askWithPossibilities("Which pending task do you want to work on?", choice.getAllPendingTasks(carMechanic));
+		ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic));
 		AssemblyTask task;
 		workstation.selectTask(carMechanic, task);
+		while(true) {
 		ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
 		ui.askYesNoQuestion("Please indicate when you have completed the assembly task");
+		}
 	}
 }

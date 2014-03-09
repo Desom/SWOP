@@ -12,5 +12,6 @@ public class Manager extends User {
 		this.approvedMethods.add("hasAllTasksCompleted");
 		this.approvedMethods.add("getAssemblyStatus");
 		this.approvedMethods.add("getFutureStatus");
+		this.approvedMethods.add("addAssemblyTask");
 	}
 }

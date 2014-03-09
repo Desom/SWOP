@@ -20,6 +20,11 @@ public class User {
 		return this.id;
 	}
 	
+	// Toegevoegd om te kunnen checken als de User die aan een Workstation wordt toegevoegd wel degelijk een car mechanic is.
+	public boolean isCarMechanic() {
+		return false;
+	}
+	
 	public boolean canPerform(String methodName) {
 		return this.approvedMethods.contains(methodName);
 	}

@@ -1,8 +1,6 @@
 package Main;
 import java.util.ArrayList;
 
-// TODO Nieuwe error-types gebruiken als ze worden gepusht
-
 public class Workstation {
 
 	private int id;
@@ -105,11 +103,15 @@ public class Workstation {
 	 * 			The desired car mechanic to operate at this Workstation.
 	 * @throws 	IllegalStateException
 	 * 			If there is already a car mechanic operating at this Workstation.
+	 * @throws	IllegalArgumentException
+	 * 			If the given user is not a car mechanic.
 	 */
-	public void addCarMechanic(User carMechanic) throws IllegalStateException {
-		// TODO checken als carMechanic wel een car mechanic is.
+	public void addCarMechanic(User carMechanic) throws IllegalStateException, IllegalArgumentException {
 		if (this.carMechanic == null)
-			this.carMechanic = carMechanic;
+			if (carMechanic.isCarMechanic())
+				this.carMechanic = carMechanic;
+			else
+				throw new IllegalArgumentException("The given user is no car mechanic");
 		else
 			throw new IllegalStateException("There already has been assigned a car mechanic to this workstation");
 	}
@@ -127,7 +129,7 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	public void addAssemblyTask(User user, AssemblyTask task) throws UserAccessException, IllegalArgumentException {
-		this.checkUser(user, "match");
+		this.checkUser(user, "addAssemblyTask");
 		if (this.taskTypes.contains(task.getType()))
 			this.allTasks.add(task);
 		else
@@ -145,11 +147,16 @@ public class Workstation {
 	 * 			If another task is still in progress.
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
+	 * @throws	IllegalArgumentException
+	 * 			If the selected task is not a pending task.
 	 */
-	public void selectTask(User user, AssemblyTask task) throws UserAccessException, IllegalStateException {
+	public void selectTask(User user, AssemblyTask task) throws UserAccessException, IllegalStateException, IllegalArgumentException {
 		this.checkUser(user, "selectTask");
 		if (this.activeTask == null)
-			this.activeTask = task;
+			if (this.getAllPendingTasks(user).contains(task))
+				this.activeTask = task;
+			else
+				throw new IllegalArgumentException("This assembly task is not a pending task");
 		else
 			throw new IllegalStateException("Another assembly task is still in progress");
 	}
@@ -161,11 +168,25 @@ public class Workstation {
 	 * 			The user that wants to call this method.
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
+	 * @throws	IllegalStateException
+	 * 			If there is no active task to complete in this workstation.
+	 * 			If there is no car mechanic to complete the active task.
 	 */
-	public void completeTask(User user) throws UserAccessException {
+	//TODO controle als car mechanic actief is in deze workstation
+	public void completeTask(User user) throws UserAccessException, IllegalStateException {
 		this.checkUser(user, "completeTask");
-		this.activeTask.completeTask();
-		this.activeTask = null;
+		if (this.activeTask != null) {
+			if (carMechanic != null) {
+				this.activeTask.completeTask();
+				this.activeTask = null;
+			}
+			else {
+				throw new IllegalStateException("There is no car mechanic to complete the active task");
+			}
+		}
+		else {
+			throw new IllegalStateException("There is no active task in this workstation");
+		}
 	}
 	
 	/**
@@ -247,7 +268,7 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	public ArrayList<String> getActiveTaskInformation(User user) throws UserAccessException, IllegalStateException {
-		this.checkUser(user, "match");
+		this.checkUser(user, "getActiveTaskInformation");
 		if (this.activeTask == null)
 			throw new IllegalStateException("There is no active task at this moment");
 		ArrayList<String> information = new ArrayList<String>();
@@ -256,10 +277,7 @@ public class Workstation {
 			information.add(action);
 		return information;
 	}
-	
-	/*
-	 * NIET GEBRUIKEN, GEBRUIK EEN USER ACCESS EXCEPTION MET DE METHODE NAAM WAAR DE EXCEPTION GEBEURD.
-	 * 
+
 	/**
 	 * Checks if the give user can perform the given method (defined by a string). 
 	 * 

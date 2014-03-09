@@ -54,7 +54,7 @@ public class Car {
 	 * 
 	 * @return	the assembly process of this car
 	 */
-	protected CarAssemblyProcess getAssemblyprocess(){
+	public CarAssemblyProcess getAssemblyprocess(){
 		return this.process;
 	}
 

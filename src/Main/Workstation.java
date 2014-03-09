@@ -271,11 +271,7 @@ public class Workstation {
 		this.checkUser(user, "getActiveTaskInformation");
 		if (this.activeTask == null)
 			throw new IllegalStateException("There is no active task at this moment");
-		ArrayList<String> information = new ArrayList<String>();
-		information.add(this.activeTask.getType());
-		for (String action : this.activeTask.getActions())
-			information.add(action);
-		return information;
+		return this.activeTask.getTaskInformation();
 	}
 
 	/**
@@ -291,5 +287,13 @@ public class Workstation {
 	private void checkUser(User user, String methodString) throws UserAccessException {
 		if (!user.canPerform(methodString))
 			throw new UserAccessException(user, methodString);
+	}
+	
+	/**
+	 * Returns the name of the workstation.
+	 */
+	@Override
+	public String toString() {
+		return "Workstation " + this.id;
 	}
 }

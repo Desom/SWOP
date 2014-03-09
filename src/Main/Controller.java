@@ -103,7 +103,14 @@ public class Controller {
 		}
 	}
 
-	public void mechanicCase(){
-
+	// TODO de car mechanic use case heeft getAllWorkstations nodig, deze is momenteel enkel beschikbaar voor manager
+	public void carMechanicCase(User carMechanic){
+		ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkStations(carMechanic).toArray());
+		Workstation workstation;
+		ui.askWithPossibilities("Which pending task do you want to work on?", choice.getAllPendingTasks(carMechanic));
+		AssemblyTask task;
+		workstation.selectTask(carMechanic, task);
+		ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
+		ui.askYesNoQuestion("Please indicate when you have completed the assembly task");
 	}
 }

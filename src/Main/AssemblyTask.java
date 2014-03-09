@@ -76,4 +76,17 @@ public class AssemblyTask {
 	public void completeTask() {
 		this.isCompleted = true;
 	}
+	
+	/**
+	 * Returns the task type of this assembly task along with the actions needed to complete this task.
+	 * 
+	 * @return	A list with on the first line the task type of this assembly task. The following lines indicate the actions needed to complete this task.
+	 */
+	public ArrayList<String> getTaskInformation() {
+		ArrayList<String> information = new ArrayList<String>();
+		information.add(this.getType());
+		for (String action : this.getActions())
+			information.add(action);
+		return information;
+	}
 }

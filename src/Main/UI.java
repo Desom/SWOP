@@ -12,6 +12,12 @@ public class UI {
 	public void display(String A){
 		System.out.println(A);
 	}
+	
+	public void display(Object[] list) {
+		for (Object object : list)
+			System.out.println(object.toString());
+	}
+	
 	public String vraag(){
 		return scan.nextLine();
 	}

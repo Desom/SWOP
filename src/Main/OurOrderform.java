@@ -5,12 +5,22 @@ import java.util.ArrayList;
 public class OurOrderform implements OrderForm{
 	ArrayList<Option> options;
 	CarModel model;
-	public OurOrderform(CarModel model, CarModelCatalog catalog,UI ui){
-
+	User user;
+	public OurOrderform(User user, CarModelCatalog catalog,UI ui) throws UserAccessException{
+		String Modelnaam = null;
+		while(Modelnaam == null || catalog.getCarModel(Modelnaam) == null){
+			String vraag = "Welke model moet uw wagen hebben?\nDit zijn de mogelijkheden:\n";
+			for(String j: catalog.getAllModelnames(user)){
+				vraag += j+"\n";
+			}
+			ui.display(vraag);
+			Modelnaam = ui.vraag();
+		}
+		model = catalog.getCarModel(Modelnaam);
 		for(String i: catalog.getAllOptionTypes()){
-			ArrayList<String> optionOfType = filterOptiontype(i,model.getOptions());
+			ArrayList<String> optionOfType = catalog.filterOptiontype(i,options,model);
 			String antwoord = null;
-			while(antwoord != null && optionOfType.contains(antwoord)){
+			while(antwoord == null || !optionOfType.contains(antwoord)){
 				String vraag = "Welke "+ i+" moet uw wagen hebben?\nDit zijn de mogelijkheden:\n";
 				for(String j: optionOfType){
 					vraag += j+"\n";
@@ -22,19 +32,7 @@ public class OurOrderform implements OrderForm{
 		}
 	}
 
-	private ArrayList<String> filterOptiontype(String type, ArrayList<Option> optionlist) {
-		ArrayList<String> result = new ArrayList<String>();
-		for(Option i: optionlist){
-			if(i.getType().equals(type)){
-				Boolean incompatible = false;
-				for(Option j: options){
-					incompatible=	incompatible || j.conflictsWith(i);
-				}
-				if(!incompatible) result.add(i.getdescription());
-			}
-		}
-		return result;
-	}
+	
 	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<Option> getOptions() {
@@ -45,5 +43,8 @@ public class OurOrderform implements OrderForm{
 	public CarModel getModel() {
 		return model;
 	}
-
+	@Override
+	public User getUser() {
+		return user;
+	}
 }

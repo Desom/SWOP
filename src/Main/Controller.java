@@ -1,6 +1,8 @@
 package Main;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
 
 public class Controller {
 	//TODO betere namen voor methodes...
@@ -79,8 +81,26 @@ public class Controller {
 		}
 	}
 
-	public void garageHolderCase(){
-
+	public void garageHolderCase(User user) throws UserAccessException{
+		OrderManager ordermanager=this.company.getOrderManager(user);
+		ui.display("Dit zijn uw orders die uw noch heeft staan:");
+		for(CarOrder order:ordermanager.getPendingOrders(user)){
+			ui.display(""+order.getCarOrderID());
+		}
+		ui.display("Dit zijn uw orders die al gedaan zijn:");
+		for(CarOrder order:ordermanager.getCompletedOrders(user)){
+			ui.display(""+order.getCarOrderID());
+		}
+		String antwoord = "";
+		while(!antwoord.equals("V") && !antwoord.equals("N")){
+			ui.display("Wilt u de overview (V)erlaten of een (N)ieuwe order plaatsen");
+			antwoord = ui.vraag();
+		}
+		if(antwoord.equals("N")){
+			CarModelCatalog catalog = company.getCatalog(user);
+			GregorianCalendar calender = ordermanager.placeOrder(new OurOrderform(user,catalog,ui));
+			ui.display("Uw  order zou klaar moeten zijn op "+calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE)+".");
+		}
 	}
 
 	public void mechanicCase(){

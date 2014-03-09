@@ -44,7 +44,7 @@ public class CarOrder {
 		this.deliveredTime = deliveredTime;
 	}
 
-	private int getCarOrderID() {
+	public int getCarOrderID() {
 		return carOrderID;
 	}
 

@@ -137,4 +137,24 @@ public class CarModelCatalog {
 	public LinkedList<String> getAllOptionTypes(){
 		return (LinkedList<String>) this.getAllOptionTypes().clone();
 	}
+	public ArrayList<String> getAllModelnames(User user) throws UserAccessException {
+		ArrayList<String> modelnamen = new ArrayList<String>();
+		for(CarModel i:this.getAllModels(user)){
+				modelnamen.add(i.getName());
+		}
+		return modelnamen;
+	}
+	public ArrayList<String> filterOptiontype(String type,ArrayList<Option> chosenoptions, CarModel model) {
+		ArrayList<String> result = new ArrayList<String>();
+		for(Option i: model.getOptions()){
+			if(i.getType().equals(type)){
+				Boolean incompatible = false;
+				for(Option j: chosenoptions){
+					incompatible=	incompatible || j.conflictsWith(i);
+				}
+				if(!incompatible) result.add(i.getdescription());
+			}
+		}
+		return result;
+	}
 }

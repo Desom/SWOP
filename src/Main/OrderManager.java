@@ -67,17 +67,20 @@ public class OrderManager {
 	 * 			The chosen CarModel of the ordered Car.
 	 * @param 	options
 	 * 			The chosen Options of the ordered Car.
+	 * @return	A gregorian calender which contains the estimate moment of completion.
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void placeOrder(User user, OrderForm order) throws UserAccessException{
+	public GregorianCalendar placeOrder(OrderForm order) throws UserAccessException{
+		User user = order.getUser();
 		if(user.canPerform("placeOrder"))
 		{
 			int carOrderId = this.getUniqueCarOrderId();
 			CarOrder newOrder = new CarOrder(carOrderId, user,order.getModel(),order.getOptions());
 			this.addCarOrder(newOrder);
 			this.getProductionSchedule().addOrder(newOrder);
-		}
+			return completionEstimate(user, newOrder);
+			}
 		else
 		{
 			throw new UserAccessException(user, "completionEstimate");

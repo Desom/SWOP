@@ -103,16 +103,18 @@ public class Controller {
 		}
 	}
 
-	// TODO de car mechanic use case heeft getAllWorkstations nodig, deze is momenteel enkel beschikbaar voor manager
 	public void carMechanicCase(User carMechanic){
-		ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkStations(carMechanic).toArray());
-		Workstation workstation;
-		ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic));
-		AssemblyTask task;
+		//TODO vraag
+		Workstation workstation = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkStations(carMechanic).toArray());
+		AssemblyTask task = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic));
 		workstation.selectTask(carMechanic, task);
 		while(true) {
-		ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
-		ui.askYesNoQuestion("Please indicate when you have completed the assembly task");
+			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
+			if (ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
+				workstation.completeTask(carMechanic);
+			if (!ui.askYesNoQuestion("Do you want to work on a task again?"))
+				break;
 		}
+		ui.display("You are now logged off.\nHave a nice day!");
 	}
 }

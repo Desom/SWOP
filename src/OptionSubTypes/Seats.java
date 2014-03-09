@@ -7,11 +7,13 @@ import Main.CarModelCatalogException;
 
 public class Seats extends Option {
 
+	private final static String type = "Seats";
+
 	public Seats(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
-			throws CarModelCatalogException {
-		super(description, compatibles, incompatibles, "Seats");
-		// TODO Auto-generated constructor stub
+					throws CarModelCatalogException {
+		super(description, compatibles, incompatibles);
 	}
-
+	
+	
 }

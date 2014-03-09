@@ -16,6 +16,7 @@ public class CarMechanic extends User {
 		this.approvedMethods.add("selectTask");
 		this.approvedMethods.add("getActiveTaskInformation");
 		this.approvedMethods.add("completeTask");
+		this.approvedMethods.add("getAllWorkstations");
 	}
 	
 	@Override

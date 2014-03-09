@@ -23,7 +23,7 @@ public class Car {
 	}
 	
 	protected CarAssemblyProcess getAssemblyprocess(){
-		return this.getAssemblyprocess();
+		return this.process;
 	}
 	
 

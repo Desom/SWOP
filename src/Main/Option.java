@@ -6,15 +6,13 @@ public abstract class Option {
 	 private String description; // 
 	 private ArrayList<Option> compatibles;
 	 private ArrayList<Option> incompatibles;
-	 private final String OptionType;
 
-	public Option(String description, ArrayList<Option> compatibles, ArrayList<Option> incompatibles,String type ) throws CarModelCatalogException{
-		 if(description == null || compatibles==null || incompatibles==null || type == null) throw new CarModelCatalogException("null in non null value of Option");
+	public Option(String description, ArrayList<Option> compatibles, ArrayList<Option> incompatibles) throws CarModelCatalogException{
+		 if(description == null || compatibles==null || incompatibles==null) throw new CarModelCatalogException("null in non null value of Option");
 		 if( hascommonElement(compatibles,incompatibles)) throw new CarModelCatalogException("Option is both Compatible and incompatiblle with another option at the same type" );
 		 this.compatibles =compatibles;
 		 this.incompatibles =incompatibles;
 		 this.description =description;
-		 this.OptionType = type;
 	 }
 	 
 	 private boolean hascommonElement(ArrayList<Option> compatibles,ArrayList<Option> incompatibles) {
@@ -44,9 +42,6 @@ public abstract class Option {
 	
 	public String toString(){
 		return description;
-	}
-	public String getType(){
-		return OptionType;
 	}
 	
 }

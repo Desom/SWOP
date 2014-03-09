@@ -11,7 +11,7 @@ public class CarAssemblyProcess {
 		return car;
 	}
 
-
+	
 	public CarAssemblyProcess(Car car, ArrayList<Option> options){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
 		for(Option o : options){

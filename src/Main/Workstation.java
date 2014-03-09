@@ -90,9 +90,13 @@ public class Workstation {
 	/**
 	 * Gives the car mechanic that is operating at this workstation.
 	 * 
-	 * @return The CarMechanic operating at this Workstation.
+	 * @return	The CarMechanic operating at this Workstation.
+	 * @throws	IllegalStateException
+	 * 			If there is no car mechanic at this workstation.
 	 */
-	public User getCarMechanic() {
+	public User getCarMechanic() throws IllegalStateException{
+		if (carMechanic == null)
+			throw new IllegalStateException("There is no car mechanic at this workstation");
 		return carMechanic;
 	}
 
@@ -168,13 +172,15 @@ public class Workstation {
 	 * 			The user that wants to call this method.
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
+	 * 			If the user is not operating at this workstation.
 	 * @throws	IllegalStateException
 	 * 			If there is no active task to complete in this workstation.
 	 * 			If there is no car mechanic to complete the active task.
 	 */
-	//TODO controle als car mechanic actief is in deze workstation
 	public void completeTask(User user) throws UserAccessException, IllegalStateException {
 		this.checkUser(user, "completeTask");
+		if (this.getCarMechanic().getId() != user.getId())
+			throw new UserAccessException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {
 			if (carMechanic != null) {
 				this.activeTask.completeTask();

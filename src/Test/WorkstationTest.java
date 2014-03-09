@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.ArrayList;
 
-import org.junit.BeforeClass;
+import org.junit.Before;
 import org.junit.Test;
 
 import Main.AssemblyTask;
@@ -16,15 +16,15 @@ import Main.Workstation;
 
 public class WorkstationTest {
 
-	private static CarMechanic carMechanic;
-	private static GarageHolder garageHolder;
-	private static Manager manager;
-	private static Workstation workstation;
-	private static AssemblyTask validTask;
-	private static AssemblyTask invalidTask;
+	private CarMechanic carMechanic;
+	private GarageHolder garageHolder;
+	private Manager manager;
+	private Workstation workstation;
+	private AssemblyTask validTask;
+	private AssemblyTask invalidTask;
 	
-	@BeforeClass
-	public static void testCreate() throws UserAccessException {
+	@Before
+	public void testCreate() throws UserAccessException {
 		carMechanic = new CarMechanic(1);
 		garageHolder = new GarageHolder(2);
 		manager = new Manager(3);
@@ -53,8 +53,18 @@ public class WorkstationTest {
 	
 	@Test
 	public void testCompleteTask() throws IllegalStateException, UserAccessException {
+		workstation.addAssemblyTask(manager, validTask);
+		workstation.addCarMechanic(carMechanic);
+		workstation.selectTask(carMechanic, validTask);
+		CarMechanic otherCarMechanic = new CarMechanic(4);
 		try {
 			workstation.completeTask(garageHolder);
+			assertTrue("UserAccessException was not thrown", false);
+		}
+		catch (UserAccessException e) {
+		}
+		try {
+			workstation.completeTask(otherCarMechanic);
 			assertTrue("UserAccessException was not thrown", false);
 		}
 		catch (UserAccessException e) {
@@ -62,10 +72,13 @@ public class WorkstationTest {
 		workstation.completeTask(carMechanic);
 		assertTrue(workstation.getAllCompletedTasks(carMechanic).contains(validTask));
 		assertTrue(workstation.getAllPendingTasks(carMechanic).isEmpty());
+		assertTrue(workstation.hasAllTasksCompleted(manager));
 	}
 	
 	@Test
 	public void testSelectTask() throws IllegalStateException, UserAccessException, IllegalArgumentException {
+		workstation.addAssemblyTask(manager, validTask);
+		workstation.addCarMechanic(carMechanic);
 		try {
 			workstation.selectTask(carMechanic, invalidTask);
 			assertTrue("IllegalArgumentException was not thrown", false);
@@ -80,6 +93,10 @@ public class WorkstationTest {
 		}
 		catch (IllegalStateException e) {
 		}
+		ArrayList<String> taskInformation = workstation.getActiveTaskInformation(carMechanic);
+		assertEquals(validTask.getType(), taskInformation.get(0));
+		assertEquals(validTask.getActions().get(0), taskInformation.get(1));
+		assertEquals(validTask.getActions().get(1), taskInformation.get(2));
 	}
 	
 	

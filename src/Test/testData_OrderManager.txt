@@ -1,6 +1,0 @@
-Begin_CarOrderInfo(carOrderId,,,,orderedById,,,,delivered?,,,,orderTime,,,,deliveryTime(unDelivered=(00-00-0000==00-00-00),,,,modelName,,,,{optionType=optionId}-...)-
-1,,,,1,,,,1,,,,26-02-2014==12-30-05,,,,28-02-2014==14-02-50,,,,Ford,,,,blue;-;manual;-;sedan;-;6 speed manual
-2,,,,2,,,,0,,,,27-02-2014==14-05-29,,,,00-00-0000==00-00-00,,,,Ford,,,,black;-;performance 2.5l 6 cilinders;-;sedan
-3,,,,2,,,,0,,,,27-02-2014==18-56-15,,,,00-00-0000==00-00-00,,,,Ford,,,,blue;-;leather black
-4,,,,2,,,,0,,,,28-02-2014==09-06-08,,,,00-00-0000==00-00-00,,,,Ford,,,,black
-End_CarOrderInfo

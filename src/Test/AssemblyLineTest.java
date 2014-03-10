@@ -40,7 +40,7 @@ public class AssemblyLineTest {
 		m3 = new CarMechanic(4);
 		
 		// maak een andere orderManager met enkele voorbeeld orders
-		OrderManager orderManager = new OrderManager(new CarModelCatalog()); 
+		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog());
 		schedule = orderManager.getProductionSchedule();
 		line = new AssemblyLine(schedule);
 		
@@ -53,8 +53,14 @@ public class AssemblyLineTest {
 		line.selectWorkStation(m3, 3);
 		assertEquals(line.selectWorkStationId(3, manager).getCarMechanic(), m3);
 		
-		//line.advanceLine(manager, 100);
-		//line.advanceLine(manager, 100);
+		line.advanceLine(manager, 100);
+		for(Workstation w : line.getAllWorkStations(manager)){
+			while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
+				w.selectTask(w.getCarMechanic(), w.getAllPendingTasks(w.getCarMechanic()).get(0));
+				w.completeTask(w.getCarMechanic());
+			}
+		}
+		line.advanceLine(manager, 100);
 	}
 	
 	@Test

@@ -14,7 +14,7 @@ import OptionSubTypes.*;
 public class CarModelCatalog {
 	private HashMap<String,Option> All_Options;
 	private HashMap<String,CarModel> All_CarModels;
-	public LinkedList<String> All_Optiontypes;
+	private LinkedList<String> All_Optiontypes;
 	public CarModelCatalog(String Optionfile, String Modelfile) throws IOException, CarModelCatalogException{
 		All_Options = new HashMap<String,Option>();
 		All_CarModels= new HashMap<String,CarModel>();
@@ -135,7 +135,7 @@ public class CarModelCatalog {
 	}
 	@SuppressWarnings("unchecked")
 	public LinkedList<String> getAllOptionTypes(){
-		return (LinkedList<String>) this.getAllOptionTypes().clone();
+		return (LinkedList<String>) All_Optiontypes.clone();
 	}
 	public ArrayList<String> getAllModelnames(User user) throws UserAccessException {
 		ArrayList<String> modelnamen = new ArrayList<String>();

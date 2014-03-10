@@ -19,16 +19,16 @@ public class Controller {
 		ui.display("Geef aan of uw mechanic, garageholder of manager bent");
 		String antwoord =ui.vraag();
 		if(antwoord.equals("mechanic")) this.carMechanicCase(new CarMechanic(12345));
-		if(antwoord.equals("Manager"))
+		if(antwoord.equals("manager"))
 			try {
 				this.managerCase(new Manager(12345));
 			} catch (UserAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-		if(antwoord.equals("Garageholder"))
+		if(antwoord.equals("garageholder"))
 			try {
-				this.garageHolderCase(new Manager(12345));
+				this.garageHolderCase(new GarageHolder(2));
 			} catch (UserAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

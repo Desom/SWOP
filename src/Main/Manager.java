@@ -9,6 +9,8 @@ public class Manager extends User {
 
 	private void initializeApprovedMethods() {
 		this.approvedMethods.add("advanceLine");
+		this.approvedMethods.add("getAllWorkstations");
+		this.approvedMethods.add("selectWorkstationID");
 		this.approvedMethods.add("hasAllTasksCompleted");
 		this.approvedMethods.add("getAssemblyStatus");
 		this.approvedMethods.add("getFutureStatus");

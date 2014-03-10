@@ -24,7 +24,7 @@ public class AssemblyLine {
 	 */
 	@SuppressWarnings("unchecked")
 	public LinkedList<Workstation> getAllWorkStations(User user) throws UserAccessException{
-		if(user.canPerform("getAllWorkStations")){
+		if(user.canPerform("getAllWorkstations")){
 			return (LinkedList<Workstation>) workStations.clone();
 		}else{
 			throw new UserAccessException(user, "getAllWorkStations");
@@ -39,7 +39,7 @@ public class AssemblyLine {
 	 * @throws DoesNotExistException
 	 * @throws CannotAdvanceException if there are workstations that are blocking the assembly line.
 	 */
-	public void advanceLine(User user, int time) throws UserAccessException, DoesNotExistException, CannotAdvanceException{
+	public void advanceLine(User user, int time) throws UserAccessException, CannotAdvanceException{
 		if(user.canPerform("advanceLine")){
 			// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 			boolean isReady = true;
@@ -51,24 +51,31 @@ public class AssemblyLine {
 				}
 			}
 			if(isReady){
-				// move huidige cars 1 plek
-				for(int i = getAllWorkStations(user).size(); i>1; i--){
-					Workstation workstationNext = selectWorkStationId(i, user);
-					workstationNext.clearCar();
-					Workstation workstationPrev = selectWorkStationId(i-1, user);
-					workstationNext.setCurrentCar(workstationPrev.getCurrentCar());
-					for(AssemblyTask t : workstationNext.getCurrentCar().compatibleWith(workstationNext)){
-						workstationNext.addAssemblyTask(user, t);
+				try{
+					// move huidige cars 1 plek
+					for(int i = getAllWorkStations(user).size(); i>1; i--){
+						Workstation workstationNext = selectWorkStationId(i, user);
+						workstationNext.clearCar();
+						Workstation workstationPrev = selectWorkStationId(i-1, user);
+						workstationNext.setCurrentCar(workstationPrev.getCurrentCar());
+						if(workstationNext.getCurrentCar() != null){
+							for(AssemblyTask t : workstationNext.getCurrentCar().compatibleWith(workstationNext)){
+								workstationNext.addAssemblyTask(user, t);
+							}
+						}
 					}
-				}
-				
-				//voeg nieuwe car toe.
-				CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
-				Workstation workstation1 = selectWorkStationId(1, user);
-				workstation1.clearCar();
-				workstation1.setCurrentCar(newCar);
-				for(AssemblyTask t : newCar.compatibleWith(workstation1)){
-					workstation1.addAssemblyTask(user, t);
+					
+					//voeg nieuwe car toe.
+					CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
+					Workstation workstation1 = selectWorkStationId(1, user);
+					workstation1.clearCar();
+					workstation1.setCurrentCar(newCar);
+					for(AssemblyTask t : newCar.compatibleWith(workstation1)){
+						workstation1.addAssemblyTask(user, t);
+					}
+				}catch(DoesNotExistException e){
+					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
 			}else{
 				throw cannotAdvance;
@@ -88,7 +95,7 @@ public class AssemblyLine {
 	 * @throws Exception If the Carmechanic could not be appointed to the workstation.
 	 */
 	public void selectWorkStation(User user, int workStation_id) throws UserAccessException, DoesNotExistException {
-		if(user.canPerform("selectWorkStation")){
+		if(user.canPerform("selectWorkstation")){
 			Workstation selected = selectWorkStationId(workStation_id, user);
 			selected.addCarMechanic(user);
 		}else{
@@ -105,7 +112,7 @@ public class AssemblyLine {
 	 * @throws UserAccessException 
 	 */
 	public Workstation selectWorkStationId(int id, User user) throws DoesNotExistException, UserAccessException{
-		if(user.canPerform("selectWorkStation")){
+		if(user.canPerform("selectWorkstationID")){
 			Workstation selected = null;
 			for(Workstation w : getAllWorkStations(user)){
 				if(w.getId() == id)
@@ -115,7 +122,7 @@ public class AssemblyLine {
 				throw new DoesNotExistException("No workstation exists with ID: " + id);
 			return selected;
 		}else{
-			throw new UserAccessException(user, "selectWorkStation");
+			throw new UserAccessException(user, "selectWorkStationID");
 		}
 	}
 

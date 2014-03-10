@@ -53,8 +53,8 @@ public class AssemblyLineTest {
 		line.selectWorkStation(m3, 3);
 		assertEquals(line.selectWorkStationId(3, manager).getCarMechanic(), m3);
 		
-		line.advanceLine(manager, 100);
-		line.advanceLine(manager, 100);
+		//line.advanceLine(manager, 100);
+		//line.advanceLine(manager, 100);
 	}
 	
 	@Test

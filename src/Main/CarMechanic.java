@@ -11,6 +11,7 @@ public class CarMechanic extends User {
 	
 	private void initializeApprovedMethods() {
 		this.approvedMethods.add("selectWorkstation");
+		this.approvedMethods.add("selectWorkstationID");
 		this.approvedMethods.add("getAllPendingTasks");
 		this.approvedMethods.add("getAllCompletedTasks");
 		this.approvedMethods.add("selectTask");

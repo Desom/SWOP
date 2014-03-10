@@ -163,7 +163,7 @@ public class AssemblyLine {
 	public AssemblyStatusView currentStatus(User user) throws UserAccessException{
 		if(user.canPerform("currentStatus")){
 			ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkStations(user));
-			AssemblyStatusView view = new AssemblyStatusView(list, "Current Status");
+			AssemblyStatusView view = new AssemblyStatusView(user, list, "Current Status");
 			return view;
 		}else{
 			throw new UserAccessException(user, "currentStatus");
@@ -179,7 +179,7 @@ public class AssemblyLine {
 	 * @throws UserAccessException if the user is not allowed to invoke this method
 	 * @throws DoesNotExistException If a workstation with a non existing ID is requested
 	 */
-	public AssemblyStatusView futureStatus(User user) throws UserAccessException, DoesNotExistException{
+	public AssemblyStatusView futureStatus(User user) throws UserAccessException{
 		if(user.canPerform("futureStatus")){
 			// check if the line can advance
 			boolean isReady = true;
@@ -190,24 +190,29 @@ public class AssemblyLine {
 			}
 			if(isReady){ // if the line can advance make new workstations representing the future
 				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkStations());
-				for(Workstation fake: list){ // set the corresponding car mechanics.
-					Workstation real = selectWorkStationId(fake.getId(), user);
-					fake.addCarMechanic(real.getCarMechanic());
-					if(fake.getId() != 1){
-						Workstation realPrev = selectWorkStationId(fake.getId()-1, user);
-						fake.setCurrentCar(realPrev.getCurrentCar());
-						for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
-							fake.addAssemblyTask(user, t);
-						}
-					}else{
-						CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder().getCar().getAssemblyprocess();
-						fake.setCurrentCar(futureCar);
-						for(AssemblyTask t : futureCar.compatibleWith(fake)){
-							fake.addAssemblyTask(user, t);
+				try{
+					for(Workstation fake: list){ // set the corresponding car mechanics.
+						Workstation real = selectWorkStationId(fake.getId(), user);
+						fake.addCarMechanic(real.getCarMechanic());
+						if(fake.getId() != 1){
+							Workstation realPrev = selectWorkStationId(fake.getId()-1, user);
+							fake.setCurrentCar(realPrev.getCurrentCar());
+							for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
+								fake.addAssemblyTask(user, t);
+							}
+						}else{
+							CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder().getCar().getAssemblyprocess();
+							fake.setCurrentCar(futureCar);
+							for(AssemblyTask t : futureCar.compatibleWith(fake)){
+								fake.addAssemblyTask(user, t);
+							}
 						}
 					}
+				}catch(DoesNotExistException e){
+					System.out.println(e.getMessage());
+					e.printStackTrace();
 				}
-				AssemblyStatusView view = new AssemblyStatusView(list, "Future Status");
+				AssemblyStatusView view = new AssemblyStatusView(user, list, "Future Status");
 				return view;
 			}else{ // if the line cannot advance, return the current status, because that is equal to the future status
 				return currentStatus(user);

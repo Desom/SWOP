@@ -6,12 +6,14 @@ import java.util.LinkedList;
 public class AssemblyStatusView {
 
 	private String header;
+	private final User user;
 	//private returnType status;
 	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
-	public AssemblyStatusView(ArrayList<Workstation> stations, String header){
+	public AssemblyStatusView(User user, ArrayList<Workstation> stations, String header){
 		this.header = header;
 		//this.status = status;
 		this.workstations = stations;
+		this.user = user;
 	}
 
 	/**
@@ -36,7 +38,7 @@ public class AssemblyStatusView {
 	public LinkedList<String> getAllTasksAt(int workstationId) throws UserAccessException, DoesNotExistException{
 		LinkedList<String> tasks = new LinkedList<String>();
 		Workstation w = getWorkstation(workstationId);
-		for(AssemblyTask t : w.getAllTasks()){
+		for(AssemblyTask t : w.getAllTasks(user)){
 			//tasks.add("Type: " + t.getType() + "  -  Completed: " + t.isCompleted());
 			tasks.add(t.getType());
 		}
@@ -45,7 +47,7 @@ public class AssemblyStatusView {
 
 	public boolean taskIsDoneAt(String task,int workstationId) throws UserAccessException, DoesNotExistException{
 		Workstation w = getWorkstation(workstationId);
-		for(AssemblyTask t : w.getAllTasks()){
+		for(AssemblyTask t : w.getAllTasks(user)){
 			if(t.getType().compareToIgnoreCase(task) == 0){
 				return t.isCompleted();
 			}

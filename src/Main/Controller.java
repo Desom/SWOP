@@ -1,5 +1,6 @@
 package Main;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -9,7 +10,29 @@ public class Controller {
 	private Company company;
 
 	public void run(){
-
+		ui = new UI();
+		try {
+			company = new Company();
+		} catch (IOException | CarModelCatalogException e) {
+			e.printStackTrace();
+		}
+		ui.display("Geef aan of uw mechanic, garageholder of manager bent");
+		String antwoord =ui.vraag();
+		if(antwoord.equals("mechanic")) this.carMechanicCase(new CarMechanic(12345));
+		if(antwoord.equals("Manager"))
+			try {
+				this.managerCase(new Manager(12345));
+			} catch (UserAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		if(antwoord.equals("Garageholder"))
+			try {
+				this.garageHolderCase(new Manager(12345));
+			} catch (UserAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	}
 
 	public void managerCase(User user) throws UserAccessException{

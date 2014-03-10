@@ -131,12 +131,14 @@ public class Controller {
 		}
 	}
 
-	public void carMechanicCase(User carMechanic){
-		//TODO vraag
-		Workstation workstation = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkStations(carMechanic).toArray());
-		AssemblyTask task = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic));
-		workstation.selectTask(carMechanic, task);
+	public void carMechanicCase(User carMechanic) throws UserAccessException{
+		//TODO optimaliseren
+		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkStations(carMechanic).toArray());
+		Workstation workstation = company.getAllWorkStations(carMechanic).get(workstationInt);
 		while(true) {
+			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic).toArray());
+			AssemblyTask task = workstation.getAllPendingTasks(carMechanic).get(taskInt);
+			workstation.selectTask(carMechanic, task);
 			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
 			if (ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
 				workstation.completeTask(carMechanic);

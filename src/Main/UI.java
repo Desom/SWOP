@@ -51,6 +51,25 @@ public class UI {
 		}
 		return input;
 	}
+	
+//	public String askWithPossibilities(String question, Object[] possibilities){
+//		System.out.println(question);
+//		String possOutput = "( ";
+//		for(Object poss: possibilities){
+//			possOutput += poss;
+//			possOutput += " , ";
+//		}
+//		possOutput = possOutput.substring(0,possOutput.length()-3);
+//		possOutput += " )";
+//		System.out.println(possOutput);
+//		String input = scan.nextLine();
+//		while(possibilities.length <= input || input < 0){
+//			System.out.println("Not a possibility. Pick one from the list:");
+//			System.out.println(possOutput);
+//			input = scan.nextLine();
+//		}
+//		return input;
+//	}
 
 	public boolean askYesNoQuestion(String question){
 		ArrayList<String> yesNo = new ArrayList<String>();

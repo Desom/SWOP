@@ -81,20 +81,6 @@ public class Company {
 		}
 	}
 	
-	/**
-	 * This method calls the advanceline method in AssemblyLine
-	 * 
-	 * @param time The time since the last advanceLine was executed
-	 * @throws UserAccessException 
-	 */
-	public void advanceLine(User user, int time) throws UserAccessException{
-		if(user.canPerform("advanceLine")){
-			assemblyLine.advanceLine(user, time);
-		}else{
-			throw new UserAccessException(user, "advanceLine");
-		}
-	}
-	
 	
 	public AssemblyLine getAssemblyLine(User user) throws UserAccessException{
 		if(user.canPerform("getAssemblyLine")){

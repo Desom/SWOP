@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
@@ -14,6 +15,7 @@ import Main.*;
 
 public class OrderManagerTest {
 	
+	@Rule
 	public ExpectedException exception = ExpectedException.none();
 	
 	public OrderManager orderManager;
@@ -28,8 +30,8 @@ public class OrderManagerTest {
 	public static void setUpBeforeClass() throws Exception{
 		catalog = new CarModelCatalog();
 		user1 = new GarageHolder(1);
-		user1 = new GarageHolder(2);
-		user1 = new GarageHolder(3);
+		user2 = new GarageHolder(2);
+		user3 = new GarageHolder(3);
 		manager = new Manager(4);
 		mechanic = new CarMechanic(5);
 	}
@@ -54,21 +56,20 @@ public class OrderManagerTest {
 		assertEquals(3,orders2.size());
 		assertEquals(0,orders3.size());
 		
-		assertEquals(1,orders1.get(0));
-		assertEquals(2,orders2.get(0));
-		assertEquals(3,orders2.get(1));
-		assertEquals(4,orders2.get(2));
+		assertEquals(1,orders1.get(0).getCarOrderID());
+		assertEquals(2,orders2.get(0).getCarOrderID());
+		assertEquals(3,orders2.get(1).getCarOrderID());
+		assertEquals(4,orders2.get(2).getCarOrderID());
 	}
 
 	@Test
 	public void testGetOrdersUserAccess() throws UserAccessException {
 
 		ArrayList<CarOrder> orders1 = orderManager.getOrders(user1);
-		
-		exception.expect(UserAccessException.class);
-		orderManager.getOrders(manager);
 
 		exception.expect(UserAccessException.class);
+		orderManager.getOrders(manager);
+		//TODO goed genoeg zo?
 		orderManager.getOrders(mechanic);
 	}
 
@@ -83,11 +84,6 @@ public class OrderManagerTest {
 		ArrayList<CarOrder> orders1 = orderManager.getOrders(user1);
 		ArrayList<CarOrder> orders2 = orderManager.getOrders(user2);
 
-	}
-
-	@Test
-	public void test() {
-		fail("Not yet implemented");
 	}
 
 }

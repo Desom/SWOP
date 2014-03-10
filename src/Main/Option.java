@@ -46,9 +46,6 @@ public abstract class Option {
 
 	public abstract String getType();
 	
-	public String getType() {
-		throw new IllegalStateException("This option is not defined");
-	}
 	
 }
 

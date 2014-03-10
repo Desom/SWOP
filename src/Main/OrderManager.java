@@ -45,20 +45,19 @@ public class OrderManager {
 	 * @param 	user
 	 * 			The User that wants to call this method.
 	 * 			The User whose CarOrders are requested.
-	 * @return	A copy of the list of all CarOrders made by the given user.
+	 * @return	A copy of the list of all CarOrders made by the given user. Empty if there are none.
 	 * @throws	UserAccessException 
 	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<CarOrder> getOrders(User user) throws UserAccessException{
-		if(user.canPerform("getOrders"))
-		{
-			return (ArrayList<CarOrder>) this.getCarOrdersPerId().get(user.getId()).clone();
-		}
+		this.checkUser(user, "getOrders");
+
+		ArrayList<CarOrder> ordersOfUser = this.getCarOrdersPerId().get(user.getId());
+		if(ordersOfUser == null)
+			return new ArrayList<CarOrder>();
 		else
-		{
-			throw new UserAccessException(user, "completionEstimate");
-		}
+			return (ArrayList<CarOrder>) ordersOfUser.clone();
 	}
 	
 	/**
@@ -77,18 +76,14 @@ public class OrderManager {
 	 */
 	public GregorianCalendar placeOrder(OrderForm order) throws UserAccessException{
 		User user = order.getUser();
-		if(user.canPerform("placeOrder"))
-		{
-			int carOrderId = this.getUniqueCarOrderId();
-			CarOrder newOrder = new CarOrder(carOrderId, user,order.getModel(),order.getOptions());
-			this.addCarOrder(newOrder);
-			this.getProductionSchedule().addOrder(newOrder);
-			return completionEstimate(user, newOrder);
-			}
-		else
-		{
-			throw new UserAccessException(user, "completionEstimate");
-		}
+		this.checkUser(user, "placeOrder");
+
+		int carOrderId = this.getUniqueCarOrderId();
+		CarOrder newOrder = new CarOrder(carOrderId, user,order.getModel(),order.getOptions());
+		this.addCarOrder(newOrder);
+		this.getProductionSchedule().addOrder(newOrder);
+		return completionEstimate(user, newOrder);
+
 	}
 
 
@@ -100,19 +95,18 @@ public class OrderManager {
 	 * @param 	order
 	 * 			The CarOrder whose estimated completion date is requested.
 	 * @return	A GregorianCalendar representing the estimated completion date of order.
+	 * 			Or the actual delivery date if it was already completed.
 	 * @throws 	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
 	//TODO controleer ofdat de order al klaar is?
 	public GregorianCalendar completionEstimate(User user, CarOrder order) throws UserAccessException{
-		if(user.canPerform("completionEstimate"))
-		{
+		this.checkUser(user, "completionEstimate");
+		
+		if(order.getDeliveredTime() == null)
 			return this.getProductionSchedule().completionEstimateCarOrder(order);
-		}
 		else
-		{
-			throw new UserAccessException(user, "completionEstimate");
-		}
+			return order.getDeliveredTime();
 	}
 
 	/**
@@ -243,12 +237,12 @@ public class OrderManager {
 	}
 
 	public ArrayList<String> getPendingOrders(User user) throws UserAccessException {
-		
+		this.checkUser(user, "getPendingOrders");
 		return GetOrdersWithStatus(user,false);
 	}
 
 	public ArrayList<String> getCompletedOrders(User user) throws UserAccessException {
-		// TODO Auto-generated method stub
+		this.checkUser(user, "getCompletedOrders");
 		return GetOrdersWithStatus(user,true);
 	}
 
@@ -259,5 +253,19 @@ public class OrderManager {
 		}
 		return result;
 	}
-
+	
+	/**
+	 * Checks if the give user can perform the given method (defined by a string). 
+	 * 
+	 * @param	user
+	 * 			The user that wants to call the given method.
+	 * @param	methodString
+	 * 			The string that defines the method.
+	 * @throws	UserAccessException
+	 *			If the user is not authorized to call the given method.
+	 */
+	private void checkUser(User user, String methodString) throws UserAccessException {
+		if (!user.canPerform(methodString))
+			throw new UserAccessException(user, methodString);
+	}
 }

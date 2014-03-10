@@ -5,23 +5,23 @@ import java.util.List;
 import java.util.Scanner;
 
 public class UI {
-		Scanner scan;
+	Scanner scan;
 	public UI(){
 		scan = new Scanner(System.in);
 	}
 	public void display(String A){
 		System.out.println(A);
 	}
-	
+
 	public void display(Object[] list) {
 		for (Object object : list)
 			System.out.println(object.toString());
 	}
-	
+
 	public String vraag(){
 		return scan.nextLine();
 	}
-	
+
 	public int askForInteger(String question, int lowerBound){
 		System.out.println(question);
 		System.out.println("At least: " + lowerBound + ".");
@@ -32,7 +32,7 @@ public class UI {
 		}
 		return input;
 	}
-	
+
 	public String askWithPossibilities(String question, List<String> possibilities){
 		System.out.println(question);
 		String possOutput = "( ";
@@ -51,7 +51,7 @@ public class UI {
 		}
 		return input;
 	}
-	
+
 	public boolean askYesNoQuestion(String question){
 		ArrayList<String> yesNo = new ArrayList<String>();
 		yesNo.add("Yes");
@@ -62,23 +62,28 @@ public class UI {
 		else
 			return false;
 	}
-	
-	public void showAssemblyLineStatus(AssemblyStatusView statusView) {
-		System.out.println(statusView.getHeader());
-		System.out.println("---");
-		for(int wsID : statusView.getAllWorkstationIds()){
-			System.out.println("Workstation " + wsID);
-			System.out.println("working at CarOrder " + statusView.getCarOrderIdAt(wsID));
-			for(String task : statusView.getAllTasksAt(wsID)){
-				String taskStatus;
-				if(statusView.taskIsDoneAt(task, wsID)){
-					taskStatus = "finished";
+
+	public void showAssemblyLineStatus(AssemblyStatusView statusView) throws UserAccessException {
+		try{
+			System.out.println(statusView.getHeader());
+			System.out.println("---");
+			for(int wsID : statusView.getAllWorkstationIds()){
+				System.out.println("Workstation " + wsID);
+				System.out.println("working at CarOrder " + statusView.getCarOrderIdAt(wsID));
+				for(String task : statusView.getAllTasksAt(wsID)){
+					String taskStatus;
+					if(statusView.taskIsDoneAt(task, wsID)){
+						taskStatus = "finished";
+					}
+					else{
+						taskStatus = "pending";
+					}
+					System.out.println("Task: " + task + " = " + taskStatus);
 				}
-				else{
-					taskStatus = "pending";
-				}
-				System.out.println("Task: " + task + " = " + taskStatus);
 			}
+		}
+		catch (DoesNotExistException exc) {
+			System.out.println("There is an internal problem : " + exc.getMessage());
 		}
 	}
 }

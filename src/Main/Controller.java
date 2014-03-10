@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 public class Controller {
-	//TODO betere namen voor methodes...
 	private UI ui;
 	private Company company;
 
@@ -25,25 +24,23 @@ public class Controller {
 
 			String action = ui.askWithPossibilities(actionRequest, actionPoss);
 			if("advanceLine".equals(action))
-				this.advandeLine(user, assembly);
+				this.actionAdvanceLine(user, assembly);
 			if("quit".equals(action))
 				return;
 		}
 	}
 
-	private void advandeLine(User user, AssemblyLine assembly) throws UserAccessException{
+	private void actionAdvanceLine(User user, AssemblyLine assembly) throws UserAccessException{
 		while(true){
 			//2. The system presents an overview of the current assembly line status,
 			//as well as a view of the future assembly line status (as it would be after
 			//completing this use case), including pending and finished tasks at each
 			//work post.
-			returnType currentStatus = assembly.getCurrentAssemblyLineStatus(user); // Of iets dergelijks
-			AssemblyStatusView currentStatusView = new AssemblyStatusView("Current assembly line status", currentStatus);
-			ui.showAssemblyLineStatus(currentStatusView);
+			AssemblyStatusView currentStatus = assembly.currentStatus(user);
+			ui.showAssemblyLineStatus(currentStatus);
 
-			returnType futureStatus = assembly.getFutureAssemblyLineStatus(user); // Of iets dergelijks
-			AssemblyStatusView futureStatusView = new AssemblyStatusView("Future assembly line status", currentStatus);
-			ui.showAssemblyLineStatus(futureStatusView);
+			AssemblyStatusView futureStatus = assembly.futureStatus(user);
+			ui.showAssemblyLineStatus(futureStatus);
 
 			//3. The user confirms the decision to move the assembly line forward,
 			//and enters the time that was spent during the current phase (e.g. 45
@@ -60,9 +57,8 @@ public class Controller {
 				assembly.advanceLine(user, timeSpent);	
 
 				//5. The system presents an overview of the new assembly line status.
-				returnType newCurrentStatus = assembly.getCurrentAssemblyLineStatus(); // Of iets dergelijks
-				AssemblyStatusView newCurrentStatusView = new AssemblyStatusView("Current assembly line status", newCurrentStatus);
-				ui.showAssemblyLineStatus(newCurrentStatusView);
+				AssemblyStatusView newCurrentStatus = assembly.currentStatus(user);
+				ui.showAssemblyLineStatus(newCurrentStatus);
 			}
 			catch(CannotAdvanceException cae){
 				//4. (a) The assembly line can not be moved forward due to a work post

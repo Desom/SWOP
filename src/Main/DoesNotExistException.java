@@ -9,8 +9,9 @@ public class DoesNotExistException extends Exception{
 	public DoesNotExistException(String string) {
 		Message=string;
 	}
-
-	public String GetMessage (){
+	
+	@Override
+	public String getMessage (){
 		return Message;
 
 	}

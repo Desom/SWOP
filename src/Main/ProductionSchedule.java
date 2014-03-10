@@ -47,11 +47,40 @@ public class ProductionSchedule {
 	 * @param 	order
 	 * 			The CarOrder whose estimated completion date is requested.
 	 * @return	A GregorianCalendar representing the estimated completion date of order.
+	 * 			Null if it isn't in this schedule.
 	 */
 	public GregorianCalendar completionEstimateCarOrder(CarOrder order){
+		//TODO zeker goed testen...
 		int positionInLine = this.getScheduleQueue().indexOf(order);
+		if(positionInLine == -1)
+			return null;
+		
+		//de tijd naar boven afronden.
 		GregorianCalendar completionTime = new GregorianCalendar();
-		completionTime.add(GregorianCalendar.HOUR_OF_DAY, (positionInLine*WORKSTATION_DURATION) + ASSEMBLY_DURATION);
+		completionTime.add(GregorianCalendar.HOUR_OF_DAY, 1);
+		completionTime.set(GregorianCalendar.MINUTE, 0);
+		completionTime.set(GregorianCalendar.SECOND, 0);
+		completionTime.set(GregorianCalendar.MILLISECOND, 0);
+
+		int waitingHours = positionInLine*WORKSTATION_DURATION;
+		int nowHour = completionTime.get(GregorianCalendar.HOUR_OF_DAY);
+		
+		if(nowHour > BEGIN_WORKDAY){
+			if(nowHour < END_WORKDAY-2){
+				int diffHours = (END_WORKDAY - 2) - nowHour;
+				waitingHours -= diffHours;
+			}
+			completionTime.add(GregorianCalendar.DATE, 1);
+		}
+		completionTime.set(GregorianCalendar.HOUR_OF_DAY, BEGIN_WORKDAY);
+		
+		int dayWaitingTime = (END_WORKDAY - 2 - BEGIN_WORKDAY);
+		while(waitingHours > dayWaitingTime){
+			waitingHours -= dayWaitingTime;
+			completionTime.add(GregorianCalendar.DATE, 1);
+		}
+		completionTime.add(GregorianCalendar.HOUR_OF_DAY, waitingHours + ASSEMBLY_DURATION);
+		
 		return completionTime;
 	}
 	

@@ -13,6 +13,7 @@ public abstract class Option {
 		 this.compatibles =compatibles;
 		 this.incompatibles =incompatibles;
 		 this.description =description;
+		 incompatibles.add(this);
 	 }
 	 
 	 private boolean hascommonElement(ArrayList<Option> compatibles,ArrayList<Option> incompatibles) {

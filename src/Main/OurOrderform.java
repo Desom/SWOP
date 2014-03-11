@@ -7,6 +7,7 @@ public class OurOrderform implements OrderForm{
 	CarModel model;
 	User user;
 	public OurOrderform(User user, CarModelCatalog catalog,UI ui) throws UserAccessException{
+		this.user =user;
 		String Modelnaam = null;
 		while(Modelnaam == null || catalog.getCarModel(Modelnaam) == null){
 			String vraag = "Welke model moet uw wagen hebben?\nDit zijn de mogelijkheden:\n";
@@ -17,6 +18,7 @@ public class OurOrderform implements OrderForm{
 			Modelnaam = ui.vraag();
 		}
 		model = catalog.getCarModel(Modelnaam);
+		options = new ArrayList<Option>();
 		for(String i: catalog.getAllOptionTypes()){
 			ArrayList<String> optionOfType = catalog.filterOptiontype(i,options,model);
 			String antwoord = null;

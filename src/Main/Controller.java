@@ -18,7 +18,13 @@ public class Controller {
 		}
 		ui.display("Geef aan of uw mechanic, garageholder of manager bent");
 		String antwoord =ui.vraag();
-		if(antwoord.equals("mechanic")) this.carMechanicCase(new CarMechanic(12345));
+		if(antwoord.equals("mechanic"))
+			try {
+				this.carMechanicCase(new CarMechanic(12345));
+			} catch (UserAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		if(antwoord.equals("manager"))
 			try {
 				this.managerCase(new Manager(12345));
@@ -112,18 +118,22 @@ public class Controller {
 		}
 		String antwoord = "";
 		while(!antwoord.equals("V") && !antwoord.equals("N")){
-			ui.display("Wilt u de overview (V)erlaten of een (N)ieuwe order plaatsen");
-			antwoord = ui.vraag();
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("V");
+			list.add("N");
+			antwoord = ui.askWithPossibilities("Wilt u de overview (V)erlaten of een (N)ieuwe order plaatsen",list);
 		}
 		if(antwoord.equals("N")){
 			CarModelCatalog catalog = company.getCatalog(user);
 			OurOrderform order = new OurOrderform(user,catalog,ui);
 			String antwoord2 ="";
 			while(!antwoord2.equals("Y") && !antwoord2.equals("N")){
-				ui.display("Wilt u de order bevestigen? Y/N");
-				antwoord2 = ui.vraag();
+				ArrayList<String> list = new ArrayList<String>();
+				list.add("Y");
+				list.add("N");
+				antwoord2 = ui.askWithPossibilities("Wilt u de order bevestigen? Y/N",list);
 			}
-			if(antwoord2.equals("Y")){GregorianCalendar calender = ordermanager.placeOrder(order);
+			if(antwoord2.equals("Y")){GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
 			ui.display("Uw  order zou klaar moeten zijn op "+calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE)+".");
 			}else{
 				this.garageHolderCase(user);

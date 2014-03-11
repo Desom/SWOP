@@ -22,6 +22,7 @@ public class Test_CarModel {
 	Seats S;
 	Wheels W;
 	String Name;
+	ArrayList<String> types;
 	@Before
 	public void setUp() throws Exception {
 		a = new ArrayList<Option>();
@@ -33,93 +34,117 @@ public class Test_CarModel {
 		S = new Seats("s",a,a);
 		W = new Wheels("w",a,a);
 		Name = "BMW";
+		a.add(E);
+		a.add(A);
+		a.add(B);
+		a.add(C);
+		a.add(G);
+		a.add(S);
+		a.add(W);
+		types = new ArrayList<String>();
+		types.add("Airco");
+		types.add("Body");
+		types.add("Color");
+		types.add("Engine");
+		types.add("Gearbox");
+		types.add("Seats");
+		types.add("Wheels");
 	}
 
 	@Test
 	public void testconstructer() throws CarModelCatalogException {
-		CarModel car = new CarModel(Name,a,A,B,C,E,G,S,W);
+		CarModel car = new CarModel(Name,a,types);
+		
 		assertEquals(Name, car.getName());
 		assertEquals(a, car.getOptions());
 		assertFalse(a == car.getOptions());
-		assertEquals(A, car.getDefault_Airco());
-		assertEquals(B, car.getDefault_Body());
-		assertEquals(C, car.getDefault_Color());
-		assertEquals(E, car.getDefault_Engine());
-		assertEquals(G, car.getDefault_Gearbox());
-		assertEquals(S, car.getDefault_Seats());
-		assertEquals(W, car.getDefault_Wheels());
+		assertTrue(car.getOfOptionType("Airco").contains(A));
+		assertTrue( car.getOfOptionType("Body").contains(B));
+		assertTrue(car.getOfOptionType("Color").contains(C));
+		assertTrue(car.getOfOptionType("Engine").contains(E));
+		assertTrue( car.getOfOptionType("Gearbox").contains(G));
+		assertTrue( car.getOfOptionType("Seats").contains(S));
+		assertTrue( car.getOfOptionType("Wheels").contains(W));
 	}
 	@Test
 	public void testnull()  {
 		try {
-			new CarModel(null,a,A,B,C,E,G,S,W);
+			new CarModel(null,a,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
-			new CarModel(Name,null,A,B,C,E,G,S,W);
+			new CarModel(Name,null,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
-			new CarModel(Name,a,null,B,C,E,G,S,W);
+			new CarModel(Name,a,null);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
+		ArrayList<Option> fake;
 		try {
-			new CarModel(Name,a,A,null,C,E,G,S,W);
+			fake = ((ArrayList<Option>) a.clone());
+			fake.remove(A);
+			new CarModel(Name,fake,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");
+			assertEquals(e.GetMessage(),"Missing type");
 		}
 		try {
-			new CarModel(Name,a,A,B,null,E,G,S,W);
+			fake = ((ArrayList<Option>) a.clone());
+			fake.remove(B);
+			new CarModel(Name,fake,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");
+			assertEquals(e.GetMessage(),"Missing type");
 		}
 		try {
-			new CarModel(Name,a,A,B,C,null,G,S,W);
+			fake = ((ArrayList<Option>) a.clone());
+			fake.remove(C);
+			new CarModel(Name,fake,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");
+			assertEquals(e.GetMessage(),"Missing type");
 		}
 		try {
-			new CarModel(Name,a,A,B,C,null,G,S,W);
+			fake = ((ArrayList<Option>) a.clone());
+			fake.remove(E);
+			new CarModel(Name,fake,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");
+			assertEquals(e.GetMessage(),"Missing type");
 		}
 		try {
-			new CarModel(Name,a,A,B,C,E,null,S,W);
+			fake = ((ArrayList<Option>) a.clone());
+			fake.remove(G);
+			new CarModel(Name,fake,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");		}
-		try {
-			new CarModel(Name,a,A,B,C,E,G,null,W);
-			fail();
-		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");
+			assertEquals(e.GetMessage(),"Missing type");
 		}
 		try {
-			new CarModel(Name,a,A,B,C,E,G,S,null);
+			fake = ((ArrayList<Option>) a.clone());
+			fake.remove(S);
+			new CarModel(Name,fake,types);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");
+			assertEquals(e.GetMessage(),"Missing type");
 		}
+		
 	}
 	
 

@@ -74,7 +74,7 @@ public class OrderManager {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public GregorianCalendar placeOrder(OrderForm order) throws UserAccessException{
+	public CarOrder placeOrder(OrderForm order) throws UserAccessException{
 		User user = order.getUser();
 		this.checkUser(user, "placeOrder");
 
@@ -82,7 +82,7 @@ public class OrderManager {
 		CarOrder newOrder = new CarOrder(carOrderId, user,order.getModel(),order.getOptions());
 		this.addCarOrder(newOrder);
 		this.getProductionSchedule().addOrder(newOrder);
-		return completionEstimate(user, newOrder);
+		return newOrder;
 
 	}
 
@@ -102,11 +102,13 @@ public class OrderManager {
 	//TODO controleer ofdat de order al klaar is?
 	public GregorianCalendar completionEstimate(User user, CarOrder order) throws UserAccessException{
 		this.checkUser(user, "completionEstimate");
-		
-		if(order.getDeliveredTime() == null)
+		try{
+		return order.getDeliveredTime();
+		} catch(IllegalStateException e){
 			return this.getProductionSchedule().completionEstimateCarOrder(order);
-		else
-			return order.getDeliveredTime();
+		}
+		
+			
 	}
 
 	/**

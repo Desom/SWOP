@@ -16,5 +16,6 @@ public class GarageHolder extends User {
 		this.approvedMethods.add("getPendingOrders");
 		this.approvedMethods.add("getCompletedOrders");
 		this.approvedMethods.add("getCatalog");
+		this.approvedMethods.add("completionEstimate");
 	}
 }

@@ -22,7 +22,7 @@ public class Configuration {
 		this.model = model;
 		this.options = new HashMap<String,Option>();
 		addall(options);
-		addmissingoptions();
+		searchmissingoptions();
 		
 	}
 	
@@ -30,15 +30,14 @@ public class Configuration {
 	 * Fills the hashmap options with all options of this configuration and adds the default options for that car model
 	 * 		if the option is missing.
 	 */
-	@SuppressWarnings("static-access")
-	private void addmissingoptions() {
-		if(!options.containsKey("Color"))options.put(model.getDefault_Color().getType(),model.getDefault_Color());
-		if(!options.containsKey("Body"))options.put(model.getDefault_Body().getType(),model.getDefault_Body());
-		if(!options.containsKey("Engine"))options.put(model.getDefault_Engine().getType(),model.getDefault_Engine());
-		if(!options.containsKey("Gearbox"))options.put(model.getDefault_Gearbox().getType(),model.getDefault_Gearbox());
-		if(!options.containsKey("Airco"))options.put(model.getDefault_Airco().getType(),model.getDefault_Airco());
-		if(!options.containsKey("Wheels"))options.put(model.getDefault_Wheels().getType(),model.getDefault_Wheels());
-		if(!options.containsKey("Seats"))options.put(model.getDefault_Seats().getType(),model.getDefault_Seats());
+	private void searchmissingoptions() {
+		if(!options.containsKey("Color"))throw new IllegalArgumentException();
+		if(!options.containsKey("Body"))throw new IllegalArgumentException();
+		if(!options.containsKey("Engine"))throw new IllegalArgumentException();
+		if(!options.containsKey("Gearbox"))throw new IllegalArgumentException();
+		if(!options.containsKey("Airco"))throw new IllegalArgumentException();
+		if(!options.containsKey("Wheels"))throw new IllegalArgumentException();
+		if(!options.containsKey("Seats")) throw new IllegalArgumentException();
 		
 	}
 
@@ -91,6 +90,9 @@ public class Configuration {
 			s += o.toString() + "\n";
 		}
 		return s;
+	}
+	public Option getOptionOfType(String type){
+		return this.options.get(type);
 	}
 
 }

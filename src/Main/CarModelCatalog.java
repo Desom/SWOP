@@ -14,13 +14,11 @@ import OptionSubTypes.*;
 public class CarModelCatalog {
 	private HashMap<String,Option> All_Options;
 	private HashMap<String,CarModel> All_CarModels;
-	private LinkedList<String> All_Optiontypes;
+	private ArrayList<String> All_Optiontypes;
 	public CarModelCatalog(String Optionfile, String Modelfile) throws IOException, CarModelCatalogException{
 		All_Options = new HashMap<String,Option>();
 		All_CarModels= new HashMap<String,CarModel>();
-		createOptions(Optionfile);
-		createModels(Modelfile);
-		All_Optiontypes = new LinkedList<String>();
+		All_Optiontypes = new ArrayList<String>();
 		All_Optiontypes.add("Color");
 		All_Optiontypes.add("Body");
 		All_Optiontypes.add("Engine");
@@ -28,6 +26,9 @@ public class CarModelCatalog {
 		All_Optiontypes.add("Airco");
 		All_Optiontypes.add("Wheels");
 		All_Optiontypes.add("Seats");
+		createOptions(Optionfile);
+		createModels(Modelfile);
+		
 	}
 	public CarModelCatalog() throws IOException, CarModelCatalogException{
 		this("options.txt", "models.txt");
@@ -106,13 +107,12 @@ public class CarModelCatalog {
 
 	private void processModelLine(String inputline) throws CarModelCatalogException {
 		String[] input=inputline.split(";");
-		if(input.length != 9) throw new CarModelCatalogException("Model: wrong input format: " + inputline);
+		if(input.length != 2) throw new CarModelCatalogException("Model: wrong input format: " + inputline);
 		if(All_CarModels.containsKey(input[0])) throw new CarModelCatalogException("Model name already exists: "+input[0] );
-		for(int i=1; i<8; i++) if(!All_Options.containsKey(input[i])) throw new CarModelCatalogException("Option does not exists: "+ input[i]);
 		try{
 			ArrayList<String> a = new ArrayList<String>();
-			addall(a,input[7].split(","));
-			All_CarModels.put(input[0], new CarModel(input[0], CollectOption(a) ,(Airco) All_Options.get(input[1]), (Body) All_Options.get(input[2]), (Color) All_Options.get(input[3]), (Engine) All_Options.get(input[4]), (Gearbox) All_Options.get(input[5]), (Seats) All_Options.get(input[6]), (Wheels) All_Options.get(input[7])));
+			addall(a,input[1].split(","));
+			All_CarModels.put(input[0], new CarModel(input[0], CollectOption(a), this.All_Optiontypes));
 		}catch(ClassCastException e){
 			throw new CarModelCatalogException("Wrong Option Type in form: " + inputline);
 		}
@@ -134,8 +134,8 @@ public class CarModelCatalog {
 
 	}
 	@SuppressWarnings("unchecked")
-	public LinkedList<String> getAllOptionTypes(){
-		return (LinkedList<String>) All_Optiontypes.clone();
+	public ArrayList<String> getAllOptionTypes(){
+		return (ArrayList<String>) All_Optiontypes.clone();
 	}
 	public ArrayList<String> getAllModelnames(User user) throws UserAccessException {
 		ArrayList<String> modelnamen = new ArrayList<String>();

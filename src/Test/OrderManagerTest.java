@@ -38,7 +38,7 @@ public class OrderManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		orderManager = new OrderManager("src/Test/testData_OrderManager.txt", catalog);
+		orderManager = new OrderManager("testData_OrderManager.txt", catalog);
 	}
 
 	@Test

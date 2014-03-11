@@ -18,8 +18,8 @@ public class ProductionSchedule {
 	private static final int AMOUNT_WORKSTATIONS = 3;
 	
 	private LinkedList<CarOrder> scheduleQueue;
-	private ArrayList<Integer> timeHistory;
-	private int overTime;
+	private GregorianCalendar currentTime; // tijd wanneer het laatst werd advanced...
+	private GregorianCalendar endWithOverTime; // in minutes
 	private int endOfDayCounter;
 	
 	/**
@@ -28,10 +28,11 @@ public class ProductionSchedule {
 	 * 
 	 * @param 	carOrderList
 	 * 			The list of carOrders that are initially in the schedule
+	 * @param	currentTime TODO
 	 */
-	public ProductionSchedule(List<CarOrder> carOrderList){
-		this.setOverTime(0);
-		this.setTimeHistory(new ArrayList<Integer>());
+	public ProductionSchedule(List<CarOrder> carOrderList, GregorianCalendar currentTime){
+		this.currentTime = currentTime;
+		this.endWithOverTime = this.initEndWithOverTime();
 		Comparator<CarOrder> comparatorFIFO = new Comparator<CarOrder>(){
 			public int compare(CarOrder order1, CarOrder order2){
 				return order1.getOrderedTime().compareTo(order2.getOrderedTime());
@@ -41,6 +42,7 @@ public class ProductionSchedule {
 		this.setScheduleQueue(new LinkedList<CarOrder>(carOrderList));
 		this.resetEndOfDayCounter();
 	}
+	
 	/**
 	 * Calculates an estimated completion date for a specific CarOrder and returns it.
 	 * 
@@ -51,53 +53,74 @@ public class ProductionSchedule {
 	 */
 	public GregorianCalendar completionEstimateCarOrder(CarOrder order){
 		//TODO zeker goed testen...
+		//controleren ofdat hij wel op deze schedule staat
 		int positionInLine = this.getScheduleQueue().indexOf(order);
 		if(positionInLine == -1)
 			return null;
 		
-		//de tijd naar boven afronden.
-		GregorianCalendar completionTime = new GregorianCalendar();
-		completionTime.add(GregorianCalendar.HOUR_OF_DAY, 1);
+		GregorianCalendar completionTime = (GregorianCalendar) this.currentTime.clone();
+		//als de assemblyLine leeg is kan er elk moment iets worden opgezet, maar wanneer er iets op staat: currentTime == lastAdvancedTime
+		if(!this.assemblyIsEmpty()){
+			completionTime.add(GregorianCalendar.HOUR_OF_DAY, WORKSTATION_DURATION);
+		}
+		
+		//als de werkdag nog niet is begonnen, beginnen we pas te rekenen bij het begin van de dag.
+		if(completionTime.before(getBeginOfWorkday())){
+			completionTime = getBeginOfWorkday();
+		}
+		//we voegen dit toe zodat we weten wanneer we het order vandaag klaar zou zijn indien het nu op de band gaat
+		completionTime.add(GregorianCalendar.HOUR_OF_DAY, ASSEMBLY_DURATION);
+		//doe dingen als er nog tijd voor de auto zou zijn indien hij vooraan de lijn zou staan.
+		if(!completionTime.after(this.endWithOverTime)){
+			int advancesToday = this.endWithOverTime.get(GregorianCalendar.HOUR_OF_DAY) - completionTime.get(GregorianCalendar.HOUR_OF_DAY)+1;
+			if(positionInLine < advancesToday){
+				completionTime.add(GregorianCalendar.HOUR_OF_DAY, positionInLine*WORKSTATION_DURATION);
+				return completionTime;
+			}
+
+			completionTime.add(GregorianCalendar.HOUR_OF_DAY, (advancesToday-1)*WORKSTATION_DURATION);
+			if(completionTime.after(endWithOverTime))
+				advancesToday -= 1;
+			if(positionInLine == advancesToday){
+				completionTime.add(GregorianCalendar.HOUR_OF_DAY, positionInLine*WORKSTATION_DURATION);
+				return completionTime;
+			}
+			positionInLine -= advancesToday;
+		}
+		
+		//set completionTime naar morgen, begin van de dag.
+		completionTime.set(GregorianCalendar.HOUR_OF_DAY, BEGIN_WORKDAY);
 		completionTime.set(GregorianCalendar.MINUTE, 0);
 		completionTime.set(GregorianCalendar.SECOND, 0);
 		completionTime.set(GregorianCalendar.MILLISECOND, 0);
-
-		int waitingHours = positionInLine*WORKSTATION_DURATION;
-		int nowHour = completionTime.get(GregorianCalendar.HOUR_OF_DAY);
-		
-		if(nowHour > BEGIN_WORKDAY){
-			if(nowHour < END_WORKDAY-2){
-				int diffHours = (END_WORKDAY - 2) - nowHour;
-				waitingHours -= diffHours;
-			}
-			completionTime.add(GregorianCalendar.DATE, 1);
+		completionTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
+		int advancesPerDay = (END_WORKDAY - BEGIN_WORKDAY - ASSEMBLY_DURATION + WORKSTATION_DURATION)/WORKSTATION_DURATION;
+		//zolang hij te ver in de wachtrij staat om er die dag op te komen, ga naar de volgende dag.
+		while(positionInLine >= advancesPerDay){
+			completionTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
+			positionInLine -= advancesPerDay;
 		}
-		completionTime.set(GregorianCalendar.HOUR_OF_DAY, BEGIN_WORKDAY);
-		
-		int dayWaitingTime = (END_WORKDAY - 2 - BEGIN_WORKDAY);
-		while(waitingHours > dayWaitingTime){
-			waitingHours -= dayWaitingTime;
-			completionTime.add(GregorianCalendar.DATE, 1);
-		}
-		completionTime.add(GregorianCalendar.HOUR_OF_DAY, waitingHours + ASSEMBLY_DURATION);
-		
+		completionTime.add(GregorianCalendar.HOUR_OF_DAY, positionInLine*WORKSTATION_DURATION + ASSEMBLY_DURATION);
 		return completionTime;
 	}
 	
+	private boolean assemblyIsEmpty() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
 	/**
 	 * Checks if there is still enough time left today to built another Car within working hours.
 	 * 
 	 * @return True if there is still enough time left, false otherwise.
 	 */
 	private boolean checkTimeRequirement() {
-		GregorianCalendar begin_today = new GregorianCalendar();
-		begin_today.set(GregorianCalendar.HOUR_OF_DAY, BEGIN_WORKDAY);
-		GregorianCalendar end_today = new GregorianCalendar();
-		end_today.set(GregorianCalendar.HOUR_OF_DAY, (END_WORKDAY - this.getOverTime()));
-		GregorianCalendar now = new GregorianCalendar();
-		GregorianCalendar auto_finished = new GregorianCalendar();
-		auto_finished.add(GregorianCalendar.HOUR_OF_DAY, AMOUNT_WORKSTATIONS * WORKSTATION_DURATION);
-		if(now.before(begin_today))
+		GregorianCalendar begin_today = getBeginOfWorkday();
+		GregorianCalendar end_today = this.endWithOverTime;
+		
+		GregorianCalendar auto_finished = (GregorianCalendar) this.currentTime.clone();
+		auto_finished.add(GregorianCalendar.HOUR_OF_DAY, ASSEMBLY_DURATION);
+		if(this.currentTime.before(begin_today))
 			return false;
 		if(end_today.before(auto_finished))
 			return false;
@@ -121,7 +144,7 @@ public class ProductionSchedule {
 	 */
 	public CarOrder seeNextCarOrder(){
 		if(this.checkTimeRequirement()){
-			return this.getScheduleQueue().element();
+			return this.getScheduleQueue().peek();
 		}
 		return null;
 	}
@@ -130,56 +153,29 @@ public class ProductionSchedule {
 	 * Returns the next CarOrder to be built and removes it from the front of the schedule.
 	 * 
 	 * @param 	time
-	 * 			The time past since the last time this method was called today.
+	 * 			The time past since the last time this method was called today. (in minutes)
 	 * @return	The CarOrder that is scheduled to be built next.
 	 */
+	//TODO welke beperking komt hier op?
 	public CarOrder getNextCarOrder(int time){
-		this.getTimeHistory().add(time);
+		this.currentTime.add(GregorianCalendar.MINUTE, time);
 		if(this.checkTimeRequirement()){
 			this.resetEndOfDayCounter();
-			return this.getScheduleQueue().remove();
+			return this.getScheduleQueue().poll();
 		}
 		this.incEndOfDayCounter();
 		if(this.getEndOfDayCounter() == AMOUNT_WORKSTATIONS){
-			this.calculateOverTime();
+			this.calculateEndWithOverTime();
 		}
 		return null;
 	}
-	
+
 	private LinkedList<CarOrder> getScheduleQueue() {
 		return this.scheduleQueue;
 	}
 
 	private void setScheduleQueue(LinkedList<CarOrder> scheduleQueue) {
 		this.scheduleQueue = scheduleQueue;
-	}
-
-	private ArrayList<Integer> getTimeHistory() {
-		return this.timeHistory;
-	}
-
-	private void setTimeHistory(ArrayList<Integer> timeHistory) {
-		this.timeHistory = timeHistory;
-	}
-
-	private int getOverTime() {
-		return overTime;
-	}
-
-	private void setOverTime(int overTime) {
-		if(overTime > 0)
-			this.overTime = overTime;
-		else 
-			this.overTime = 0;
-	}
-	private void calculateOverTime() {
-		int time = new GregorianCalendar().get(GregorianCalendar.HOUR_OF_DAY) - END_WORKDAY + this.overTime;
-		if(time > 0){
-			this.setOverTime(time);
-		}
-		else{
-			this.setOverTime(0);
-		}
 	}
 	
 	private int getEndOfDayCounter() {
@@ -192,5 +188,56 @@ public class ProductionSchedule {
 	
 	private void resetEndOfDayCounter() {
 		this.endOfDayCounter = 0;
+	}
+	
+	/**
+	 * Calculate when the tomorrows workday will end considering the overtime done today.
+	 */
+	private void calculateEndWithOverTime() {
+		int extraDay = this.endWithOverTime.get(GregorianCalendar.DAY_OF_YEAR) - this.currentTime.get(GregorianCalendar.DAY_OF_YEAR);
+		int extraHour = this.endWithOverTime.get(GregorianCalendar.HOUR_OF_DAY) - this.currentTime.get(GregorianCalendar.HOUR_OF_DAY);
+		int extraMinute = this.endWithOverTime.get(GregorianCalendar.MINUTE) - this.currentTime.get(GregorianCalendar.MINUTE);
+		int extraSecond = this.endWithOverTime.get(GregorianCalendar.SECOND) - this.currentTime.get(GregorianCalendar.SECOND);
+		int extraMilliSecond = this.endWithOverTime.get(GregorianCalendar.MILLISECOND) - this.currentTime.get(GregorianCalendar.MILLISECOND);
+		
+		boolean overTime = this.endWithOverTime.before(this.currentTime);
+		
+		this.endWithOverTime.set(GregorianCalendar.HOUR_OF_DAY, END_WORKDAY);
+		this.endWithOverTime.set(GregorianCalendar.MINUTE, 0);
+		this.endWithOverTime.set(GregorianCalendar.SECOND, 0);
+		this.endWithOverTime.set(GregorianCalendar.MILLISECOND, 0);
+		this.endWithOverTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
+
+		if(overTime){
+			this.endWithOverTime.add(GregorianCalendar.DAY_OF_YEAR, -extraDay);
+			this.endWithOverTime.add(GregorianCalendar.HOUR_OF_DAY, -extraHour);
+			this.endWithOverTime.add(GregorianCalendar.MINUTE, -extraMinute);
+			this.endWithOverTime.add(GregorianCalendar.SECOND, -extraSecond);
+			this.endWithOverTime.add(GregorianCalendar.MILLISECOND, -extraMilliSecond);
+		}
+	}
+	
+	/**
+	 * @return
+	 */
+	private GregorianCalendar getBeginOfWorkday() {
+		GregorianCalendar begin_today = (GregorianCalendar) this.currentTime.clone();
+		begin_today.set(GregorianCalendar.HOUR_OF_DAY, BEGIN_WORKDAY);
+		begin_today.set(GregorianCalendar.MINUTE, 0);
+		begin_today.set(GregorianCalendar.SECOND, 0);
+		begin_today.set(GregorianCalendar.MILLISECOND, 0);
+		return begin_today;
+	}
+
+	private GregorianCalendar initEndWithOverTime() {
+		GregorianCalendar endWithOverTime = (GregorianCalendar) this.currentTime.clone();
+		endWithOverTime.set(GregorianCalendar.HOUR_OF_DAY, END_WORKDAY);
+		endWithOverTime.set(GregorianCalendar.MINUTE, 0);
+		endWithOverTime.set(GregorianCalendar.SECOND, 0);
+		endWithOverTime.set(GregorianCalendar.MILLISECOND, 0);
+		if(endWithOverTime.before(currentTime))
+			this.endWithOverTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
+		
+		return endWithOverTime;
 	}
 }

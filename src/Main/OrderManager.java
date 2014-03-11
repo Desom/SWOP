@@ -22,21 +22,28 @@ public class OrderManager {
 	 * This constructor is also responsible for creating objects for all the placed carOrders.
 	 * This constructor is also responsible for creating a ProductionSchedule and feeding it the unfinished carOrders.
 	 * 
+	 * @param	dataFilePath
 	 * @param 	catalog
 	 * 			The CarModelCatalog necessary for finding the Options and CarModel Objects of all CarOrders
+	 * @param	currentTime TODO
 	 */
-	public OrderManager(String dataFilePath, CarModelCatalog catalog) {
+	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) {
 		ArrayList<CarOrder> allCarOrders = this.createOrderList(dataFilePath,catalog);
 		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
 		for(CarOrder order : allCarOrders) {
 			this.addCarOrder(order);
 		}
 		
-		this.createProductionSchedule(allCarOrders);
+		this.createProductionSchedule(allCarOrders, currentTime);
 	}
 	
-	public OrderManager(CarModelCatalog catalog){
-		this("carOrderData.txt", catalog);
+	/**
+	 * TODO
+	 * @param catalog
+	 * @param currentTime
+	 */
+	public OrderManager(CarModelCatalog catalog, GregorianCalendar currentTime){
+		this("carOrderData.txt", catalog, currentTime);
 	}
 	
 	/**
@@ -116,9 +123,10 @@ public class OrderManager {
 	 * 
 	 * @param orderList
 	 * 			The list of orders that has to be scheduled on the create ProductionSchedule.
+	 * @param currentTime TODO
 	 */
-	private void createProductionSchedule(ArrayList<CarOrder> orderList){
-		ProductionSchedule newProductionSchedule = new ProductionSchedule(orderList);
+	private void createProductionSchedule(ArrayList<CarOrder> orderList, GregorianCalendar currentTime){
+		ProductionSchedule newProductionSchedule = new ProductionSchedule(orderList, currentTime);
 		this.setProductionSchedule(newProductionSchedule);
 	}
 	

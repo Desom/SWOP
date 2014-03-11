@@ -16,8 +16,11 @@ public class Controller {
 		} catch (IOException | CarModelCatalogException e) {
 			e.printStackTrace();
 		}
-		ui.display("Geef aan of uw mechanic, garageholder of manager bent");
-		String antwoord =ui.vraag();
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("mechanic");
+		list.add("garageholder");
+		list.add("manager");
+		String antwoord =ui.askWithPossibilities("Geef aan of uw mechanic, garageholder of manager bent", list);
 		if(antwoord.equals("mechanic"))
 			try {
 				this.carMechanicCase(new CarMechanic(12345));
@@ -125,7 +128,8 @@ public class Controller {
 		}
 		if(antwoord.equals("N")){
 			CarModelCatalog catalog = company.getCatalog(user);
-			OurOrderform order = new OurOrderform(user,catalog,ui);
+			OurOrderform order = new OurOrderform(user,catalog);
+			ui.fillIn(order);
 			String antwoord2 ="";
 			while(!antwoord2.equals("Y") && !antwoord2.equals("N")){
 				ArrayList<String> list = new ArrayList<String>();

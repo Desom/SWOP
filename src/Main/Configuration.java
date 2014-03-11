@@ -19,6 +19,7 @@ public class Configuration {
 	 * 			If the given options are conflicting with each other
 	 */
 	public Configuration(CarModel model, ArrayList<Option> options) {
+		possible(model, options);
 		this.model = model;
 		this.options = new HashMap<String,Option>();
 		addall(options);
@@ -26,6 +27,14 @@ public class Configuration {
 		
 	}
 	
+	private void possible(CarModel model, ArrayList<Option> options) {
+		for(Option i: options){
+			if(!model.getOptions().contains(i)){
+				throw new IllegalArgumentException("dit model bevat deze optie niet");
+			}
+		}
+	}
+
 	/**
 	 * Fills the hashmap options with all options of this configuration and adds the default options for that car model
 	 * 		if the option is missing.

@@ -18,9 +18,6 @@ public class UI {
 			System.out.println(object.toString());
 	}
 
-	public String vraag(){
-		return scan.nextLine();
-	}
 
 	public int askForInteger(String question, int lowerBound){
 		System.out.println(question);
@@ -107,5 +104,12 @@ public class UI {
 		catch (DoesNotExistException exc) {
 			System.out.println("There is an internal problem : " + exc.getMessage());
 		}
+	}
+	public void fillIn(OrderForm order) {
+		order.SetModel(this.askWithPossibilities("Geef uw model in", order.getAllModels()));
+		for(String i: order.getOptionTypes()){
+			order.setOption(this.askWithPossibilities("Geef uw type "+i+" in", order.getPossibleOptionsOfType(i)));
+		}
+		
 	}
 }

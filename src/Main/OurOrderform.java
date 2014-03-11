@@ -1,44 +1,31 @@
 package Main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public class OurOrderform implements OrderForm{
-	ArrayList<Option> options;
-	CarModel model;
-	User user;
-	public OurOrderform(User user, CarModelCatalog catalog,UI ui) throws UserAccessException{
-		this.user =user;
-		String Modelnaam = null;
-		while(Modelnaam == null || catalog.getCarModel(Modelnaam) == null){
-			String vraag = "Welke model moet uw wagen hebben?\nDit zijn de mogelijkheden:\n";
-			for(String j: catalog.getAllModelnames(user)){
-				vraag += j+"\n";
-			}
-			ui.display(vraag);
-			Modelnaam = ui.vraag();
-		}
-		model = catalog.getCarModel(Modelnaam);
-		options = new ArrayList<Option>();
-		for(String i: catalog.getAllOptionTypes()){
-			ArrayList<String> optionOfType = catalog.filterOptiontype(i,options,model);
-			String antwoord = null;
-			while(antwoord == null || !optionOfType.contains(antwoord)){
-				String vraag = "Welke "+ i+" moet uw wagen hebben?\nDit zijn de mogelijkheden:\n";
-				for(String j: optionOfType){
-					vraag += j+"\n";
-				}
-				ui.display(vraag);
-				antwoord = ui.vraag();
-			}
-			options.add(catalog.getOption(antwoord));
-		}
+	private HashMap<String,Option> options;
+	private CarModel model;
+	private User user;
+	private CarModelCatalog catalog;
+	public OurOrderform(User user, CarModelCatalog catalog) {
+		options= new HashMap<String,Option>();
+		this.user= user;
+		this.catalog = catalog;
 	}
-
+	@Override
+	public boolean SetModel(String model) {
+		if(this.model == null){
+			this.model = catalog.getCarModel(model);
+			if(this.model != null)return true;
+		}
+		return false;
+	}
 	
-	@SuppressWarnings("unchecked")
 	@Override
 	public ArrayList<Option> getOptions() {
-		return (ArrayList<Option>) options.clone();
+		return  new ArrayList<Option>(options.values());
 	}
 
 	@Override
@@ -48,5 +35,58 @@ public class OurOrderform implements OrderForm{
 	@Override
 	public User getUser() {
 		return user;
+	}
+	private boolean basicOptionRestrictions(){
+		if(model==null)return false;
+		return true;
+		
+	}
+
+	@Override
+	public List<String> getPossibleOptionsOfType(String type) {
+		if(!this.basicOptionRestrictions()) return null;
+		List<String> result = new ArrayList<String>();
+			for(Option i: model.getOptions()){
+				if(i.getType().equals(type)){
+					Boolean incompatible = false;
+					for(Option j: options.values()){
+						incompatible=	incompatible || j.conflictsWith(i);
+					}
+					if(!incompatible) result.add(i.getdescription());
+				}
+			}
+			return result;
+	}
+
+
+	@Override
+	public boolean setOption(String description) {
+		if(!this.basicOptionRestrictions()) return false;
+		Option option = catalog.getOption(description);
+		if(option == null) return false;
+		if(model.getOptions().contains(option) && !this.options.containsKey(option.getType())){
+			this.options.put(option.getType(), option);
+			return true;
+		}
+		return false;
+	}
+	@Override
+	public boolean CanPlaceType(String Type) {
+		return options.containsKey(Type);
+	}
+	@Override
+	public List<String> getAllModels(){
+		List<String> result = new ArrayList<String>();
+		try {
+			for(CarModel i: catalog.getAllModels(user)){
+				result.add(i.getName());
+			}
+		} catch (UserAccessException e) {
+			e.printStackTrace();
+		}
+		return result;
+	}
+	public List<String> getOptionTypes() {
+				return catalog.getAllOptionTypes();
 	}
 }

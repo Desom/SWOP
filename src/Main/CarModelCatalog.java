@@ -144,17 +144,5 @@ public class CarModelCatalog {
 		}
 		return modelnamen;
 	}
-	public ArrayList<String> filterOptiontype(String type,ArrayList<Option> chosenoptions, CarModel model) {
-		ArrayList<String> result = new ArrayList<String>();
-		for(Option i: model.getOptions()){
-			if(i.getType().equals(type)){
-				Boolean incompatible = false;
-				for(Option j: chosenoptions){
-					incompatible=	incompatible || j.conflictsWith(i);
-				}
-				if(!incompatible) result.add(i.getdescription());
-			}
-		}
-		return result;
-	}
+	
 }

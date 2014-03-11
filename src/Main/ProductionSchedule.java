@@ -15,12 +15,11 @@ public class ProductionSchedule {
 	private static final int WORKSTATION_DURATION = 1;
 	private static final int BEGIN_WORKDAY = 6;
 	private static final int END_WORKDAY = 22;
-	private static final int AMOUNT_WORKSTATIONS = 3;
 	
 	private LinkedList<CarOrder> scheduleQueue;
-	private GregorianCalendar currentTime; // tijd wanneer het laatst werd advanced...
+	private GregorianCalendar currentTime; // tijd wanneer het laatst werd advanced of begin van de dag.
 	private GregorianCalendar endWithOverTime; // in minutes
-	private int endOfDayCounter;
+	private CarOrder[] ordersOnAssemblyLine;
 	
 	/**
 	 * The constructor for the ProductionSchedule class.
@@ -28,19 +27,20 @@ public class ProductionSchedule {
 	 * 
 	 * @param 	carOrderList
 	 * 			The list of carOrders that are initially in the schedule
-	 * @param	currentTime TODO
+	 * @param	currentTime
+	 * 			The date at which this ProductionSchedule starts.
 	 */
 	public ProductionSchedule(List<CarOrder> carOrderList, GregorianCalendar currentTime){
 		this.currentTime = currentTime;
-		this.endWithOverTime = this.initEndWithOverTime();
+		this.initEndWithOverTime();
 		Comparator<CarOrder> comparatorFIFO = new Comparator<CarOrder>(){
 			public int compare(CarOrder order1, CarOrder order2){
 				return order1.getOrderedTime().compareTo(order2.getOrderedTime());
 			}
 		};
 		Collections.sort(carOrderList, comparatorFIFO);
-		this.setScheduleQueue(new LinkedList<CarOrder>(carOrderList));
-		this.resetEndOfDayCounter();
+		this.scheduleQueue = new LinkedList<CarOrder>(carOrderList);
+		ordersOnAssemblyLine = new CarOrder[3];
 	}
 	
 	/**
@@ -103,11 +103,6 @@ public class ProductionSchedule {
 		completionTime.add(GregorianCalendar.HOUR_OF_DAY, positionInLine*WORKSTATION_DURATION + ASSEMBLY_DURATION);
 		return completionTime;
 	}
-	
-	private boolean assemblyIsEmpty() {
-		// TODO Auto-generated method stub
-		return true;
-	}
 
 	/**
 	 * Checks if there is still enough time left today to built another Car within working hours.
@@ -151,43 +146,75 @@ public class ProductionSchedule {
 	
 	/**
 	 * Returns the next CarOrder to be built and removes it from the front of the schedule.
+	 * If this results in making the assemblyLine completely empty, we start again tomorrow.
 	 * 
 	 * @param 	time
 	 * 			The time past since the last time this method was called today. (in minutes)
 	 * @return	The CarOrder that is scheduled to be built next.
 	 */
-	//TODO welke beperking komt hier op?
 	public CarOrder getNextCarOrder(int time){
 		this.currentTime.add(GregorianCalendar.MINUTE, time);
 		if(this.checkTimeRequirement()){
-			this.resetEndOfDayCounter();
-			return this.getScheduleQueue().poll();
+			CarOrder nextOrder = this.getScheduleQueue().poll();
+			this.putOnLine(nextOrder);
+			return nextOrder;
 		}
-		this.incEndOfDayCounter();
-		if(this.getEndOfDayCounter() == AMOUNT_WORKSTATIONS){
-			this.calculateEndWithOverTime();
+		this.putOnLine(null);
+		if(this.assemblyIsEmpty()){
+			this.handleEndOfDay();
 		}
 		return null;
 	}
 
+	/**
+	 * Keep track of which order is on the assemblyLine
+	 * 
+	 * @param nextOrder
+	 * 			The order that is now put on the assemblyLine.
+	 */
+	private void putOnLine(CarOrder nextOrder) {
+		this.ordersOnAssemblyLine[0] = this.ordersOnAssemblyLine[1];
+		this.ordersOnAssemblyLine[1] = this.ordersOnAssemblyLine[2];
+		this.ordersOnAssemblyLine[2] = nextOrder;
+		
+	}
+	
+	/**
+	 * Checks if the assemblyLine is currently empty.
+	 * 
+	 * @return true if empty, false if there is a CarOrder on the assemblyLine
+	 */
+	private boolean assemblyIsEmpty() {
+		for(CarOrder order: this.ordersOnAssemblyLine){
+			if(order!=null)
+				return false;
+		}
+		return true;
+	}
+	
 	private LinkedList<CarOrder> getScheduleQueue() {
 		return this.scheduleQueue;
 	}
 
-	private void setScheduleQueue(LinkedList<CarOrder> scheduleQueue) {
-		this.scheduleQueue = scheduleQueue;
+	/**
+	 * Handles all the things that need to be set when a workday ends.
+	 */
+	private void handleEndOfDay() {
+		this.calculateEndWithOverTime();
+		this.setCurrentTimeTomorrow();
 	}
 	
-	private int getEndOfDayCounter() {
-		return endOfDayCounter;
-	}
-	
-	private void incEndOfDayCounter() {
-		this.endOfDayCounter = this.endOfDayCounter + 1;
-	}
-	
-	private void resetEndOfDayCounter() {
-		this.endOfDayCounter = 0;
+	/**
+	 * Set the currentTime to the begin of tomorrows workday.
+	 */
+	private void setCurrentTimeTomorrow() {
+		this.currentTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
+		this.currentTime.set(GregorianCalendar.HOUR_OF_DAY, BEGIN_WORKDAY);
+		this.currentTime.set(GregorianCalendar.MINUTE, 0);
+		this.currentTime.set(GregorianCalendar.SECOND, 0);
+		this.currentTime.set(GregorianCalendar.MILLISECOND, 0);
+		
+		
 	}
 	
 	/**
@@ -218,7 +245,9 @@ public class ProductionSchedule {
 	}
 	
 	/**
-	 * @return
+	 * Returns when today's workday begins
+	 * 
+	 * @return The date at which today's workday begins
 	 */
 	private GregorianCalendar getBeginOfWorkday() {
 		GregorianCalendar begin_today = (GregorianCalendar) this.currentTime.clone();
@@ -228,16 +257,19 @@ public class ProductionSchedule {
 		begin_today.set(GregorianCalendar.MILLISECOND, 0);
 		return begin_today;
 	}
-
-	private GregorianCalendar initEndWithOverTime() {
+	
+	/**
+	 * Initializes the date at which today's workday will end, while knowing there isn't any overTime done.
+	 */
+	private void initEndWithOverTime() {
 		GregorianCalendar endWithOverTime = (GregorianCalendar) this.currentTime.clone();
 		endWithOverTime.set(GregorianCalendar.HOUR_OF_DAY, END_WORKDAY);
 		endWithOverTime.set(GregorianCalendar.MINUTE, 0);
 		endWithOverTime.set(GregorianCalendar.SECOND, 0);
 		endWithOverTime.set(GregorianCalendar.MILLISECOND, 0);
 		if(endWithOverTime.before(currentTime))
-			this.endWithOverTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
+			endWithOverTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
 		
-		return endWithOverTime;
+		this.endWithOverTime = endWithOverTime;
 	}
 }

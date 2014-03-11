@@ -20,39 +20,22 @@ public class ProductionScheduleTest {
 	public ProductionSchedule prodSchedNormal;
 	public ProductionSchedule prodSchedEarly;
 	public ProductionSchedule prodSchedLate;
-	public static ArrayList<Option> arrayList;
-	public static Airco A;
-	public static Body B;
-	public static Color C;
-	public static Engine E; 
-	public static Gearbox G;
-	public static Seats S;
-	public static Wheels W;
-	public static String Name;
 	public static CarModel carModel;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		arrayList = new ArrayList<Option>();
-		A = new Airco("a",arrayList,arrayList);
-		B = new Body("b",arrayList,arrayList);
-		C = new Color("c",arrayList,arrayList);
-		E = new Engine("e",arrayList,arrayList);
-		G = new Gearbox("g",arrayList,arrayList);
-		S = new Seats("s",arrayList,arrayList);
-		W = new Wheels("w",arrayList,arrayList);
-		Name = "BMW";
-		carModel = new CarModel(Name,arrayList,A,B,C,E,G,S,W);
-		
+		CarModelCatalog catalog = new CarModelCatalog();
+		carModel = catalog.getCarModel("Ford");
+		ArrayList<Option> arrayOption = carModel.getOptions();
 		
 		GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar now1 = new GregorianCalendar();
 		now1.add(GregorianCalendar.HOUR_OF_DAY, 1);
 		GregorianCalendar now3 = new GregorianCalendar();
 		now3.add(GregorianCalendar.HOUR_OF_DAY, 3);
-		carOrder = new CarOrder(0, 0, now, null, carModel, new ArrayList<Option>());
-		carOrder1 = new CarOrder(1, 0, now1, null, carModel, new ArrayList<Option>());
-		carOrderLaatst = new CarOrder(2, 0, now3, null, carModel, new ArrayList<Option>());
+		carOrder = new CarOrder(0, 0, now, null, carModel, arrayOption);
+		carOrder1 = new CarOrder(1, 0, now1, null, carModel, arrayOption);
+		carOrderLaatst = new CarOrder(2, 0, now3, null, carModel, arrayOption);
 	}
 	
 	@Before
@@ -224,15 +207,23 @@ public class ProductionScheduleTest {
 	@Test
 	public void testGetNextCarOrder() {
 		//problemen met het feit dat er geen carOrders komen na de werkdag.
-		CarOrder a = prodSchedNormal.getNextCarOrder(0);
+		CarOrder a = prodSchedNormal.getNextCarOrder(60);
 		assertEquals(0,a.getCarOrderID());
 		
-		CarOrder b = prodSchedNormal.getNextCarOrder(0);
+		CarOrder b = prodSchedNormal.getNextCarOrder(60);
 		assertEquals(1,b.getCarOrderID());
 		
-		prodSchedNormal.getNextCarOrder(0);
-		CarOrder c = prodSchedNormal.seeNextCarOrder();
-		assertNull(c);
+		for(int i = 6; i >0;i++){
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(2,c.getCarOrderID());
+		}
+		for(int i = 3; i >0;i++){
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertNull(c);
+		}
+
+		CarOrder c = prodSchedNormal.getNextCarOrder(60);
+		assertEquals(2,c.getCarOrderID());
 	}
 
 }

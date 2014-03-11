@@ -58,8 +58,12 @@ public class Car {
 		return this.process;
 	}
 
+	/**
+	 * Checks if the construction process of this car is completed.
+	 * 
+	 * @return	true if construction is completed, otherwise false
+	 */
 	public Boolean IsCompleted() {
-		
 		return this.getAssemblyprocess().IsCompleted();
 	}
 	

@@ -2,11 +2,20 @@ package Main;
 
 public class GarageHolder extends User {
 
+	/**
+	 * Contructor of GarageHolder.
+	 * 
+	 * @param	id
+	 * 			id of this garage holder
+	 */
 	public GarageHolder(int id) {
 		super(id);
 		initializeApprovedMethods();
 	}
 
+	/**
+	 * Initializes all methods (represented by strings) that this garage holder can use.
+	 */
 	private void initializeApprovedMethods() {
 		this.approvedMethods.add("getOrders");
 		this.approvedMethods.add("getAllModels");

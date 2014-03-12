@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import Assembly.AssemblyStatusView;
+import Assembly.DoesNotExistException;
 import Order.OrderForm;
 import User.UserAccessException;
 

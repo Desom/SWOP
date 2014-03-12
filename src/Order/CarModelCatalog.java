@@ -113,7 +113,15 @@ public class CarModelCatalog {
 			if( !comp.remove(i)) throw new CarModelCatalogException("Option does not exists: "+ i);
 		}
 	}
-
+	/**
+	 * creates an option
+	 * @param description the description of the made option
+	 * @param type the type of the made option
+	 * @param comp the list containing the descriptions compatible with the made option
+	 * @param incomp the list containing the descriptions incompatible with the made option
+	 * @return the made option
+	 * @throws CarModelCatalogException The option type is not supported
+	 */
 	private Option create_Option(String description, String type, ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
 		if(type.equals("Color"))return new Color(description, CollectOption(comp), CollectOption(incomp));
 		if(type.equals("Body"))return new Body(description, CollectOption(comp), CollectOption(incomp));
@@ -124,13 +132,22 @@ public class CarModelCatalog {
 		if(type.equals("Seats"))return new Seats(description, CollectOption(comp), CollectOption(incomp));
 		throw new CarModelCatalogException("no valid type: " + type);
 	}
-
+	/**
+	 *  makes a list of option made of a list of descriptions
+	 * @param comp the list of descriptions of options
+	 * @return a list of options which corresponds with comp
+	 */
 	private ArrayList<Option> CollectOption(ArrayList<String> comp) {
 		ArrayList<Option> result = new ArrayList<Option>();
 		for(String i: comp) result.add(All_Options.get(i));
 		return result;
 	}
-
+	/**
+	 * Create the models from a file
+	 * @param path of the file 
+	 * @throws IOException Problems with accessing file
+	 * @throws CarModelCatalogException an modelline is not in the right format
+	 */
 	private void createModels(String path) throws IOException, CarModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(path));
 		String inputline = input.readLine();
@@ -140,7 +157,6 @@ public class CarModelCatalog {
 		}
 		input.close();
 	}
-
 	private void processModelLine(String inputline) throws CarModelCatalogException {
 		String[] input=inputline.split(";");
 		if(input.length != 2) throw new CarModelCatalogException("Model: wrong input format: " + inputline);

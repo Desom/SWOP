@@ -18,6 +18,13 @@ public class CarModelCatalog {
 	private HashMap<String,Option> All_Options;
 	private HashMap<String,CarModel> All_CarModels;
 	private ArrayList<String> All_Optiontypes;
+	/**
+	 * Create a carmodelcatalog
+	 * @param Optionfile this file is the file which contains the data of options
+	 * @param Modelfile this file is the file which contains the data of models
+	 * @throws IOException 
+	 * @throws CarModelCatalogException
+	 */
 	public CarModelCatalog(String Optionfile, String Modelfile) throws IOException, CarModelCatalogException{
 		All_Options = new HashMap<String,Option>();
 		All_CarModels= new HashMap<String,CarModel>();
@@ -36,7 +43,12 @@ public class CarModelCatalog {
 	public CarModelCatalog() throws IOException, CarModelCatalogException{
 		this("options.txt", "models.txt");
 	}
-
+	/***
+	 * Create the options from a file
+	 * @param path of the file 
+	 * @throws IOException Problems with accessing file
+	 * @throws CarModelCatalogException an optionline is not in the right format
+	 */
 	private void createOptions(String path) throws IOException, CarModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(path));
 		String inputline = input.readLine();
@@ -46,8 +58,13 @@ public class CarModelCatalog {
 		}
 		input.close();
 	}
-
-	private void processOptionLine(String inputline) throws CarModelCatalogException {
+	/**
+	 * proccessing a line which stores the information of a single option
+	 * @param inputline the line to be processed
+	 * @throws CarModelCatalogException The option the line describes alreasy exist , the line isn't in the right format,
+	 * 									the option the line describes is of the wrong subtype or the lines use an option that does not exist
+	 */
+	private void processOptionLine(String inputline) throws CarModelCatalogException   {
 		String[] input=inputline.split(";");
 		if(input.length != 3) throw new CarModelCatalogException("Option: wrong input format: " + inputline);
 		if(All_Options.containsKey(input[0])) throw new CarModelCatalogException("Option already exists: " + input[0]);
@@ -64,6 +81,13 @@ public class CarModelCatalog {
 		for(String i: split) incomp.add(i);
 
 	}
+	/**
+	 * this moves all option of a specific type that reside in one list to another list
+	 * @param comp the list that contains options may move from
+	 * @param incomp the list where may move to
+	 * @param string the specified type
+	 * 
+	 */
 	private void sametypefilter(ArrayList<String> comp, ArrayList<String> incomp,
 			String string) {
 		ArrayList<String> temp = new ArrayList<String>() ;
@@ -77,8 +101,17 @@ public class CarModelCatalog {
 			comp.remove(i);
 		}
 	}
+	/**
+	 * this removes all strings that reside in a certain list, from another list
+	 * @param comp the list where string may be removed from
+	 * @param incomp the list which strings will be removed
+	 * @throws CarModelCatalogException a string in incomp is not in comp
+	 */
 	private void check_and_remove(ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
-		for(String i: incomp) if( !comp.remove(i)) throw new CarModelCatalogException("Option does not exists: "+ i);
+		if(comp == incomp) return;
+		for(String i: incomp){
+			if( !comp.remove(i)) throw new CarModelCatalogException("Option does not exists: "+ i);
+		}
 	}
 
 	private Option create_Option(String description, String type, ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {

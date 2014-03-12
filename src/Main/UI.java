@@ -110,7 +110,6 @@ public class UI {
 		}
 	}
 	public void fillIn(OrderForm order) {
-		order.SetModel(this.askWithPossibilities("Geef uw model in", order.getAllModels()));
 		for(String i: order.getOptionTypes()){
 			order.setOption(this.askWithPossibilities("Geef uw type "+i+" in", order.getPossibleOptionsOfType(i)));
 		}

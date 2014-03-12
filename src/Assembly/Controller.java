@@ -1,15 +1,14 @@
 package Assembly;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import Car.CarModel;
 import Main.Company;
 import Main.InternalFailureException;
 import Main.UI;
 import Order.CarModelCatalog;
-import Order.CarModelCatalogException;
 import Order.OrderManager;
 import Order.OurOrderform;
 import User.CarMechanic;
@@ -25,13 +24,13 @@ public class Controller {
 	public void run()  {
 		ui = new UI();
 
-			try {
-				company = new Company();
-			} catch (InternalFailureException e2) {
-				// TODO Auto-generated catch block
-				e2.printStackTrace();
-			}
-	
+		try {
+			company = new Company();
+		} catch (InternalFailureException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("mechanic");
 		list.add("garageholder");
@@ -134,14 +133,20 @@ public class Controller {
 	 */
 	public void garageHolderCase(User user) throws UserAccessException{
 		OrderManager ordermanager=this.company.getOrderManager(user);
+		//1.The system presents an overview of the orders placed by the user,
+		//divided into two parts. The first part shows a list of pending orders,
+		//with estimated completion times.
 		ui.display("Dit zijn uw orders die uw noch heeft staan:");
 		for(String order:ordermanager.getPendingOrders(user)){
 			ui.display(""+order);
 		}
+		//1.the second part shows a history
+		//of completed orders, sorted most recent first.
 		ui.display("Dit zijn uw orders die al gedaan zijn:");
 		for(String order:ordermanager.getCompletedOrders(user)){
 			ui.display(""+order);
 		}
+		//2.The user indicates he wants to place a new car order.
 		String antwoord = "";
 		while(!antwoord.equals("V") && !antwoord.equals("N")){
 			ArrayList<String> list = new ArrayList<String>();
@@ -149,9 +154,22 @@ public class Controller {
 			list.add("N");
 			antwoord = ui.askWithPossibilities("Wilt u de overview (V)erlaten of een (N)ieuwe order plaatsen",list);
 		}
+		//3. The system shows a list of available car models
+		//4. The user indicates the car model he wishes to order.
 		if(antwoord.equals("N")){
 			CarModelCatalog catalog = company.getCatalog(user);
-			OurOrderform order = new OurOrderform(user,catalog);
+			CarModel model = null;
+			while(model != null ){
+				ArrayList<String> modelList = new ArrayList<String>();
+				for(CarModel j: catalog.getAllModels(user)){
+					modelList.add(j.getName());
+				}
+				String modelname = ui.askWithPossibilities("Geef uw model in", modelList);
+				model = catalog.getCarModel(modelname);
+			}
+			//5. The system displays the ordering form.
+			//6. The user completes the ordering form.
+			OurOrderform order = new OurOrderform(user, model ,catalog);
 			ui.fillIn(order);
 			String antwoord2 ="";
 			while(!antwoord2.equals("Y") && !antwoord2.equals("N")){
@@ -160,12 +178,19 @@ public class Controller {
 				list.add("N");
 				antwoord2 = ui.askWithPossibilities("Wilt u de order bevestigen? Y/N",list);
 			}
-			if(antwoord2.equals("Y")){GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
-			ui.display("Uw  order zou klaar moeten zijn op "+calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE)+".");
+			if(antwoord2.equals("Y")){
+				//7. The system stores the new order and updates the production schedule.
+				//8. The system presents an estimated completion date for the new order.
+				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
+				ui.display("Uw  order zou klaar moeten zijn op "+calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE)+".");
 			}else{
+				//6. (a) The user indicates he wants to cancel placing the order.
+				//7. The use case returns to step 1.
 				this.garageHolderCase(user);
 			}
 		}
+		//1. (a) The user indicates he wants to leave the overview.
+		//2. The use case ends here.
 	}
 
 	public void carMechanicCase(User carMechanic) throws UserAccessException{

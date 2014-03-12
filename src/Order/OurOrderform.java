@@ -14,20 +14,13 @@ public class OurOrderform implements OrderForm{
 	private CarModel model;
 	private User user;
 	private CarModelCatalog catalog;
-	public OurOrderform(User user, CarModelCatalog catalog) {
+	public OurOrderform(User user, CarModel model, CarModelCatalog catalog) {
 		options= new HashMap<String,Option>();
 		this.user= user;
 		this.catalog = catalog;
+		this.model = model;
 	}
-	@Override
-	public boolean SetModel(String model) {
-		if(this.model == null){
-			this.model = catalog.getCarModel(model);
-			if(this.model != null)return true;
-		}
-		return false;
-	}
-	
+		
 	@Override
 	public ArrayList<Option> getOptions() {
 		return  new ArrayList<Option>(options.values());
@@ -41,15 +34,9 @@ public class OurOrderform implements OrderForm{
 	public User getUser() {
 		return user;
 	}
-	private boolean basicOptionRestrictions(){
-		if(model==null)return false;
-		return true;
-		
-	}
-
+	
 	@Override
 	public List<String> getPossibleOptionsOfType(String type) {
-		if(!this.basicOptionRestrictions()) return null;
 		List<String> result = new ArrayList<String>();
 			for(Option i: model.getOptions()){
 				if(i.getType().equals(type)){
@@ -66,7 +53,6 @@ public class OurOrderform implements OrderForm{
 
 	@Override
 	public boolean setOption(String description) {
-		if(!this.basicOptionRestrictions()) return false;
 		Option option = catalog.getOption(description);
 		if(option == null) return false;
 		if(model.getOptions().contains(option) && !this.options.containsKey(option.getType())){

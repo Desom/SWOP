@@ -1,13 +1,15 @@
-package Assembly;
+package Main;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import Assembly.AssemblyLine;
+import Assembly.AssemblyStatusView;
+import Assembly.AssemblyTask;
+import Assembly.CannotAdvanceException;
+import Assembly.Workstation;
 import Car.CarModel;
-import Main.Company;
-import Main.InternalFailureException;
-import Main.UI;
 import Order.CarModelCatalog;
 import Order.OrderManager;
 import Order.OurOrderform;

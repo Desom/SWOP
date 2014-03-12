@@ -3,7 +3,6 @@ package Assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import Main.DoesNotExistException;
 import User.User;
 import User.UserAccessException;
 

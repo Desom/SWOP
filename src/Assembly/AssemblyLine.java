@@ -2,7 +2,6 @@ package Assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import Main.DoesNotExistException;
 import Main.InternalFailureException;
 import User.User;
 import User.UserAccessException;

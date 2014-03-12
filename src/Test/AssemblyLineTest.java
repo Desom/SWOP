@@ -43,7 +43,7 @@ public class AssemblyLineTest {
 		m3 = new CarMechanic(4);
 		
 		// maak een andere orderManager met enkele voorbeeld orders
-		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1));
+		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1, 12, 0, 0));
 		schedule = orderManager.getProductionSchedule();
 		line = new AssemblyLine(schedule);
 		

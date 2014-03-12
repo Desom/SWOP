@@ -29,7 +29,7 @@ public class Company {
 	public Company() throws InternalFailureException {
 		try {
 			this.catalog = new CarModelCatalog();
-			this.orderManager = new OrderManager(catalog, new GregorianCalendar(2014, 1, 1));
+			this.orderManager = new OrderManager(catalog, new GregorianCalendar(2014, 1, 1, 12, 0, 0));
 			this.assemblyLine = new AssemblyLine(orderManager.getProductionSchedule());
 		} catch (IOException | CarModelCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company");

@@ -45,7 +45,7 @@ public class OrderManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		orderManager = new OrderManager("testData_OrderManager.txt", catalog, new GregorianCalendar(2014, 1, 1));
+		orderManager = new OrderManager("testData_OrderManager.txt", catalog, new GregorianCalendar(2014, 1, 1,12,0,0));
 	}
 
 	@Test

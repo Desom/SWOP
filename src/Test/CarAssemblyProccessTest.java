@@ -30,7 +30,7 @@ public class CarAssemblyProccessTest {
 		
 		// MAAK EEN AUTO MET OPTIONS EN MODEL AAN
 		
-		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1));
+		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1, 12, 0, 0));
 		ProductionSchedule schedule = orderManager.getProductionSchedule();
 		process = schedule.getNextCarOrder(100).getCar().getAssemblyprocess();
 		

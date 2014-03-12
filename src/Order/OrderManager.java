@@ -40,7 +40,13 @@ public class OrderManager {
 		for(CarOrder order : allCarOrders) {
 			this.addCarOrder(order);
 		}
-		
+
+		ArrayList<CarOrder> allUnfinishedCarOrders = this.createOrderList(dataFilePath,catalog);
+		for(CarOrder order : allCarOrders) {
+			if(!order.IsCompleted()){
+				allUnfinishedCarOrders.add(order);
+			}
+		}
 		this.createProductionSchedule(allCarOrders, currentTime);
 	}
 	

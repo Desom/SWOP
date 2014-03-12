@@ -161,7 +161,7 @@ public class Controller {
 		if(antwoord.equals("N")){
 			CarModelCatalog catalog = company.getCatalog(user);
 			CarModel model = null;
-			while(model != null ){
+			while(model == null ){
 				ArrayList<String> modelList = new ArrayList<String>();
 				for(CarModel j: catalog.getAllModels(user)){
 					modelList.add(j.getName());

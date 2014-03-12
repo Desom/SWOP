@@ -1,1 +1,1 @@
-Ford;manual;sedan;red;performance 2.5l 6 cilinders;6 speed manual;leather black;comfort;black,blue
+Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue

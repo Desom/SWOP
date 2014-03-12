@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import Main.Company;
+import Main.InternalFailureException;
 import Main.UI;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
@@ -21,13 +22,16 @@ public class Controller {
 	private UI ui;
 	private Company company;
 
-	public void run(){
+	public void run()  {
 		ui = new UI();
-		try {
-			company = new Company();
-		} catch (IOException | CarModelCatalogException e) {
-			e.printStackTrace();
-		}
+
+			try {
+				company = new Company();
+			} catch (InternalFailureException e2) {
+				// TODO Auto-generated catch block
+				e2.printStackTrace();
+			}
+	
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("mechanic");
 		list.add("garageholder");
@@ -46,6 +50,9 @@ public class Controller {
 			} catch (UserAccessException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} catch (InternalFailureException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		if(antwoord.equals("garageholder"))
 			try {
@@ -56,7 +63,7 @@ public class Controller {
 			}
 	}
 
-	public void managerCase(User user) throws UserAccessException{
+	public void managerCase(User user) throws UserAccessException, InternalFailureException{
 		AssemblyLine assembly = this.company.getAssemblyLine(user);
 
 		//1. The user indicates he wants to advance the assembly line.
@@ -74,7 +81,7 @@ public class Controller {
 		}
 	}
 
-	private void actionAdvanceLine(User user, AssemblyLine assembly) throws UserAccessException{
+	private void actionAdvanceLine(User user, AssemblyLine assembly) throws UserAccessException, InternalFailureException{
 		while(true){
 			//2. The system presents an overview of the current assembly line status,
 			//as well as a view of the future assembly line status (as it would be after
@@ -120,7 +127,11 @@ public class Controller {
 			}
 		}
 	}
-
+	/**
+	 * The use case of the garageholder: ordering a car
+	 * @param user The user that wants to use the garage holder use case
+	 * @throws UserAccessException
+	 */
 	public void garageHolderCase(User user) throws UserAccessException{
 		OrderManager ordermanager=this.company.getOrderManager(user);
 		ui.display("Dit zijn uw orders die uw noch heeft staan:");

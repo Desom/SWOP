@@ -13,24 +13,29 @@ import User.UserAccessException;
 
 
 public class Company {
-	
+
 	private AssemblyLine assemblyLine = null;
-	private final CarModelCatalog catalog;
-	private final OrderManager orderManager;
-	
+	private CarModelCatalog catalog;
+	private OrderManager orderManager;
+
 	/**
 	 * Constructor for the company class.
 	 * This constructor is also responsible for the creation of 1 or more assemblyLines.
 	 * This constructor is also responsible for the creation of the cat model catalog.
+	 * @throws InternalFailureException 
 	 * @throws CarModelCatalogException 
 	 * @throws IOException 
 	 */
-	public Company() throws IOException, CarModelCatalogException{ // catalog exception
-		this.catalog = new CarModelCatalog();
-		this.orderManager = new OrderManager(catalog, new GregorianCalendar(2014, 1, 1));
-		this.assemblyLine = new AssemblyLine(orderManager.getProductionSchedule());
+	public Company() throws InternalFailureException {
+		try {
+			this.catalog = new CarModelCatalog();
+			this.orderManager = new OrderManager(catalog, new GregorianCalendar(2014, 1, 1));
+			this.assemblyLine = new AssemblyLine(orderManager.getProductionSchedule());
+		} catch (IOException | CarModelCatalogException e) {
+			throw new InternalFailureException("Failed to initialise Company");
+		}
 	}
-	
+
 	/**
 	 * Gives a LinkedList of all the workstations.
 	 * 
@@ -45,22 +50,23 @@ public class Company {
 			throw new UserAccessException(user, "getAllWorkStations");
 		}
 	}
-	
+
 	/**
 	 * Add's the specified user to the workstation matching the given workStation id if the specified user is allowed to perform this action.
 	 * 
 	 * @param user The user that wants to be added to the given workstation.
 	 * @param workStation_id The id of the workstation the user wants to be added to.
+	 * @throws UserAccessException 
 	 * @throws Exception 
 	 */
-	public void selectWorkstation(User user, int workStation_id) throws Exception{
+	public void selectWorkstation(User user, int workStation_id) throws UserAccessException, InternalFailureException{
 		if(user.canPerform("selectWorkStation")){
 			assemblyLine.selectWorkstation(user, workStation_id);
 		}else{
 			throw new UserAccessException(user, "selectWorkStation");
 		}
 	}
-	
+
 	/**
 	 * Returns the company's car model catalog.
 	 * @param user The user requesting the catalog
@@ -74,8 +80,8 @@ public class Company {
 			throw new UserAccessException(user, "getCatalog");
 		}
 	}
-	
-	
+
+
 	/**
 	 * Returns the company's order manager.
 	 * @param user The user requesting the order manager
@@ -89,7 +95,7 @@ public class Company {
 			throw new UserAccessException(user, "getOrderManager");
 		}
 	}
-	
+
 	/**
 	 * Returns the company's assembly line.
 	 * @param user The user requesting the aasembly Line

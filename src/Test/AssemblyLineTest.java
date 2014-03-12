@@ -17,6 +17,7 @@ import Assembly.CarAssemblyProcess;
 import Assembly.ProductionSchedule;
 import Assembly.Workstation;
 import Main.DoesNotExistException;
+import Main.InternalFailureException;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
 import Order.OrderManager;
@@ -35,7 +36,7 @@ public class AssemblyLineTest {
 	private CarMechanic m3;
 	
 	@Before
-	public void testCreate() throws UserAccessException, DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException {
+	public void testCreate() throws UserAccessException, DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException {
 		manager = new Manager(1);
 		m1 = new CarMechanic(2);
 		m2 = new CarMechanic(3);
@@ -74,7 +75,7 @@ public class AssemblyLineTest {
 	}
 	
 	@Test
-	public void testSelectWorkStationId() throws DoesNotExistException, UserAccessException{
+	public void testSelectWorkStationId() throws DoesNotExistException, UserAccessException, InternalFailureException{
 		assertNotNull(line.selectWorkstationById(1, manager));
 		assertEquals(line.selectWorkstationById(1, manager).getId(), 1);
 		
@@ -86,7 +87,7 @@ public class AssemblyLineTest {
 	}
 	
 	@Test
-	public void testAdvanceLineSucces() throws UserAccessException, DoesNotExistException, CannotAdvanceException {
+	public void testAdvanceLineSucces() throws UserAccessException, DoesNotExistException, CannotAdvanceException, InternalFailureException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations(manager)){
 			while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
@@ -111,7 +112,7 @@ public class AssemblyLineTest {
 	}
 	
 	@Test(expected = CannotAdvanceException.class)  
-	public void testAdvanceLineBlocking() throws UserAccessException, DoesNotExistException, CannotAdvanceException {
+	public void testAdvanceLineBlocking() throws UserAccessException, DoesNotExistException, CannotAdvanceException, InternalFailureException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations(manager)){
 			processesBefore.add(w.getCurrentCar());
@@ -130,7 +131,7 @@ public class AssemblyLineTest {
 	}
 	
 	@Test
-	public void testCurrentStatus() {
+	public void testCurrentStatus() throws InternalFailureException {
 		try {
 			AssemblyStatusView current = line.currentStatus(manager);
 			
@@ -146,7 +147,7 @@ public class AssemblyLineTest {
 	}
 	
 	@Test
-	public void testFutureStatus() {
+	public void testFutureStatus() throws InternalFailureException {
 		try {
 			AssemblyStatusView future = line.futureStatus(manager);
 			line.advanceLine(manager, 100);

@@ -1,5 +1,4 @@
 package User;
-import java.util.ArrayList;
 
 
 public class CarMechanic extends User {

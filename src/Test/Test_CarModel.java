@@ -66,6 +66,7 @@ public class Test_CarModel {
 		assertTrue( car.getOfOptionType("Seats").contains(S));
 		assertTrue( car.getOfOptionType("Wheels").contains(W));
 	}
+	@SuppressWarnings("unchecked")
 	@Test
 	public void testnull()  {
 		try {

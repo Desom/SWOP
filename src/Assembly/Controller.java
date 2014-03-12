@@ -159,8 +159,8 @@ public class Controller {
 
 	public void carMechanicCase(User carMechanic) throws UserAccessException{
 		//TODO optimaliseren
-		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkStations(carMechanic).toArray());
-		Workstation workstation = company.getAllWorkStations(carMechanic).get(workstationInt);
+		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkstations(carMechanic).toArray());
+		Workstation workstation = company.getAllWorkstations(carMechanic).get(workstationInt);
 		while(true) {
 			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic).toArray());
 			AssemblyTask task = workstation.getAllPendingTasks(carMechanic).get(taskInt);

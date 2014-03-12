@@ -3,6 +3,7 @@ package Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -11,7 +12,6 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
 import Car.CarOrder;
-import Main.*;
 import Order.CarModelCatalog;
 import Order.OrderManager;
 import User.CarMechanic;
@@ -45,7 +45,7 @@ public class OrderManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		orderManager = new OrderManager("testData_OrderManager.txt", catalog);
+		orderManager = new OrderManager("testData_OrderManager.txt", catalog, new GregorianCalendar(2014, 1, 1));
 	}
 
 	@Test
@@ -72,7 +72,7 @@ public class OrderManagerTest {
 	@Test
 	public void testGetOrdersUserAccess() throws UserAccessException {
 
-		ArrayList<CarOrder> orders1 = orderManager.getOrders(user1);
+		orderManager.getOrders(user1);
 
 		exception.expect(UserAccessException.class);
 		orderManager.getOrders(manager);

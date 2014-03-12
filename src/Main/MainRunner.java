@@ -2,7 +2,7 @@ package Main;
 
 import Assembly.Controller;
 
-public class main {
+public class MainRunner {
 
 	/**
 	 * @param args

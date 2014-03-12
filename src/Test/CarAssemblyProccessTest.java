@@ -1,29 +1,17 @@
 package Test;
 
 import java.util.ArrayList;
-
+import java.util.GregorianCalendar;
 import static org.junit.Assert.*;
-
 import java.io.IOException;
-import java.util.LinkedList;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import Assembly.AssemblyLine;
-import Assembly.AssemblyTask;
-import Assembly.CannotAdvanceException;
 import Assembly.CarAssemblyProcess;
 import Assembly.ProductionSchedule;
 import Assembly.Workstation;
-import Car.Car;
-import Main.DoesNotExistException;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
 import Order.OrderManager;
-import User.CarMechanic;
-import User.Manager;
-import User.UserAccessException;
 
 public class CarAssemblyProccessTest {
 
@@ -31,25 +19,32 @@ public class CarAssemblyProccessTest {
 	Workstation w2;
 	Workstation w3;
 	
+	ArrayList<String> taskTypes1;
+	ArrayList<String> taskTypes2;
+	ArrayList<String> taskTypes3;
+	
 	CarAssemblyProcess process;
 	
 	@Before
-	public void testCreate(){
+	public void testCreate() throws IOException, CarModelCatalogException{
 		
 		// MAAK EEN AUTO MET OPTIONS EN MODEL AAN
-		process = new Car().getAssemblyprocess();
 		
-		ArrayList<String> taskTypes1 = new ArrayList<String>();
+		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1));
+		ProductionSchedule schedule = orderManager.getProductionSchedule();
+		process = schedule.getNextCarOrder(100).getCar().getAssemblyprocess();
+		
+		taskTypes1 = new ArrayList<String>();
 		taskTypes1.add("Body");
 		taskTypes1.add("Color");
 		Workstation workStation1 = new Workstation(1, taskTypes1);
 		
-		ArrayList<String> taskTypes2 = new ArrayList<String>();
+		taskTypes2 = new ArrayList<String>();
 		taskTypes2.add("Engine");
 		taskTypes2.add("GearBox");
 		Workstation workStation2 = new Workstation(2, taskTypes2);
 		
-		ArrayList<String> taskTypes3 = new ArrayList<String>();
+		taskTypes3 = new ArrayList<String>();
 		taskTypes3.add("Seats");
 		taskTypes3.add("Airco");
 		taskTypes3.add("Wheels");
@@ -61,21 +56,17 @@ public class CarAssemblyProccessTest {
 	}
 	
 	@Test
-	public void testMatching(){ // VUL TASKS IN AFHANKELIJK VAN CAR OPTIONS
-		ArrayList<AssemblyTask> tasks1 = new ArrayList<AssemblyTask>();
-		for(int i = 0; i<tasks1.size(); i++){
-			assertEquals(process.compatibleWith(w1).get(i), tasks1.get(i));
+	public void testMatching(){
+		for(int i = 0; i<process.compatibleWith(w1).size(); i++){
+			assertTrue(taskTypes1.contains(process.compatibleWith(w1).get(i).getType()));
 		}
 		
-		ArrayList<AssemblyTask> tasks2 = new ArrayList<AssemblyTask>();
-		for(int i = 0; i<tasks2.size(); i++){
-			assertEquals(process.compatibleWith(w2).get(i), tasks2.get(i));
+		for(int i = 0; i<process.compatibleWith(w2).size(); i++){
+			assertTrue(taskTypes2.contains(process.compatibleWith(w2).get(i).getType()));
 		}
 		
-		
-		ArrayList<AssemblyTask> tasks3 = new ArrayList<AssemblyTask>();
-		for(int i = 0; i<tasks3.size(); i++){
-			assertEquals(process.compatibleWith(w3).get(i), tasks3.get(i));
+		for(int i = 0; i<process.compatibleWith(w3).size(); i++){
+			assertTrue(taskTypes3.contains(process.compatibleWith(w3).get(i).getType()));
 		}
 	}
 	

@@ -157,7 +157,9 @@ public class OrderManager {
 				allCarOrderInfo.add(otherLine);
 				otherLine = bReader.readLine();
 			}
+			bReader.close();
 			//TODO is multiple exceptions in 1 catcher possible?
+			// Yes, but in this case IOException will also catch filenotfoundexception as it is a subclass
 		} catch (FileNotFoundException e) {
 			return null;
 		} catch (IOException e) {

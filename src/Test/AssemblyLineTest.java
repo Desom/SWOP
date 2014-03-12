@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import org.junit.Before;
@@ -40,21 +41,21 @@ public class AssemblyLineTest {
 		m3 = new CarMechanic(4);
 		
 		// maak een andere orderManager met enkele voorbeeld orders
-		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog());
+		OrderManager orderManager = new OrderManager("testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1));
 		schedule = orderManager.getProductionSchedule();
 		line = new AssemblyLine(schedule);
 		
-		line.selectWorkStation(m1, 1);
-		assertEquals(line.selectWorkStationId(1, manager).getCarMechanic(), m1);
+		line.selectWorkstation(m1, 1);
+		assertEquals(line.selectWorkstationId(1, manager).getCarMechanic(), m1);
 		
-		line.selectWorkStation(m2, 2);
-		assertEquals(line.selectWorkStationId(2, manager).getCarMechanic(), m2);
+		line.selectWorkstation(m2, 2);
+		assertEquals(line.selectWorkstationId(2, manager).getCarMechanic(), m2);
 		
-		line.selectWorkStation(m3, 3);
-		assertEquals(line.selectWorkStationId(3, manager).getCarMechanic(), m3);
+		line.selectWorkstation(m3, 3);
+		assertEquals(line.selectWorkstationId(3, manager).getCarMechanic(), m3);
 		
 		line.advanceLine(manager, 100);
-		for(Workstation w : line.getAllWorkStations(manager)){
+		for(Workstation w : line.getAllWorkstations(manager)){
 			while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
 				w.selectTask(w.getCarMechanic(), w.getAllPendingTasks(w.getCarMechanic()).get(0));
 				w.completeTask(w.getCarMechanic());
@@ -65,7 +66,7 @@ public class AssemblyLineTest {
 	
 	@Test
 	public void testgetAllWorkStations() throws UserAccessException {
-		LinkedList<Workstation> stations = line.getAllWorkStations(manager);
+		LinkedList<Workstation> stations = line.getAllWorkstations(manager);
 		for(Workstation w : stations){
 			assertNotNull(w);
 		}
@@ -73,20 +74,20 @@ public class AssemblyLineTest {
 	
 	@Test
 	public void testSelectWorkStationId() throws DoesNotExistException, UserAccessException{
-		assertNotNull(line.selectWorkStationId(1, manager));
-		assertEquals(line.selectWorkStationId(1, manager).getId(), 1);
+		assertNotNull(line.selectWorkstationId(1, manager));
+		assertEquals(line.selectWorkstationId(1, manager).getId(), 1);
 		
-		assertNotNull(line.selectWorkStationId(2, manager));
-		assertEquals(line.selectWorkStationId(2, manager).getId(), 2);
+		assertNotNull(line.selectWorkstationId(2, manager));
+		assertEquals(line.selectWorkstationId(2, manager).getId(), 2);
 		
-		assertNotNull(line.selectWorkStationId(3, manager));
-		assertEquals(line.selectWorkStationId(3, manager).getId(), 3);
+		assertNotNull(line.selectWorkstationId(3, manager));
+		assertEquals(line.selectWorkstationId(3, manager).getId(), 3);
 	}
 	
 	@Test
 	public void testAdvanceLineSucces() throws UserAccessException, DoesNotExistException, CannotAdvanceException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
-		for(Workstation w : line.getAllWorkStations(manager)){
+		for(Workstation w : line.getAllWorkstations(manager)){
 			while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
 				w.selectTask(w.getCarMechanic(), w.getAllPendingTasks(w.getCarMechanic()).get(0));
 				w.completeTask(w.getCarMechanic());
@@ -94,11 +95,11 @@ public class AssemblyLineTest {
 			processesBefore.add(w.getCurrentCar());
 		}
 		
-		line.advanceLine(manager, 100);
 		CarAssemblyProcess next = schedule.seeNextCarOrder().getCar().getAssemblyprocess();
+		line.advanceLine(manager, 100);
 		
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
-		for(Workstation w : line.getAllWorkStations(manager)){
+		for(Workstation w : line.getAllWorkstations(manager)){
 			processesAfter.add(w.getCurrentCar());
 		}
 		
@@ -111,14 +112,14 @@ public class AssemblyLineTest {
 	@Test(expected = CannotAdvanceException.class)  
 	public void testAdvanceLineBlocking() throws UserAccessException, DoesNotExistException, CannotAdvanceException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
-		for(Workstation w : line.getAllWorkStations(manager)){
+		for(Workstation w : line.getAllWorkstations(manager)){
 			processesBefore.add(w.getCurrentCar());
 		}
 		
 		line.advanceLine(manager, 100);
 		
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
-		for(Workstation w : line.getAllWorkStations(manager)){
+		for(Workstation w : line.getAllWorkstations(manager)){
 			processesAfter.add(w.getCurrentCar());
 		}
 		

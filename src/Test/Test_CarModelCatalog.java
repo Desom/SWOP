@@ -1,24 +1,12 @@
 package Test;
 import static org.junit.Assert.*;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-
 import org.junit.Before;
 import org.junit.Test;
-
-import Car.Option;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
-import Order.OptionSubTypes.Airco;
-import Order.OptionSubTypes.Body;
-import Order.OptionSubTypes.Color;
-import Order.OptionSubTypes.Engine;
-import Order.OptionSubTypes.Gearbox;
-import Order.OptionSubTypes.Seats;
-import Order.OptionSubTypes.Wheels;
 
 
 public class Test_CarModelCatalog {

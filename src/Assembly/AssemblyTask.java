@@ -47,6 +47,7 @@ public class AssemblyTask {
 	 * 
 	 * @return	A copy of the list of all actions needed to complete this AssemblyTask.
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<String> getActions() {
 		return (ArrayList<String>) actions.clone();
 	}

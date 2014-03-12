@@ -9,7 +9,7 @@ import User.UserAccessException;
 
 public class AssemblyLine {
 
-	private LinkedList<Workstation> workStations = null;
+	private LinkedList<Workstation> workstations = null;
 	private final ProductionSchedule schedule;
 
 	/**
@@ -17,7 +17,7 @@ public class AssemblyLine {
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
 	public AssemblyLine(ProductionSchedule schedule){
-		workStations = new LinkedList<Workstation>(createWorkStations());
+		workstations = new LinkedList<Workstation>(createWorkstations());
 		this.schedule = schedule;
 	}
 
@@ -27,9 +27,9 @@ public class AssemblyLine {
 	 * @throws UserAccessException If this user is not allowed to execute this method.
 	 */
 	@SuppressWarnings("unchecked")
-	public LinkedList<Workstation> getAllWorkStations(User user) throws UserAccessException{
+	public LinkedList<Workstation> getAllWorkstations(User user) throws UserAccessException{
 		if(user.canPerform("getAllWorkstations")){
-			return (LinkedList<Workstation>) workStations.clone();
+			return (LinkedList<Workstation>) workstations.clone();
 		}else{
 			throw new UserAccessException(user, "getAllWorkStations");
 		}
@@ -48,7 +48,7 @@ public class AssemblyLine {
 			// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 			boolean isReady = true;
 			CannotAdvanceException cannotAdvance = new CannotAdvanceException();
-			for(Workstation w : getAllWorkStations(user)){
+			for(Workstation w : getAllWorkstations(user)){
 				if(!w.hasAllTasksCompleted(user)){
 					isReady = false;
 					cannotAdvance.addBlockingWorkstation(w);
@@ -57,10 +57,10 @@ public class AssemblyLine {
 			if(isReady){
 				try{
 					// move huidige cars 1 plek
-					for(int i = getAllWorkStations(user).size(); i>1; i--){
-						Workstation workstationNext = selectWorkStationId(i, user);
+					for(int i = getAllWorkstations(user).size(); i>1; i--){
+						Workstation workstationNext = selectWorkstationId(i, user);
 						workstationNext.clearCar();
-						Workstation workstationPrev = selectWorkStationId(i-1, user);
+						Workstation workstationPrev = selectWorkstationId(i-1, user);
 						workstationNext.setCurrentCar(workstationPrev.getCurrentCar());
 						if(workstationNext.getCurrentCar() != null){
 							for(AssemblyTask t : workstationNext.getCurrentCar().compatibleWith(workstationNext)){
@@ -71,7 +71,7 @@ public class AssemblyLine {
 					
 					//voeg nieuwe car toe.
 					CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
-					Workstation workstation1 = selectWorkStationId(1, user);
+					Workstation workstation1 = selectWorkstationId(1, user);
 					workstation1.clearCar();
 					workstation1.setCurrentCar(newCar);
 					for(AssemblyTask t : newCar.compatibleWith(workstation1)){
@@ -98,9 +98,9 @@ public class AssemblyLine {
 	 * @throws DoesNotExistException 
 	 * @throws Exception If the Carmechanic could not be appointed to the workstation.
 	 */
-	public void selectWorkStation(User user, int workStation_id) throws UserAccessException, DoesNotExistException {
+	public void selectWorkstation(User user, int workStation_id) throws UserAccessException, DoesNotExistException {
 		if(user.canPerform("selectWorkstation")){
-			Workstation selected = selectWorkStationId(workStation_id, user);
+			Workstation selected = selectWorkstationId(workStation_id, user);
 			selected.addCarMechanic(user);
 		}else{
 			throw new UserAccessException(user, "advanceLine");
@@ -115,10 +115,10 @@ public class AssemblyLine {
 	 * @throws DoesNotExistException when no workstation with the specified ID exists.
 	 * @throws UserAccessException 
 	 */
-	public Workstation selectWorkStationId(int id, User user) throws DoesNotExistException, UserAccessException{
+	public Workstation selectWorkstationId(int id, User user) throws DoesNotExistException, UserAccessException{
 		if(user.canPerform("selectWorkstationID")){
 			Workstation selected = null;
-			for(Workstation w : getAllWorkStations(user)){
+			for(Workstation w : getAllWorkstations(user)){
 				if(w.getId() == id)
 					selected = w;
 			}
@@ -133,7 +133,7 @@ public class AssemblyLine {
 	/**
 	 * This method creates 3 workstations, specifies their ID's and the respective assembly tasks those workstations can perform.
 	 */
-	private ArrayList<Workstation> createWorkStations(){
+	private ArrayList<Workstation> createWorkstations(){
 		ArrayList<Workstation> list = new ArrayList<Workstation>();
 		ArrayList<String> taskTypes1 = new ArrayList<String>();
 		taskTypes1.add("Body");
@@ -166,7 +166,7 @@ public class AssemblyLine {
 	 */
 	public AssemblyStatusView currentStatus(User user) throws UserAccessException{
 		if(user.canPerform("currentStatus")){
-			ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkStations(user));
+			ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkstations(user));
 			AssemblyStatusView view = new AssemblyStatusView(user, list, "Current Status");
 			return view;
 		}else{
@@ -187,19 +187,19 @@ public class AssemblyLine {
 		if(user.canPerform("futureStatus")){
 			// check if the line can advance
 			boolean isReady = true;
-			for(Workstation w : getAllWorkStations(user)){
+			for(Workstation w : getAllWorkstations(user)){
 				if(!w.hasAllTasksCompleted(user)){
 					isReady = false;
 				}
 			}
 			if(isReady){ // if the line can advance make new workstations representing the future
-				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkStations());
+				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations());
 				try{
 					for(Workstation fake: list){ // set the corresponding car mechanics.
-						Workstation real = selectWorkStationId(fake.getId(), user);
+						Workstation real = selectWorkstationId(fake.getId(), user);
 						fake.addCarMechanic(real.getCarMechanic());
 						if(fake.getId() != 1){
-							Workstation realPrev = selectWorkStationId(fake.getId()-1, user);
+							Workstation realPrev = selectWorkstationId(fake.getId()-1, user);
 							fake.setCurrentCar(realPrev.getCurrentCar());
 							for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
 								fake.addAssemblyTask(user, t);

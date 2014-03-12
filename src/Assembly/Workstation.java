@@ -207,6 +207,7 @@ public class Workstation {
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllPendingTasks(User user) throws UserAccessException {
 		this.checkUser(user, "getAllPendingTasks");
 		ArrayList<AssemblyTask> allPendingTasks = new ArrayList<AssemblyTask>();
@@ -225,6 +226,7 @@ public class Workstation {
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllCompletedTasks(User user) throws UserAccessException {
 		this.checkUser(user, "getAllCompletedTasks");
 		ArrayList<AssemblyTask> allCompletedTasks = new ArrayList<AssemblyTask>();
@@ -243,6 +245,7 @@ public class Workstation {
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllTasks(User user) throws UserAccessException {
 		this.checkUser(user, "getAllTasks");
 		return (ArrayList<AssemblyTask>) this.allTasks.clone();

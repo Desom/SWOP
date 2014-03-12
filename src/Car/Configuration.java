@@ -58,7 +58,6 @@ public class Configuration {
 	 * @throws	Exception
 	 * 			If there are conflicting options to be added
 	 */
-	@SuppressWarnings("static-access")
 	private void addall(ArrayList<Option> optionlist) throws IllegalArgumentException {
 		for(int i=0; i< optionlist.size();i++){
 			for(int j= i+1; j<optionlist.size();j++){

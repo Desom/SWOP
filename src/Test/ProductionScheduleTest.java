@@ -3,6 +3,7 @@ package Test;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import org.junit.Before;
@@ -13,9 +14,7 @@ import Assembly.ProductionSchedule;
 import Car.CarModel;
 import Car.CarOrder;
 import Car.Option;
-import Main.*;
 import Order.CarModelCatalog;
-import Order.OptionSubTypes.*;
 
 public class ProductionScheduleTest {
 	public ArrayList<CarOrder> carOrders;
@@ -186,7 +185,7 @@ public class ProductionScheduleTest {
 	public void testAddOrder() {
 		//problemen met het feit dat er geen carOrders komen na de werkdag.
 		GregorianCalendar now2 = new GregorianCalendar();
-		now2.add(now2.HOUR_OF_DAY, 2);
+		now2.add(Calendar.HOUR_OF_DAY, 2);
 		CarOrder order2 = new CarOrder(2, 0, now2, null,  carModel, new ArrayList<Option>());
 		prodSchedNormal.addOrder(order2);
 		prodSchedNormal.getNextCarOrder(0);

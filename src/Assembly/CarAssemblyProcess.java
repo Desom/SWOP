@@ -10,7 +10,7 @@ public class CarAssemblyProcess {
 	private final ArrayList<AssemblyTask> tasks;
 	private final Car car;
 	
-	protected Car getCar() {
+	public Car getCar() {
 		return car;
 	}
 

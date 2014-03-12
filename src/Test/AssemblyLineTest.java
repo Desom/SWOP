@@ -11,6 +11,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Assembly.AssemblyLine;
+import Assembly.AssemblyStatusView;
 import Assembly.CannotAdvanceException;
 import Assembly.CarAssemblyProcess;
 import Assembly.ProductionSchedule;
@@ -46,13 +47,13 @@ public class AssemblyLineTest {
 		line = new AssemblyLine(schedule);
 		
 		line.selectWorkstation(m1, 1);
-		assertEquals(line.selectWorkstationId(1, manager).getCarMechanic(), m1);
+		assertEquals(line.selectWorkstationById(1, manager).getCarMechanic(), m1);
 		
 		line.selectWorkstation(m2, 2);
-		assertEquals(line.selectWorkstationId(2, manager).getCarMechanic(), m2);
+		assertEquals(line.selectWorkstationById(2, manager).getCarMechanic(), m2);
 		
 		line.selectWorkstation(m3, 3);
-		assertEquals(line.selectWorkstationId(3, manager).getCarMechanic(), m3);
+		assertEquals(line.selectWorkstationById(3, manager).getCarMechanic(), m3);
 		
 		line.advanceLine(manager, 100);
 		for(Workstation w : line.getAllWorkstations(manager)){
@@ -74,14 +75,14 @@ public class AssemblyLineTest {
 	
 	@Test
 	public void testSelectWorkStationId() throws DoesNotExistException, UserAccessException{
-		assertNotNull(line.selectWorkstationId(1, manager));
-		assertEquals(line.selectWorkstationId(1, manager).getId(), 1);
+		assertNotNull(line.selectWorkstationById(1, manager));
+		assertEquals(line.selectWorkstationById(1, manager).getId(), 1);
 		
-		assertNotNull(line.selectWorkstationId(2, manager));
-		assertEquals(line.selectWorkstationId(2, manager).getId(), 2);
+		assertNotNull(line.selectWorkstationById(2, manager));
+		assertEquals(line.selectWorkstationById(2, manager).getId(), 2);
 		
-		assertNotNull(line.selectWorkstationId(3, manager));
-		assertEquals(line.selectWorkstationId(3, manager).getId(), 3);
+		assertNotNull(line.selectWorkstationById(3, manager));
+		assertEquals(line.selectWorkstationById(3, manager).getId(), 3);
 	}
 	
 	@Test
@@ -128,6 +129,39 @@ public class AssemblyLineTest {
 		}
 	}
 	
+	@Test
+	public void testCurrentStatus() {
+		try {
+			AssemblyStatusView current = line.currentStatus(manager);
+			
+			for(int i : line.getWorkstationIDs()){
+				assertEquals(current.getAllTasksAt(i), line.selectWorkstationById(i, manager).getAllTasks(manager));
+				assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i, manager).getCurrentCar().getCar().getOrder());
+				assertTrue(current.getHeader().compareToIgnoreCase("Current Status") == 0);
+			}
+			
+		} catch (UserAccessException | DoesNotExistException e) {
+			fail();
+		}
+	}
+	
+	@Test
+	public void testFutureStatus() {
+		try {
+			AssemblyStatusView future = line.futureStatus(manager);
+			line.advanceLine(manager, 100);
+			AssemblyStatusView current = line.currentStatus(manager);
+			for(int i : line.getWorkstationIDs()){
+				assertEquals(current.getAllTasksAt(i), future.getAllTasksAt(i));
+				assertEquals(current.getCarOrderIdAt(i), future.getCarOrderIdAt(i));
+			}
+			assertEquals(current.getAllWorkstationIds(), future.getAllWorkstationIds());
+			assertTrue(current.getHeader().compareToIgnoreCase(future.getHeader()) == 0);
+			
+		} catch (UserAccessException | DoesNotExistException | CannotAdvanceException e) {
+			fail();
+		}
+	}
 	
 	
 }

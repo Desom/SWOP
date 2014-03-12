@@ -34,7 +34,7 @@ public class AssemblyLine {
 			throw new UserAccessException(user, "getAllWorkStations");
 		}
 	}
-	
+
 	/**
 	 * 
 	 * @param user The user trying to advance the line
@@ -58,9 +58,9 @@ public class AssemblyLine {
 				try{
 					// move huidige cars 1 plek
 					for(int i = getAllWorkstations(user).size(); i>1; i--){
-						Workstation workstationNext = selectWorkstationId(i, user);
+						Workstation workstationNext = selectWorkstationById(i, user);
 						workstationNext.clearCar();
-						Workstation workstationPrev = selectWorkstationId(i-1, user);
+						Workstation workstationPrev = selectWorkstationById(i-1, user);
 						workstationNext.setCurrentCar(workstationPrev.getCurrentCar());
 						if(workstationNext.getCurrentCar() != null){
 							for(AssemblyTask t : workstationNext.getCurrentCar().compatibleWith(workstationNext)){
@@ -68,10 +68,10 @@ public class AssemblyLine {
 							}
 						}
 					}
-					
+
 					//voeg nieuwe car toe.
 					CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
-					Workstation workstation1 = selectWorkstationId(1, user);
+					Workstation workstation1 = selectWorkstationById(1, user);
 					workstation1.clearCar();
 					workstation1.setCurrentCar(newCar);
 					for(AssemblyTask t : newCar.compatibleWith(workstation1)){
@@ -100,7 +100,7 @@ public class AssemblyLine {
 	 */
 	public void selectWorkstation(User user, int workStation_id) throws UserAccessException, DoesNotExistException {
 		if(user.canPerform("selectWorkstation")){
-			Workstation selected = selectWorkstationId(workStation_id, user);
+			Workstation selected = selectWorkstationById(workStation_id, user);
 			selected.addCarMechanic(user);
 		}else{
 			throw new UserAccessException(user, "advanceLine");
@@ -115,7 +115,7 @@ public class AssemblyLine {
 	 * @throws DoesNotExistException when no workstation with the specified ID exists.
 	 * @throws UserAccessException 
 	 */
-	public Workstation selectWorkstationId(int id, User user) throws DoesNotExistException, UserAccessException{
+	public Workstation selectWorkstationById(int id, User user) throws DoesNotExistException, UserAccessException{
 		if(user.canPerform("selectWorkstationID")){
 			Workstation selected = null;
 			for(Workstation w : getAllWorkstations(user)){
@@ -139,24 +139,24 @@ public class AssemblyLine {
 		taskTypes1.add("Body");
 		taskTypes1.add("Color");
 		Workstation workStation1 = new Workstation(1, taskTypes1);
-		
+
 		ArrayList<String> taskTypes2 = new ArrayList<String>();
 		taskTypes2.add("Engine");
 		taskTypes2.add("GearBox");
 		Workstation workStation2 = new Workstation(2, taskTypes2);
-		
+
 		ArrayList<String> taskTypes3 = new ArrayList<String>();
 		taskTypes3.add("Seats");
 		taskTypes3.add("Airco");
 		taskTypes3.add("Wheels");
 		Workstation workStation3 = new Workstation(3, taskTypes3);
-		
+
 		list.add(workStation1);
 		list.add(workStation2);
 		list.add(workStation3);
 		return list;
 	}
-	
+
 	/**
 	 * Creates a view of the current status of the assembly line
 	 * 
@@ -173,8 +173,8 @@ public class AssemblyLine {
 			throw new UserAccessException(user, "currentStatus");
 		}
 	}
-	
-	
+
+
 	/**
 	 * Creates a view of the future status of the assembly line
 	 * 
@@ -196,10 +196,10 @@ public class AssemblyLine {
 				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations());
 				try{
 					for(Workstation fake: list){ // set the corresponding car mechanics.
-						Workstation real = selectWorkstationId(fake.getId(), user);
+						Workstation real = selectWorkstationById(fake.getId(), user);
 						fake.addCarMechanic(real.getCarMechanic());
 						if(fake.getId() != 1){
-							Workstation realPrev = selectWorkstationId(fake.getId()-1, user);
+							Workstation realPrev = selectWorkstationById(fake.getId()-1, user);
 							fake.setCurrentCar(realPrev.getCurrentCar());
 							for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
 								fake.addAssemblyTask(user, t);
@@ -224,5 +224,25 @@ public class AssemblyLine {
 		}else{
 			throw new UserAccessException(user, "currentStatus");
 		}
+	}
+
+	/**
+	 * Get an array of all workstation id's
+	 * @return all workstation id's
+	 */
+	public LinkedList<Integer> getWorkstationIDs(){
+		LinkedList<Integer> ids= new LinkedList<Integer>();
+		for(Workstation w: workstations){
+			ids.add(w.getId());
+		}
+		return ids;
+	}
+	
+	/**
+	 * 
+	 * @return The number of workstations on the assembly line
+	 */
+	public int getNumberOfWorkstations(){
+		return workstations.size();
 	}
 }

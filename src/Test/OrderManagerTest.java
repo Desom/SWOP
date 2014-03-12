@@ -10,7 +10,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import Car.CarOrder;
 import Main.*;
+import Order.CarModelCatalog;
+import Order.OrderManager;
+import User.CarMechanic;
+import User.GarageHolder;
+import User.Manager;
+import User.UserAccessException;
 
 
 public class OrderManagerTest {

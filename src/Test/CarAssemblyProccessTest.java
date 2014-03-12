@@ -10,21 +10,20 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
-import Main.AssemblyLine;
-import Main.CannotAdvanceException;
-import Main.CarAssemblyProcess;
-import Main.CarMechanic;
-import Main.CarModelCatalog;
-import Main.CarModelCatalogException;
+import Assembly.AssemblyLine;
+import Assembly.AssemblyTask;
+import Assembly.CannotAdvanceException;
+import Assembly.CarAssemblyProcess;
+import Assembly.ProductionSchedule;
+import Assembly.Workstation;
+import Car.Car;
 import Main.DoesNotExistException;
-import Main.Manager;
-import Main.OrderManager;
-import Main.ProductionSchedule;
-import Main.UserAccessException;
-import Main.Workstation;
-
-import Main.AssemblyTask;
-import Main.Car;
+import Order.CarModelCatalog;
+import Order.CarModelCatalogException;
+import Order.OrderManager;
+import User.CarMechanic;
+import User.Manager;
+import User.UserAccessException;
 
 public class CarAssemblyProccessTest {
 

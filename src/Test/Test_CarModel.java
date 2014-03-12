@@ -6,10 +6,10 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import Main.CarModel;
-import Main.Option;
-import Main.CarModelCatalogException;
-import OptionSubTypes.*;
+import Car.CarModel;
+import Car.Option;
+import Order.CarModelCatalogException;
+import Order.OptionSubTypes.*;
 
 
 public class Test_CarModel {

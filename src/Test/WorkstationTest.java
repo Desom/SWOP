@@ -7,12 +7,12 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import Main.AssemblyTask;
-import Main.CarMechanic;
-import Main.GarageHolder;
-import Main.Manager;
-import Main.UserAccessException;
-import Main.Workstation;
+import Assembly.AssemblyTask;
+import Assembly.Workstation;
+import User.CarMechanic;
+import User.GarageHolder;
+import User.Manager;
+import User.UserAccessException;
 
 public class WorkstationTest {
 

@@ -2,6 +2,14 @@ package Main;
 import java.io.IOException;
 import java.util.LinkedList;
 
+import Assembly.AssemblyLine;
+import Assembly.Workstation;
+import Order.CarModelCatalog;
+import Order.CarModelCatalogException;
+import Order.OrderManager;
+import User.User;
+import User.UserAccessException;
+
 
 public class Company {
 	

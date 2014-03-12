@@ -1,8 +1,10 @@
 package Test;
 
-import Main.AssemblyTask;
+import Assembly.AssemblyTask;
 import static org.junit.Assert.*;
+
 import java.util.ArrayList;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 

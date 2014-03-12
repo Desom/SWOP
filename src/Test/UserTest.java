@@ -5,10 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import Main.CarMechanic;
-import Main.GarageHolder;
-import Main.Manager;
-import Main.User;
+import User.CarMechanic;
+import User.GarageHolder;
+import User.Manager;
+import User.User;
 
 public class UserTest {
 

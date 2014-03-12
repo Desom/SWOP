@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import Main.Option;
-import Main.CarModelCatalogException;
-import OptionSubTypes.Color;
+import Car.Option;
+import Order.CarModelCatalogException;
+import Order.OptionSubTypes.Color;
 
 
 public class Test_Options {

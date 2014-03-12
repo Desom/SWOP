@@ -9,8 +9,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import Assembly.ProductionSchedule;
+import Car.CarModel;
+import Car.CarOrder;
+import Car.Option;
 import Main.*;
-import OptionSubTypes.*;
+import Order.CarModelCatalog;
+import Order.OptionSubTypes.*;
 
 public class ProductionScheduleTest {
 	public ArrayList<CarOrder> carOrders;

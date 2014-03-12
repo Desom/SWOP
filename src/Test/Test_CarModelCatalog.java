@@ -9,16 +9,16 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
-import Main.CarModelCatalog;
-import Main.CarModelCatalogException;
-import Main.Option;
-import OptionSubTypes.Airco;
-import OptionSubTypes.Body;
-import OptionSubTypes.Color;
-import OptionSubTypes.Engine;
-import OptionSubTypes.Gearbox;
-import OptionSubTypes.Seats;
-import OptionSubTypes.Wheels;
+import Car.Option;
+import Order.CarModelCatalog;
+import Order.CarModelCatalogException;
+import Order.OptionSubTypes.Airco;
+import Order.OptionSubTypes.Body;
+import Order.OptionSubTypes.Color;
+import Order.OptionSubTypes.Engine;
+import Order.OptionSubTypes.Gearbox;
+import Order.OptionSubTypes.Seats;
+import Order.OptionSubTypes.Wheels;
 
 
 public class Test_CarModelCatalog {

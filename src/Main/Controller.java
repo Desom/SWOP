@@ -3,6 +3,7 @@ package Main;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import Assembly.AssemblyLine;
 import Assembly.AssemblyStatusView;
@@ -226,11 +227,11 @@ public class Controller {
 	}
 
 	public void carMechanicCase(User carMechanic) throws UserAccessException{
-		//TODO optimaliseren
 		// 1. The system asks the user what work post he is currently residing at
-		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkstations(carMechanic).toArray());
+		LinkedList<Workstation> workstations = company.getAllWorkstations(carMechanic);
+		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
 		// 2. The user selects the corresponding work post.
-		Workstation workstation = company.getAllWorkstations(carMechanic).get(workstationInt);
+		Workstation workstation = workstations.get(workstationInt);
 		workstation.addCarMechanic(carMechanic); //TODO catch error of niet?
 		while(true) {
 			// 3. The system presents an overview of the pending assembly tasks for the
@@ -239,16 +240,17 @@ public class Controller {
 				ui.display("This workstation has no pending assembly tasks. Please try again later or go to another workstation.");
 				break;
 			}
-			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic).toArray());
+			ArrayList<AssemblyTask> tasks = workstation.getAllPendingTasks(carMechanic);
+			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", tasks.toArray().clone());
 			// 4. The user selects one of the assembly tasks.
-			AssemblyTask task = workstation.getAllPendingTasks(carMechanic).get(taskInt);
+			AssemblyTask task = tasks.get(taskInt);
 			workstation.selectTask(carMechanic, task);
 			// 5. The system shows the assembly task information, including the
 			// sequence of actions to perform.
 			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
 			// 6. The user performs the assembly tasks and indicates when the assembly
 			// task is finished.
-			while (!ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
+			while (!ui.askYesNoQuestion("Please indicate if you have completed the assembly task"))
 				;
 			workstation.completeTask(carMechanic);
 			// 8. (a) The user indicates he wants to stop performing assembly tasks

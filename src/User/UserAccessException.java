@@ -10,10 +10,11 @@ public class UserAccessException extends Exception{
 	}
 	
 	public UserAccessException(User user, String methodName) {
-		Message="User ID " + user.getId() + " cannot excecute the method" +  methodName;
+		Message="User ID " + user.getId() + " cannot excecute the method " +  methodName;
 	}
 	
-	public String GetMessage (){
+	@Override
+	public String getMessage (){
 		return Message;
 		
 	}

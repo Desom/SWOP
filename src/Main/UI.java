@@ -91,11 +91,13 @@ public class UI {
 			System.out.println("---");
 			for(int wsID : statusView.getAllWorkstationIds()){
 				System.out.println("Workstation " + wsID);
-				int carOrderID = statusView.getCarOrderIdAt(wsID);
-				if(carOrderID == -1)
-					System.out.println("Not working at a CarOrder");
-				else
+				try{
+					int carOrderID = statusView.getCarOrderIdAt(wsID);
 					System.out.println("working at CarOrder " + carOrderID);
+				}
+				catch(NullPointerException exc){
+					System.out.println("Not working at a CarOrder");
+				}
 				for(String task : statusView.getAllTasksAt(wsID)){
 					String taskStatus;
 					if(statusView.taskIsDoneAt(task, wsID)){

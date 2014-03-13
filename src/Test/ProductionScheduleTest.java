@@ -25,12 +25,20 @@ public class ProductionScheduleTest {
 	public ProductionSchedule prodSchedEarly;
 	public ProductionSchedule prodSchedLate;
 	public static CarModel carModel;
+	public static ArrayList<Option> arrayOption;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		CarModelCatalog catalog = new CarModelCatalog();
 		carModel = catalog.getCarModel("Ford");
-		ArrayList<Option> arrayOption = carModel.getOptions();
+		arrayOption = new ArrayList<Option>();
+		arrayOption.add(catalog.getOption("sedan"));
+		arrayOption.add(catalog.getOption("manual"));
+		arrayOption.add(catalog.getOption("blue"));
+		arrayOption.add(catalog.getOption("performance 2.5l 6 cilinders"));
+		arrayOption.add(catalog.getOption("6 speed manual"));
+		arrayOption.add(catalog.getOption("leather black"));
+		arrayOption.add(catalog.getOption("comfort"));
 		
 		GregorianCalendar now = new GregorianCalendar();
 		GregorianCalendar now1 = new GregorianCalendar();
@@ -39,7 +47,7 @@ public class ProductionScheduleTest {
 		now3.add(GregorianCalendar.HOUR_OF_DAY, 3);
 		carOrder = new CarOrder(0, 0, now, null, carModel, arrayOption);
 		carOrder1 = new CarOrder(1, 0, now1, null, carModel, arrayOption);
-		carOrderLaatst = new CarOrder(2, 0, now3, null, carModel, arrayOption);
+		carOrderLaatst = new CarOrder(3, 0, now3, null, carModel, arrayOption);
 	}
 	
 	@Before
@@ -50,36 +58,36 @@ public class ProductionScheduleTest {
 		carOrders = new ArrayList<CarOrder>();
 		carOrders.add(carOrder); //1
 		carOrders.add(carOrder1);//2
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//3
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//4
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//5
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//6
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//7
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//8
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//9
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//10
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//11
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//12
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//13
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//14
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//15
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//16
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//17
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//18
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//19
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//20
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//21
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//22
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//23
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//24
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//25
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//26
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//27
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//28
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//29
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//30
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//31
-		carOrders.add(new CarOrder(2, 0, now2, null, carModel, new ArrayList<Option>()));//32
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//3
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel,arrayOption));//4
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//5
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//6
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//7
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//8
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//9
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//10
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//11
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//12
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//13
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//14
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//15
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//16
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//17
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//18
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//19
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//20
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//21
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//22
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//23
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//24
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//25
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//26
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//27
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//28
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//29
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//30
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//31
+		carOrders.add(new CarOrder(2, 0, now2, null, carModel, arrayOption));//32
 		carOrders.add(carOrderLaatst);//33
 		
 		GregorianCalendar day = new GregorianCalendar();
@@ -182,11 +190,11 @@ public class ProductionScheduleTest {
 	}
 
 	@Test
-	public void testAddOrder() {
+	public void testAddOrder(){
 		//problemen met het feit dat er geen carOrders komen na de werkdag.
 		GregorianCalendar now2 = new GregorianCalendar();
 		now2.add(Calendar.HOUR_OF_DAY, 2);
-		CarOrder order2 = new CarOrder(2, 0, now2, null,  carModel, new ArrayList<Option>());
+		CarOrder order2 = new CarOrder(2, 0, now2, null,  carModel, arrayOption);
 		prodSchedNormal.addOrder(order2);
 		prodSchedNormal.getNextCarOrder(0);
 		prodSchedNormal.getNextCarOrder(1);
@@ -195,39 +203,98 @@ public class ProductionScheduleTest {
 	}
 
 	@Test
-	public void testSeeNextCarOrder() {
+	public void testSeeNextCarOrder(){
 		//problemen met het feit dat er geen carOrders komen na de werkdag.
-		CarOrder a = prodSchedNormal.seeNextCarOrder();
-		CarOrder b = prodSchedNormal.seeNextCarOrder();
+		CarOrder a2 = prodSchedNormal.seeNextCarOrder();
+		CarOrder a = prodSchedNormal.getNextCarOrder(0);
+		assertEquals(a,a2);
 
-		assertEquals(0,a.getCarOrderID());
-		assertEquals(0,b.getCarOrderID());
+		CarOrder b2 = prodSchedNormal.seeNextCarOrder();
+		CarOrder b = prodSchedNormal.getNextCarOrder(60);
+		assertEquals(b,b2);
 		
-		prodSchedNormal.getNextCarOrder(0);
-		CarOrder c = prodSchedNormal.seeNextCarOrder();
-		assertEquals(1,c.getCarOrderID());
+		for(int i = 6; i >0;i--){
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(c,c2);
+		}
+		for(int i = 3; i >0;i--){
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(c,c2);
+			assertNull(c2);
+		}
+		
+		a2 = prodSchedNormal.seeNextCarOrder();
+		a = prodSchedNormal.getNextCarOrder(0);
+		assertEquals(a,a2);
+
+		for(int i = 13; i >0;i--){
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(c,c2);
+		}
+		for(int i = 3; i >0;i--){
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(c,c2);
+			assertNull(c2);
+		}
+		
+		a = prodSchedNormal.getNextCarOrder(0);
+		assertEquals(2,a.getCarOrderID());
+		
+		for(int i = 9; i >0;i--){
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(c,c2);
+		}
+		
+		CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+		CarOrder c = prodSchedNormal.getNextCarOrder(60);
+		assertEquals(c,c2);
+		assertEquals(3,c.getCarOrderID());
 	}
+	
 
 	@Test
-	public void testGetNextCarOrder() {
-		//problemen met het feit dat er geen carOrders komen na de werkdag.
-		CarOrder a = prodSchedNormal.getNextCarOrder(60);
+	public void testgetNextCarOrder(){
+		CarOrder a = prodSchedNormal.getNextCarOrder(0);
 		assertEquals(0,a.getCarOrderID());
 		
 		CarOrder b = prodSchedNormal.getNextCarOrder(60);
 		assertEquals(1,b.getCarOrderID());
 		
-		for(int i = 6; i >0;i++){
+		for(int i = 6; i >0;i--){
 			CarOrder c = prodSchedNormal.getNextCarOrder(60);
 			assertEquals(2,c.getCarOrderID());
 		}
-		for(int i = 3; i >0;i++){
+		for(int i = 3; i >0;i--){
 			CarOrder c = prodSchedNormal.getNextCarOrder(60);
 			assertNull(c);
 		}
-
+		
+		a = prodSchedNormal.getNextCarOrder(0);
+		assertEquals(2,a.getCarOrderID());
+		
+		for(int i = 13; i >0;i--){
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(2,c.getCarOrderID());
+		}
+		for(int i = 3; i >0;i--){
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertNull(c);
+		}
+		
+		a = prodSchedNormal.getNextCarOrder(0);
+		assertEquals(2,a.getCarOrderID());
+		
+		for(int i = 9; i >0;i--){
+			CarOrder c = prodSchedNormal.getNextCarOrder(60);
+			assertEquals(2,c.getCarOrderID());
+		}
 		CarOrder c = prodSchedNormal.getNextCarOrder(60);
-		assertEquals(2,c.getCarOrderID());
+		assertEquals(3,c.getCarOrderID());
 	}
 
 }

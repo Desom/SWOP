@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import User.User;
+import User.UserAccessException;
 
 public class CarOrder {
 	
@@ -69,9 +70,19 @@ public class CarOrder {
 	 * 
 	 * @param 	deliveredTime
 	 * 			the time this car was delivered
+	 * @throws UserAccessException TODO
 	 */
-	private void setDeliveredTime(GregorianCalendar deliveredTime) {
-		this.deliveredTime = deliveredTime;
+	public void setDeliveredTime(User user, GregorianCalendar deliveredTime) throws UserAccessException {
+		if(user.canPerform("setDeliveredTime")){
+			if(!this.isCompleted())
+				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
+			if(this.deliveredTime.equals(null))
+				throw new IllegalStateException("DeliveredTime already set");
+			this.deliveredTime = deliveredTime;
+		}
+		else{
+			throw new UserAccessException(user, "setDeliveredTime");
+		}
 	}
 
 	/**

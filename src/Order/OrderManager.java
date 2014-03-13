@@ -30,9 +30,11 @@ public class OrderManager {
 	 * This constructor is also responsible for creating a ProductionSchedule and feeding it the unfinished carOrders.
 	 * 
 	 * @param	dataFilePath
+	 * 			The data file containing all the previously placed CarOrders. 
 	 * @param 	catalog
 	 * 			The CarModelCatalog necessary for finding the Options and CarModel Objects of all CarOrders
-	 * @param	currentTime TODO
+	 * @param	currentTime 
+	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
 	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) {
 		ArrayList<CarOrder> allCarOrders = this.createOrderList(dataFilePath,catalog);
@@ -51,9 +53,16 @@ public class OrderManager {
 	}
 	
 	/**
-	 * TODO
-	 * @param catalog
-	 * @param currentTime
+	 * Constructor for the OrderManager class.
+	 * This constructor is also responsible for creating objects for all the placed carOrders.
+	 * This constructor is also responsible for creating a ProductionSchedule and feeding it the unfinished carOrders.
+	 * The default "carOrderData.txt" file will be used to create all the previously placed CarOrders
+	 * 
+	 * @param	dataFilePath
+	 * @param 	catalog
+	 * 			The CarModelCatalog necessary for finding the Options and CarModel Objects of all CarOrders
+	 * @param	currentTime 
+	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
 	public OrderManager(CarModelCatalog catalog, GregorianCalendar currentTime){
 		this("carOrderData.txt", catalog, currentTime);
@@ -65,9 +74,9 @@ public class OrderManager {
 	 * @param 	user
 	 * 			The User that wants to call this method.
 	 * 			The User whose CarOrders are requested.
-	 * @return	A copy of the list of all CarOrders made by the given user. Empty if there are none.
+	 * @return	A copy of the list of all CarOrders made by the given user. An empty list if there are none.
 	 * @throws	UserAccessException 
-	 * 			If the user is not authorized to call the given method.
+	 * 			If the user is not authorized to call this method.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<CarOrder> getOrders(User user) throws UserAccessException{
@@ -81,25 +90,20 @@ public class OrderManager {
 	}
 	
 	/**
-	 * Create a carOrder based on the user,model and options and put it in a ProductionSchedule.
+	 * Create a CarOrder based on the given OrderForm and put it in a ProductionSchedule.
 	 * 
-	 * @param 	user
-	 * 			The User that wants to call this method.
-	 * 			The User that wants to place a CarOrder.
-	 * @param 	model
-	 * 			The chosen CarModel of the ordered Car.
-	 * @param 	options
-	 * 			The chosen Options of the ordered Car.
-	 * @return	A gregorian calender which contains the estimate moment of completion.
-	 * @throws UserAccessException
-	 * 			If the user is not authorized to call the given method.
+	 * @param 	orderForm
+	 * 			The OrderForm containing all the information necessary to place a CarOrder.
+	 * @return	The CarOrder that was made with the given OrderForm.
+	 * @throws 	UserAccessException
+	 * 			If the given OrderForm is filled in by a user who is not authorized to place orders.
 	 */
-	public CarOrder placeOrder(OrderForm order) throws UserAccessException{
-		User user = order.getUser();
+	public CarOrder placeOrder(OrderForm orderForm) throws UserAccessException{
+		User user = orderForm.getUser();
 		this.checkUser(user, "placeOrder");
 
 		int carOrderId = this.getUniqueCarOrderId();
-		CarOrder newOrder = new CarOrder(carOrderId, user,order.getModel(),order.getOptions());
+		CarOrder newOrder = new CarOrder(carOrderId, user,orderForm.getModel(),orderForm.getOptions());
 		this.addCarOrder(newOrder);
 		this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
@@ -108,7 +112,7 @@ public class OrderManager {
 
 
 	/**
-	 * Calculates an estimated completion date for a specific CarOrder and returns it.
+	 * Calculates an estimated completion date for the given CarOrder.
 	 * 
 	 * @param 	user
 	 * 			The User that wants to call this method.

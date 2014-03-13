@@ -58,6 +58,12 @@ public class AssemblyLine {
 			}
 			if(isReady){
 				// move huidige cars 1 plek
+				//neem CarOrder van WorkStation 3
+				Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations(), user);
+				if(workstationLast.getCurrentCar() != null){
+					CarOrder finished = workstationLast.getCurrentCar().getCar().getOrder();
+					finished.setDeliveredTime(user, this.schedule.getCurrentTime());
+				}
 				for(int i = getAllWorkstations(user).size(); i>1; i--){
 					Workstation workstationNext = selectWorkstationById(i, user);
 					workstationNext.clearCar();
@@ -69,10 +75,6 @@ public class AssemblyLine {
 						}
 					}
 				}
-				//neem CarOrder van WorkStation 3
-				Workstation workstation3 = selectWorkstationById(3, user);
-				CarOrder finished = workstation3.getCurrentCar().getCar().getOrder();
-				finished.setDeliveredTime(user, this.schedule.getCurrentTime());
 				
 				//voeg nieuwe car toe.
 				CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();

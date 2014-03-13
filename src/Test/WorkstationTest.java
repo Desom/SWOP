@@ -2,13 +2,21 @@ package Test;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
 import Assembly.AssemblyTask;
+import Assembly.CarAssemblyProcess;
 import Assembly.Workstation;
+import Car.Car;
+import Car.CarModel;
+import Car.CarOrder;
+import Car.Option;
+import Order.CarModelCatalog;
+import Order.CarModelCatalogException;
 import User.CarMechanic;
 import User.GarageHolder;
 import User.Manager;
@@ -49,6 +57,36 @@ public class WorkstationTest {
 		actions2.add("action2");
 		String type2 = "invalidType";
 		invalidTask = new AssemblyTask(actions2, type2);
+	}
+	
+	@Test
+	public void testCar() throws UserAccessException, IOException, CarModelCatalogException {
+		GarageHolder holder = new GarageHolder(1);
+		CarModelCatalog catalog = new CarModelCatalog();
+		CarModel model= catalog.getCarModel("Ford");
+		ArrayList<Option> allOptions = model.getOptions();
+		ArrayList<Option> selectedOptions = new ArrayList<Option>();
+		selectedOptions.add(allOptions.get(0));
+		selectedOptions.add(allOptions.get(1));
+		selectedOptions.add(allOptions.get(2));
+		selectedOptions.add(allOptions.get(3));
+		selectedOptions.add(allOptions.get(4));
+		selectedOptions.add(allOptions.get(5));
+		selectedOptions.add(allOptions.get(6));
+		CarOrder order = new CarOrder(1, holder, model, selectedOptions);
+		Car car = order.getCar();
+		CarAssemblyProcess process = car.getAssemblyprocess();
+		workstation.setCurrentCar(process);
+		assertEquals(process, workstation.getCurrentCar());
+		workstation.clearCar();
+		assertEquals(null, workstation.getCurrentCar());
+		try {
+			workstation.getActiveTaskInformation(carMechanic);
+			fail("No IllegalStateException was thrown");
+		}
+		catch (IllegalStateException e) {
+		}
+		
 	}
 	
 	@Test

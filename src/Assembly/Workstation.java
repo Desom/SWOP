@@ -25,7 +25,7 @@ public class Workstation {
 	/**
 	 * Clears the workstation of it's current tasks and other attributes related to it's current car.
 	 */
-	protected void clearCar(){
+	public void clearCar(){
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
 		this.currentCar = null;
@@ -43,7 +43,7 @@ public class Workstation {
 	 * 
 	 * @param currentCar The assemblyprocess of the car this workstation is currently working on.
 	 */
-	protected void setCurrentCar(CarAssemblyProcess currentCar) {
+	public void setCurrentCar(CarAssemblyProcess currentCar) {
 		this.currentCar = currentCar;
 	}
 
@@ -114,13 +114,13 @@ public class Workstation {
 	 * 			If the given user is not a car mechanic.
 	 */
 	public void addCarMechanic(User carMechanic) throws IllegalStateException, IllegalArgumentException {
-		if (this.carMechanic == null)
+		//if (this.carMechanic == null)
 			if (carMechanic.isCarMechanic())
 				this.carMechanic = carMechanic;
 			else
 				throw new IllegalArgumentException("The given user is no car mechanic");
-		else
-			throw new IllegalStateException("There already has been assigned a car mechanic to this workstation");
+		//else
+		//	throw new IllegalStateException("There already has been assigned a car mechanic to this workstation");
 	}
 	
 	/**

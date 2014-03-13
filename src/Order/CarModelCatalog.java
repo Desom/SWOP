@@ -157,6 +157,11 @@ public class CarModelCatalog {
 		}
 		input.close();
 	}
+	/**
+	 * 
+	 * @param inputline
+	 * @throws CarModelCatalogException
+	 */
 	private void processModelLine(String inputline) throws CarModelCatalogException {
 		String[] input=inputline.split(";");
 		if(input.length != 2) throw new CarModelCatalogException("Model: wrong input format: " + inputline);

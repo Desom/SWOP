@@ -37,7 +37,7 @@ public class Controller {
 		list.add("mechanic");
 		list.add("garageholder");
 		list.add("manager");
-		String antwoord =ui.askWithPossibilities("Geef aan of uw mechanic, garageholder of manager bent", list);
+		String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
 		if(antwoord.equals("mechanic"))
 			try {
 				this.carMechanicCase(new CarMechanic(12345));
@@ -197,18 +197,37 @@ public class Controller {
 
 	public void carMechanicCase(User carMechanic) throws UserAccessException{
 		//TODO optimaliseren
+		// 1. The system asks the user what work post he is currently residing at
 		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkstations(carMechanic).toArray());
+		// 2. The user selects the corresponding work post.
 		Workstation workstation = company.getAllWorkstations(carMechanic).get(workstationInt);
+		workstation.addCarMechanic(carMechanic); //TODO catch error
 		while(true) {
+			// 3. The system presents an overview of the pending assembly tasks for the
+			// car at the current work post.
+			if (workstation.getAllPendingTasks(carMechanic).isEmpty()) {
+				ui.display("This workstation has no pending assembly tasks. Please try again later or go to another workstation.");
+				break;
+			}
 			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic).toArray());
+			// 4. The user selects one of the assembly tasks.
 			AssemblyTask task = workstation.getAllPendingTasks(carMechanic).get(taskInt);
 			workstation.selectTask(carMechanic, task);
+			// 5. The system shows the assembly task information, including the
+			// sequence of actions to perform.
 			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
+			// 6. The user performs the assembly tasks and indicates when the assembly
+			// task is finished.
 			if (ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
 				workstation.completeTask(carMechanic);
+			// 8. (a) The user indicates he wants to stop performing assembly tasks
 			if (!ui.askYesNoQuestion("Do you want to work on a task again?"))
 				break;
+			// 7. The system stores the changes and presents an updated overview of
+			// pending assembly tasks for the car at the current work post.
+			// By restarting the while-loop.
 		}
-		ui.display("You are now logged off.\nHave a nice day!");
+		// 9. The use case ends here.
+		ui.display("You are now logged off.");
 	}
 }

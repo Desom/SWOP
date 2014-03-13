@@ -64,8 +64,6 @@ public class UI {
 			possOutput += "\n";
 			visualInt++;
 		}
-		possOutput = possOutput.substring(0,possOutput.length()-3);
-		possOutput += " )";
 		System.out.println(possOutput);
 		int input = Integer.parseInt(scan.nextLine());
 		while(possibilities.length <= input || input < 0){

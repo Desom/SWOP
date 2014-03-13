@@ -2,7 +2,6 @@ package Order;
 import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class OrderManager {
 	 * @param	dataFilePath
 	 * 			The data file containing all the previously placed CarOrders. 
 	 * @param 	catalog
-	 * 			The CarModelCatalog necessary for finding the Options and CarModel Objects of all CarOrders
+	 * 			The CarModelCatalog necessary for finding the Options and CarModel objects of all CarOrders
 	 * @param	currentTime 
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
@@ -121,9 +120,8 @@ public class OrderManager {
 	 * @return	A GregorianCalendar representing the estimated completion date of order.
 	 * 			Or the actual delivery date if it was already completed.
 	 * @throws 	UserAccessException
-	 * 			If the user is not authorized to call the given method.
+	 * 			If the user is not authorized to call this method.
 	 */
-	//TODO controleer ofdat de order al klaar is?
 	public GregorianCalendar completionEstimate(User user, CarOrder order) throws UserAccessException{
 		this.checkUser(user, "completionEstimate");
 		try{
@@ -136,11 +134,12 @@ public class OrderManager {
 	}
 
 	/**
-	 * Creates a ProductionSchedule which is initialised with the given CarOrders.
+	 * Creates a ProductionSchedule which is initialized with the given CarOrders.
 	 * 
 	 * @param orderList
 	 * 			The list of orders that has to be scheduled on the create ProductionSchedule.
-	 * @param currentTime TODO
+	 * @param currentTime
+	 * 			The date at which the created ProductionSchedule starts.
 	 */
 	private void createProductionSchedule(ArrayList<CarOrder> orderList, GregorianCalendar currentTime){
 		ProductionSchedule newProductionSchedule = new ProductionSchedule(orderList, currentTime);
@@ -149,6 +148,9 @@ public class OrderManager {
 	
 	/**
 	 * Creates all the placed CarOrders.
+	 * 
+	 * @param	dataFile
+	 * 			The file from which the CarOrders will be read.
 	 * @param 	catalog
 	 * 			The CarModelCatalog used to convert Strings to Option and CarModel objects.
 	 * @return	A list of all the placed CarOrders.
@@ -168,10 +170,6 @@ public class OrderManager {
 				otherLine = bReader.readLine();
 			}
 			bReader.close();
-			//TODO is multiple exceptions in 1 catcher possible?
-			// Yes, but in this case IOException will also catch filenotfoundexception as it is a subclass
-		} catch (FileNotFoundException e) {
-			return null;
 		} catch (IOException e) {
 			return null;
 		}
@@ -237,6 +235,7 @@ public class OrderManager {
 	
 	/**
 	 * Add a new CarOrder to the OrderManager 
+	 * 
 	 * @param 	newOrder
 	 * 			The CarOrder which will be added.
 	 */
@@ -247,7 +246,12 @@ public class OrderManager {
 		}
 		this.getCarOrdersPerId().get(newOrder.getUserId()).add(newOrder);
 	}
-
+	
+	/**
+	 * Returns a CarOrderId which is higher than all other carOrderId of the CarOrders in this OrderManager
+	 * 
+	 * @return a CarOrderId
+	 */
 	private int getUniqueCarOrderId() {
 		this.highestCarOrderID += 1;
 		return this.highestCarOrderID;
@@ -265,16 +269,45 @@ public class OrderManager {
 		return carOrdersPerId;
 	}
 
+	/**
+	 * Give a list of all the still pending CarOrders placed by a given user.
+	 * @param user
+	 * 			The User that wants to call this method.
+	 * 			The User whose CarOrders are requested.
+	 * @return List of the pending CarOrders placed by the given user.
+	 * @throws UserAccessException
+	 * 			If the user is not authorized to call this method.
+	 */
 	public ArrayList<CarOrder> getPendingOrders(User user) throws UserAccessException {
 		this.checkUser(user, "getPendingOrders");
 		return GetOrdersWithStatus(user,false);
 	}
 
+	/**
+	 * Give a list of all the still completed CarOrders placed by a given user.
+	 * @param user
+	 * 			The User that wants to call this method.
+	 * 			The User whose CarOrders are requested.
+	 * @return List of the completed CarOrders placed by the given user.
+	 * @throws UserAccessException
+	 * 			If the user is not authorized to call this method.
+	 */
 	public ArrayList<CarOrder> getCompletedOrders(User user) throws UserAccessException {
 		this.checkUser(user, "getCompletedOrders");
 		return GetOrdersWithStatus(user,true);
 	}
-
+	
+	/**
+	 * Give a list of  CarOrders placed by a given user, with the boolean indicating if they have to be completed or not.
+	 * @param user
+	 * 			The User that wants to call this method.
+	 * 			The User whose CarOrders are requested.
+	 * @param b
+	 * 			The boolean indicating completion
+	 * @return List of CarOrders placed by the given user.
+	 * @throws UserAccessException
+	 * 			If the user is not authorized to call this method.
+	 */
 	private ArrayList<CarOrder> GetOrdersWithStatus(User user, boolean b) throws UserAccessException {
 		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
 		for(CarOrder i : this.getOrders(user)){

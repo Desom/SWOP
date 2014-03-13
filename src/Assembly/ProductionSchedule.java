@@ -107,16 +107,17 @@ public class ProductionSchedule {
 
 	/**
 	 * Checks if there is still enough time left today to built another Car within working hours.
-	 * 
+	 * @param nowTime 
+	 * TODO
 	 * @return True if there is still enough time left, false otherwise.
 	 */
-	private boolean checkTimeRequirement() {
+	private boolean checkTimeRequirement(GregorianCalendar nowTime) {
 		GregorianCalendar begin_today = getBeginOfWorkday();
 		GregorianCalendar end_today = this.endWithOverTime;
 		
-		GregorianCalendar auto_finished = (GregorianCalendar) this.currentTime.clone();
+		GregorianCalendar auto_finished = (GregorianCalendar) nowTime.clone();
 		auto_finished.add(GregorianCalendar.HOUR_OF_DAY, ASSEMBLY_DURATION);
-		if(this.currentTime.before(begin_today))
+		if(nowTime.before(begin_today))
 			return false;
 		if(end_today.before(auto_finished))
 			return false;
@@ -135,11 +136,13 @@ public class ProductionSchedule {
 	
 	/**
 	 * Returns the next CarOrder to be built, but without removing it from the front of the schedule.
-	 * 
+	 * TODO
 	 * @return The CarOrder that is scheduled to be built next.
 	 */
-	public CarOrder seeNextCarOrder(){
-		if(this.checkTimeRequirement()){
+	public CarOrder seeNextCarOrder(int time){
+		GregorianCalendar nowTime = (GregorianCalendar) this.currentTime.clone();
+		nowTime.add(GregorianCalendar.MINUTE, time);
+		if(this.checkTimeRequirement(nowTime)){
 			return this.getScheduleQueue().peek();
 		}
 		return null;
@@ -156,7 +159,7 @@ public class ProductionSchedule {
 	 */
 	public CarOrder getNextCarOrder(int time){
 		this.currentTime.add(GregorianCalendar.MINUTE, time);
-		if(this.checkTimeRequirement()){
+		if(this.checkTimeRequirement(this.currentTime)){
 			CarOrder nextOrder = this.getScheduleQueue().poll();
 			this.putOnLine(nextOrder);
 			return nextOrder;
@@ -274,5 +277,9 @@ public class ProductionSchedule {
 			endWithOverTime.add(GregorianCalendar.DAY_OF_YEAR, 1);
 		
 		this.endWithOverTime = endWithOverTime;
+	}
+
+	public GregorianCalendar getCurrentTime() {
+		return (GregorianCalendar) currentTime.clone();
 	}
 }

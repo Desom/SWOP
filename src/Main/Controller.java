@@ -85,13 +85,19 @@ public class Controller {
 			String action = ui.askWithPossibilities(actionRequest, actionPoss);
 			if("advanceLine".equals(action))
 				this.actionAdvanceLine(user, assembly);
-			if("quit".equals(action))
+			if("quit".equals(action)){
+				ui.display("You are now logged off.");
 				return;
+			}
 		}
 	}
 
 	private void actionAdvanceLine(User user, AssemblyLine assembly) throws UserAccessException, InternalFailureException{
-		while(true){
+		boolean repeat = true;
+		while(repeat){
+
+			int timeSpent = ui.askForInteger("Give the time spent during the current phase. (minutes)", 0);
+			
 			//2. The system presents an overview of the current assembly line status,
 			//as well as a view of the future assembly line status (as it would be after
 			//completing this use case), including pending and finished tasks at each
@@ -99,7 +105,7 @@ public class Controller {
 			AssemblyStatusView currentStatus = assembly.currentStatus(user);
 			ui.showAssemblyLineStatus(currentStatus);
 
-			AssemblyStatusView futureStatus = assembly.futureStatus(user);
+			AssemblyStatusView futureStatus = assembly.futureStatus(user, timeSpent);
 			ui.showAssemblyLineStatus(futureStatus);
 
 			//3. The user confirms the decision to move the assembly line forward,
@@ -109,7 +115,6 @@ public class Controller {
 			if(!doAdvance){
 				return;
 			}
-			int timeSpent = ui.askForInteger("Give the time spent during the current phase. (minutes)", 0);
 
 			try{
 				//4. The system moves the assembly line forward one work post according
@@ -130,10 +135,7 @@ public class Controller {
 				//6. The use case continues in step 6.
 			}
 			//6. The user indicates he is done viewing the status.
-			boolean repeat = ui.askYesNoQuestion("Do you want to view the new future status?");
-			if(!repeat){
-				return;
-			}
+			repeat = ui.askYesNoQuestion("Do you want to view the new future status?");
 		}
 	}
 	/**
@@ -141,7 +143,7 @@ public class Controller {
 	 * @param user The user that wants to use the garage holder use case
 	 * @throws UserAccessException
 	 */
-	public void garageHolderCase(User user) throws UserAccessException{
+	public void garageHolderCase(User user) throws UserAccessException {
 		OrderManager ordermanager=this.company.getOrderManager(user);
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
@@ -172,7 +174,7 @@ public class Controller {
 			CarModel model = null;
 			while(model == null ){
 				ArrayList<String> modelList = new ArrayList<String>();
-				for(CarModel j: catalog.getAllModels(user)){
+				for(CarModel j: catalog.getAllModels()){
 					modelList.add(j.getName());
 				}
 				String modelname = ui.askWithPossibilities("Geef uw model in", modelList);

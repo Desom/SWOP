@@ -97,7 +97,7 @@ public class AssemblyLineTest {
 			processesBefore.add(w.getCurrentCar());
 		}
 		
-		CarAssemblyProcess next = schedule.seeNextCarOrder().getCar().getAssemblyprocess();
+		CarAssemblyProcess next = schedule.seeNextCarOrder(100).getCar().getAssemblyprocess();
 		line.advanceLine(manager, 100);
 		
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
@@ -149,7 +149,7 @@ public class AssemblyLineTest {
 	@Test
 	public void testFutureStatus() throws InternalFailureException {
 		try {
-			AssemblyStatusView future = line.futureStatus(manager);
+			AssemblyStatusView future = line.futureStatus(manager,100);
 			line.advanceLine(manager, 100);
 			AssemblyStatusView current = line.currentStatus(manager);
 			for(int i : line.getWorkstationIDs()){

@@ -126,6 +126,7 @@ public class UI {
 					System.out.println("Task: " + task + " = " + taskStatus);
 				}
 			}
+			System.out.println();
 		}
 		catch (DoesNotExistException exc) {
 			System.out.println("There is an internal problem : " + exc.getMessage());

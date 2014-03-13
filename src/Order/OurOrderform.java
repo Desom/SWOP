@@ -65,18 +65,7 @@ public class OurOrderform implements OrderForm{
 	public boolean CanPlaceType(String Type) {
 		return options.containsKey(Type);
 	}
-	@Override
-	public List<String> getAllModels(){
-		List<String> result = new ArrayList<String>();
-		try {
-			for(CarModel i: catalog.getAllModels(user)){
-				result.add(i.getName());
-			}
-		} catch (UserAccessException e) {
-			e.printStackTrace();
-		}
-		return result;
-	}
+	
 	public List<String> getOptionTypes() {
 				return catalog.getAllOptionTypes();
 	}

@@ -165,9 +165,10 @@ public class CarModelCatalog {
 		input.close();
 	}
 	/**
-	 * 
-	 * @param inputline
-	 * @throws CarModelCatalogException
+	 * processes a line of the model file
+	 * @param inputline a line of the model file
+	 * @throws CarModelCatalogException the line is in the wrong format, he modelname already exists,
+	 * 									or an option type is missing.	 * 
 	 */
 	private void processModelLine(String inputline) throws CarModelCatalogException {
 		String[] input=inputline.split(";");
@@ -181,18 +182,33 @@ public class CarModelCatalog {
 			throw new CarModelCatalogException("Wrong Option Type in form: " + inputline);
 		}
 	}
-
+	/***
+	 * get the list of all models
+	 * @param user the user who wants to access the models
+	 * @return a list of all the models
+	 * @throws UserAccessException the use has no authority to view the model
+	 */
 	@SuppressWarnings("unchecked")
-	public List<CarModel> getAllModels(User user) throws UserAccessException {
-		if(user.canPerform("getAllModels"))	return  new ArrayList<CarModel>(((HashMap<String,CarModel>)All_CarModels.clone()).values());
-		else throw new UserAccessException(user, "getAllModels");
+	public List<CarModel> getAllModels()  {
+	return  new ArrayList<CarModel>(((HashMap<String,CarModel>)All_CarModels.clone()).values());
+		
 	}
-
+	/**
+	 * Get a car model based on the name
+	 * @param name the name
+	 * @return a car model based with the name name
+	 * 	       null if the name does not match a model 
+	 */
 	public CarModel getCarModel(String name){
 		return this.All_CarModels.get(name);
 
 	}
-
+	/**
+	 * Get a car option based on the description
+	 * @param description the description
+	 * @return a car option based with the description description
+	 *         null if the description does not match an option
+	 */
 	public Option getOption(String description){
 		return this.All_Options.get(description);
 
@@ -201,9 +217,15 @@ public class CarModelCatalog {
 	public ArrayList<String> getAllOptionTypes(){
 		return (ArrayList<String>) All_Optiontypes.clone();
 	}
-	public ArrayList<String> getAllModelnames(User user) throws UserAccessException {
+	/**
+	  get the list of all model names
+	 * @param user the user who wants to access the model names
+	 * @return a list of all the model names
+	 * @throws UserAccessException the use has no authority to view the model names
+	 */
+	public ArrayList<String> getAllModelnames() {
 		ArrayList<String> modelnamen = new ArrayList<String>();
-		for(CarModel i:this.getAllModels(user)){
+		for(CarModel i:this.getAllModels()){
 				modelnamen.add(i.getName());
 		}
 		return modelnamen;

@@ -100,7 +100,7 @@ public class Test_CarModel {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"Missing type");
+			assertEquals(e.GetMessage(),"Missing type: Airco");
 		}
 		try {
 			fake = ((ArrayList<Option>) a.clone());
@@ -109,7 +109,7 @@ public class Test_CarModel {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"Missing type");
+			assertEquals(e.GetMessage(),"Missing type: Body");
 		}
 		try {
 			fake = ((ArrayList<Option>) a.clone());
@@ -118,7 +118,7 @@ public class Test_CarModel {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"Missing type");
+			assertEquals(e.GetMessage(),"Missing type: Color");
 		}
 		try {
 			fake = ((ArrayList<Option>) a.clone());
@@ -127,7 +127,7 @@ public class Test_CarModel {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"Missing type");
+			assertEquals(e.GetMessage(),"Missing type: Engine");
 		}
 		try {
 			fake = ((ArrayList<Option>) a.clone());
@@ -136,7 +136,7 @@ public class Test_CarModel {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"Missing type");
+			assertEquals(e.GetMessage(),"Missing type: Gearbox");
 		}
 		try {
 			fake = ((ArrayList<Option>) a.clone());
@@ -145,7 +145,7 @@ public class Test_CarModel {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"Missing type");
+			assertEquals(e.GetMessage(),"Missing type: Seats");
 		}
 		
 	}

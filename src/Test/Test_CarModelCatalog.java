@@ -112,8 +112,8 @@ public class Test_CarModelCatalog {
 	@Test
 	public void test_model_doublename() throws IOException {
 		BufferedWriter write = new BufferedWriter(new FileWriter("test_model.txt"));
-		write.write("a;manual;sedan;red;standard 2l 4 cilinders;6 speed manual;leather black;comfort;,\n");
-		write.write("a,i");
+		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,\n");
+		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,");
 		write.close();
 		try {
 			new CarModelCatalog("test_option.txt","test_model.txt");
@@ -126,14 +126,14 @@ public class Test_CarModelCatalog {
 	@Test
 	public void test_model_nonexisting_Option() throws IOException {
 		BufferedWriter write = new BufferedWriter(new FileWriter("test_model.txt"));
-		write.write("a;i");
+		write.write("a;manual,sedan,red,nospoiler,standard 2l 4 cilinders,6 speed manual,leather black,comfort,");
 		write.close();
 		try {
 			new CarModelCatalog("test_option.txt","test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Option does not exists: i",e.GetMessage());
+			assertEquals("Option does not exists: nospoiler",e.GetMessage());
 		}
 	}
 	

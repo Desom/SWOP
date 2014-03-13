@@ -175,24 +175,22 @@ public class OrderManagerTest {
 	
 	@Test
 	public void testGetPendingOrders() throws UserAccessException {
-		ArrayList<String> pendOrder1 = orderManager.getPendingOrders(user1);
+		ArrayList<CarOrder> pendOrder1 = orderManager.getPendingOrders(user1);
 		assertEquals(0,pendOrder1.size());
 
-		ArrayList<String> pendOrder2 = orderManager.getPendingOrders(user2);
+		ArrayList<CarOrder> pendOrder2 = orderManager.getPendingOrders(user2);
 		assertEquals(3,pendOrder2.size());
-		boolean b = pendOrder2.get(0).startsWith("CarOrder: 2");
-		assertTrue(pendOrder2.get(0).startsWith("CarOrder: 2") || pendOrder2.get(0).startsWith("CarOrder: 3") || pendOrder2.get(0).startsWith("CarOrder: 4"));
-		assertTrue(pendOrder2.get(1).startsWith("CarOrder: 2") || pendOrder2.get(1).startsWith("CarOrder: 3") || pendOrder2.get(1).startsWith("CarOrder: 4"));
-		assertTrue(pendOrder2.get(2).startsWith("CarOrder: 2") || pendOrder2.get(2).startsWith("CarOrder: 3") || pendOrder2.get(2).startsWith("CarOrder: 4"));
-		
+		assertEquals(2,pendOrder2.get(0).getCarOrderID());
+		assertEquals(3,pendOrder2.get(1).getCarOrderID());
+		assertEquals(4,pendOrder2.get(2).getCarOrderID());
 
-		ArrayList<String> pendOrder3 = orderManager.getPendingOrders(user3);
+		ArrayList<CarOrder> pendOrder3 = orderManager.getPendingOrders(user3);
 		assertEquals(0,pendOrder3.size());
 	}
 	
 	@Test
 	public void testGetPendingOrdersUserAccess(){
-		ArrayList<String> compOrder1;
+		ArrayList<CarOrder> compOrder1;
 		try {
 			compOrder1 = orderManager.getPendingOrders(manager);
 		} catch (UserAccessException e) {
@@ -208,20 +206,20 @@ public class OrderManagerTest {
 	
 	@Test
 	public void testGetCompletedOrders() throws UserAccessException {
-		ArrayList<String> compOrder1 = orderManager.getCompletedOrders(user1);
+		ArrayList<CarOrder> compOrder1 = orderManager.getCompletedOrders(user1);
 		assertEquals(1,compOrder1.size());
 		
-		assertTrue(compOrder1.get(0).startsWith("CarOrder: 1"));
+		assertEquals(1,compOrder1.get(0).getCarOrderID());
 		
-		ArrayList<String> compOrder2 = orderManager.getCompletedOrders(user2);
+		ArrayList<CarOrder> compOrder2 = orderManager.getCompletedOrders(user2);
 		assertEquals(0,compOrder2.size());
-		ArrayList<String> compOrder3 = orderManager.getCompletedOrders(user3);
+		ArrayList<CarOrder> compOrder3 = orderManager.getCompletedOrders(user3);
 		assertEquals(0,compOrder3.size());
 	}
 	
 	@Test
 	public void testGetCompletedOrdersUserAccess(){
-		ArrayList<String> compOrder1;
+		ArrayList<CarOrder> compOrder1;
 		try {
 			compOrder1 = orderManager.getCompletedOrders(manager);
 		} catch (UserAccessException e) {

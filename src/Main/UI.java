@@ -28,9 +28,11 @@ public class UI {
 		System.out.println(question);
 		System.out.println("At least: " + lowerBound + ".");
 		int input = scan.nextInt();
+		scan.nextLine();
 		while(lowerBound > input){
 			System.out.println("This Number is to low.");
 			input = scan.nextInt();
+			scan.nextLine();
 		}
 		return input;
 	}

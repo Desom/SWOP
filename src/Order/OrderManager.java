@@ -261,20 +261,20 @@ public class OrderManager {
 		return carOrdersPerId;
 	}
 
-	public ArrayList<String> getPendingOrders(User user) throws UserAccessException {
+	public ArrayList<CarOrder> getPendingOrders(User user) throws UserAccessException {
 		this.checkUser(user, "getPendingOrders");
 		return GetOrdersWithStatus(user,false);
 	}
 
-	public ArrayList<String> getCompletedOrders(User user) throws UserAccessException {
+	public ArrayList<CarOrder> getCompletedOrders(User user) throws UserAccessException {
 		this.checkUser(user, "getCompletedOrders");
 		return GetOrdersWithStatus(user,true);
 	}
 
-	private ArrayList<String> GetOrdersWithStatus(User user, boolean b) throws UserAccessException {
-		ArrayList<String> result = new ArrayList<String>();
+	private ArrayList<CarOrder> GetOrdersWithStatus(User user, boolean b) throws UserAccessException {
+		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
 		for(CarOrder i : this.getOrders(user)){
-			if(i.isCompleted().equals(b)) result.add(i.toString());
+			if(i.isCompleted().equals(b)) result.add(i);
 		}
 		return result;
 	}

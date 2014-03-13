@@ -49,11 +49,6 @@ public class OrderManagerTest {
 		orderManager = new OrderManager("testData_OrderManager.txt", catalog, new GregorianCalendar(2014, 1, 1,12,0,0));
 	}
 
-	@Test
-	public void testCreation() {
-
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testGetOrders() throws UserAccessException {
@@ -161,12 +156,14 @@ public class OrderManagerTest {
 		GregorianCalendar estimate;
 		try {
 			estimate = orderManager.completionEstimate(manager,order2_0);
+			fail();
 		} catch (UserAccessException e) {
 			assertEquals("User ID " + 4 + " cannot excecute the method " + "completionEstimate",e.getMessage());
 		}
 		
 		try {
 			estimate = orderManager.completionEstimate(mechanic,order2_0);
+			fail();
 		} catch (UserAccessException e) {
 			assertEquals("User ID " + 5 + " cannot excecute the method " + "completionEstimate",e.getMessage());
 		}
@@ -193,12 +190,14 @@ public class OrderManagerTest {
 		ArrayList<CarOrder> compOrder1;
 		try {
 			compOrder1 = orderManager.getPendingOrders(manager);
+			fail();
 		} catch (UserAccessException e) {
 			assertEquals("User ID " + 4 + " cannot excecute the method " + "getPendingOrders",e.getMessage());
 		}
 		
 		try {
 			compOrder1 = orderManager.getPendingOrders(mechanic);
+			fail();
 		} catch (UserAccessException e) {
 			assertEquals("User ID " + 5 + " cannot excecute the method " + "getPendingOrders",e.getMessage());
 		}
@@ -222,12 +221,14 @@ public class OrderManagerTest {
 		ArrayList<CarOrder> compOrder1;
 		try {
 			compOrder1 = orderManager.getCompletedOrders(manager);
+			fail();
 		} catch (UserAccessException e) {
 			assertEquals("User ID " + 4 + " cannot excecute the method " + "getCompletedOrders",e.getMessage());
 		}
 		
 		try {
 			compOrder1 = orderManager.getCompletedOrders(mechanic);
+			fail();
 		} catch (UserAccessException e) {
 			assertEquals("User ID " + 5 + " cannot excecute the method " + "getCompletedOrders",e.getMessage());
 		}

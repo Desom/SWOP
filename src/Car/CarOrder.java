@@ -20,9 +20,8 @@ public class CarOrder {
 	 * 
 	 * @param	carOrderId
 	 * 			The id of this car order
-	 * @param	user
+	 * @param	user TODO
 	 * 			The user of that has placed this order
-	 * 			// TODO waarom niet gewoon id?
 	 * @param	model
 	 * 			The model of the car to be ordered
 	 * @param	options
@@ -45,9 +44,12 @@ public class CarOrder {
 	 * @param model
 	 * @param optionsList
 	 */
-	public CarOrder(int carOrderId, int garageHolderId,
+	public CarOrder(
+			int carOrderId, 
+			int garageHolderId,
 			GregorianCalendar orderedCalendar,
-			GregorianCalendar deliveredCalendar, CarModel model,
+			GregorianCalendar deliveredCalendar, 
+			CarModel model,
 			ArrayList<Option> optionsList) {
 		this.carOrderID = carOrderId;
 		this.userID = garageHolderId;

@@ -37,12 +37,10 @@ public class Controller {
 		}
 		while (true) {
 
-<<<<<<< HEAD
 			ArrayList<String> list = new ArrayList<String>();
 			list.add("mechanic");
 			list.add("garageholder");
 			list.add("manager");
-			list.add("exit");
 			String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
 			if(antwoord.equals("mechanic"))
 				try {
@@ -65,42 +63,11 @@ public class Controller {
 				try {
 					this.garageHolderCase(new GarageHolder(2));
 				} catch (UserAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ui.display("Er is een fout opgeloden in ons programma gelive ons te verontschuldigen");
 				}
 			if(antwoord.equals("exit"))
 				break;
 		}
-=======
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("mechanic");
-		list.add("garageholder");
-		list.add("manager");
-		String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
-		if(antwoord.equals("mechanic"))
-			try {
-				this.carMechanicCase(new CarMechanic(12345));
-			} catch (UserAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		if(antwoord.equals("manager"))
-			try {
-				this.managerCase(new Manager(12345));
-			} catch (UserAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InternalFailureException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		if(antwoord.equals("garageholder"))
-			try {
-				this.garageHolderCase(new GarageHolder(2));
-			} catch (UserAccessException e) {
-				ui.display("Er is een fout opgeloden in ons programma gelive ons te verontschuldigen");
-			}
->>>>>>> 1d996fbe784b57995477a0cc3c27489876736afd
 	}
 
 	public void managerCase(User user) throws UserAccessException, InternalFailureException{

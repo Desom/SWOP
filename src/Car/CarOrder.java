@@ -35,14 +35,21 @@ public class CarOrder {
 	}
 
 	/**
-	 * TODO
+	 * Constructor of CarOrder.
+	 * Creates a car using model and options
 	 * 
 	 * @param carOrderId
-	 * @param garageHolderId
+	 * 			The id of this car order
+	 * @param userId
+	 * 			The id of the garageHolder that has placed this order
 	 * @param orderedCalendar
+	 * 			The time when it was ordered
 	 * @param deliveredCalendar
+	 * 			The time when it was delivered; the car is already completed if deliveredCalendar is not null
 	 * @param model
+	 * 			The model of the car that has been ordered
 	 * @param optionsList
+	 * 			The options of the car that has been ordered
 	 */
 	public CarOrder(
 			int carOrderId, 
@@ -70,9 +77,12 @@ public class CarOrder {
 	/**
 	 * Sets the time this car was delivered.
 	 * 
+	 * @param	user
+	 * 			The user that has ordered the delivery
 	 * @param 	deliveredTime
-	 * 			the time this car was delivered
-	 * @throws UserAccessException TODO
+	 * 			The time this car was delivered
+	 * @throws UserAccessException
+	 * 			If the user is not authorized to call this method.
 	 */
 	public void setDeliveredTime(User user, GregorianCalendar deliveredTime) throws UserAccessException {
 		if(user.canPerform("setDeliveredTime")){
@@ -145,6 +155,9 @@ public class CarOrder {
 		return this.getCar().IsCompleted();
 	}
 	
+	/**
+	 * Returns a string representation of the CarOrder
+	 */
 	@Override
 	public String toString(){
 		String ordered = "  Ordered on: " + this.orderedTime.get(GregorianCalendar.DAY_OF_MONTH) 

@@ -115,6 +115,13 @@ public class Company {
 	}
 
 
+	/**
+	 * Creates a user when requested
+	 * @param userName type of the user to create
+	 * @param ID The Id that is to be associated with this user
+	 * @return The user object that was created
+	 * @throws DoesNotExistException
+	 */
 	public User createUser(String userName, int ID) throws DoesNotExistException{
 		switch(userName){
 		case "manager":

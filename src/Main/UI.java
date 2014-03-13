@@ -93,7 +93,11 @@ public class UI {
 			System.out.println("---");
 			for(int wsID : statusView.getAllWorkstationIds()){
 				System.out.println("Workstation " + wsID);
-				System.out.println("working at CarOrder " + statusView.getCarOrderIdAt(wsID));
+				int carOrderID = statusView.getCarOrderIdAt(wsID);
+				if(carOrderID == -1)
+					System.out.println("Not working at a CarOrder");
+				else
+					System.out.println("working at CarOrder " + carOrderID);
 				for(String task : statusView.getAllTasksAt(wsID)){
 					String taskStatus;
 					if(statusView.taskIsDoneAt(task, wsID)){

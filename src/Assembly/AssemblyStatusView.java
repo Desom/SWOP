@@ -32,9 +32,17 @@ public class AssemblyStatusView {
 		}
 		return IDs;
 	}
-
+	/**
+	 * TODO + is -1 terug sturen goed?
+	 * @param workstationId
+	 * @return
+	 * @throws DoesNotExistException
+	 */
 	public int getCarOrderIdAt(int workstationId) throws DoesNotExistException{
 		Workstation w = getWorkstation(workstationId);
+		Object orderAtW = w.getCurrentCar();//TODO object? of beter toch klasse importeren?
+		if(orderAtW == null)
+			return -1;
 		return w.getCurrentCar().getCar().getOrder().getCarOrderID();
 	}
 

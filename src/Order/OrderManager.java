@@ -41,13 +41,13 @@ public class OrderManager {
 			this.addCarOrder(order);
 		}
 
-		ArrayList<CarOrder> allUnfinishedCarOrders = this.createOrderList(dataFilePath,catalog);
+		ArrayList<CarOrder> allUnfinishedCarOrders = new ArrayList<CarOrder>();
 		for(CarOrder order : allCarOrders) {
-			if(!order.IsCompleted()){
+			if(!order.isCompleted()){
 				allUnfinishedCarOrders.add(order);
 			}
 		}
-		this.createProductionSchedule(allCarOrders, currentTime);
+		this.createProductionSchedule(allUnfinishedCarOrders, currentTime);
 	}
 	
 	/**
@@ -183,7 +183,7 @@ public class OrderManager {
 			int garageHolderId = Integer.parseInt(orderPieces[1]);
 		// 2 : isDelivered -> Boolean
 			boolean isDelivered = false;
-			if(orderPieces[2] == "1"){
+			if(orderPieces[2].equals("1")){
 				isDelivered = true;
 			}
 			
@@ -220,14 +220,14 @@ public class OrderManager {
 	private GregorianCalendar createCalendarFor(String info) {
 		String[] dateTime = info.split("==");
 		String[] dateStr = dateTime[0].split("-");
-		String[] timeStr = dateTime[0].split("-");
+		String[] timeStr = dateTime[1].split("-");
 		int[] dateInt = new int[3];
 		int[] timeInt = new int[3];
 		for(int i = 0; i < 3;i++){
 			dateInt[i] = Integer.parseInt(dateStr[i]);
 			timeInt[i] = Integer.parseInt(timeStr[i]);
 		}
-		return new GregorianCalendar(dateInt[0],dateInt[1],dateInt[2],timeInt[0],timeInt[1],timeInt[2]);
+		return new GregorianCalendar(dateInt[2],dateInt[1],dateInt[0],timeInt[0],timeInt[1],timeInt[2]);
 	}
 
 	
@@ -274,7 +274,7 @@ public class OrderManager {
 	private ArrayList<String> GetOrdersWithStatus(User user, boolean b) throws UserAccessException {
 		ArrayList<String> result = new ArrayList<String>();
 		for(CarOrder i : this.getOrders(user)){
-			if(i.IsCompleted().equals("b")) result.add(i.toString());
+			if(i.isCompleted().equals(b)) result.add(i.toString());
 		}
 		return result;
 	}

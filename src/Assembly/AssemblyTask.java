@@ -11,6 +11,7 @@ public class AssemblyTask {
 	/**
 	 * Constructor of AssemblyTask.
 	 * Creates an assembly task with a list of actions that are needed to complete this assembly task and the type of this assembly task.
+	 * The created assembly task is not completed by default.
 	 * 
 	 * @param	actions
 	 * 			A list of actions that is needed to complete this AssemblyTask.
@@ -18,9 +19,24 @@ public class AssemblyTask {
 	 * 			A string that indicates the type of this AssemblyTask.
 	 */
 	public AssemblyTask(ArrayList<String> actions, String type) {
+		this(actions, type, false);
+	}
+	
+	/**
+	 * Constructor of AssemblyTask.
+	 * Creates an assembly task with a list of actions that are needed to complete this assembly task, the type of this assembly task and a boolean indicating if it is already completed or not.
+	 * 
+	 * @param	actions
+	 * 			A list of actions that is needed to complete this AssemblyTask.
+	 * @param	type
+	 * 			A string that indicates the type of this AssemblyTask.
+	 * @param	isCompleted
+	 * 			A boolean telling if this assembly task is already completed or not
+	 */
+	public AssemblyTask(ArrayList<String> actions, String type, boolean isCompleted) {
 		this.setActions(actions);
 		this.setType(type);
-		isCompleted = false;
+		this.isCompleted = isCompleted;
 	}
 	
 	/**

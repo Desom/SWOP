@@ -217,7 +217,7 @@ public class AssemblyLine {
 				return currentStatus(user);
 			}
 		}else{
-			throw new UserAccessException(user, "currentStatus");
+			throw new UserAccessException(user, "futureStatus");
 		}
 	}
 

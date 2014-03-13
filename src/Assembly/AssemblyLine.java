@@ -196,12 +196,22 @@ public class AssemblyLine {
 				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations());
 				for(Workstation fake: list){ // set the corresponding car mechanics.
 					Workstation real = selectWorkstationById(fake.getId(), user);
-					fake.addCarMechanic(real.getCarMechanic());
+					try{
+						fake.addCarMechanic(real.getCarMechanic());
+					}
+					catch(IllegalStateException e){	
+						/*TODO gewoon niets doen?*/
+					}
 					if(fake.getId() != 1){
 						Workstation realPrev = selectWorkstationById(fake.getId()-1, user);
 						fake.setCurrentCar(realPrev.getCurrentCar());
-						for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
-							fake.addAssemblyTask(user, t);
+						try{
+							for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
+								fake.addAssemblyTask(user, t);
+							}
+						}
+						catch(NullPointerException e){	
+							/*TODO gewoon niets doen?*/
 						}
 					}else{
 						CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder().getCar().getAssemblyprocess();

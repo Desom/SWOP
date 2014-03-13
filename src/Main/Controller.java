@@ -10,6 +10,7 @@ import Assembly.AssemblyTask;
 import Assembly.CannotAdvanceException;
 import Assembly.Workstation;
 import Car.CarModel;
+import Car.CarOrder;
 import Order.CarModelCatalog;
 import Order.OrderManager;
 import Order.OurOrderform;
@@ -36,6 +37,7 @@ public class Controller {
 		}
 		while (true) {
 
+<<<<<<< HEAD
 			ArrayList<String> list = new ArrayList<String>();
 			list.add("mechanic");
 			list.add("garageholder");
@@ -69,6 +71,36 @@ public class Controller {
 			if(antwoord.equals("exit"))
 				break;
 		}
+=======
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("mechanic");
+		list.add("garageholder");
+		list.add("manager");
+		String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
+		if(antwoord.equals("mechanic"))
+			try {
+				this.carMechanicCase(new CarMechanic(12345));
+			} catch (UserAccessException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		if(antwoord.equals("manager"))
+			try {
+				this.managerCase(new Manager(12345));
+			} catch (UserAccessException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (InternalFailureException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		if(antwoord.equals("garageholder"))
+			try {
+				this.garageHolderCase(new GarageHolder(2));
+			} catch (UserAccessException e) {
+				ui.display("Er is een fout opgeloden in ons programma gelive ons te verontschuldigen");
+			}
+>>>>>>> 1d996fbe784b57995477a0cc3c27489876736afd
 	}
 
 	public void managerCase(User user) throws UserAccessException, InternalFailureException{
@@ -146,14 +178,15 @@ public class Controller {
 		//divided into two parts. The first part shows a list of pending orders,
 		//with estimated completion times.
 		ui.display("Dit zijn uw orders die uw noch heeft staan:");
-		for(String order:ordermanager.getPendingOrders(user)){
-			ui.display(""+order);
+		for(CarOrder order:ordermanager.getPendingOrders(user)){
+			ui.display("order: "+order.getCarOrderID()+" delivered on:"+getTime(ordermanager.completionEstimate(user, order)));
 		}
 		//1.the second part shows a history
 		//of completed orders, sorted most recent first.
 		ui.display("Dit zijn uw orders die al gedaan zijn:");
-		for(String order:ordermanager.getCompletedOrders(user)){
-			ui.display(""+order);
+		ArrayList<CarOrder> orders = getSortedCompletedOrder(user, ordermanager);
+		for(CarOrder order:orders){
+			ui.display(""+order.getCarOrderID()+" "+getTime(order.getDeliveredTime()));
 		}
 		//2.The user indicates he wants to place a new car order.
 		String antwoord = "";
@@ -191,7 +224,8 @@ public class Controller {
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
 				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
-				ui.display("Uw  order zou klaar moeten zijn op "+calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE)+".");
+				String time = getTime(calender);
+				ui.display("Uw  order zou klaar moeten zijn op "+ time+".");
 			}else{
 				//6. (a) The user indicates he wants to cancel placing the order.
 				//7. The use case returns to step 1.
@@ -200,6 +234,27 @@ public class Controller {
 		}
 		//1. (a) The user indicates he wants to leave the overview.
 		//2. The use case ends here.
+	}
+
+	private String getTime(GregorianCalendar calender) {
+		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE);
+		return date;
+	}
+
+	private ArrayList<CarOrder> getSortedCompletedOrder(User user, OrderManager ordermanager) throws UserAccessException {
+		ArrayList<CarOrder> Orders = ordermanager.getCompletedOrders(user);
+		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
+		while(!Orders.isEmpty()){
+			CarOrder min = Orders.get(0);
+			for(int i=1; i < Orders.size(); i++){
+				if(ordermanager.completionEstimate(user, Orders.get(i)).before(ordermanager.completionEstimate(user, min))){
+					min = Orders.get(i);
+				}
+			}
+			Orders.remove(min);
+			result.add(min);
+		}
+		return result;
 	}
 
 	public void carMechanicCase(User carMechanic) throws UserAccessException{

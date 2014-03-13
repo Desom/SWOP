@@ -83,6 +83,41 @@ public class OrderManagerTest {
 	}
 
 	@Test
+	public void testPlaceOrderUserAccess(){
+		OurOrderform form = new OurOrderform(manager, catalog.getCarModel("Ford"), catalog);
+		form.setOption("manual");
+		form.setOption("sedan");
+		form.setOption("red");
+		form.setOption("performance 2.5l 6 cilinders");
+		form.setOption("6 speed manual");
+		form.setOption("leather black");
+		form.setOption("comfort");
+		
+		try {
+			orderManager.placeOrder(form);
+			fail();
+		} catch (UserAccessException e) {
+			assertEquals(e.getMessage(),"User ID " + 4 + " cannot excecute the method " + "placeOrder");
+		}
+
+		OurOrderform form2 = new OurOrderform(mechanic, catalog.getCarModel("Ford"), catalog);
+		form2.setOption("manual");
+		form2.setOption("sedan");
+		form2.setOption("red");
+		form2.setOption("performance 2.5l 6 cilinders");
+		form2.setOption("6 speed manual");
+		form2.setOption("leather black");
+		form2.setOption("comfort");
+		
+		try {
+			orderManager.placeOrder(form2);
+			fail();
+		} catch (UserAccessException e) {
+			assertEquals("User ID " + 5 + " cannot excecute the method " + "placeOrder",e.getMessage());
+		}
+	}
+	
+	@Test
 	public void testPlaceOrder() throws UserAccessException {
 		OurOrderform form = new OurOrderform(user3, catalog.getCarModel("Ford"), catalog);
 		form.setOption("manual");
@@ -118,32 +153,83 @@ public class OrderManagerTest {
 	}
 	
 	@Test
+	public void testCompletionEstimateUserAccess() throws UserAccessException{
+		ArrayList<CarOrder> orders2 = orderManager.getOrders(user2);
+		CarOrder order2_0 = orders2.get(0);
+		
+		ArrayList<String> compOrder1;
+		GregorianCalendar estimate;
+		try {
+			estimate = orderManager.completionEstimate(manager,order2_0);
+		} catch (UserAccessException e) {
+			assertEquals("User ID " + 4 + " cannot excecute the method " + "completionEstimate",e.getMessage());
+		}
+		
+		try {
+			estimate = orderManager.completionEstimate(mechanic,order2_0);
+		} catch (UserAccessException e) {
+			assertEquals("User ID " + 5 + " cannot excecute the method " + "completionEstimate",e.getMessage());
+		}
+	}
+	
+	
+	@Test
 	public void testGetPendingOrders() throws UserAccessException {
-		ArrayList<String> pendOrder1 = orderManager.getPendingOrders(user1);
+		ArrayList<CarOrder> pendOrder1 = orderManager.getPendingOrders(user1);
 		assertEquals(0,pendOrder1.size());
 
-		ArrayList<String> pendOrder2 = orderManager.getPendingOrders(user2);
+		ArrayList<CarOrder> pendOrder2 = orderManager.getPendingOrders(user2);
 		assertEquals(3,pendOrder2.size());
-		boolean b = pendOrder2.get(0).startsWith("CarOrder: 2");
-		assertTrue(pendOrder2.get(0).startsWith("CarOrder: 2") || pendOrder2.get(0).startsWith("CarOrder: 3") || pendOrder2.get(0).startsWith("CarOrder: 4"));
-		assertTrue(pendOrder2.get(1).startsWith("CarOrder: 2") || pendOrder2.get(1).startsWith("CarOrder: 3") || pendOrder2.get(1).startsWith("CarOrder: 4"));
-		assertTrue(pendOrder2.get(2).startsWith("CarOrder: 2") || pendOrder2.get(2).startsWith("CarOrder: 3") || pendOrder2.get(2).startsWith("CarOrder: 4"));
-		
+		assertEquals(2,pendOrder2.get(0).getCarOrderID());
+		assertEquals(3,pendOrder2.get(1).getCarOrderID());
+		assertEquals(4,pendOrder2.get(2).getCarOrderID());
 
-		ArrayList<String> pendOrder3 = orderManager.getPendingOrders(user3);
+		ArrayList<CarOrder> pendOrder3 = orderManager.getPendingOrders(user3);
 		assertEquals(0,pendOrder3.size());
 	}
 	
 	@Test
+	public void testGetPendingOrdersUserAccess(){
+		ArrayList<CarOrder> compOrder1;
+		try {
+			compOrder1 = orderManager.getPendingOrders(manager);
+		} catch (UserAccessException e) {
+			assertEquals("User ID " + 4 + " cannot excecute the method " + "getPendingOrders",e.getMessage());
+		}
+		
+		try {
+			compOrder1 = orderManager.getPendingOrders(mechanic);
+		} catch (UserAccessException e) {
+			assertEquals("User ID " + 5 + " cannot excecute the method " + "getPendingOrders",e.getMessage());
+		}
+	}
+	
+	@Test
 	public void testGetCompletedOrders() throws UserAccessException {
-		ArrayList<String> compOrder1 = orderManager.getCompletedOrders(user1);
+		ArrayList<CarOrder> compOrder1 = orderManager.getCompletedOrders(user1);
 		assertEquals(1,compOrder1.size());
 		
-		assertTrue(compOrder1.get(0).startsWith("CarOrder: 1"));
+		assertEquals(1,compOrder1.get(0).getCarOrderID());
 		
-		ArrayList<String> compOrder2 = orderManager.getCompletedOrders(user2);
+		ArrayList<CarOrder> compOrder2 = orderManager.getCompletedOrders(user2);
 		assertEquals(0,compOrder2.size());
-		ArrayList<String> compOrder3 = orderManager.getCompletedOrders(user3);
+		ArrayList<CarOrder> compOrder3 = orderManager.getCompletedOrders(user3);
 		assertEquals(0,compOrder3.size());
+	}
+	
+	@Test
+	public void testGetCompletedOrdersUserAccess(){
+		ArrayList<CarOrder> compOrder1;
+		try {
+			compOrder1 = orderManager.getCompletedOrders(manager);
+		} catch (UserAccessException e) {
+			assertEquals("User ID " + 4 + " cannot excecute the method " + "getCompletedOrders",e.getMessage());
+		}
+		
+		try {
+			compOrder1 = orderManager.getCompletedOrders(mechanic);
+		} catch (UserAccessException e) {
+			assertEquals("User ID " + 5 + " cannot excecute the method " + "getCompletedOrders",e.getMessage());
+		}
 	}
 }

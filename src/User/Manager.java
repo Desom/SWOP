@@ -29,5 +29,6 @@ public class Manager extends User {
 		this.approvedMethods.add("getAssemblyLine");
 		this.approvedMethods.add("getFutureStatus");
 		this.approvedMethods.add("addAssemblyTask");
+		this.approvedMethods.add("setDeliveredTime");
 	}
 }

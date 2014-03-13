@@ -2,7 +2,6 @@ package Assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import Main.DoesNotExistException;
 import Main.InternalFailureException;
 import User.User;
 import User.UserAccessException;
@@ -30,7 +29,7 @@ public class AssemblyLine {
 	@SuppressWarnings("unchecked")
 	public LinkedList<Workstation> getAllWorkstations(User user) throws UserAccessException{
 		if(user.canPerform("getAllWorkstations")){
-			return (LinkedList<Workstation>) workstations.clone();
+			return (LinkedList<Workstation>) workstations; //TODO GJ
 		}else{
 			throw new UserAccessException(user, "getAllWorkStations");
 		}
@@ -197,12 +196,22 @@ public class AssemblyLine {
 				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations());
 				for(Workstation fake: list){ // set the corresponding car mechanics.
 					Workstation real = selectWorkstationById(fake.getId(), user);
-					fake.addCarMechanic(real.getCarMechanic());
+					try{
+						fake.addCarMechanic(real.getCarMechanic());
+					}
+					catch(IllegalStateException e){	
+						/*TODO gewoon niets doen?*/
+					}
 					if(fake.getId() != 1){
 						Workstation realPrev = selectWorkstationById(fake.getId()-1, user);
 						fake.setCurrentCar(realPrev.getCurrentCar());
-						for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
-							fake.addAssemblyTask(user, t);
+						try{
+							for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
+								fake.addAssemblyTask(user, t);
+							}
+						}
+						catch(NullPointerException e){	
+							/*TODO gewoon niets doen?*/
 						}
 					}else{
 						CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder().getCar().getAssemblyprocess();
@@ -218,7 +227,7 @@ public class AssemblyLine {
 				return currentStatus(user);
 			}
 		}else{
-			throw new UserAccessException(user, "currentStatus");
+			throw new UserAccessException(user, "futureStatus");
 		}
 	}
 

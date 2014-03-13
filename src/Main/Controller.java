@@ -1,13 +1,16 @@
-package Assembly;
+package Main;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
+import Assembly.AssemblyLine;
+import Assembly.AssemblyStatusView;
+import Assembly.AssemblyTask;
+import Assembly.CannotAdvanceException;
+import Assembly.Workstation;
 import Car.CarModel;
-import Main.Company;
-import Main.InternalFailureException;
-import Main.UI;
+import Car.CarOrder;
 import Order.CarModelCatalog;
 import Order.OrderManager;
 import Order.OurOrderform;
@@ -24,42 +27,48 @@ public class Controller {
 	public void run()  {
 		ui = new UI();
 
+		// TODO
+
 		try {
 			company = new Company();
 		} catch (InternalFailureException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		while (true) {
 
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("mechanic");
-		list.add("garageholder");
-		list.add("manager");
-		String antwoord =ui.askWithPossibilities("Geef aan of uw mechanic, garageholder of manager bent", list);
-		if(antwoord.equals("mechanic"))
-			try {
-				this.carMechanicCase(new CarMechanic(12345));
-			} catch (UserAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		if(antwoord.equals("manager"))
-			try {
-				this.managerCase(new Manager(12345));
-			} catch (UserAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InternalFailureException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		if(antwoord.equals("garageholder"))
-			try {
-				this.garageHolderCase(new GarageHolder(2));
-			} catch (UserAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("mechanic");
+			list.add("garageholder");
+			list.add("manager");
+			list.add("exit");
+			String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
+			if(antwoord.equals("mechanic"))
+				try {
+					this.carMechanicCase(new CarMechanic(12345));
+				} catch (UserAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			if(antwoord.equals("manager"))
+				try {
+					this.managerCase(new Manager(12345));
+				} catch (UserAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InternalFailureException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if(antwoord.equals("garageholder"))
+				try {
+					this.garageHolderCase(new GarageHolder(2));
+				} catch (UserAccessException e) {
+					ui.display("Er is een fout opgeloden in ons programma gelive ons te verontschuldigen");
+				}
+			if(antwoord.equals("exit"))
+				break;
+		}
 	}
 
 	public void managerCase(User user) throws UserAccessException, InternalFailureException{
@@ -137,14 +146,15 @@ public class Controller {
 		//divided into two parts. The first part shows a list of pending orders,
 		//with estimated completion times.
 		ui.display("Dit zijn uw orders die uw noch heeft staan:");
-		for(String order:ordermanager.getPendingOrders(user)){
-			ui.display(""+order);
+		for(CarOrder order:ordermanager.getPendingOrders(user)){
+			ui.display("order: "+order.getCarOrderID()+" delivered on:"+getTime(ordermanager.completionEstimate(user, order)));
 		}
 		//1.the second part shows a history
 		//of completed orders, sorted most recent first.
 		ui.display("Dit zijn uw orders die al gedaan zijn:");
-		for(String order:ordermanager.getCompletedOrders(user)){
-			ui.display(""+order);
+		ArrayList<CarOrder> orders = getSortedCompletedOrder(user, ordermanager);
+		for(CarOrder order:orders){
+			ui.display(""+order.getCarOrderID()+" "+getTime(order.getDeliveredTime()));
 		}
 		//2.The user indicates he wants to place a new car order.
 		String antwoord = "";
@@ -159,7 +169,7 @@ public class Controller {
 		if(antwoord.equals("N")){
 			CarModelCatalog catalog = company.getCatalog(user);
 			CarModel model = null;
-			while(model != null ){
+			while(model == null ){
 				ArrayList<String> modelList = new ArrayList<String>();
 				for(CarModel j: catalog.getAllModels(user)){
 					modelList.add(j.getName());
@@ -182,7 +192,8 @@ public class Controller {
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
 				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
-				ui.display("Uw  order zou klaar moeten zijn op "+calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE)+".");
+				String time = getTime(calender);
+				ui.display("Uw  order zou klaar moeten zijn op "+ time+".");
 			}else{
 				//6. (a) The user indicates he wants to cancel placing the order.
 				//7. The use case returns to step 1.
@@ -193,20 +204,61 @@ public class Controller {
 		//2. The use case ends here.
 	}
 
+	private String getTime(GregorianCalendar calender) {
+		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE);
+		return date;
+	}
+
+	private ArrayList<CarOrder> getSortedCompletedOrder(User user, OrderManager ordermanager) throws UserAccessException {
+		ArrayList<CarOrder> Orders = ordermanager.getCompletedOrders(user);
+		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
+		while(!Orders.isEmpty()){
+			CarOrder min = Orders.get(0);
+			for(int i=1; i < Orders.size(); i++){
+				if(ordermanager.completionEstimate(user, Orders.get(i)).before(ordermanager.completionEstimate(user, min))){
+					min = Orders.get(i);
+				}
+			}
+			Orders.remove(min);
+			result.add(min);
+		}
+		return result;
+	}
+
 	public void carMechanicCase(User carMechanic) throws UserAccessException{
 		//TODO optimaliseren
+		// 1. The system asks the user what work post he is currently residing at
 		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkstations(carMechanic).toArray());
+		// 2. The user selects the corresponding work post.
 		Workstation workstation = company.getAllWorkstations(carMechanic).get(workstationInt);
+		workstation.addCarMechanic(carMechanic); //TODO catch error of niet?
 		while(true) {
+			// 3. The system presents an overview of the pending assembly tasks for the
+			// car at the current work post.
+			if (workstation.getAllPendingTasks(carMechanic).isEmpty()) {
+				ui.display("This workstation has no pending assembly tasks. Please try again later or go to another workstation.");
+				break;
+			}
 			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic).toArray());
+			// 4. The user selects one of the assembly tasks.
 			AssemblyTask task = workstation.getAllPendingTasks(carMechanic).get(taskInt);
 			workstation.selectTask(carMechanic, task);
+			// 5. The system shows the assembly task information, including the
+			// sequence of actions to perform.
 			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
-			if (ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
-				workstation.completeTask(carMechanic);
+			// 6. The user performs the assembly tasks and indicates when the assembly
+			// task is finished.
+			while (!ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
+				;
+			workstation.completeTask(carMechanic);
+			// 8. (a) The user indicates he wants to stop performing assembly tasks
 			if (!ui.askYesNoQuestion("Do you want to work on a task again?"))
 				break;
+			// 7. The system stores the changes and presents an updated overview of
+			// pending assembly tasks for the car at the current work post.
+			// By restarting the while-loop.
 		}
-		ui.display("You are now logged off.\nHave a nice day!");
+		// 9. The use case ends here.
+		ui.display("You are now logged off.");
 	}
 }

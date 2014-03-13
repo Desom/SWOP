@@ -44,10 +44,10 @@ public class Company {
 	 * @throws UserAccessException 
 	 */
 	public LinkedList<Workstation> getAllWorkstations(User user) throws UserAccessException{
-		if(user.canPerform("getAllWorkStations")){
+		if(user.canPerform("getAllWorkstations")){
 			return assemblyLine.getAllWorkstations(user); //moet dit een kopie zijn ivm beveiliging?
 		}else{
-			throw new UserAccessException(user, "getAllWorkStations");
+			throw new UserAccessException(user, "getAllWorkstations");
 		}
 	}
 

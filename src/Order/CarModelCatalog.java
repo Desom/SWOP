@@ -136,10 +136,17 @@ public class CarModelCatalog {
 	 *  makes a list of option made of a list of descriptions
 	 * @param comp the list of descriptions of options
 	 * @return a list of options which corresponds with comp
+	 * @throws CarModelCatalogException 
 	 */
-	private ArrayList<Option> CollectOption(ArrayList<String> comp) {
+	private ArrayList<Option> CollectOption(ArrayList<String> comp) throws CarModelCatalogException {
 		ArrayList<Option> result = new ArrayList<Option>();
-		for(String i: comp) result.add(All_Options.get(i));
+		for(String i: comp){
+			Option e = All_Options.get(i);
+			if(e !=null)result.add(e);
+			else {
+				throw new CarModelCatalogException("Option does not exists: "+ i);
+			}
+		}
 		return result;
 	}
 	/**
@@ -157,6 +164,11 @@ public class CarModelCatalog {
 		}
 		input.close();
 	}
+	/**
+	 * 
+	 * @param inputline
+	 * @throws CarModelCatalogException
+	 */
 	private void processModelLine(String inputline) throws CarModelCatalogException {
 		String[] input=inputline.split(";");
 		if(input.length != 2) throw new CarModelCatalogException("Model: wrong input format: " + inputline);

@@ -14,13 +14,16 @@ public class CarAssemblyProcess {
 		return car;
 	}
 
-	
 	public CarAssemblyProcess(Car car, ArrayList<Option> options){
+		this(car, options, false);
+	}
+	
+	public CarAssemblyProcess(Car car, ArrayList<Option> options, boolean isCompleted){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
 		for(Option o : options){
 			ArrayList<String> actions = new ArrayList<String>();
 			actions.add("dummy action");
-			tasks.add(new AssemblyTask(actions, o.getType()));
+			tasks.add(new AssemblyTask(actions, o.getType(), isCompleted));
 		}
 		this.tasks = tasks;
 		this.car = car;

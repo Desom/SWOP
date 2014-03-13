@@ -38,7 +38,7 @@ public class Car {
 	 */
 	public Car(CarOrder order, CarModel model, ArrayList<Option> options, boolean isDelivered){
 		this.configuration = new Configuration(model, options);
-		this.process = new CarAssemblyProcess(this, this.configuration.getAllOptions());
+		this.process = new CarAssemblyProcess(this, this.configuration.getAllOptions(), isDelivered);
 		this.order = order;
 	}
 

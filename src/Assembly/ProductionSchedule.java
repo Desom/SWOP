@@ -5,6 +5,8 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import User.User;
+import User.UserAccessException;
 import Car.CarOrder;
 
 
@@ -150,6 +152,7 @@ public class ProductionSchedule {
 	 * @param 	time
 	 * 			The time past since the last time this method was called today. (in minutes)
 	 * @return	The CarOrder that is scheduled to be built next.
+	 * @throws UserAccessException  TODO
 	 */
 	public CarOrder getNextCarOrder(int time){
 		this.currentTime.add(GregorianCalendar.MINUTE, time);
@@ -170,8 +173,9 @@ public class ProductionSchedule {
 	 * 
 	 * @param nextOrder
 	 * 			The order that is now put on the assemblyLine.
+	 * @throws UserAccessException TODO
 	 */
-	private void putOnLine(CarOrder nextOrder) {
+	private void putOnLine(CarOrder nextOrder){
 		this.ordersOnAssemblyLine[0] = this.ordersOnAssemblyLine[1];
 		this.ordersOnAssemblyLine[1] = this.ordersOnAssemblyLine[2];
 		this.ordersOnAssemblyLine[2] = nextOrder;

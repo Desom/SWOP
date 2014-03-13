@@ -12,7 +12,7 @@ public class CarModel {
 		if(Name == null || OptionList == null|| optiontypes == null) throw new CarModelCatalogException("null in non null value of Model");
 
 		for(String type:optiontypes){
-			if(!existstype(type,OptionList)) throw new CarModelCatalogException("Missing type");
+			if(!existstype(type,OptionList)) throw new CarModelCatalogException("Missing type: "+ type);
 		}
 		PossibleOptions = OptionList;
 		this.Name=Name;

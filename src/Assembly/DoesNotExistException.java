@@ -1,4 +1,4 @@
-package Main;
+package Assembly;
 
 public class DoesNotExistException extends Exception{
 

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import User.User;
+import User.UserAccessException;
 
 public class CarOrder {
 	
@@ -61,7 +62,7 @@ public class CarOrder {
 			isDelivered = false;
 		}
 
-		this.car = new Car(this, model, optionsList, isDelivered);//TODO hoe maken we een geleverde auto.
+		this.car = new Car(this, model, optionsList, isDelivered);
 	}
 
 	/**
@@ -69,9 +70,19 @@ public class CarOrder {
 	 * 
 	 * @param 	deliveredTime
 	 * 			the time this car was delivered
+	 * @throws UserAccessException TODO
 	 */
-	private void setDeliveredTime(GregorianCalendar deliveredTime) {
-		this.deliveredTime = deliveredTime;
+	public void setDeliveredTime(User user, GregorianCalendar deliveredTime) throws UserAccessException {
+		if(user.canPerform("setDeliveredTime")){
+			if(!this.isCompleted())
+				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
+			if(this.deliveredTime.equals(null))
+				throw new IllegalStateException("DeliveredTime already set");
+			this.deliveredTime = deliveredTime;
+		}
+		else{
+			throw new UserAccessException(user, "setDeliveredTime");
+		}
 	}
 
 	/**
@@ -122,10 +133,35 @@ public class CarOrder {
 	public GregorianCalendar getOrderedTime() {
 		return (GregorianCalendar) this.orderedTime.clone();
 	}
-
-	public Boolean IsCompleted() {
-		// TODO Auto-generated method stub
+	
+	/**
+	 * Returns if this car is already completed or not.
+	 * 
+	 * @return true if the car is already completed, else false
+	 */
+	public Boolean isCompleted() {
 		return this.getCar().IsCompleted();
+	}
+	
+	@Override
+	public String toString(){
+		String ordered = "  Ordered on: " + this.orderedTime.get(GregorianCalendar.DAY_OF_MONTH) 
+				+ "-" + this.orderedTime.get(GregorianCalendar.MONTH)
+				+ "-" + this.orderedTime.get(GregorianCalendar.YEAR)
+				+ " " + this.orderedTime.get(GregorianCalendar.HOUR_OF_DAY)
+				+ ":" + this.orderedTime.get(GregorianCalendar.MINUTE)
+				+ ":" + this.orderedTime.get(GregorianCalendar.SECOND);
+		String delivered ="";
+		if(this.deliveredTime != null){
+			delivered = "  Delivered on: " + this.deliveredTime.get(GregorianCalendar.DAY_OF_MONTH) 
+					+ "-" + this.deliveredTime.get(GregorianCalendar.MONTH)
+					+ "-" + this.deliveredTime.get(GregorianCalendar.YEAR)
+					+ " " + this.deliveredTime.get(GregorianCalendar.HOUR_OF_DAY)
+					+ ":" + this.deliveredTime.get(GregorianCalendar.MINUTE)
+					+ ":" + this.deliveredTime.get(GregorianCalendar.SECOND);
+		}
+		return "CarOrder: " + this.carOrderID + "  User: " + this.userID + ordered + delivered;
+		
 	}
 
 }

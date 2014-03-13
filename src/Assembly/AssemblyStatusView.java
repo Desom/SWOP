@@ -3,7 +3,6 @@ package Assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import Main.DoesNotExistException;
 import User.User;
 import User.UserAccessException;
 
@@ -33,10 +32,14 @@ public class AssemblyStatusView {
 		}
 		return IDs;
 	}
-
+	/**
+	 * TODO + is -1 terug sturen goed?
+	 * @param workstationId
+	 * @return
+	 * @throws DoesNotExistException
+	 */
 	public int getCarOrderIdAt(int workstationId) throws DoesNotExistException{
-		Workstation w = getWorkstation(workstationId);
-		return w.getCurrentCar().getCar().getOrder().getCarOrderID();
+		return getWorkstation(workstationId).getCurrentCar().getCar().getOrder().getCarOrderID();
 	}
 
 	public LinkedList<String> getAllTasksAt(int workstationId) throws UserAccessException, DoesNotExistException{

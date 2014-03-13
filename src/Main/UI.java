@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import Assembly.AssemblyStatusView;
+import Assembly.DoesNotExistException;
 import Order.OrderForm;
 import User.UserAccessException;
 
@@ -27,9 +28,11 @@ public class UI {
 		System.out.println(question);
 		System.out.println("At least: " + lowerBound + ".");
 		int input = scan.nextInt();
+		scan.nextLine();
 		while(lowerBound > input){
 			System.out.println("This Number is to low.");
 			input = scan.nextInt();
+			scan.nextLine();
 		}
 		return input;
 	}
@@ -63,14 +66,22 @@ public class UI {
 			possOutput += "\n";
 			visualInt++;
 		}
-		possOutput = possOutput.substring(0,possOutput.length()-3);
-		possOutput += " )";
 		System.out.println(possOutput);
-		int input = Integer.parseInt(scan.nextLine());
+		int input = -1;
+		try {
+			input = Integer.parseInt(scan.nextLine()) - 1;
+		}
+		catch (NumberFormatException e) {
+		}
 		while(possibilities.length <= input || input < 0){
 			System.out.println("Not a possibility. Pick one from the list:");
 			System.out.println(possOutput);
-			input = Integer.parseInt(scan.nextLine());
+			try {
+				input = Integer.parseInt(scan.nextLine()) - 1;
+			}
+			catch (NumberFormatException e) {
+			}
+			
 		}
 		return input;
 	}
@@ -92,7 +103,13 @@ public class UI {
 			System.out.println("---");
 			for(int wsID : statusView.getAllWorkstationIds()){
 				System.out.println("Workstation " + wsID);
-				System.out.println("working at CarOrder " + statusView.getCarOrderIdAt(wsID));
+				try{
+					int carOrderID = statusView.getCarOrderIdAt(wsID);
+					System.out.println("working at CarOrder " + carOrderID);
+				}
+				catch(NullPointerException exc){
+					System.out.println("Not working at a CarOrder");
+				}
 				for(String task : statusView.getAllTasksAt(wsID)){
 					String taskStatus;
 					if(statusView.taskIsDoneAt(task, wsID)){

@@ -142,7 +142,7 @@ public class Controller {
 	 * @param user The user that wants to use the garage holder use case
 	 * @throws UserAccessException
 	 */
-	public void garageHolderCase(User user) throws UserAccessException{
+	public void garageHolderCase(User user) throws UserAccessException {
 		OrderManager ordermanager=this.company.getOrderManager(user);
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
@@ -173,7 +173,7 @@ public class Controller {
 			CarModel model = null;
 			while(model == null ){
 				ArrayList<String> modelList = new ArrayList<String>();
-				for(CarModel j: catalog.getAllModels(user)){
+				for(CarModel j: catalog.getAllModels()){
 					modelList.add(j.getName());
 				}
 				String modelname = ui.askWithPossibilities("Geef uw model in", modelList);

@@ -28,13 +28,11 @@ public class Controller {
 	public void run()  {
 		ui = new UI();
 
-		// TODO
 
 		try {
 			company = new Company();
 		} catch (InternalFailureException e2) {
-			// TODO Auto-generated catch block
-			e2.printStackTrace();
+			ui.display("Internal Error");
 		}
 		while (true) {
 
@@ -48,18 +46,15 @@ public class Controller {
 				try {
 					this.carMechanicCase(new CarMechanic(12345));
 				} catch (UserAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
+					ui.display(e1.getMessage());
 				}
 			if(antwoord.equals("manager"))
 				try {
 					this.managerCase(new Manager(12345));
 				} catch (UserAccessException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ui.display(e.getMessage());
 				} catch (InternalFailureException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					ui.display("Internal Error");
 				}
 			if(antwoord.equals("garageholder"))
 				try {
@@ -96,7 +91,7 @@ public class Controller {
 		boolean repeat = true;
 		while(repeat){
 
-			int timeSpent = ui.askForInteger("Give the time spent during the current phase. (minutes)", 0);
+			int timeSpent = ui.askForInteger("Give the time spent during the current phase. 0 if it's the begin of the day.(minutes)", 0);
 			
 			//2. The system presents an overview of the current assembly line status,
 			//as well as a view of the future assembly line status (as it would be after
@@ -234,7 +229,7 @@ public class Controller {
 		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
 		// 2. The user selects the corresponding work post.
 		Workstation workstation = workstations.get(workstationInt);
-		workstation.addCarMechanic(carMechanic); //TODO catch error of niet?
+		workstation.addCarMechanic(carMechanic);
 		while(true) {
 			// 3. The system presents an overview of the pending assembly tasks for the
 			// car at the current work post.

@@ -64,7 +64,11 @@ public class CarOrderTest {
 
 	@Test
 	public void testCreation() {
-		fail("Not yet implemented");
+		assertEquals(carModel,carOrder.getCar().getConfiguration().getModel());
+		assertEquals(0,carOrder.getCarOrderID());
+		assertEquals(now3,carOrder.getDeliveredTime());
+		assertEquals(now,carOrder.getOrderedTime());
+		assertEquals(0,carOrder.getUserId());
 	}
 
 	@Test
@@ -101,40 +105,32 @@ public class CarOrderTest {
 		GregorianCalendar now4 = (GregorianCalendar) now.clone();
 		now3.add(GregorianCalendar.HOUR_OF_DAY, 24);
 		
-		try {
-			carOrder1.setDeliveredTime(manager, now4);
-		} catch (UserAccessException e) {
-			fail();
-		}
 		
 		try {
 			carOrder1.setDeliveredTime(manager, now4);
 			fail();
 		} catch (IllegalStateException e) {
-			assertEquals("DeliveredTime already set",e.getMessage());
+			assertEquals("Can't set deliveredTime because this CarOrder is not completed yet.",e.getMessage());
 		} catch (UserAccessException e) {
 			fail();
 		}
 		
 		try {
 			carOrder2.setDeliveredTime(manager, now4);
+		} catch (IllegalStateException e) {
+			assertEquals("Can't set deliveredTime because this CarOrder is not completed yet.",e.getMessage());
 		} catch (UserAccessException e) {
 			fail();
 		}
 		
 		try {
-			carOrder2.setDeliveredTime(manager, now4);
-			fail();
+			carOrder.setDeliveredTime(manager, now4);
 		} catch (IllegalStateException e) {
-			assertEquals("DeliveredTime already set",e.getMessage());
+			fail();
 		} catch (UserAccessException e) {
 			fail();
 		}
 	}
 
-	@Test
-	public void testToString() {
-		fail("Not yet implemented");
-	}
 }
 

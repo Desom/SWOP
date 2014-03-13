@@ -148,28 +148,28 @@ public class Controller {
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
 		//with estimated completion times.
-		ui.display("Dit zijn uw orders die uw noch heeft staan:");
+		ui.display("These are your pending orders:");
 		for(CarOrder order:ordermanager.getPendingOrders(user)){
 			ui.display("order: "+order.getCarOrderID()+" delivered on:"+getTime(ordermanager.completionEstimate(user, order)));
 		}
 		//1.the second part shows a history
 		//of completed orders, sorted most recent first.
-		ui.display("Dit zijn uw orders die al gedaan zijn:");
+		ui.display("These are you completed order:");
 		ArrayList<CarOrder> orders = getSortedCompletedOrder(user, ordermanager);
 		for(CarOrder order:orders){
 			ui.display(""+order.getCarOrderID()+" "+getTime(order.getDeliveredTime()));
 		}
 		//2.The user indicates he wants to place a new car order.
 		String antwoord = "";
-		while(!antwoord.equals("V") && !antwoord.equals("N")){
+		while(!antwoord.equals("L") && !antwoord.equals("P")){
 			ArrayList<String> list = new ArrayList<String>();
-			list.add("V");
-			list.add("N");
-			antwoord = ui.askWithPossibilities("Wilt u de overview (V)erlaten of een (N)ieuwe order plaatsen",list);
+			list.add("L");
+			list.add("P");
+			antwoord = ui.askWithPossibilities("Do you want to (L)eave this overview or (P)lace a new order?",list);
 		}
 		//3. The system shows a list of available car models
 		//4. The user indicates the car model he wishes to order.
-		if(antwoord.equals("N")){
+		if(antwoord.equals("P")){
 			CarModelCatalog catalog = company.getCatalog(user);
 			CarModel model = null;
 			while(model == null ){
@@ -177,7 +177,7 @@ public class Controller {
 				for(CarModel j: catalog.getAllModels()){
 					modelList.add(j.getName());
 				}
-				String modelname = ui.askWithPossibilities("Geef uw model in", modelList);
+				String modelname = ui.askWithPossibilities("Please input your car model", modelList);
 				model = catalog.getCarModel(modelname);
 			}
 			//5. The system displays the ordering form.
@@ -189,14 +189,14 @@ public class Controller {
 				ArrayList<String> list = new ArrayList<String>();
 				list.add("Y");
 				list.add("N");
-				antwoord2 = ui.askWithPossibilities("Wilt u de order bevestigen? Y/N",list);
+				antwoord2 = ui.askWithPossibilities("Do you want to confirm this order? Y/N",list);
 			}
 			if(antwoord2.equals("Y")){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
 				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
 				String time = getTime(calender);
-				ui.display("Uw  order zou klaar moeten zijn op "+ time+".");
+				ui.display("Your order should be ready at "+ time+".");
 			}else{
 				//6. (a) The user indicates he wants to cancel placing the order.
 				//7. The use case returns to step 1.
@@ -208,7 +208,7 @@ public class Controller {
 	}
 
 	private String getTime(GregorianCalendar calender) {
-		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE);
+		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" at "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE);
 		return date;
 	}
 

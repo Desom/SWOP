@@ -32,7 +32,7 @@ public class Test_CarModelCatalog {
 		write.write("sports (low profle);Wheels;,\n");
 		write.close();
 		BufferedWriter write2 = new BufferedWriter(new FileWriter("init_model.txt"));
-		write2.write("Ford;manual;sedan;red;performance 2.5l 6 cilinders;6 speed manual;leather black;comfort;black,blue");
+		write2.write("Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue");
 		write2.close();
 	}
 	@Test
@@ -113,7 +113,7 @@ public class Test_CarModelCatalog {
 	public void test_model_doublename() throws IOException {
 		BufferedWriter write = new BufferedWriter(new FileWriter("test_model.txt"));
 		write.write("a;manual;sedan;red;standard 2l 4 cilinders;6 speed manual;leather black;comfort;,\n");
-		write.write("a;,;,;,;,;,;,;,;,");
+		write.write("a,i");
 		write.close();
 		try {
 			new CarModelCatalog("test_option.txt","test_model.txt");
@@ -126,28 +126,17 @@ public class Test_CarModelCatalog {
 	@Test
 	public void test_model_nonexisting_Option() throws IOException {
 		BufferedWriter write = new BufferedWriter(new FileWriter("test_model.txt"));
-		write.write("a;,;,;,;,;,;,;,;,");
+		write.write("a;i");
 		write.close();
 		try {
 			new CarModelCatalog("test_option.txt","test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Option does not exists: ,",e.GetMessage());
+			assertEquals("Option does not exists: i",e.GetMessage());
 		}
 	}
-	@Test
-	public void test_model_wrongtype() throws IOException {
-		BufferedWriter write = new BufferedWriter(new FileWriter("test_model.txt"));
-		write.write("a;sedan;sedan;red;standard 2l 4 cilinders;6 speed manual;leather black;comfort;,\n");
-		write.close();
-		try {
-			new CarModelCatalog("test_option.txt","test_model.txt");
-			fail();
-		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
-			assertEquals("Wrong Option Type in form: a;sedan;sedan;red;standard 2l 4 cilinders;6 speed manual;leather black;comfort;,",e.GetMessage());
-		}
-	}
+	
+	
 
 }

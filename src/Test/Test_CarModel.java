@@ -26,13 +26,15 @@ public class Test_CarModel {
 	@Before
 	public void setUp() throws Exception {
 		a = new ArrayList<Option>();
-		A = new Airco("a",a,a);
-		B = new Body("b",a,a);
-		C = new Color("c",a,a);
-		E = new Engine("e",a,a);
-		G = new Gearbox("g",a,a);
-		S = new Seats("s",a,a);
-		W = new Wheels("w",a,a);
+		ArrayList<Option> b = new ArrayList<Option>();
+		ArrayList<Option> c = new ArrayList<Option>();
+		A = new Airco("a",b,c);
+		B = new Body("b",b,c);
+		C = new Color("c",b,c);
+		E = new Engine("e",b,c);
+		G = new Gearbox("g",b,c);
+		S = new Seats("s",b,c);
+		W = new Wheels("w",b,c);
 		Name = "BMW";
 		a.add(E);
 		a.add(A);

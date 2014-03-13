@@ -109,4 +109,12 @@ public class Configuration {
 		return this.options.get(type);
 	}
 
+	/**
+	 * Returns the CarModel from this configuration 
+	 * 
+	 * @return The CarModel of this configuration
+	 */
+	public CarModel getModel() {
+		return model;
+	}
 }

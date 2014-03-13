@@ -155,7 +155,7 @@ public class AssemblyLineTest {
 	@Test
 	public void testFutureStatus() throws InternalFailureException {
 		try {
-			for(Workstation w : line.getAllWorkstations(manager,100)){
+			for(Workstation w : line.getAllWorkstations(manager)){
 				while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
 					w.selectTask(w.getCarMechanic(), w.getAllPendingTasks(w.getCarMechanic()).get(0));
 					w.completeTask(w.getCarMechanic());

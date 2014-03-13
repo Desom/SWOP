@@ -155,12 +155,15 @@ public class AssemblyLineTest {
 	@Test
 	public void testFutureStatus() throws InternalFailureException {
 		try {
-			for(Workstation w : line.getAllWorkstations(manager,100)){
+<<<<<<< HEAD
+			for(Workstation w : line.getAllWorkstations(manager)){
 				while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
 					w.selectTask(w.getCarMechanic(), w.getAllPendingTasks(w.getCarMechanic()).get(0));
 					w.completeTask(w.getCarMechanic());
 				}
 			}
+=======
+>>>>>>> 62cd072f5c2a3af19d89c8ea26568cd8a4523057
 			AssemblyStatusView future = line.futureStatus(manager,100);
 			line.advanceLine(manager, 100);
 			AssemblyStatusView current = line.currentStatus(manager);

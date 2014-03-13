@@ -97,7 +97,7 @@ public class AssemblyLineTest {
 			processesBefore.add(w.getCurrentCar());
 		}
 		
-		CarAssemblyProcess next = schedule.seeNextCarOrder(100).getCar().getAssemblyprocess();
+		CarAssemblyProcess next = schedule.seeNextCarOrder().getCar().getAssemblyprocess();
 		line.advanceLine(manager, 100);
 		
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
@@ -136,14 +136,8 @@ public class AssemblyLineTest {
 			AssemblyStatusView current = line.currentStatus(manager);
 			
 			for(int i : line.getWorkstationIDs()){
-				LinkedList<String> list = new LinkedList<String>();
-				for(int j = 0; j<line.selectWorkstationById(i, manager).getAllTasks(manager).size() ; j++ ){
-					list.add(line.selectWorkstationById(i, manager).getAllTasks(manager).get(j).getType());
-				}
-				assertEquals(current.getAllTasksAt(i), list);
-				if(current.getCarOrderIdAt(i) != -1){
-					assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i, manager).getCurrentCar().getCar().getOrder().getCarOrderID());
-				}
+				assertEquals(current.getAllTasksAt(i), line.selectWorkstationById(i, manager).getAllTasks(manager));
+				assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i, manager).getCurrentCar().getCar().getOrder());
 				assertTrue(current.getHeader().compareToIgnoreCase("Current Status") == 0);
 			}
 			
@@ -155,29 +149,17 @@ public class AssemblyLineTest {
 	@Test
 	public void testFutureStatus() throws InternalFailureException {
 		try {
-			for(Workstation w : line.getAllWorkstations(manager,100)){
-				while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
-					w.selectTask(w.getCarMechanic(), w.getAllPendingTasks(w.getCarMechanic()).get(0));
-					w.completeTask(w.getCarMechanic());
-				}
-			}
-			AssemblyStatusView future = line.futureStatus(manager,100);
+			AssemblyStatusView future = line.futureStatus(manager);
 			line.advanceLine(manager, 100);
 			AssemblyStatusView current = line.currentStatus(manager);
 			for(int i : line.getWorkstationIDs()){
 				assertEquals(current.getAllTasksAt(i), future.getAllTasksAt(i));
 				assertEquals(current.getCarOrderIdAt(i), future.getCarOrderIdAt(i));
 			}
-			for(int i=0; i<current.getAllWorkstationIds().length; i++){
-				assertEquals(current.getAllWorkstationIds()[i], future.getAllWorkstationIds()[i]);
-			}
-			assertTrue(future.getHeader().compareToIgnoreCase("Future Status")== 0);
+			assertEquals(current.getAllWorkstationIds(), future.getAllWorkstationIds());
+			assertTrue(current.getHeader().compareToIgnoreCase(future.getHeader()) == 0);
 			
-		} catch (UserAccessException e) {
-			fail();
-		} catch (DoesNotExistException e) {
-			fail();
-		} catch (CannotAdvanceException e) {
+		} catch (UserAccessException | DoesNotExistException | CannotAdvanceException e) {
 			fail();
 		}
 	}

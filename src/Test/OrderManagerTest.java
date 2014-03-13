@@ -50,7 +50,8 @@ public class OrderManagerTest {
 
 	@Test
 	public void testCreation() {
-		
+
+		fail("Not yet implemented");
 	}
 
 	@Test
@@ -92,5 +93,14 @@ public class OrderManagerTest {
 		ArrayList<CarOrder> orders2 = orderManager.getOrders(user2);
 
 	}
-
+	
+	@Test
+	public void testGetPendingOrders() {
+		fail("Not yet implemented");
+	}
+	
+	@Test
+	public void testGetCompletedOrders() {
+		fail("Not yet implemented");
+	}
 }

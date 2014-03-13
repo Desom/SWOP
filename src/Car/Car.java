@@ -69,5 +69,13 @@ public class Car {
 		return this.getAssemblyprocess().IsCompleted();
 	}
 	
+	/**
+	 * Returns the Configuration of this car.
+	 * 
+	 * @return	the Configuration of this car
+	 */
+	public Configuration getConfiguration() {
+		return configuration;
+	}
 
 }

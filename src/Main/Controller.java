@@ -41,6 +41,7 @@ public class Controller {
 			list.add("mechanic");
 			list.add("garageholder");
 			list.add("manager");
+			list.add("exit");
 			String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
 			if(antwoord.equals("mechanic"))
 				try {
@@ -247,8 +248,9 @@ public class Controller {
 			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
 			// 6. The user performs the assembly tasks and indicates when the assembly
 			// task is finished.
-			if (ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
-				workstation.completeTask(carMechanic);
+			while (!ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
+				;
+			workstation.completeTask(carMechanic);
 			// 8. (a) The user indicates he wants to stop performing assembly tasks
 			if (!ui.askYesNoQuestion("Do you want to work on a task again?"))
 				break;

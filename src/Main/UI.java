@@ -65,11 +65,21 @@ public class UI {
 			visualInt++;
 		}
 		System.out.println(possOutput);
-		int input = Integer.parseInt(scan.nextLine());
+		int input = -1;
+		try {
+			input = Integer.parseInt(scan.nextLine()) - 1;
+		}
+		catch (NumberFormatException e) {
+		}
 		while(possibilities.length <= input || input < 0){
 			System.out.println("Not a possibility. Pick one from the list:");
 			System.out.println(possOutput);
-			input = Integer.parseInt(scan.nextLine());
+			try {
+				input = Integer.parseInt(scan.nextLine()) - 1;
+			}
+			catch (NumberFormatException e) {
+			}
+			
 		}
 		return input;
 	}

@@ -29,7 +29,7 @@ public class AssemblyLine {
 	@SuppressWarnings("unchecked")
 	public LinkedList<Workstation> getAllWorkstations(User user) throws UserAccessException{
 		if(user.canPerform("getAllWorkstations")){
-			return (LinkedList<Workstation>) workstations.clone();
+			return (LinkedList<Workstation>) workstations; //TODO GJ
 		}else{
 			throw new UserAccessException(user, "getAllWorkStations");
 		}

@@ -26,42 +26,49 @@ public class Controller {
 	public void run()  {
 		ui = new UI();
 
+		// TODO
+
 		try {
 			company = new Company();
 		} catch (InternalFailureException e2) {
 			// TODO Auto-generated catch block
 			e2.printStackTrace();
 		}
+		while (true) {
 
-		ArrayList<String> list = new ArrayList<String>();
-		list.add("mechanic");
-		list.add("garageholder");
-		list.add("manager");
-		String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
-		if(antwoord.equals("mechanic"))
-			try {
-				this.carMechanicCase(new CarMechanic(12345));
-			} catch (UserAccessException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-		if(antwoord.equals("manager"))
-			try {
-				this.managerCase(new Manager(12345));
-			} catch (UserAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (InternalFailureException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		if(antwoord.equals("garageholder"))
-			try {
-				this.garageHolderCase(new GarageHolder(2));
-			} catch (UserAccessException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			ArrayList<String> list = new ArrayList<String>();
+			list.add("mechanic");
+			list.add("garageholder");
+			list.add("manager");
+			list.add("exit");
+			String antwoord =ui.askWithPossibilities("Geef aan of u mechanic, garageholder of manager bent", list);
+			if(antwoord.equals("mechanic"))
+				try {
+					this.carMechanicCase(new CarMechanic(12345));
+				} catch (UserAccessException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			if(antwoord.equals("manager"))
+				try {
+					this.managerCase(new Manager(12345));
+				} catch (UserAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InternalFailureException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if(antwoord.equals("garageholder"))
+				try {
+					this.garageHolderCase(new GarageHolder(2));
+				} catch (UserAccessException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			if(antwoord.equals("exit"))
+				break;
+		}
 	}
 
 	public void managerCase(User user) throws UserAccessException, InternalFailureException{
@@ -201,7 +208,7 @@ public class Controller {
 		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkstations(carMechanic).toArray());
 		// 2. The user selects the corresponding work post.
 		Workstation workstation = company.getAllWorkstations(carMechanic).get(workstationInt);
-		workstation.addCarMechanic(carMechanic); //TODO catch error
+		workstation.addCarMechanic(carMechanic); //TODO catch error of niet?
 		while(true) {
 			// 3. The system presents an overview of the pending assembly tasks for the
 			// car at the current work post.

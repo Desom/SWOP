@@ -11,7 +11,6 @@ import Car.CarOrder;
 
 
 public class ProductionSchedule {
-	//TODO protected
 	private static final int ASSEMBLY_DURATION = 3;
 	private static final int WORKSTATION_DURATION = 1;
 	private static final int BEGIN_WORKDAY = 6;
@@ -19,7 +18,7 @@ public class ProductionSchedule {
 	
 	private LinkedList<CarOrder> scheduleQueue;
 	private GregorianCalendar currentTime; // tijd wanneer het laatst werd advanced of begin van de dag.
-	private GregorianCalendar endWithOverTime; // in minutes
+	private GregorianCalendar endWithOverTime;
 	private CarOrder[] ordersOnAssemblyLine;
 	
 	/**
@@ -53,7 +52,6 @@ public class ProductionSchedule {
 	 * 			Null if it isn't in this schedule.
 	 */
 	public GregorianCalendar completionEstimateCarOrder(CarOrder order){
-		//TODO zeker goed testen...
 		//controleren ofdat hij wel op deze schedule staat
 		int positionInLine = this.getScheduleQueue().indexOf(order);
 		if(positionInLine == -1)
@@ -108,7 +106,7 @@ public class ProductionSchedule {
 	/**
 	 * Checks if there is still enough time left today to built another Car within working hours.
 	 * @param nowTime 
-	 * TODO
+	 * 				The time which will be used to check.
 	 * @return True if there is still enough time left, false otherwise.
 	 */
 	private boolean checkTimeRequirement(GregorianCalendar nowTime) {
@@ -136,7 +134,9 @@ public class ProductionSchedule {
 	
 	/**
 	 * Returns the next CarOrder to be built, but without removing it from the front of the schedule.
-	 * TODO
+	 * 
+	 * @param	time
+	 * 			The time past since the last time getNextCarOrder was called today. (in minutes)
 	 * @return The CarOrder that is scheduled to be built next.
 	 */
 	public CarOrder seeNextCarOrder(int time){
@@ -176,7 +176,6 @@ public class ProductionSchedule {
 	 * 
 	 * @param nextOrder
 	 * 			The order that is now put on the assemblyLine.
-	 * @throws UserAccessException TODO
 	 */
 	private void putOnLine(CarOrder nextOrder){
 		this.ordersOnAssemblyLine[0] = this.ordersOnAssemblyLine[1];

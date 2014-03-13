@@ -99,6 +99,12 @@ public class Configuration {
 		}
 		return s;
 	}
+	/**
+	 * returns the option of a specific type
+	 * @param type
+	 * @return the option of a specific type
+	 * 			null if no option is found of that type
+	 */
 	public Option getOptionOfType(String type){
 		return this.options.get(type);
 	}

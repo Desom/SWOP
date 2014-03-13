@@ -3,6 +3,7 @@ package Main;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import Assembly.AssemblyLine;
 import Assembly.AssemblyStatusView;
@@ -84,13 +85,19 @@ public class Controller {
 			String action = ui.askWithPossibilities(actionRequest, actionPoss);
 			if("advanceLine".equals(action))
 				this.actionAdvanceLine(user, assembly);
-			if("quit".equals(action))
+			if("quit".equals(action)){
+				ui.display("You are now logged off.");
 				return;
+			}
 		}
 	}
 
 	private void actionAdvanceLine(User user, AssemblyLine assembly) throws UserAccessException, InternalFailureException{
-		while(true){
+		boolean repeat = true;
+		while(repeat){
+
+			int timeSpent = ui.askForInteger("Give the time spent during the current phase. (minutes)", 0);
+			
 			//2. The system presents an overview of the current assembly line status,
 			//as well as a view of the future assembly line status (as it would be after
 			//completing this use case), including pending and finished tasks at each
@@ -98,7 +105,7 @@ public class Controller {
 			AssemblyStatusView currentStatus = assembly.currentStatus(user);
 			ui.showAssemblyLineStatus(currentStatus);
 
-			AssemblyStatusView futureStatus = assembly.futureStatus(user);
+			AssemblyStatusView futureStatus = assembly.futureStatus(user, timeSpent);
 			ui.showAssemblyLineStatus(futureStatus);
 
 			//3. The user confirms the decision to move the assembly line forward,
@@ -108,7 +115,6 @@ public class Controller {
 			if(!doAdvance){
 				return;
 			}
-			int timeSpent = ui.askForInteger("Give the time spent during the current phase. (minutes)", 0);
 
 			try{
 				//4. The system moves the assembly line forward one work post according
@@ -129,10 +135,7 @@ public class Controller {
 				//6. The use case continues in step 6.
 			}
 			//6. The user indicates he is done viewing the status.
-			boolean repeat = ui.askYesNoQuestion("Do you want to view the new future status?");
-			if(!repeat){
-				return;
-			}
+			repeat = ui.askYesNoQuestion("Do you want to view the new future status?");
 		}
 	}
 	/**
@@ -140,41 +143,41 @@ public class Controller {
 	 * @param user The user that wants to use the garage holder use case
 	 * @throws UserAccessException
 	 */
-	public void garageHolderCase(User user) throws UserAccessException{
+	public void garageHolderCase(User user) throws UserAccessException {
 		OrderManager ordermanager=this.company.getOrderManager(user);
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
 		//with estimated completion times.
-		ui.display("Dit zijn uw orders die uw noch heeft staan:");
+		ui.display("These are your pending orders:");
 		for(CarOrder order:ordermanager.getPendingOrders(user)){
 			ui.display("order: "+order.getCarOrderID()+" delivered on:"+getTime(ordermanager.completionEstimate(user, order)));
 		}
 		//1.the second part shows a history
 		//of completed orders, sorted most recent first.
-		ui.display("Dit zijn uw orders die al gedaan zijn:");
+		ui.display("These are you completed order:");
 		ArrayList<CarOrder> orders = getSortedCompletedOrder(user, ordermanager);
 		for(CarOrder order:orders){
 			ui.display(""+order.getCarOrderID()+" "+getTime(order.getDeliveredTime()));
 		}
 		//2.The user indicates he wants to place a new car order.
 		String antwoord = "";
-		while(!antwoord.equals("V") && !antwoord.equals("N")){
+		while(!antwoord.equals("L") && !antwoord.equals("P")){
 			ArrayList<String> list = new ArrayList<String>();
-			list.add("V");
-			list.add("N");
-			antwoord = ui.askWithPossibilities("Wilt u de overview (V)erlaten of een (N)ieuwe order plaatsen",list);
+			list.add("L");
+			list.add("P");
+			antwoord = ui.askWithPossibilities("Do you want to (L)eave this overview or (P)lace a new order?",list);
 		}
 		//3. The system shows a list of available car models
 		//4. The user indicates the car model he wishes to order.
-		if(antwoord.equals("N")){
+		if(antwoord.equals("P")){
 			CarModelCatalog catalog = company.getCatalog(user);
 			CarModel model = null;
 			while(model == null ){
 				ArrayList<String> modelList = new ArrayList<String>();
-				for(CarModel j: catalog.getAllModels(user)){
+				for(CarModel j: catalog.getAllModels()){
 					modelList.add(j.getName());
 				}
-				String modelname = ui.askWithPossibilities("Geef uw model in", modelList);
+				String modelname = ui.askWithPossibilities("Please input your car model", modelList);
 				model = catalog.getCarModel(modelname);
 			}
 			//5. The system displays the ordering form.
@@ -186,14 +189,14 @@ public class Controller {
 				ArrayList<String> list = new ArrayList<String>();
 				list.add("Y");
 				list.add("N");
-				antwoord2 = ui.askWithPossibilities("Wilt u de order bevestigen? Y/N",list);
+				antwoord2 = ui.askWithPossibilities("Do you want to confirm this order? Y/N",list);
 			}
 			if(antwoord2.equals("Y")){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
 				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
 				String time = getTime(calender);
-				ui.display("Uw  order zou klaar moeten zijn op "+ time+".");
+				ui.display("Your order should be ready at "+ time+".");
 			}else{
 				//6. (a) The user indicates he wants to cancel placing the order.
 				//7. The use case returns to step 1.
@@ -205,7 +208,7 @@ public class Controller {
 	}
 
 	private String getTime(GregorianCalendar calender) {
-		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" om "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE);
+		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" at "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE);
 		return date;
 	}
 
@@ -226,11 +229,11 @@ public class Controller {
 	}
 
 	public void carMechanicCase(User carMechanic) throws UserAccessException{
-		//TODO optimaliseren
 		// 1. The system asks the user what work post he is currently residing at
-		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", company.getAllWorkstations(carMechanic).toArray());
+		LinkedList<Workstation> workstations = company.getAllWorkstations(carMechanic);
+		int workstationInt = ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
 		// 2. The user selects the corresponding work post.
-		Workstation workstation = company.getAllWorkstations(carMechanic).get(workstationInt);
+		Workstation workstation = workstations.get(workstationInt);
 		workstation.addCarMechanic(carMechanic); //TODO catch error of niet?
 		while(true) {
 			// 3. The system presents an overview of the pending assembly tasks for the
@@ -239,16 +242,17 @@ public class Controller {
 				ui.display("This workstation has no pending assembly tasks. Please try again later or go to another workstation.");
 				break;
 			}
-			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", workstation.getAllPendingTasks(carMechanic).toArray());
+			ArrayList<AssemblyTask> tasks = workstation.getAllPendingTasks(carMechanic);
+			int taskInt = ui.askWithPossibilities("Which pending task do you want to work on?", tasks.toArray().clone());
 			// 4. The user selects one of the assembly tasks.
-			AssemblyTask task = workstation.getAllPendingTasks(carMechanic).get(taskInt);
+			AssemblyTask task = tasks.get(taskInt);
 			workstation.selectTask(carMechanic, task);
 			// 5. The system shows the assembly task information, including the
 			// sequence of actions to perform.
 			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
 			// 6. The user performs the assembly tasks and indicates when the assembly
 			// task is finished.
-			while (!ui.askYesNoQuestion("Please indicate when you have completed the assembly task"))
+			while (!ui.askYesNoQuestion("Please indicate if you have completed the assembly task"))
 				;
 			workstation.completeTask(carMechanic);
 			// 8. (a) The user indicates he wants to stop performing assembly tasks

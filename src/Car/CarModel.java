@@ -7,7 +7,13 @@ import Order.CarModelCatalogException;
 public class CarModel {
 	private final String Name;
 	private final ArrayList<Option> PossibleOptions;
-
+	/**
+	 * create a car model
+	 * @param Name name of the model
+	 * @param OptionList the options which are possible in this model
+	 * @param optiontypes all possible types of options that are required
+	 * @throws CarModelCatalogException a paramater is null or a type of option is not represented
+	 */
 	public CarModel(String Name,ArrayList<Option> OptionList, ArrayList<String> optiontypes) throws CarModelCatalogException{
 		if(Name == null || OptionList == null|| optiontypes == null) throw new CarModelCatalogException("null in non null value of Model");
 
@@ -18,7 +24,13 @@ public class CarModel {
 		this.Name=Name;
 
 	}
-
+	/**
+	 * looks if a type of options is represented in a list
+	 * @param type
+	 * @param OptionList
+	 * @return true if an option with the type is found
+	 * 			false if an option with the type is not found
+	 */
 	private boolean existstype(String type, ArrayList<Option> OptionList) {
 		boolean result = false;
 		for(Option option: OptionList ){
@@ -40,7 +52,11 @@ public class CarModel {
 	public String toString(){
 		return "Model : " + Name;
 	}
-
+	/**
+	 * Get all options of a specific type
+	 * @param string the type
+	 * @return
+	 */
 	public ArrayList<Option> getOfOptionType(String string) {
 		ArrayList<Option> result = new ArrayList<Option>();
 		for(Option i: PossibleOptions){

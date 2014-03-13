@@ -149,6 +149,18 @@ public class Test_CarModel {
 		}
 		
 	}
+	@Test
+	public void testgetOfOptionType() {
+		CarModel car = null;
+		try {
+			car = new CarModel(Name,a,types);
+		} catch (CarModelCatalogException e) {
+			fail();
+		}
+		ArrayList<Option> temp = car.getOfOptionType("Wheels");
+		assertTrue(temp.contains(W));
+		assertFalse(temp.contains(E));
+	}
 	
 
 }

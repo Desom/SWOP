@@ -39,7 +39,10 @@ public class AssemblyStatusView {
 	 * @throws DoesNotExistException
 	 */
 	public int getCarOrderIdAt(int workstationId) throws DoesNotExistException{
-		return getWorkstation(workstationId).getCurrentCar().getCar().getOrder().getCarOrderID();
+		if(getWorkstation(workstationId).getCurrentCar() != null){
+			return getWorkstation(workstationId).getCurrentCar().getCar().getOrder().getCarOrderID();
+		}
+		return -1;
 	}
 
 	public LinkedList<String> getAllTasksAt(int workstationId) throws UserAccessException, DoesNotExistException{
@@ -65,7 +68,7 @@ public class AssemblyStatusView {
 	public String getHeader() {
 		return header;
 	}
-	
+
 	private Workstation getWorkstation(int ID) throws DoesNotExistException{
 		Workstation found = null;
 		for(Workstation w : workstations){

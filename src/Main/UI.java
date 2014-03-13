@@ -1,6 +1,7 @@
 package Main;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -25,16 +26,20 @@ public class UI {
 
 
 	public int askForInteger(String question, int lowerBound){
-		System.out.println(question);
-		System.out.println("At least: " + lowerBound + ".");
-		int input = scan.nextInt();
-		scan.nextLine();
-		while(lowerBound > input){
-			System.out.println("This Number is to low.");
-			input = scan.nextInt();
-			scan.nextLine();
+		try {
+			System.out.println(question);
+			System.out.println("At least: " + lowerBound + ".");
+			int input = Integer.parseInt(scan.nextLine());
+			while(lowerBound > input){
+				System.out.println("This Number is to low.");
+				input = Integer.parseInt(scan.nextLine());
+			}
+			return input;
 		}
-		return input;
+		catch (NumberFormatException e) {
+			System.out.println("This is not a valid answer.");
+			return askForInteger(question, lowerBound);
+		}
 	}
 
 	public String askWithPossibilities(String question, List<String> possibilities){
@@ -55,7 +60,7 @@ public class UI {
 		}
 		return input;
 	}
-	
+
 	public int askWithPossibilities(String question, Object[] possibilities){
 		System.out.println(question);
 		String possOutput = "\n";
@@ -81,7 +86,7 @@ public class UI {
 			}
 			catch (NumberFormatException e) {
 			}
-			
+
 		}
 		return input;
 	}
@@ -121,6 +126,7 @@ public class UI {
 					System.out.println("Task: " + task + " = " + taskStatus);
 				}
 			}
+			System.out.println();
 		}
 		catch (DoesNotExistException exc) {
 			System.out.println("There is an internal problem : " + exc.getMessage());
@@ -130,6 +136,6 @@ public class UI {
 		for(String i: order.getOptionTypes()){
 			order.setOption(this.askWithPossibilities("Geef uw type "+i+" in", order.getPossibleOptionsOfType(i)));
 		}
-		
+
 	}
 }

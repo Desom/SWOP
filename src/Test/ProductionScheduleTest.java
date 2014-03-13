@@ -113,12 +113,6 @@ public class ProductionScheduleTest {
 		prodSchedLate = new ProductionSchedule(carOrders, late);
 	}
 	
-	
-	
-	@Test
-	public void testCreation() {
-		fail("Not yet implemented");
-	}
 
 	@Test
 	public void testCompletionEstimate() {
@@ -205,37 +199,37 @@ public class ProductionScheduleTest {
 	@Test
 	public void testSeeNextCarOrder(){
 		//problemen met het feit dat er geen carOrders komen na de werkdag.
-		CarOrder a2 = prodSchedNormal.seeNextCarOrder();
+		CarOrder a2 = prodSchedNormal.seeNextCarOrder(0);
 		CarOrder a = prodSchedNormal.getNextCarOrder(0);
 		assertEquals(a,a2);
 
-		CarOrder b2 = prodSchedNormal.seeNextCarOrder();
+		CarOrder b2 = prodSchedNormal.seeNextCarOrder(60);
 		CarOrder b = prodSchedNormal.getNextCarOrder(60);
 		assertEquals(b,b2);
 		
 		for(int i = 6; i >0;i--){
-			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder(60);
 			CarOrder c = prodSchedNormal.getNextCarOrder(60);
 			assertEquals(c,c2);
 		}
 		for(int i = 3; i >0;i--){
-			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder(60);
 			CarOrder c = prodSchedNormal.getNextCarOrder(60);
 			assertEquals(c,c2);
 			assertNull(c2);
 		}
 		
-		a2 = prodSchedNormal.seeNextCarOrder();
+		a2 = prodSchedNormal.seeNextCarOrder(0);
 		a = prodSchedNormal.getNextCarOrder(0);
 		assertEquals(a,a2);
 
 		for(int i = 13; i >0;i--){
-			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder(60);
 			CarOrder c = prodSchedNormal.getNextCarOrder(60);
 			assertEquals(c,c2);
 		}
 		for(int i = 3; i >0;i--){
-			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder(60);
 			CarOrder c = prodSchedNormal.getNextCarOrder(60);
 			assertEquals(c,c2);
 			assertNull(c2);
@@ -245,12 +239,12 @@ public class ProductionScheduleTest {
 		assertEquals(2,a.getCarOrderID());
 		
 		for(int i = 9; i >0;i--){
-			CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+			CarOrder c2 = prodSchedNormal.seeNextCarOrder(60);
 			CarOrder c = prodSchedNormal.getNextCarOrder(60);
 			assertEquals(c,c2);
 		}
 		
-		CarOrder c2 = prodSchedNormal.seeNextCarOrder();
+		CarOrder c2 = prodSchedNormal.seeNextCarOrder(60);
 		CarOrder c = prodSchedNormal.getNextCarOrder(60);
 		assertEquals(c,c2);
 		assertEquals(3,c.getCarOrderID());

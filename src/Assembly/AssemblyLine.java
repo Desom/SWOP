@@ -2,6 +2,7 @@ package Assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import Car.CarOrder;
 import Main.InternalFailureException;
 import User.User;
 import User.UserAccessException;
@@ -68,7 +69,11 @@ public class AssemblyLine {
 						}
 					}
 				}
-
+				//neem CarOrder van WorkStation 3
+				Workstation workstation3 = selectWorkstationById(3, user);
+				CarOrder finished = workstation3.getCurrentCar().getCar().getOrder();
+				finished.setDeliveredTime(user, this.schedule.getCurrentTime());
+				
 				//voeg nieuwe car toe.
 				CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
 				Workstation workstation1 = selectWorkstationById(1, user);
@@ -178,12 +183,13 @@ public class AssemblyLine {
 	 * Creates a view of the future status of the assembly line
 	 * 
 	 * @param user The user requesting the assemblyStatusview
+	 * @param time The time that has past since the last advanceLine
 	 * @return An AssemblyStatusView representing the future status
 	 * @throws UserAccessException if the user is not allowed to invoke this method
 	 * @throws InternalFailureException 
 	 * @throws DoesNotExistException If a workstation with a non existing ID is requested
 	 */
-	public AssemblyStatusView futureStatus(User user) throws UserAccessException, InternalFailureException{
+	public AssemblyStatusView futureStatus(User user, int time) throws UserAccessException, InternalFailureException{
 		if(user.canPerform("futureStatus")){
 			// check if the line can advance
 			boolean isReady = true;
@@ -196,25 +202,15 @@ public class AssemblyLine {
 				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations());
 				for(Workstation fake: list){ // set the corresponding car mechanics.
 					Workstation real = selectWorkstationById(fake.getId(), user);
-					try{
-						fake.addCarMechanic(real.getCarMechanic());
-					}
-					catch(IllegalStateException e){	
-						/*TODO gewoon niets doen?*/
-					}
+					fake.addCarMechanic(real.getCarMechanic());
 					if(fake.getId() != 1){
 						Workstation realPrev = selectWorkstationById(fake.getId()-1, user);
 						fake.setCurrentCar(realPrev.getCurrentCar());
-						try{
-							for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
-								fake.addAssemblyTask(user, t);
-							}
-						}
-						catch(NullPointerException e){	
-							/*TODO gewoon niets doen?*/
+						for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
+							fake.addAssemblyTask(user, t);
 						}
 					}else{
-						CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder().getCar().getAssemblyprocess();
+						CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder(time).getCar().getAssemblyprocess();
 						fake.setCurrentCar(futureCar);
 						for(AssemblyTask t : futureCar.compatibleWith(fake)){
 							fake.addAssemblyTask(user, t);

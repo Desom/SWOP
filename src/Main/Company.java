@@ -4,10 +4,14 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import Assembly.AssemblyLine;
+import Assembly.DoesNotExistException;
 import Assembly.Workstation;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
 import Order.OrderManager;
+import User.CarMechanic;
+import User.GarageHolder;
+import User.Manager;
 import User.User;
 import User.UserAccessException;
 
@@ -107,6 +111,20 @@ public class Company {
 			return this.assemblyLine;
 		}else{
 			throw new UserAccessException(user, "getAssemblyLine");
+		}
+	}
+
+
+	public User createUser(String userName, int ID) throws DoesNotExistException{
+		switch(userName){
+		case "manager":
+			return new Manager(ID);
+		case "garageholder":
+			return new GarageHolder(ID);
+		case "carmechanic":
+			return new CarMechanic(ID);
+		default:
+			throw new DoesNotExistException("user type " + userName + " does not exist");
 		}
 	}
 

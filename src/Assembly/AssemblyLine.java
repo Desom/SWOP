@@ -77,12 +77,18 @@ public class AssemblyLine {
 				}
 				
 				//voeg nieuwe car toe.
-				CarAssemblyProcess newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
+				CarAssemblyProcess newCar = null;
+				if(this.schedule.seeNextCarOrder(time) != null){
+					newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
+				}
+				
 				Workstation workstation1 = selectWorkstationById(1, user);
 				workstation1.clearCar();
 				workstation1.setCurrentCar(newCar);
-				for(AssemblyTask t : newCar.compatibleWith(workstation1)){
-					workstation1.addAssemblyTask(user, t);
+				if(newCar != null){
+					for(AssemblyTask t : newCar.compatibleWith(workstation1)){
+						workstation1.addAssemblyTask(user, t);
+					}
 				}
 			}else{
 				throw cannotAdvance;

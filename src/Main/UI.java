@@ -10,7 +10,7 @@ import Assembly.DoesNotExistException;
 import Order.OrderForm;
 import User.UserAccessException;
 
-public class UI {
+public class UI{
 	Scanner scan;
 	public UI(){
 		scan = new Scanner(System.in);

@@ -25,8 +25,8 @@ public class Controller {
 	private UI ui;
 	private Company company;
 
-	public void run()  {
-		ui = new UI();
+	public void run(UI ui)  {
+		this.ui =ui;
 
 
 		try {

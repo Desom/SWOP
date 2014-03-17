@@ -10,6 +10,10 @@ public class CarAssemblyProcess {
 	private final ArrayList<AssemblyTask> tasks;
 	private final Car car;
 	
+	/**
+	 * 
+	 * @return The car related to this assembly process
+	 */
 	public Car getCar() {
 		return car;
 	}
@@ -18,6 +22,12 @@ public class CarAssemblyProcess {
 		this(car, options, false);
 	}
 	
+	/**
+	 * 
+	 * @param car The car related to this assembly process
+	 * @param options The options that are to be converted into assemblyTasks
+	 * @param isCompleted Indicate if the carassemblyprocess is already completed
+	 */
 	public CarAssemblyProcess(Car car, ArrayList<Option> options, boolean isCompleted){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
 		for(Option o : options){
@@ -29,7 +39,12 @@ public class CarAssemblyProcess {
 		this.car = car;
 	}
 	
-	
+	/**
+	 * Get the tasks of this assemblyprocess that are compatible with the given workstation.
+	 * 
+	 * @param station The workstation to check against.
+	 * @return An arraylist of assemblytasks compatible with the given workstation.
+	 */
 	public ArrayList<AssemblyTask> compatibleWith(Workstation station){
 		ArrayList<String> acceptedTypes = station.getTaskTypes();
 		ArrayList<AssemblyTask> compatibleTypes = new ArrayList<AssemblyTask>();
@@ -42,6 +57,10 @@ public class CarAssemblyProcess {
 	}
 
 
+	/**
+	 * Test if this assemblyprocess is completed.
+	 * @return
+	 */
 	public Boolean IsCompleted() {
 		boolean status = true;
 		for(AssemblyTask i: tasks){

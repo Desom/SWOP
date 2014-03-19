@@ -106,4 +106,15 @@ public class AssemblyTask {
 			information.add(action);
 		return information;
 	}
+	
+	/**
+	 * Returns the string representation of this assembly task.
+	 */
+	@Override
+	public String toString() {
+		String name = this.type + ":";
+		for (String action : this.actions)
+			name += " " + action;
+		return name;
+	}
 }

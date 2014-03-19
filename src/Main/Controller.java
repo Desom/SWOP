@@ -203,7 +203,7 @@ public class Controller {
 	}
 
 	private String getTime(GregorianCalendar calender) {
-		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" at "+calender.get(Calendar.HOUR)+"u"+calender.get(Calendar.MINUTE);
+		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" at "+calender.get(Calendar.HOUR_OF_DAY)+"u"+calender.get(Calendar.MINUTE);
 		return date;
 	}
 

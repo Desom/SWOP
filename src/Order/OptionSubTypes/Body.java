@@ -7,7 +7,7 @@ import Order.CarModelCatalogException;
 
 public class Body extends Option {
 
-	private final static String type = "Body";
+	private final static OptionType type = OptionType.Body;
 	
 	public Body(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
@@ -16,7 +16,7 @@ public class Body extends Option {
 		// TODO Auto-generated constructor stub
 	}
 	
-	public String getType() {
+	public OptionType getType() {
 		return type;
 	}
 }

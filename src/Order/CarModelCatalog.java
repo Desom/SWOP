@@ -17,7 +17,7 @@ import User.UserAccessException;
 public class CarModelCatalog {
 	private HashMap<String,Option> All_Options;
 	private HashMap<String,CarModel> All_CarModels;
-	private ArrayList<String> All_Optiontypes;
+
 	/**
 	 * Create a carmodelcatalog
 	 * @param Optionfile this file is the file which contains the data of options
@@ -28,14 +28,6 @@ public class CarModelCatalog {
 	public CarModelCatalog(String Optionfile, String Modelfile) throws IOException, CarModelCatalogException{
 		All_Options = new HashMap<String,Option>();
 		All_CarModels= new HashMap<String,CarModel>();
-		All_Optiontypes = new ArrayList<String>();
-		All_Optiontypes.add("Color");
-		All_Optiontypes.add("Body");
-		All_Optiontypes.add("Engine");
-		All_Optiontypes.add("Gearbox");
-		All_Optiontypes.add("Airco");
-		All_Optiontypes.add("Wheels");
-		All_Optiontypes.add("Seats");
 		createOptions(Optionfile);
 		createModels(Modelfile);
 		
@@ -92,7 +84,7 @@ public class CarModelCatalog {
 			String string) {
 		ArrayList<String> temp = new ArrayList<String>() ;
 		for(String i: comp){
-			if(All_Options.get(i).getType().equals(string)) {
+			if(All_Options.get(i).getType().toString().equals(string)) {
 				incomp.add(i);
 				temp.add(i);
 			}
@@ -177,7 +169,7 @@ public class CarModelCatalog {
 		try{
 			ArrayList<String> a = new ArrayList<String>();
 			addall(a,input[1].split(","));
-			All_CarModels.put(input[0], new CarModel(input[0], CollectOption(a), this.All_Optiontypes));
+			All_CarModels.put(input[0], new CarModel(input[0], CollectOption(a)));
 		}catch(ClassCastException e){
 			throw new CarModelCatalogException("Wrong Option Type in form: " + inputline);
 		}
@@ -212,10 +204,6 @@ public class CarModelCatalog {
 	public Option getOption(String description){
 		return this.All_Options.get(description);
 
-	}
-	@SuppressWarnings("unchecked")
-	public ArrayList<String> getAllOptionTypes(){
-		return (ArrayList<String>) All_Optiontypes.clone();
 	}
 	/**
 	  get the list of all model names

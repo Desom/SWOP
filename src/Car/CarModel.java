@@ -2,6 +2,7 @@ package Car;
 import java.util.ArrayList;
 
 import Order.CarModelCatalogException;
+import Order.OptionSubTypes.OptionType;
 
 
 public class CarModel {
@@ -14,10 +15,10 @@ public class CarModel {
 	 * @param optiontypes all possible types of options that are required
 	 * @throws CarModelCatalogException a paramater is null or a type of option is not represented
 	 */
-	public CarModel(String Name,ArrayList<Option> OptionList, ArrayList<String> optiontypes) throws CarModelCatalogException{
-		if(Name == null || OptionList == null|| optiontypes == null) throw new CarModelCatalogException("null in non null value of Model");
+	public CarModel(String Name,ArrayList<Option> OptionList) throws CarModelCatalogException{
+		if(Name == null || OptionList == null) throw new CarModelCatalogException("null in non null value of Model");
 
-		for(String type:optiontypes){
+		for(OptionType type:OptionType.values()){
 			if(!existstype(type,OptionList)) throw new CarModelCatalogException("Missing type: "+ type);
 		}
 		PossibleOptions = OptionList;
@@ -31,7 +32,7 @@ public class CarModel {
 	 * @return true if an option with the type is found
 	 * 			false if an option with the type is not found
 	 */
-	private boolean existstype(String type, ArrayList<Option> OptionList) {
+	private boolean existstype(OptionType type, ArrayList<Option> OptionList) {
 		boolean result = false;
 		for(Option option: OptionList ){
 			result= result || option.getType().equals(type);
@@ -57,7 +58,7 @@ public class CarModel {
 	 * @param string the type
 	 * @return
 	 */
-	public ArrayList<Option> getOfOptionType(String string) {
+	public ArrayList<Option> getOfOptionType(OptionType string) {
 		ArrayList<Option> result = new ArrayList<Option>();
 		for(Option i: PossibleOptions){
 			if(i.getType().equals(string)) result.add(i);

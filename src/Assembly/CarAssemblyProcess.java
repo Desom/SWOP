@@ -33,7 +33,7 @@ public class CarAssemblyProcess {
 		for(Option o : options){
 			ArrayList<String> actions = new ArrayList<String>();
 			actions.add("dummy action");
-			tasks.add(new AssemblyTask(actions, o.getType(), isCompleted));
+			tasks.add(new AssemblyTask(actions, o.getType().toString(), isCompleted)); // to string laten vallen of niet?
 		}
 		this.tasks = tasks;
 		this.car = car;

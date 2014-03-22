@@ -3,10 +3,12 @@ package Car;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import Order.OptionSubTypes.OptionType;
+
 public class Configuration {
 	
 	private final CarModel model;
-	private final HashMap<String,Option> options;
+	private final HashMap<OptionType,Option> options;
 	
 	/**
 	 * Constructor of Configuration.
@@ -21,7 +23,7 @@ public class Configuration {
 	public Configuration(CarModel model, ArrayList<Option> options) {
 		possible(model, options);
 		this.model = model;
-		this.options = new HashMap<String,Option>();
+		this.options = new HashMap<OptionType,Option>();
 		addall(options);
 		searchmissingoptions();
 		
@@ -40,14 +42,9 @@ public class Configuration {
 	 * 		if the option is missing.
 	 */
 	private void searchmissingoptions() {
-		if(!options.containsKey("Color"))throw new IllegalArgumentException();
-		if(!options.containsKey("Body"))throw new IllegalArgumentException();
-		if(!options.containsKey("Engine"))throw new IllegalArgumentException();
-		if(!options.containsKey("Gearbox"))throw new IllegalArgumentException();
-		if(!options.containsKey("Airco"))throw new IllegalArgumentException();
-		if(!options.containsKey("Wheels"))throw new IllegalArgumentException();
-		if(!options.containsKey("Seats")) throw new IllegalArgumentException();
-		
+		for(OptionType i : OptionType.values()){
+			if(!options.containsKey(i))throw new IllegalArgumentException();
+		}	
 	}
 
 	/**

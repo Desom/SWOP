@@ -2,6 +2,7 @@ package Car;
 import java.util.ArrayList;
 
 import Order.CarModelCatalogException;
+import Order.OptionSubTypes.OptionType;
 
 
 public abstract class Option {
@@ -62,7 +63,7 @@ public abstract class Option {
 		return description;
 	}
 
-	public abstract String getType();
+	public abstract OptionType getType();
 	
 	
 }

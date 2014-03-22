@@ -7,7 +7,7 @@ import Order.CarModelCatalogException;
 
 public class Airco extends Option {
 
-	private final static String type = "Airco";
+	private final static OptionType type = OptionType.Airco;
 	
 	public Airco(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
@@ -15,7 +15,7 @@ public class Airco extends Option {
 		super(description, compatibles, incompatibles);
 	}
 	
-	public String getType() {
+	public OptionType getType() {
 		return type;
 	}
 

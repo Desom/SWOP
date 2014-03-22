@@ -6,16 +6,17 @@ import java.util.List;
 
 import Car.CarModel;
 import Car.Option;
+import Order.OptionSubTypes.OptionType;
 import User.User;
 import User.UserAccessException;
 
 public class OurOrderform implements OrderForm{
-	private HashMap<String,Option> options;
+	private HashMap<OptionType,Option> options;
 	private CarModel model;
 	private User user;
 	private CarModelCatalog catalog;
 	public OurOrderform(User user, CarModel model, CarModelCatalog catalog) {
-		options= new HashMap<String,Option>();
+		options= new HashMap<OptionType,Option>();
 		this.user= user;
 		this.catalog = catalog;
 		this.model = model;
@@ -39,7 +40,7 @@ public class OurOrderform implements OrderForm{
 	public List<String> getPossibleOptionsOfType(String type) {
 		List<String> result = new ArrayList<String>();
 			for(Option i: model.getOptions()){
-				if(i.getType().equals(type)){
+				if(i.getType().toString().equals(type)){
 					Boolean incompatible = false;
 					for(Option j: options.values()){
 						incompatible=	incompatible || j.conflictsWith(i);
@@ -67,6 +68,8 @@ public class OurOrderform implements OrderForm{
 	}
 	
 	public List<String> getOptionTypes() {
-				return catalog.getAllOptionTypes();
+		ArrayList<String> result = new ArrayList<String>();
+		for(OptionType i:OptionType.values()) result.add(i.toString());
+				return result;
 	}
 }

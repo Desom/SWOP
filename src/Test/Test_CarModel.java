@@ -43,60 +43,46 @@ public class Test_CarModel {
 		a.add(G);
 		a.add(S);
 		a.add(W);
-		types = new ArrayList<String>();
-		types.add("Airco");
-		types.add("Body");
-		types.add("Color");
-		types.add("Engine");
-		types.add("Gearbox");
-		types.add("Seats");
-		types.add("Wheels");
 	}
 
 	@Test
 	public void testconstructer() throws CarModelCatalogException {
-		CarModel car = new CarModel(Name,a,types);
+		CarModel car = new CarModel(Name,a);
 		
 		assertEquals(Name, car.getName());
 		assertEquals(a, car.getOptions());
 		assertFalse(a == car.getOptions());
-		assertTrue(car.getOfOptionType("Airco").contains(A));
-		assertTrue( car.getOfOptionType("Body").contains(B));
-		assertTrue(car.getOfOptionType("Color").contains(C));
-		assertTrue(car.getOfOptionType("Engine").contains(E));
-		assertTrue( car.getOfOptionType("Gearbox").contains(G));
-		assertTrue( car.getOfOptionType("Seats").contains(S));
-		assertTrue( car.getOfOptionType("Wheels").contains(W));
+		assertTrue(car.getOfOptionType(OptionType.Airco).contains(A));
+		assertTrue( car.getOfOptionType(OptionType.Body).contains(B));
+		assertTrue(car.getOfOptionType(OptionType.Color).contains(C));
+		assertTrue(car.getOfOptionType(OptionType.Engine).contains(E));
+		assertTrue( car.getOfOptionType(OptionType.Gearbox).contains(G));
+		assertTrue( car.getOfOptionType(OptionType.Seats).contains(S));
+		assertTrue( car.getOfOptionType(OptionType.Wheels).contains(W));
 	}
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testnull()  {
 		try {
-			new CarModel(null,a,types);
+			new CarModel(null,a);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
 		try {
-			new CarModel(Name,null,types);
+			new CarModel(Name,null);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"null in non null value of Model");
 		}
-		try {
-			new CarModel(Name,a,null);
-			fail();
-		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
-			assertEquals(e.GetMessage(),"null in non null value of Model");
-		}
+	
 		ArrayList<Option> fake;
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(A);
-			new CarModel(Name,fake,types);
+			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -105,7 +91,7 @@ public class Test_CarModel {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(B);
-			new CarModel(Name,fake,types);
+			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -114,7 +100,7 @@ public class Test_CarModel {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(C);
-			new CarModel(Name,fake,types);
+			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -123,7 +109,7 @@ public class Test_CarModel {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(E);
-			new CarModel(Name,fake,types);
+			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -132,7 +118,7 @@ public class Test_CarModel {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(G);
-			new CarModel(Name,fake,types);
+			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -141,7 +127,7 @@ public class Test_CarModel {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(S);
-			new CarModel(Name,fake,types);
+			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
@@ -153,11 +139,11 @@ public class Test_CarModel {
 	public void testgetOfOptionType() {
 		CarModel car = null;
 		try {
-			car = new CarModel(Name,a,types);
+			car = new CarModel(Name,a);
 		} catch (CarModelCatalogException e) {
 			fail();
 		}
-		ArrayList<Option> temp = car.getOfOptionType("Wheels");
+		ArrayList<Option> temp = car.getOfOptionType(OptionType.Wheels);
 		assertTrue(temp.contains(W));
 		assertFalse(temp.contains(E));
 	}

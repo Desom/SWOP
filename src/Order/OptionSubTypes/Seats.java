@@ -7,7 +7,7 @@ import Order.CarModelCatalogException;
 
 public class Seats extends Option {
 
-	private final static String type = "Seats";
+	private final static OptionType type = OptionType.Seats;
 
 	public Seats(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
@@ -15,7 +15,7 @@ public class Seats extends Option {
 		super(description, compatibles, incompatibles);
 	}
 	
-	public String getType() {
+	public OptionType getType() {
 		return type;
 	}
 }

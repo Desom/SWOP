@@ -7,7 +7,7 @@ import Order.CarModelCatalogException;
 
 public class Color extends Option {
 	
-	private final static String type = "Color";
+	private final static OptionType type = OptionType.Color;
 
 	public Color(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
@@ -15,7 +15,7 @@ public class Color extends Option {
 		super(description, compatibles, incompatibles);
 		// TODO Auto-generated constructor stub
 	}
-	public String getType() {
+	public OptionType getType() {
 		return type;
 	}
 }

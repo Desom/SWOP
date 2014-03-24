@@ -4,6 +4,7 @@ import java.util.LinkedList;
 
 import Car.CarOrder;
 import Main.InternalFailureException;
+import Order.OptionSubTypes.OptionType;
 import User.User;
 import User.UserAccessException;
 
@@ -147,20 +148,20 @@ public class AssemblyLine {
 	 */
 	private ArrayList<Workstation> createWorkstations(){
 		ArrayList<Workstation> list = new ArrayList<Workstation>();
-		ArrayList<String> taskTypes1 = new ArrayList<String>();
-		taskTypes1.add("Body");
-		taskTypes1.add("Color");
+		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
+		taskTypes1.add(OptionType.Body);
+		taskTypes1.add(OptionType.Color);
 		Workstation workStation1 = new Workstation(1, taskTypes1);
 
-		ArrayList<String> taskTypes2 = new ArrayList<String>();
-		taskTypes2.add("Engine");
-		taskTypes2.add("GearBox");
+		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
+		taskTypes2.add(OptionType.Engine);
+		taskTypes2.add(OptionType.Gearbox);
 		Workstation workStation2 = new Workstation(2, taskTypes2);
 
-		ArrayList<String> taskTypes3 = new ArrayList<String>();
-		taskTypes3.add("Seats");
-		taskTypes3.add("Airco");
-		taskTypes3.add("Wheels");
+		ArrayList<OptionType> taskTypes3 = new ArrayList<OptionType>();
+		taskTypes3.add(OptionType.Seats);
+		taskTypes3.add(OptionType.Airco);
+		taskTypes3.add(OptionType.Wheels);
 		Workstation workStation3 = new Workstation(3, taskTypes3);
 
 		list.add(workStation1);

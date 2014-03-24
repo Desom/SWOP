@@ -1,22 +1,14 @@
 package Assembly;
 import java.util.ArrayList;
 
+import Order.OptionSubTypes.OptionType;
 import User.User;
 import User.UserAccessException;
 
 public class Workstation {
 
 	private int id;
-	private final ArrayList<String> taskTypes; // DEZE MOETEN OVEREEN KOMEN MET ASSEMBLYTASK SETTYPE
-	/* mogelijke types
-	 * -Body
-	 * -Color
-	 * -Engine
-	 * -GearBox
-	 * -Seats
-	 * -Airco
-	 * -Wheels
-	 */
+	private final ArrayList<OptionType> taskTypes; 
 	private User carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
@@ -54,7 +46,7 @@ public class Workstation {
 	 * @param id
 	 * @param taskTypes
 	 */
-	public Workstation(int id, ArrayList<String> taskTypes) {
+	public Workstation(int id, ArrayList<OptionType> taskTypes) {
 		this.setId(id);
 		this.taskTypes = taskTypes;
 		this.allTasks = new ArrayList<AssemblyTask>();

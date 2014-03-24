@@ -50,7 +50,7 @@ public class AssemblyStatusView {
 		Workstation w = getWorkstation(workstationId);
 		for(AssemblyTask t : w.getAllTasks(user)){
 			//tasks.add("Type: " + t.getType() + "  -  Completed: " + t.isCompleted());
-			tasks.add(t.getType());
+			tasks.add(t.getType().toString());
 		}
 		return tasks;
 	}
@@ -58,7 +58,7 @@ public class AssemblyStatusView {
 	public boolean taskIsDoneAt(String task,int workstationId) throws UserAccessException, DoesNotExistException{
 		Workstation w = getWorkstation(workstationId);
 		for(AssemblyTask t : w.getAllTasks(user)){
-			if(t.getType().compareToIgnoreCase(task) == 0){
+			if(t.getType().toString().compareToIgnoreCase(task) == 0){
 				return t.isCompleted();
 			}
 		}

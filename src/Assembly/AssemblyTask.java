@@ -2,10 +2,12 @@ package Assembly;
 
 import java.util.ArrayList;
 
-public class AssemblyTask {
+import Order.OptionSubTypes.OptionType;
 
+public class AssemblyTask {
+	//TODO documentatie
 	private ArrayList<String> actions;
-	private String type;
+	private OptionType type;
 	private boolean isCompleted;
 
 	/**
@@ -18,7 +20,7 @@ public class AssemblyTask {
 	 * @param	type
 	 * 			A string that indicates the type of this AssemblyTask.
 	 */
-	public AssemblyTask(ArrayList<String> actions, String type) {
+	public AssemblyTask(ArrayList<String> actions, OptionType type) {
 		this(actions, type, false);
 	}
 	
@@ -33,7 +35,7 @@ public class AssemblyTask {
 	 * @param	isCompleted
 	 * 			A boolean telling if this assembly task is already completed or not
 	 */
-	public AssemblyTask(ArrayList<String> actions, String type, boolean isCompleted) {
+	public AssemblyTask(ArrayList<String> actions, OptionType type, boolean isCompleted) {
 		this.setActions(actions);
 		this.setType(type);
 		this.isCompleted = isCompleted;
@@ -44,18 +46,18 @@ public class AssemblyTask {
 	 * 
 	 * @return	The type of this AssemblyTask.
 	 */
-	public String getType() {
+	public OptionType getType() {
 		return type;
 	}
 
 	/**
 	 * Sets the type of this assembly task. Only used in constructor.
 	 * 
-	 * @param	type
+	 * @param	type2
 	 * 			The string that indicates the type of this AssemblyTask.
 	 */
-	private void setType(String type) { // DEZE MOETEN OVEREEN KOMEN MET WORKSTATION
-		this.type = type;
+	private void setType(OptionType type2) { // DEZE MOETEN OVEREEN KOMEN MET WORKSTATION
+		this.type = type2;
 	}
 	
 	/**
@@ -101,7 +103,7 @@ public class AssemblyTask {
 	 */
 	public ArrayList<String> getTaskInformation() {
 		ArrayList<String> information = new ArrayList<String>();
-		information.add(this.getType());
+		information.add(this.getType().toString());
 		for (String action : this.getActions())
 			information.add(action);
 		return information;

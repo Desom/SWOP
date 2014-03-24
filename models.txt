@@ -1,1 +1,3 @@
-Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue
+Model A;sedan,break,red,blue,black,white,standard 2l v4,performance 2.5l v6,6 speed manual,5 speed manual,5 speed automatic,leather white,leather black,vinyl grey,no airco,manual,automatic,winter,comfort,sports,no spoiler,
+Model B;sedan,break,sport,red,blue,green,yellow,standard 2l v4,performance 2.5l v6,ultra 3l v8,6 speed manual,5 speed automatic,leather white,leather black,vinyl grey,no airco,manual,automatic,winter,comfort,sports,no spoiler,low,
+Model C;sport,black,white,performance 2.5l v6,ultra 3l v8,6 speed manual,leather white,leather black,no airco,manual,automatic,winter,sports,no spoiler,low,high

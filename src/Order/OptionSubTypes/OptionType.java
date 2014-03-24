@@ -1,5 +1,5 @@
 package Order.OptionSubTypes;
 
 public enum OptionType {
-	Airco, Body, Color, Engine, Gearbox,Seats,Wheels
+	 Body, Color, Engine, Gearbox,Seats,Wheels,Airco,Spoiler
 }

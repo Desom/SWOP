@@ -1,15 +1,15 @@
 package Order.OptionSubTypes;
+
 import java.util.ArrayList;
 
 import Car.Option;
 import Order.CarModelCatalogException;
 
+public class Spoiler extends Option {
 
-public class Airco extends Option {
-
-private final static OptionType type = OptionType.Airco;
+private final static OptionType type = OptionType.Spoiler;
 	
-	public Airco(String description, ArrayList<Option> compatibles,
+	public Spoiler(String description, ArrayList<Option> compatibles,
 			ArrayList<Option> incompatibles)
 			throws CarModelCatalogException {
 		super(description, compatibles, incompatibles);

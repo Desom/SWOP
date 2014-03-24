@@ -28,7 +28,6 @@ public class AssemblyLine {
 	 * @return A linked list containing all the workStations.
 	 * @throws UserAccessException If this user is not allowed to execute this method.
 	 */
-	@SuppressWarnings("unchecked")
 	public LinkedList<Workstation> getAllWorkstations(User user) throws UserAccessException{
 		if(user.canPerform("getAllWorkstations")){
 			return (LinkedList<Workstation>) workstations; //TODO GJ
@@ -162,6 +161,7 @@ public class AssemblyLine {
 		taskTypes3.add(OptionType.Seats);
 		taskTypes3.add(OptionType.Airco);
 		taskTypes3.add(OptionType.Wheels);
+		taskTypes3.add(OptionType.Spoiler);
 		Workstation workStation3 = new Workstation(3, taskTypes3);
 
 		list.add(workStation1);

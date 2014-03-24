@@ -43,8 +43,10 @@ public class Workstation {
 	 * Constructor of Workstation.
 	 * Creates a new workstation with a specific id and a list of taskTypes.
 	 * 
-	 * @param id
-	 * @param taskTypes
+	 * @param	id
+	 * 			the id of this workstation
+	 * @param	taskTypes
+	 * 			the task types that can be handled at this workstation
 	 */
 	public Workstation(int id, ArrayList<OptionType> taskTypes) {
 		this.setId(id);
@@ -78,8 +80,8 @@ public class Workstation {
 	 * @return A copy of all possible types of the tasks this Workstation can perform.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<String> getTaskTypes() {
-		return (ArrayList<String>) taskTypes.clone();
+	public ArrayList<OptionType> getTaskTypes() {
+		return (ArrayList<OptionType>) taskTypes.clone();
 	}
 	
 	/**

@@ -17,6 +17,7 @@ import Car.CarOrder;
 import Car.Option;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
+import Order.OptionSubTypes.OptionType;
 import User.CarMechanic;
 import User.GarageHolder;
 import User.Manager;
@@ -36,10 +37,10 @@ public class WorkstationTest {
 		carMechanic = new CarMechanic(1);
 		garageHolder = new GarageHolder(2);
 		manager = new Manager(3);
-		ArrayList<String> taskTypes = new ArrayList<String>();
-		taskTypes.add("Task type 1");
-		taskTypes.add("Task type 2");
-		taskTypes.add("Task type 3");
+		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
+		taskTypes.add(OptionType.Airco);
+		taskTypes.add(OptionType.Body);
+		taskTypes.add(OptionType.Color);
 		workstation = new Workstation(1, taskTypes);
 		assertEquals(1, workstation.getId());
 		assertEquals(taskTypes, workstation.getTaskTypes());
@@ -49,13 +50,13 @@ public class WorkstationTest {
 		ArrayList<String> actions1 = new ArrayList<String>();
 		actions1.add("action1");
 		actions1.add("action2");
-		String type1 = "Task type 2";
+		OptionType type1 = OptionType.Body;
 		validTask = new AssemblyTask(actions1, type1);
 		
 		ArrayList<String> actions2 = new ArrayList<String>();
 		actions2.add("action1");
 		actions2.add("action2");
-		String type2 = "invalidType";
+		OptionType type2 = OptionType.Gearbox;
 		invalidTask = new AssemblyTask(actions2, type2);
 	}
 	
@@ -124,7 +125,7 @@ public class WorkstationTest {
 		catch (IllegalArgumentException e) {
 		}
 		workstation.selectTask(carMechanic, validTask);
-		assertEquals(validTask.getType(), workstation.getActiveTaskInformation(carMechanic).get(0));
+		assertEquals(validTask.getType().toString(), workstation.getActiveTaskInformation(carMechanic).get(0));
 		try {
 			workstation.selectTask(carMechanic, validTask);
 			assertTrue("IllegalStateException was not thrown", false);
@@ -132,7 +133,7 @@ public class WorkstationTest {
 		catch (IllegalStateException e) {
 		}
 		ArrayList<String> taskInformation = workstation.getActiveTaskInformation(carMechanic);
-		assertEquals(validTask.getType(), taskInformation.get(0));
+		assertEquals(validTask.getType().toString(), taskInformation.get(0));
 		assertEquals(validTask.getActions().get(0), taskInformation.get(1));
 		assertEquals(validTask.getActions().get(1), taskInformation.get(2));
 	}

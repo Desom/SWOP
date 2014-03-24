@@ -1,6 +1,7 @@
 package Test;
 
 import Assembly.AssemblyTask;
+import Order.OptionSubTypes.OptionType;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public class AssemblyTaskTest {
 		actions.add("action2");
 		actions.add("action3");
 		actions.add("action4");
-		String type = "type";
+		OptionType type = OptionType.Airco;
 		task = new AssemblyTask(actions, type);
 		assert(task.isCompleted());
 		assertEquals(actions, task.getActions());

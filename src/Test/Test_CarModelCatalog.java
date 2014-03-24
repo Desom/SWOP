@@ -30,9 +30,10 @@ public class Test_CarModelCatalog {
 		write.write("automatic climate control;Airco;,\n");
 		write.write("comfort;Wheels;,\n");
 		write.write("sports (low profle);Wheels;,\n");
+		write.write("no spoiler;Spoiler;,");
 		write.close();
 		BufferedWriter write2 = new BufferedWriter(new FileWriter("init_model.txt"));
-		write2.write("Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue");
+		write2.write("Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue,no spoiler");
 		write2.close();
 	}
 	@Test
@@ -112,8 +113,8 @@ public class Test_CarModelCatalog {
 	@Test
 	public void test_model_doublename() throws IOException {
 		BufferedWriter write = new BufferedWriter(new FileWriter("test_model.txt"));
-		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,\n");
-		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,");
+		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,no spoiler,\n");
+		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,no spoiler,");
 		write.close();
 		try {
 			new CarModelCatalog("test_option.txt","test_model.txt");

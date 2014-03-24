@@ -9,7 +9,6 @@ import java.util.List;
 import Car.CarModel;
 import Car.Option;
 import Order.OptionSubTypes.*;
-import User.User;
 import User.UserAccessException;
 
 
@@ -122,6 +121,7 @@ public class CarModelCatalog {
 		if(type.equals("Airco"))return new Airco(description, CollectOption(comp), CollectOption(incomp));
 		if(type.equals("Wheels"))return new Wheels(description, CollectOption(comp), CollectOption(incomp));
 		if(type.equals("Seats"))return new Seats(description, CollectOption(comp), CollectOption(incomp));
+		if(type.equals("Spoiler"))return new Spoiler(description, CollectOption(comp), CollectOption(incomp));
 		throw new CarModelCatalogException("no valid type: " + type);
 	}
 	/**

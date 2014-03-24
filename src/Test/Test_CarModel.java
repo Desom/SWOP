@@ -23,6 +23,7 @@ public class Test_CarModel {
 	Wheels W;
 	String Name;
 	ArrayList<String> types;
+	Spoiler Sp;
 	@Before
 	public void setUp() throws Exception {
 		a = new ArrayList<Option>();
@@ -35,6 +36,7 @@ public class Test_CarModel {
 		G = new Gearbox("g",b,c);
 		S = new Seats("s",b,c);
 		W = new Wheels("w",b,c);
+		Sp = new Spoiler("sp",b,c);
 		Name = "BMW";
 		a.add(E);
 		a.add(A);
@@ -43,6 +45,7 @@ public class Test_CarModel {
 		a.add(G);
 		a.add(S);
 		a.add(W);
+		a.add(Sp);
 	}
 
 	@Test
@@ -132,6 +135,15 @@ public class Test_CarModel {
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
 			assertEquals(e.GetMessage(),"Missing type: Seats");
+		}
+		try {
+			fake = ((ArrayList<Option>) a.clone());
+			fake.remove(Sp);
+			new CarModel(Name,fake);
+			fail();
+		} catch (CarModelCatalogException e) {
+			// TODO Auto-generated catch block
+			assertEquals(e.GetMessage(),"Missing type: Spoiler");
 		}
 		
 	}

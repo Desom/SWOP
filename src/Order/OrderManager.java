@@ -1,17 +1,11 @@
 package Order;
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import Assembly.ProductionSchedule;
-import Car.CarModel;
 import Car.CarOrder;
-import Car.Option;
 import User.User;
 import User.UserAccessException;
 
@@ -25,47 +19,19 @@ public class OrderManager {
 
 	/**
 	 * Constructor for the OrderManager class.
-	 * This constructor is also responsible for creating objects for all the placed carOrders.
-	 * This constructor is also responsible for creating a ProductionSchedule and feeding it the unfinished carOrders.
-	 * 
-	 * @param	dataFilePath
-	 * 			The data file containing all the previously placed CarOrders. 
-	 * @param 	catalog
-	 * 			The CarModelCatalog necessary for finding the Options and CarModel objects of all CarOrders
+	 * This OrderManager starts without any CarOrders.
+	 * This constructor is also responsible for creating a ProductionSchedule.
+
 	 * @param	currentTime 
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
-	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) {
-		ArrayList<CarOrder> allCarOrders = this.createOrderList(dataFilePath,catalog);
+	public OrderManager(GregorianCalendar currentTime) {
 		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
-		for(CarOrder order : allCarOrders) {
-			this.addCarOrder(order);
-		}
 
-		ArrayList<CarOrder> allUnfinishedCarOrders = new ArrayList<CarOrder>();
-		for(CarOrder order : allCarOrders) {
-			if(!order.isCompleted()){
-				allUnfinishedCarOrders.add(order);
-			}
-		}
-		this.createProductionSchedule(allUnfinishedCarOrders, currentTime);
+		this.createProductionSchedule(currentTime);
 	}
 	
-	/**
-	 * Constructor for the OrderManager class.
-	 * This constructor is also responsible for creating objects for all the placed carOrders.
-	 * This constructor is also responsible for creating a ProductionSchedule and feeding it the unfinished carOrders.
-	 * The default "carOrderData.txt" file will be used to create all the previously placed CarOrders
-	 * 
-	 * @param	dataFilePath
-	 * @param 	catalog
-	 * 			The CarModelCatalog necessary for finding the Options and CarModel Objects of all CarOrders
-	 * @param	currentTime 
-	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
-	 */
-	public OrderManager(CarModelCatalog catalog, GregorianCalendar currentTime){
-		this("carOrderData.txt", catalog, currentTime);
-	}
+
 	
 	/**
 	 * Give a list of all the CarOrders placed by a given user.
@@ -141,95 +107,9 @@ public class OrderManager {
 	 * @param currentTime
 	 * 			The date at which the created ProductionSchedule starts.
 	 */
-	private void createProductionSchedule(ArrayList<CarOrder> orderList, GregorianCalendar currentTime){
-		ProductionSchedule newProductionSchedule = new ProductionSchedule(orderList, currentTime);
+	private void createProductionSchedule(GregorianCalendar currentTime){
+		ProductionSchedule newProductionSchedule = new ProductionSchedule(currentTime);
 		this.setProductionSchedule(newProductionSchedule);
-	}
-	
-	/**
-	 * Creates all the placed CarOrders.
-	 * 
-	 * @param	dataFile
-	 * 			The file from which the CarOrders will be read.
-	 * @param 	catalog
-	 * 			The CarModelCatalog used to convert Strings to Option and CarModel objects.
-	 * @return	A list of all the placed CarOrders.
-	 */
-	private ArrayList<CarOrder> createOrderList(String dataFile, CarModelCatalog catalog){
-		ArrayList<CarOrder> allCarOrders = new ArrayList<CarOrder>();
-		ArrayList<String> allCarOrderInfo = new ArrayList<String>();
-		try {
-			FileInputStream fStream = new FileInputStream(dataFile);
-			DataInputStream dinStream = new DataInputStream(fStream);
-			InputStreamReader insReader = new InputStreamReader(dinStream);
-			BufferedReader bReader = new BufferedReader(insReader);
-			bReader.readLine();
-			String otherLine = bReader.readLine();
-			while(!otherLine.startsWith("End")){
-				allCarOrderInfo.add(otherLine);
-				otherLine = bReader.readLine();
-			}
-			bReader.close();
-		} catch (IOException e) {
-			return null;
-		}
-		int highestID = 0;
-		for(String orderStr: allCarOrderInfo){
-			String[] orderPieces = orderStr.split(",,,,");
-			// String omvormen naar objecten
-		// 0 : carOrderId
-			int carOrderId = Integer.parseInt(orderPieces[0]);
-			if(carOrderId > highestID)
-				highestID = carOrderId;
-		// 1 : garageHolderId
-			int garageHolderId = Integer.parseInt(orderPieces[1]);
-		// 2 : isDelivered -> Boolean
-			boolean isDelivered = false;
-			if(orderPieces[2].equals("1")){
-				isDelivered = true;
-			}
-			
-		// 3 : orderedTime -> GregorianCalendar
-			GregorianCalendar orderedCalendar = this.createCalendarFor(orderPieces[3]);
-		// 4 : deliveryTime -> GregorianCalendar
-			GregorianCalendar deliveredCalendar = null;
-			if(isDelivered){
-				deliveredCalendar = this.createCalendarFor(orderPieces[4]);
-			}
-		// 5 : modelId -> CarModel (we hebben hiervoor de Catalog nodig, hoe komen we daar aan?)
-			CarModel model = catalog.getCarModel(orderPieces[5]);
-		// 6 : options -> ArrayList<Option> (ook Catalog nodig)
-			ArrayList<Option> optionsList = new ArrayList<Option>();
-			String[] optionStr = orderPieces[6].split(";-;");
-			for(String optionDescr: optionStr){
-				optionsList.add(catalog.getOption(optionDescr));
-			}
-			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, model, optionsList));
-		}
-
-		this.highestCarOrderID = highestID;
-		
-		return allCarOrders;
-	}
-
-	/**
-	 * Create a GregorianCalendar based on the given time and date.
-	 * 
-	 * @param	info
-	 * 			The String that has to be converted to a GregorianCalendar object; format=DD-MM-YYYY*HH:MM:SS
-	 * @return	A GregorianCalendar
-	 */
-	private GregorianCalendar createCalendarFor(String info) {
-		String[] dateTime = info.split("==");
-		String[] dateStr = dateTime[0].split("-");
-		String[] timeStr = dateTime[1].split("-");
-		int[] dateInt = new int[3];
-		int[] timeInt = new int[3];
-		for(int i = 0; i < 3;i++){
-			dateInt[i] = Integer.parseInt(dateStr[i]);
-			timeInt[i] = Integer.parseInt(timeStr[i]);
-		}
-		return new GregorianCalendar(dateInt[2],dateInt[1],dateInt[0],timeInt[0],timeInt[1],timeInt[2]);
 	}
 
 	

@@ -45,7 +45,7 @@ public abstract class Option {
 		return (ArrayList<Option>) incompatibles.clone();
 	}
 
-	public String getdescription(){
+	public String getDescription(){
 		 return description;
 	 }
 	 /**

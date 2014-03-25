@@ -17,7 +17,7 @@ public class Test_Options {
 		ArrayList<Option> a = new ArrayList<Option>();
 		ArrayList<Option> b = new ArrayList<Option>();
 		Option opt = new Color("green", a, b);
-		assertEquals(opt.getdescription(), "green");
+		assertEquals(opt.getDescription(), "green");
 		assertEquals(opt.getCompatibles(),a);
 		assertEquals(opt.getIncompatibles(),b);
 		assertFalse(opt.getCompatibles() == b);

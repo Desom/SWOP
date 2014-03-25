@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import Car.Car;
 import Car.Option;
+import Order.OptionSubTypes.OptionType;
 
 public class CarAssemblyProcess {
 	
@@ -46,7 +47,7 @@ public class CarAssemblyProcess {
 	 * @return An arraylist of assemblytasks compatible with the given workstation.
 	 */
 	public ArrayList<AssemblyTask> compatibleWith(Workstation station){
-		ArrayList<String> acceptedTypes = station.getTaskTypes();
+		ArrayList<OptionType> acceptedTypes = station.getTaskTypes();
 		ArrayList<AssemblyTask> compatibleTypes = new ArrayList<AssemblyTask>();
 		for(AssemblyTask t : this.tasks){
 			if(acceptedTypes.contains(t.getType())){
@@ -61,7 +62,7 @@ public class CarAssemblyProcess {
 	 * Test if this assemblyprocess is completed.
 	 * @return
 	 */
-	public Boolean IsCompleted() {
+	public Boolean isCompleted() {
 		boolean status = true;
 		for(AssemblyTask i: tasks){
 			status = status && i.isCompleted();

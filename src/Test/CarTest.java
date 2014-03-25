@@ -35,7 +35,7 @@ public class CarTest {
 		Car car = order.getCar();
 		
 		assertEquals(order, car.getOrder());
-		assertEquals(false, car.IsCompleted());
+		assertEquals(false, car.isCompleted());
 	}
 
 }

@@ -44,7 +44,7 @@ public class OurOrderform implements OrderForm{
 					for(Option j: options.values()){
 						incompatible=	incompatible || j.conflictsWith(i);
 					}
-					if(!incompatible) result.add(i.getdescription());
+					if(!incompatible) result.add(i.getDescription());
 				}
 			}
 			return result;
@@ -62,7 +62,7 @@ public class OurOrderform implements OrderForm{
 		return false;
 	}
 	@Override
-	public boolean CanPlaceType(String Type) {
+	public boolean canPlaceType(String Type) {
 		return options.containsKey(Type);
 	}
 	

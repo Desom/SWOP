@@ -152,7 +152,7 @@ public class CarOrder {
 	 * @return true if the car is already completed, else false
 	 */
 	public Boolean isCompleted() {
-		return this.getCar().IsCompleted();
+		return this.getCar().isCompleted();
 	}
 	
 	/**

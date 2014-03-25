@@ -42,20 +42,47 @@ public class ProductionSchedule {
 	}
 	
 	/**
+	 * The constructor for the ProductionSchedule class.
+	 * This ProductionSchedule will start without CarOrders to be scheduled.
+	 * 
+	 * @param	currentTime
+	 * 			The date at which this ProductionSchedule starts.
+	 */
+	public ProductionSchedule(GregorianCalendar currentTime){
+		this.currentTime = currentTime;
+		this.initEndWithOverTime();
+		this.scheduleQueue = new LinkedList<CarOrder>();
+		ordersOnAssemblyLine = new CarOrder[3];
+	}
+	
+	/**
 	 * Calculates an estimated completion date for a specific CarOrder and returns it.
 	 * 
 	 * @param 	order
 	 * 			The CarOrder whose estimated completion date is requested.
 	 * @return	A GregorianCalendar representing the estimated completion date of order.
 	 * 			Null if it isn't in this schedule.
+	 * @throws  NullPointerException
+	 * 			When the given order is null
 	 */
 	public GregorianCalendar completionEstimateCarOrder(CarOrder order){
+
+		GregorianCalendar completionTime = (GregorianCalendar) this.currentTime.clone();
+		
+		//controleren ofdat de order op de AssemblyLine staat.
+		if(order == null)
+			throw new NullPointerException("The given CarOrder was null");
+		for(int i = 0; i < this.ordersOnAssemblyLine.length; i++){
+			if(order.equals(this.ordersOnAssemblyLine[i])){
+				completionTime.add(GregorianCalendar.HOUR_OF_DAY, 3-i);
+				return completionTime;
+			}
+		}
 		//controleren ofdat hij wel op deze schedule staat
 		int positionInLine = this.getScheduleQueue().indexOf(order);
 		if(positionInLine == -1)
 			return null;
 		
-		GregorianCalendar completionTime = (GregorianCalendar) this.currentTime.clone();
 		//als de assemblyLine leeg is kan er elk moment iets worden opgezet, maar wanneer er iets op staat: currentTime == lastAdvancedTime
 		if(!this.assemblyIsEmpty()){
 			completionTime.add(GregorianCalendar.HOUR_OF_DAY, WORKSTATION_DURATION);
@@ -176,9 +203,9 @@ public class ProductionSchedule {
 	 * 			The order that is now put on the assemblyLine.
 	 */
 	private void putOnLine(CarOrder nextOrder){
-		this.ordersOnAssemblyLine[0] = this.ordersOnAssemblyLine[1];
-		this.ordersOnAssemblyLine[1] = this.ordersOnAssemblyLine[2];
-		this.ordersOnAssemblyLine[2] = nextOrder;
+		this.ordersOnAssemblyLine[2] = this.ordersOnAssemblyLine[1];
+		this.ordersOnAssemblyLine[1] = this.ordersOnAssemblyLine[0];
+		this.ordersOnAssemblyLine[0] = nextOrder;
 		
 	}
 	

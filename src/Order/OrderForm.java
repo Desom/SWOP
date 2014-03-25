@@ -40,7 +40,7 @@ public interface OrderForm {
 	 * @param Type
 	 * @return true if you can place an option of a specified type
 	 */
-	public boolean CanPlaceType(String Type);
+	public boolean canPlaceType(String Type);
 	/**
 	 * get a list of all option types.
 	 * @return a list of all option types.

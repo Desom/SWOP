@@ -224,6 +224,8 @@ public class AssemblyLine {
 						}
 						catch(NullPointerException e){}
 					}else{
+						//TODO NullpointerException indien geen car uit schedule komt, Exception gooien in ProductionSchedule?
+						// of hier null checken?
 						CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder(time).getCar().getAssemblyprocess();
 						fake.setCurrentCar(futureCar);
 						for(AssemblyTask t : futureCar.compatibleWith(fake)){

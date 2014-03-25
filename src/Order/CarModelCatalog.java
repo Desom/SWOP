@@ -211,12 +211,12 @@ public class CarModelCatalog {
 	 * @return a list of all the model names
 	 * @throws UserAccessException the use has no authority to view the model names
 	 */
-	public ArrayList<String> getAllModelnames() {
-		ArrayList<String> modelnamen = new ArrayList<String>();
+	public ArrayList<String> getAllModelNames() {
+		ArrayList<String> modelNames = new ArrayList<String>();
 		for(CarModel i:this.getAllModels()){
-				modelnamen.add(i.getName());
+				modelNames.add(i.getName());
 		}
-		return modelnamen;
+		return modelNames;
 	}
 	
 }

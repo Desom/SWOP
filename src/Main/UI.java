@@ -43,26 +43,39 @@ public class UI{
 
 	public String askWithPossibilities(String question, List<String> possibilities){
 		System.out.println(question);
-		String possOutput = "( ";
+		String possOutput = "";
+		int visualInt = 1;
 		for(String poss: possibilities){
+			possOutput += visualInt;
+			possOutput += ". ";
 			possOutput += poss;
-			possOutput += " , ";
+			possOutput += "\n";
+			visualInt++;
 		}
-		possOutput = possOutput.substring(0,possOutput.length()-3);
-		possOutput += " )";
 		System.out.println(possOutput);
-		String input = scan.nextLine();
-		while(!possibilities.contains(input)){
+		
+		int input = -1;
+		try {
+			input = Integer.parseInt(scan.nextLine());
+		}
+		catch (NumberFormatException e) {
+		}
+		while(possibilities.size() < input || input < 1){
 			System.out.println("Not a possibility. Pick one from the list:");
 			System.out.println(possOutput);
-			input = scan.nextLine();
+			try {
+				input = Integer.parseInt(scan.nextLine());
+			}
+			catch (NumberFormatException e) {
+			}
 		}
-		return input;
+		return possibilities.get(input-1);
 	}
-
-	public int askWithPossibilities(String question, Object[] possibilities){
+	
+	//TODO mss private methode maken die door beide askWith's wordt opgeroepen...
+	public Object askWithPossibilities(String question, Object[] possibilities){
 		System.out.println(question);
-		String possOutput = "\n";
+		String possOutput = "";
 		int visualInt = 1;
 		for(Object poss: possibilities){
 			possOutput += visualInt + ". ";
@@ -87,7 +100,7 @@ public class UI{
 			}
 
 		}
-		return input;
+		return possibilities[input];
 	}
 
 	public boolean askYesNoQuestion(String question){

@@ -65,8 +65,8 @@ public class Car {
 	 * 
 	 * @return	true if construction is completed, otherwise false
 	 */
-	public Boolean IsCompleted() {
-		return this.getAssemblyprocess().IsCompleted();
+	public Boolean isCompleted() {
+		return this.getAssemblyprocess().isCompleted();
 	}
 	
 	/**

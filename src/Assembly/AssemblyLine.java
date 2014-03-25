@@ -3,8 +3,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import Car.CarOrder;
+import Car.OptionType;
 import Main.InternalFailureException;
-import Order.OptionSubTypes.OptionType;
 import User.User;
 import User.UserAccessException;
 

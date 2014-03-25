@@ -3,8 +3,6 @@ package Car;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import Order.OptionSubTypes.OptionType;
-
 public class Configuration {
 	
 	private final CarModel model;

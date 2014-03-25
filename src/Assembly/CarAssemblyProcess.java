@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import Car.Car;
 import Car.Option;
-import Order.OptionSubTypes.OptionType;
+import Car.OptionType;
 
 public class CarAssemblyProcess {
 	

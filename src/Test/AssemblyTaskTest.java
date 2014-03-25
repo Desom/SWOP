@@ -1,7 +1,7 @@
 package Test;
 
 import Assembly.AssemblyTask;
-import Order.OptionSubTypes.OptionType;
+import Car.OptionType;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;

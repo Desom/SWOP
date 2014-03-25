@@ -8,7 +8,7 @@ import java.util.List;
 
 import Car.CarModel;
 import Car.Option;
-import Order.OptionSubTypes.*;
+import Car.OptionType;
 import User.UserAccessException;
 
 
@@ -114,15 +114,11 @@ public class CarModelCatalog {
 	 * @throws CarModelCatalogException The option type is not supported
 	 */
 	private Option create_Option(String description, String type, ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
-		if(type.equals("Color"))return new Color(description, CollectOption(comp), CollectOption(incomp));
-		if(type.equals("Body"))return new Body(description, CollectOption(comp), CollectOption(incomp));
-		if(type.equals("Engine"))return new Engine(description, CollectOption(comp), CollectOption(incomp));
-		if(type.equals("Gearbox"))return new Gearbox(description, CollectOption(comp), CollectOption(incomp));
-		if(type.equals("Airco"))return new Airco(description, CollectOption(comp), CollectOption(incomp));
-		if(type.equals("Wheels"))return new Wheels(description, CollectOption(comp), CollectOption(incomp));
-		if(type.equals("Seats"))return new Seats(description, CollectOption(comp), CollectOption(incomp));
-		if(type.equals("Spoiler"))return new Spoiler(description, CollectOption(comp), CollectOption(incomp));
+		try{
+		return new Option(description, CollectOption(comp), CollectOption(incomp), OptionType.valueOf(type));
+		}catch(IllegalArgumentException e){
 		throw new CarModelCatalogException("no valid type: " + type);
+		}
 	}
 	/**
 	 *  makes a list of option made of a list of descriptions

@@ -8,35 +8,35 @@ import org.junit.Test;
 
 import Car.CarModel;
 import Car.Option;
+import Car.OptionType;
 import Order.CarModelCatalogException;
-import Order.OptionSubTypes.*;
 
 
 public class Test_CarModel {
 	ArrayList<Option> a;
-	Airco A;
-	Body B;
-	Color C;
-	Engine E; 
-	Gearbox G;
-	Seats S;
-	Wheels W;
+	Option A;
+	Option B;
+	Option C;
+	Option E; 
+	Option G;
+	Option S;
+	Option W;
 	String Name;
 	ArrayList<String> types;
-	Spoiler Sp;
+	Option Sp;
 	@Before
 	public void setUp() throws Exception {
 		a = new ArrayList<Option>();
 		ArrayList<Option> b = new ArrayList<Option>();
 		ArrayList<Option> c = new ArrayList<Option>();
-		A = new Airco("a",b,c);
-		B = new Body("b",b,c);
-		C = new Color("c",b,c);
-		E = new Engine("e",b,c);
-		G = new Gearbox("g",b,c);
-		S = new Seats("s",b,c);
-		W = new Wheels("w",b,c);
-		Sp = new Spoiler("sp",b,c);
+		A = new Option("a",b,c, OptionType.Airco);
+		B = new Option("b",b,c,OptionType.Body);
+		C = new Option("c",b,c,OptionType.Color);
+		E = new Option("e",b,c,OptionType.Engine);
+		G = new Option("g",b,c,OptionType.Gearbox);
+		S = new Option("s",b,c,OptionType.Seats);
+		W = new Option("w",b,c,OptionType.Wheels);
+		Sp = new Option("sp",b,c,OptionType.Spoiler);
 		Name = "BMW";
 		a.add(E);
 		a.add(A);
@@ -62,6 +62,7 @@ public class Test_CarModel {
 		assertTrue( car.getOfOptionType(OptionType.Gearbox).contains(G));
 		assertTrue( car.getOfOptionType(OptionType.Seats).contains(S));
 		assertTrue( car.getOfOptionType(OptionType.Wheels).contains(W));
+		assertTrue( car.getOfOptionType(OptionType.Spoiler).contains(Sp));
 	}
 	@SuppressWarnings("unchecked")
 	@Test

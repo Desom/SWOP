@@ -2,7 +2,7 @@ package Assembly;
 
 import java.util.ArrayList;
 
-import Order.OptionSubTypes.OptionType;
+import Car.OptionType;
 
 public class AssemblyTask {
 	//TODO documentatie

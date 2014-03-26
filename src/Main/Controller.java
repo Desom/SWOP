@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+import java.util.List;
 
 import Assembly.AssemblyLine;
 import Assembly.AssemblyStatusView;
@@ -12,7 +13,10 @@ import Assembly.CannotAdvanceException;
 import Assembly.Workstation;
 import Car.CarModel;
 import Car.CarOrder;
+import Car.Option;
+import Car.OptionType;
 import Order.CarModelCatalog;
+import Order.OrderForm;
 import Order.OrderManager;
 import Order.OurOrderform;
 import User.CarMechanic;
@@ -21,7 +25,7 @@ import User.Manager;
 import User.User;
 import User.UserAccessException;
 
-public class Controller {
+public class Controller implements Communcatietool{
 	private UI ui;
 	private Company company;
 
@@ -67,7 +71,7 @@ public class Controller {
 		}
 	}
 
-	public void managerCase(User user) throws UserAccessException, InternalFailureException{
+	private void managerCase(User user) throws UserAccessException, InternalFailureException{
 		AssemblyLine assembly = this.company.getAssemblyLine(user);
 
 		//1. The user indicates he wants to advance the assembly line.
@@ -138,7 +142,7 @@ public class Controller {
 	 * @param user The user that wants to use the garage holder use case
 	 * @throws UserAccessException
 	 */
-	public void garageHolderCase(User user) throws UserAccessException {
+	private void garageHolderCase(User user) throws UserAccessException {
 		OrderManager ordermanager=this.company.getOrderManager(user);
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
@@ -164,7 +168,7 @@ public class Controller {
 		//3. The system shows a list of available car models
 		//4. The user indicates the car model he wishes to order.
 		if(antwoord.equals("Place a new order")){
-			CarModelCatalog catalog = company.getCatalog(user);
+			CarModelCatalog catalog = company.getCatalog();
 			CarModel model = null;
 			while(model == null ){
 				ArrayList<String> modelList = new ArrayList<String>();
@@ -172,17 +176,17 @@ public class Controller {
 					modelList.add(j.getName());
 				}
 				String modelname = ui.askWithPossibilities("Please input your car model", modelList);
-				model = catalog.getCarModel(modelname);
+				model =getCarModel(modelname);
 			}
 			//5. The system displays the ordering form.
 			//6. The user completes the ordering form.
-			OurOrderform order = new OurOrderform(user, model ,catalog);
+			OurOrderform order = new OurOrderform( model.getName(), this);
 			ui.fillIn(order);
 			boolean antwoord2 = ui.askYesNoQuestion("Do you want to confirm this order?");
 			if(antwoord2){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
-				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(order));
+				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(user, model, getOptions(order.getOptions())));
 				String time = getTime(calender);
 				ui.display("Your order should be ready at "+ time+".");
 			}else{
@@ -193,6 +197,12 @@ public class Controller {
 		}
 		//1. (a) The user indicates he wants to leave the overview.
 		//2. The use case ends here.
+	}
+
+	private ArrayList<Option> getOptions(ArrayList<String> options) {
+		ArrayList<Option> result = new ArrayList<Option>();
+		for(String i:options) result.add(getOption(i));
+				return result;
 	}
 
 	private String getTime(GregorianCalendar calender) {
@@ -251,5 +261,69 @@ public class Controller {
 		}
 		// 9. The use case ends here.
 		ui.display("You are now logged off.");
+	}
+	
+	@Override
+	public List<String> getPossibleOptionsOfType(OrderForm order ,String type) {
+		List<String> result = new ArrayList<String>();
+		
+		CarModel model = getCarModel(order.getModel());
+			for(Option i: model.getOptions()){
+				if(i.getType().toString().equals(type)){
+					Boolean incompatible = false;
+					for(String k: order.getOptions()){
+						Option j = getOption(k);
+						incompatible=	incompatible || j.conflictsWith(i);
+					}
+					if(!incompatible) result.add(i.getDescription());
+				}
+			}
+			return result;
+	}
+
+	@Override
+	public boolean canPlaceType(OrderForm order ,String Type) {
+		Boolean temp = false;
+		for(OptionType validType: OptionType.values()){
+			if(validType.equals(OptionType.valueOf(Type))) temp = true;
+		}
+		if(!temp) return false;
+		for(String input: order.getOptions()){
+			if(getOption(input).getType().equals(OptionType.valueOf(Type))) return false;
+		}
+		return true;
+	}
+
+	public List<String> getOptionTypes() {
+		ArrayList<String> result = new ArrayList<String>();
+		for(OptionType i:OptionType.values()) result.add(i.toString());
+				return result;
+	}
+	
+	/**
+	 * Get a car model based on the name
+	 * @param name the name
+	 * @return a car model based with the name name
+	 * 	       null if the name does not match a model 
+	 */
+	private CarModel getCarModel(String name){
+		CarModelCatalog catalog = company.getCatalog();
+		for(CarModel possible: catalog.getAllModels()){
+			if(possible.getName().equals(name)) return possible;
+		}
+		return null;
+	}
+	/**
+	 * Get a car option based on the description
+	 * @param description the description
+	 * @return a car option based with the description description
+	 *         null if the description does not match an option
+	 */
+	private Option getOption(String description){
+		CarModelCatalog catalog = company.getCatalog();
+		for(Option possible: catalog.getOptions()){
+			if(possible.getDescription().equals(description)) return possible;
+		}
+		return null;
 	}
 }

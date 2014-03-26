@@ -73,16 +73,13 @@ public class Company {
 
 	/**
 	 * Returns the company's car model catalog.
-	 * @param user The user requesting the catalog
 	 * @return If the user is allowed to request the catalog, return the catalog, else return null;
 	 * @throws UserAccessException 
 	 */
-	public CarModelCatalog getCatalog(User user) throws UserAccessException{
-		if(user.canPerform("getCatalog")){
+	public CarModelCatalog getCatalog()  {
+		
 			return catalog;
-		}else{
-			throw new UserAccessException(user, "getCatalog");
-		}
+		
 	}
 
 

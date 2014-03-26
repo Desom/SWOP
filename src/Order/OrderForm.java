@@ -3,32 +3,24 @@ package Order;
 import java.util.ArrayList;
 import java.util.List;
 
-import Car.CarModel;
-import Car.Option;
-import User.User;
 
 public interface OrderForm {
 	/**
 	 * Get all the filled-in options stored in the form
 	 * @return
 	 */
-	public ArrayList<Option> getOptions();
+	public ArrayList<String> getOptions();
 	/**
 	 * Get the Car model stored in the form
 	 * @return
 	 */
-	public CarModel getModel();
-	/**
-	 * Get the User stored in the form
-	 * @return
-	 */
-	public User getUser();
+	public String getModel();
 	/**
 	 * Stores an option in the form
 	 * @param option description of the option you want to store
 	 * @return true if you placed the option false otherwise
 	 * **/
-	public boolean setOption(String option);
+	public void setOption(String option);
 	/**
 	 * get all possible options of a specified type
 	 * @param type

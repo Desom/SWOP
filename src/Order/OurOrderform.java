@@ -1,74 +1,48 @@
 package Order;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import Car.CarModel;
-import Car.Option;
-import Car.OptionType;
-import User.User;
+import Main.Communcatietool;
 
 public class OurOrderform implements OrderForm{
-	private HashMap<OptionType,Option> options;
-	private CarModel model;
-	private User user;
-	private CarModelCatalog catalog;
-	public OurOrderform(User user, CarModel model, CarModelCatalog catalog) {
-		options= new HashMap<OptionType,Option>();
-		this.user= user;
-		this.catalog = catalog;
+	private ArrayList<String> options;
+	private String model;
+	private Communcatietool controller;
+	public OurOrderform(String model, Communcatietool controller) {
+		options= new ArrayList<String>();
 		this.model = model;
+		this.controller=controller;
 	}
 		
+	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Option> getOptions() {
-		return  new ArrayList<Option>(options.values());
+	public ArrayList<String> getOptions() {
+		return  (ArrayList<String>) options.clone();
 	}
 
 	@Override
-	public CarModel getModel() {
+	public String getModel() {
 		return model;
 	}
-	@Override
-	public User getUser() {
-		return user;
-	}
 	
 	@Override
-	public List<String> getPossibleOptionsOfType(String type) {
-		List<String> result = new ArrayList<String>();
-			for(Option i: model.getOptions()){
-				if(i.getType().toString().equals(type)){
-					Boolean incompatible = false;
-					for(Option j: options.values()){
-						incompatible=	incompatible || j.conflictsWith(i);
-					}
-					if(!incompatible) result.add(i.getDescription());
-				}
-			}
-			return result;
+	public void setOption(String description) {
+		this.options.add(description);
 	}
-
 
 	@Override
-	public boolean setOption(String description) {
-		Option option = catalog.getOption(description);
-		if(option == null) return false;
-		if(model.getOptions().contains(option) && !this.options.containsKey(option.getType())){
-			this.options.put(option.getType(), option);
-			return true;
-		}
-		return false;
+	public List<String> getPossibleOptionsOfType( String type) {
+ 		return this.controller.getPossibleOptionsOfType(this, type);
 	}
+
 	@Override
 	public boolean canPlaceType(String Type) {
-		return options.containsKey(Type);
+		return this.controller.canPlaceType(this, Type);
 	}
-	
+
+	@Override
 	public List<String> getOptionTypes() {
-		ArrayList<String> result = new ArrayList<String>();
-		for(OptionType i:OptionType.values()) result.add(i.toString());
-				return result;
+		return this.controller.getOptionTypes();
 	}
 }

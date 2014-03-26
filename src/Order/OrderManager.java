@@ -5,7 +5,9 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 
 import Assembly.ProductionSchedule;
+import Car.CarModel;
 import Car.CarOrder;
+import Car.Option;
 import User.User;
 import User.UserAccessException;
 
@@ -63,12 +65,11 @@ public class OrderManager {
 	 * @throws 	UserAccessException
 	 * 			If the given OrderForm is filled in by a user who is not authorized to place orders.
 	 */
-	public CarOrder placeOrder(OrderForm orderForm) throws UserAccessException{
-		User user = orderForm.getUser();
+	public CarOrder placeOrder(User user , CarModel model ,ArrayList<Option> options) throws UserAccessException{
 		this.checkUser(user, "placeOrder");
 
 		int carOrderId = this.getUniqueCarOrderId();
-		CarOrder newOrder = new CarOrder(carOrderId, user,orderForm.getModel(),orderForm.getOptions());
+		CarOrder newOrder = new CarOrder(carOrderId, user,model,options);
 		this.addCarOrder(newOrder);
 		this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;

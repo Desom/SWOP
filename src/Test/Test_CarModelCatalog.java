@@ -52,7 +52,7 @@ public class Test_CarModelCatalog {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Option: wrong input format: a;Body",e.GetMessage());
+			assertEquals("Option: wrong input format: a;Body",e.getMessage());
 		}
 	}
 	@Test
@@ -66,7 +66,7 @@ public class Test_CarModelCatalog {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Option already exists: a",e.GetMessage());
+			assertEquals("Option already exists: a",e.getMessage());
 		}
 	}
 
@@ -80,7 +80,7 @@ public class Test_CarModelCatalog {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Option does not exists: b",e.GetMessage());
+			assertEquals("Option does not exists: b",e.getMessage());
 		}
 	}
 
@@ -94,7 +94,7 @@ public class Test_CarModelCatalog {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("no valid type: fake",e.GetMessage());
+			assertEquals("no valid type: fake",e.getMessage());
 		}
 	}
 	@Test
@@ -107,7 +107,7 @@ public class Test_CarModelCatalog {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Model: wrong input format: a;Body;,",e.GetMessage());
+			assertEquals("Model: wrong input format: a;Body;,",e.getMessage());
 		}
 	}
 	@Test
@@ -121,7 +121,7 @@ public class Test_CarModelCatalog {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Model name already exists: a",e.GetMessage());
+			assertEquals("Model name already exists: a",e.getMessage());
 		}
 	}
 	@Test
@@ -134,7 +134,7 @@ public class Test_CarModelCatalog {
 			fail();
 		} catch (CarModelCatalogException e) {
 			// TODO Auto-generated catch block
-			assertEquals("Option does not exists: nospoiler",e.GetMessage());
+			assertEquals("Option does not exists: nospoiler",e.getMessage());
 		}
 	}
 	

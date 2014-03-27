@@ -12,7 +12,7 @@ import Car.Option;
 
 public class OptionCreator {
 	
-	private HashMap<String,Option> All_Options;
+	private HashMap<String,Option> allOptions;
 	String path;
 	
 	public OptionCreator(){
@@ -30,14 +30,14 @@ public class OptionCreator {
 	 */
 	public ArrayList<Option> createOptions() throws IOException, CarModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(path));
-		this.All_Options = new HashMap<String,Option>();
+		this.allOptions = new HashMap<String,Option>();
 		String inputline = input.readLine();
 		while( inputline!=null){
 			processOptionLine(inputline);
 			inputline = input.readLine();
 		}
 		input.close();
-		return new ArrayList<Option>(All_Options.values());
+		return new ArrayList<Option>(allOptions.values());
 	}
 	/**
 	 * proccessing a line which stores the information of a single option
@@ -48,16 +48,16 @@ public class OptionCreator {
 	private void processOptionLine(String inputline) throws CarModelCatalogException   {
 		String[] input=inputline.split(";");
 		if(input.length != 3) throw new CarModelCatalogException("Option: wrong input format: " + inputline);
-		if(All_Options.containsKey(input[0])) throw new CarModelCatalogException("Option already exists: " + input[0]);
+		if(allOptions.containsKey(input[0])) throw new CarModelCatalogException("Option already exists: " + input[0]);
 		ArrayList<String> incomp = new ArrayList<String>();
-		addall(incomp , input[2].split(","));
+		addAll(incomp , input[2].split(","));
 		ArrayList<String> comp = new ArrayList<String>();
-		comp.addAll(All_Options.keySet());
-		check_and_remove(comp,incomp);
-		sametypefilter(comp,incomp,input[1]);
-		All_Options.put(input[0], create_Option(input[0],input[1], comp,incomp));
+		comp.addAll(allOptions.keySet());
+		checkAndRemove(comp,incomp);
+		sameTypeFilter(comp,incomp,input[1]);
+		allOptions.put(input[0], createOption(input[0],input[1], comp,incomp));
 	}
-	private void addall(ArrayList<String> incomp, String[] split) {
+	private void addAll(ArrayList<String> incomp, String[] split) {
 		for(String i: split) incomp.add(i);
 	
 	}
@@ -68,11 +68,11 @@ public class OptionCreator {
 	 * @param string the specified type
 	 * 
 	 */
-	private void sametypefilter(ArrayList<String> comp, ArrayList<String> incomp,
+	private void sameTypeFilter(ArrayList<String> comp, ArrayList<String> incomp,
 			String string) {
 		ArrayList<String> temp = new ArrayList<String>() ;
 		for(String i: comp){
-			if(All_Options.get(i).getType().toString().equals(string)) {
+			if(allOptions.get(i).getType().toString().equals(string)) {
 				incomp.add(i);
 				temp.add(i);
 			}
@@ -87,7 +87,7 @@ public class OptionCreator {
 	 * @param incomp the list which strings will be removed
 	 * @throws CarModelCatalogException a string in incomp is not in comp
 	 */
-	private void check_and_remove(ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
+	private void checkAndRemove(ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
 		if(comp == incomp) return;
 		for(String i: incomp){
 			if( !comp.remove(i)) throw new CarModelCatalogException("Option does not exists: "+ i);
@@ -102,9 +102,9 @@ public class OptionCreator {
 	 * @return the made option
 	 * @throws CarModelCatalogException The option type is not supported
 	 */
-	private Option create_Option(String description, String type, ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
+	private Option createOption(String description, String type, ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
 		try{
-		return new Option(description, CollectOption(comp), CollectOption(incomp), OptionType.valueOf(type));
+		return new Option(description, collectOption(comp), collectOption(incomp), OptionType.valueOf(type));
 		}catch(IllegalArgumentException e){
 		throw new CarModelCatalogException("no valid type: " + type);
 		}
@@ -115,10 +115,10 @@ public class OptionCreator {
 	 * @return a list of options which corresponds with comp
 	 * @throws CarModelCatalogException 
 	 */
-	private ArrayList<Option> CollectOption(ArrayList<String> comp) throws CarModelCatalogException {
+	private ArrayList<Option> collectOption(ArrayList<String> comp) throws CarModelCatalogException {
 		ArrayList<Option> result = new ArrayList<Option>();
 		for(String i: comp){
-			Option e = All_Options.get(i);
+			Option e = allOptions.get(i);
 			if(e !=null)result.add(e);
 			else {
 				throw new CarModelCatalogException("Option does not exists: "+ i);

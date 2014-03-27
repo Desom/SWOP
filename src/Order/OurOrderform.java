@@ -3,13 +3,13 @@ package Order;
 import java.util.ArrayList;
 import java.util.List;
 
-import Main.Communcatietool;
+import Main.CommunicationTool;
 
 public class OurOrderform implements OrderForm{
 	private ArrayList<String> options;
 	private String model;
-	private Communcatietool controller;
-	public OurOrderform(String model, Communcatietool controller) {
+	private CommunicationTool controller;
+	public OurOrderform(String model, CommunicationTool controller) {
 		options= new ArrayList<String>();
 		this.model = model;
 		this.controller=controller;

@@ -31,25 +31,25 @@ public class Test_Options {
 			 new Option("red", null , a,OptionType.Color);
 			 fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals("null in non null value of Option", e.GetMessage());
+			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
 			 new Option("green", a , null,OptionType.Color);
 			 fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals("null in non null value of Option", e.GetMessage());
+			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
 			 new Option(null, a , a,OptionType.Color);
 			 fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals("null in non null value of Option", e.GetMessage());
+			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
 			 new Option("red", null , a, null);
 			 fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals("null in non null value of Option", e.GetMessage());
+			assertEquals("null in non null value of Option", e.getMessage());
 		}
 	}
 	
@@ -62,7 +62,7 @@ public class Test_Options {
 			 new Option("red", b , b,OptionType.Color);
 			 fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals("Option is both Compatible and incompatiblle with another option at the same type" , e.GetMessage());
+			assertEquals("Option is both Compatible and incompatiblle with another option at the same type" , e.getMessage());
 		}
 	}
 	

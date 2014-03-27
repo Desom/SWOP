@@ -13,7 +13,7 @@ import Car.Option;
 public class ModelCreator {
 	String path;
 	List<Option> options;
-	private HashMap<String, CarModel> All_CarModels;
+	private HashMap<String, CarModel> allCarModels;
 	public ModelCreator(List<Option> options, String path){
 		this.options = options;
 		this.path = path;
@@ -33,7 +33,7 @@ public class ModelCreator {
 	 * @throws CarModelCatalogException an modelline is not in the right format
 	 */
 	public ArrayList<CarModel> createModels() throws IOException, CarModelCatalogException{
-		this.All_CarModels = new HashMap<String,CarModel>();
+		this.allCarModels = new HashMap<String,CarModel>();
 		BufferedReader input = new BufferedReader(new FileReader(path));
 		String inputline = input.readLine();
 		while( inputline!=null){
@@ -41,7 +41,7 @@ public class ModelCreator {
 			inputline = input.readLine();
 		}
 		input.close();
-		return new ArrayList<CarModel>(All_CarModels.values());
+		return new ArrayList<CarModel>(allCarModels.values());
 	}
 	/**
 	 * processes a line of the model file
@@ -52,11 +52,11 @@ public class ModelCreator {
 	private void processModelLine(String inputline) throws CarModelCatalogException {
 		String[] input=inputline.split(";");
 		if(input.length != 2) throw new CarModelCatalogException("Model: wrong input format: " + inputline);
-		if(All_CarModels.containsKey(input[0])) throw new CarModelCatalogException("Model name already exists: "+input[0] );
+		if(allCarModels.containsKey(input[0])) throw new CarModelCatalogException("Model name already exists: "+input[0] );
 		try{
 			ArrayList<String> a = new ArrayList<String>();
 			addAll(a,input[1].split(","));
-			All_CarModels.put(input[0], new CarModel(input[0], collectOption(a)));
+			allCarModels.put(input[0], new CarModel(input[0], collectOption(a)));
 		}catch(ClassCastException e){
 			throw new CarModelCatalogException("Wrong Option Type in form: " + inputline);
 		}

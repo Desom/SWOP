@@ -25,10 +25,10 @@ import User.Manager;
 import User.User;
 
 public class Controller implements CommunicationTool{
-	private UI ui;
+	private UIInterface ui;
 	private Company company;
 
-	public void run(UI ui)  {
+	public void run(UIInterface ui)  {
 		this.ui =ui;
 
 
@@ -132,22 +132,28 @@ public class Controller implements CommunicationTool{
 	 * @param user The user that wants to use the garage holder use case
 	 * @throws UserAccessException
 	 */
-	private void garageHolderCase(User user) {
+	private void garageHolderCase(GarageHolder user) {
 		OrderManager ordermanager=this.company.getOrderManager();
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
 		//with estimated completion times.
-		ui.display("These are your pending orders:");
+		ArrayList<Integer> tempIdList= new ArrayList<Integer>();
+		ArrayList<Calendar> tempCalendarList= new ArrayList<Calendar>();
 		for(CarOrder order:ordermanager.getPendingOrders(user)){
-			ui.display("order: "+order.getCarOrderID()+" delivered on:"+getTime(ordermanager.completionEstimate(order)));
+			tempIdList.add(order.getUserId());
+			tempCalendarList.add(ordermanager.completionEstimate(order));
 		}
+		ui.displayPendingCarOrders(tempIdList, tempCalendarList);
+		tempIdList= new ArrayList<Integer>();
+		tempCalendarList= new ArrayList<Calendar>();
 		//1.the second part shows a history
 		//of completed orders, sorted most recent first.
-		ui.display("These are you completed order:");
 		ArrayList<CarOrder> orders = getSortedCompletedOrder(user, ordermanager);
 		for(CarOrder order:orders){
-			ui.display(""+order.getCarOrderID()+" "+getTime(order.getDeliveredTime()));
+			tempIdList.add(order.getUserId());
+			tempCalendarList.add(order.getDeliveredTime());
 		}
+		ui.displayCompletedCarOrders(tempIdList, tempCalendarList);
 		//2.The user indicates he wants to place a new car order.
 
 		ArrayList<String> list = new ArrayList<String>();
@@ -176,7 +182,7 @@ public class Controller implements CommunicationTool{
 			if(antwoord2){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
-				GregorianCalendar calender = ordermanager.completionEstimate(user, ordermanager.placeOrder(user, model, getOptions(order.getOptions())));
+				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeOrder(user, model, getOptions(order.getOptions())));
 				String time = getTime(calender);
 				ui.display("Your order should be ready at "+ time+".");
 			}else{
@@ -200,8 +206,8 @@ public class Controller implements CommunicationTool{
 		return date;
 	}
 
-	private ArrayList<CarOrder> getSortedCompletedOrder(User user, OrderManager ordermanager)  {
-		ArrayList<CarOrder> Orders = ordermanager.getCompletedOrders();
+	private ArrayList<CarOrder> getSortedCompletedOrder(GarageHolder user, OrderManager ordermanager)  {
+		ArrayList<CarOrder> Orders = ordermanager.getCompletedOrders(user);
 		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
 		while(!Orders.isEmpty()){
 			CarOrder min = Orders.get(0);

@@ -150,7 +150,7 @@ public class Workstation {
 	 */
 	public void completeTask(CarMechanic user) throws IllegalStateException {
 		if (this.getCarMechanic().getId() != user.getId())
-			throw new UserAccessException("This user is not assigned to this workstation");
+			throw new IllegalStateException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {
 			if (carMechanic != null) {
 				this.activeTask.completeTask();

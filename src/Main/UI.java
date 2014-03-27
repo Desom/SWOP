@@ -1,6 +1,7 @@
 package Main;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -8,9 +9,9 @@ import Assembly.AssemblyStatusView;
 import Assembly.DoesNotExistException;
 import Order.OrderForm;
 
-public class UI{
+public class UI implements UIInterface{
 	Scanner scan;
-	public UI(){
+	public UI() {
 		scan = new Scanner(System.in);
 	}
 	public void display(String A){
@@ -148,5 +149,23 @@ public class UI{
 			order.setOption(this.askWithPossibilities("Geef uw type "+i+" in", order.getPossibleOptionsOfType(i)));
 		}
 
+	}
+	@Override
+	public void displayPendingCarOrders(ArrayList<Integer> tempIdList,
+			ArrayList<Calendar> tempCalendarList) {
+		display("your pending orders:");
+		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
+			display(tempIdList.get(i) +" will be delivered around:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
+		}
+		
+	}
+	@Override
+	public void displayCompletedCarOrders(ArrayList<Integer> tempIdList,
+			ArrayList<Calendar> tempCalendarList) {
+		display("your completed orders:");
+		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
+			display(tempIdList.get(i) +" is delivered on:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
+		}
+		
 	}
 }

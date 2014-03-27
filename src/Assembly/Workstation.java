@@ -2,6 +2,7 @@ package Assembly;
 import java.util.ArrayList;
 
 import Car.OptionType;
+import User.CarMechanic;
 import User.User;
 import User.UserAccessException;
 
@@ -9,10 +10,10 @@ public class Workstation {
 
 	private int id;
 	private final ArrayList<OptionType> taskTypes; 
-	private User carMechanic;
+	private CarMechanic carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
-	
+
 	/**
 	 * Constructor of Workstation.
 	 * Creates a new workstation with a specific id and a list of taskTypes.
@@ -28,7 +29,7 @@ public class Workstation {
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
 	}
-	
+
 	/**
 	 * Clears this workstation of tasks and the active task. Used by the AssemblyLine object in advanceLine().
 	 */
@@ -36,7 +37,7 @@ public class Workstation {
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
 	}
-	
+
 	/**
 	 * Getter for the id of this workstation.
 	 * 
@@ -55,7 +56,7 @@ public class Workstation {
 	private void setId(int id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * Gives a list of all task types this workstation can perform.
 	 * 
@@ -65,7 +66,7 @@ public class Workstation {
 	public ArrayList<OptionType> getTaskTypes() {
 		return (ArrayList<OptionType>) taskTypes.clone();
 	}
-	
+
 	/**
 	 * Gives the car mechanic that is operating at this workstation.
 	 * 
@@ -73,7 +74,7 @@ public class Workstation {
 	 * @throws	IllegalStateException
 	 * 			If there is no car mechanic at this workstation.
 	 */
-	public User getCarMechanic() throws IllegalStateException{
+	public CarMechanic getCarMechanic() throws IllegalStateException{
 		if (carMechanic == null)
 			throw new IllegalStateException("There is no car mechanic at this workstation");
 		return carMechanic;
@@ -89,16 +90,10 @@ public class Workstation {
 	 * @throws	IllegalArgumentException
 	 * 			If the given user is not a car mechanic.
 	 */
-	public void addCarMechanic(User carMechanic) throws IllegalStateException, IllegalArgumentException {
-		//if (this.carMechanic == null)
-			if (carMechanic.isCarMechanic())
-				this.carMechanic = carMechanic;
-			else
-				throw new IllegalArgumentException("The given user is no car mechanic");
-		//else
-		//	throw new IllegalStateException("There already has been assigned a car mechanic to this workstation");
+	public void addCarMechanic(CarMechanic carMechanic) throws IllegalStateException, IllegalArgumentException {
+		this.carMechanic = carMechanic;
 	}
-	
+
 	/**
 	 * Adds an assembly task to this workstation.
 	 * 
@@ -111,14 +106,13 @@ public class Workstation {
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void addAssemblyTask(User user, AssemblyTask task) throws UserAccessException, IllegalArgumentException {
-		this.checkUser(user, "addAssemblyTask");
+	public void addAssemblyTask(AssemblyTask task) throws UserAccessException, IllegalArgumentException {
 		if (this.taskTypes.contains(task.getType()))
 			this.allTasks.add(task);
 		else
 			throw new IllegalArgumentException("This assembly task can't be assigned to this workstation");
 	}
-	
+
 	/**
 	 * Selects the given task to be the active task of this workstation.
 	 * 
@@ -133,17 +127,16 @@ public class Workstation {
 	 * @throws	IllegalArgumentException
 	 * 			If the selected task is not a pending task.
 	 */
-	public void selectTask(User user, AssemblyTask task) throws UserAccessException, IllegalStateException, IllegalArgumentException {
-		this.checkUser(user, "selectTask");
+	public void selectTask(AssemblyTask task) throws UserAccessException, IllegalStateException, IllegalArgumentException {
 		if (this.activeTask == null)
-			if (this.getAllPendingTasks(user).contains(task))
+			if (this.getAllPendingTasks().contains(task))
 				this.activeTask = task;
 			else
 				throw new IllegalArgumentException("This assembly task is not a pending task");
 		else
 			throw new IllegalStateException("Another assembly task is still in progress");
 	}
-	
+
 	/**
 	 * Completes the assembly task that the operating car mechanic is working on.
 	 * 
@@ -156,8 +149,7 @@ public class Workstation {
 	 * 			If there is no active task to complete in this workstation.
 	 * 			If there is no car mechanic to complete the active task.
 	 */
-	public void completeTask(User user) throws UserAccessException, IllegalStateException {
-		this.checkUser(user, "completeTask");
+	public void completeTask(CarMechanic user) throws UserAccessException, IllegalStateException {
 		if (this.getCarMechanic().getId() != user.getId())
 			throw new UserAccessException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {
@@ -173,7 +165,7 @@ public class Workstation {
 			throw new IllegalStateException("There is no active task in this workstation");
 		}
 	}
-	
+
 	/**
 	 * Gives a list of all pending assembly tasks.
 	 * 
@@ -184,15 +176,14 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<AssemblyTask> getAllPendingTasks(User user) throws UserAccessException {
-		this.checkUser(user, "getAllPendingTasks");
+	public ArrayList<AssemblyTask> getAllPendingTasks() throws UserAccessException {
 		ArrayList<AssemblyTask> allPendingTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
 			if (!task.isCompleted())
 				allPendingTasks.add(task);
 		return (ArrayList<AssemblyTask>) allPendingTasks.clone();
 	}
-	
+
 	/**
 	 * Gives a list of all completed assembly tasks.
 	 * 
@@ -203,15 +194,14 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<AssemblyTask> getAllCompletedTasks(User user) throws UserAccessException {
-		this.checkUser(user, "getAllCompletedTasks");
+	public ArrayList<AssemblyTask> getAllCompletedTasks() throws UserAccessException {
 		ArrayList<AssemblyTask> allCompletedTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
 			if (task.isCompleted())
 				allCompletedTasks.add(task);
 		return (ArrayList<AssemblyTask>) allCompletedTasks.clone();
 	}
-	
+
 	/**
 	 * Gives a list of all assembly tasks.
 	 * 
@@ -222,11 +212,10 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<AssemblyTask> getAllTasks(User user) throws UserAccessException {
-		this.checkUser(user, "getAllTasks");
+	public ArrayList<AssemblyTask> getAllTasks() throws UserAccessException {
 		return (ArrayList<AssemblyTask>) this.allTasks.clone();
 	}
-	
+
 	/**
 	 * Returns true if all assembly tasks of this workstation are completed, otherwise false.
 	 * 
@@ -236,14 +225,13 @@ public class Workstation {
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public boolean hasAllTasksCompleted(User user) throws UserAccessException {
-		this.checkUser(user, "hasAllTasksCompleted");
+	public boolean hasAllTasksCompleted() throws UserAccessException {
 		for (AssemblyTask task : this.allTasks)
 			if (!task.isCompleted())
 				return false;
 		return true;
 	}
-	
+
 	/**
 	 * Returns the task type of the active assembly task of this workstation along with the actions needed to complete this task.
 	 * 
@@ -255,28 +243,13 @@ public class Workstation {
 	 * @throws	IllegalStateException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public ArrayList<String> getActiveTaskInformation(User user) throws UserAccessException, IllegalStateException {
-		this.checkUser(user, "getActiveTaskInformation");
+	public ArrayList<String> getActiveTaskInformation() throws UserAccessException, IllegalStateException {
 		if (this.activeTask == null)
 			throw new IllegalStateException("There is no active task at this moment");
 		return this.activeTask.getTaskInformation();
 	}
 
-	/**
-	 * Checks if the give user can perform the given method (defined by a string). 
-	 * 
-	 * @param	user
-	 * 			The user that wants to call the given method.
-	 * @param	methodString
-	 * 			The string that defines the method.
-	 * @throws	UserAccessException
-	 *			If the user is not authorized to call the given method.
-	 */
-	private void checkUser(User user, String methodString) throws UserAccessException {
-		if (!user.canPerform(methodString))
-			throw new UserAccessException(user, methodString);
-	}
-	
+
 	/**
 	 * Returns the name of the workstation.
 	 */

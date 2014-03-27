@@ -84,17 +84,12 @@ public class CarOrder {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call this method.
 	 */
-	public void setDeliveredTime(User user, GregorianCalendar deliveredTime) throws UserAccessException {
-		if(user.canPerform("setDeliveredTime")){
+	public void setDeliveredTime(GregorianCalendar deliveredTime) throws UserAccessException {
 			if(!this.isCompleted())
 				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
 			if(this.deliveredTime.equals(null))
 				throw new IllegalStateException("DeliveredTime already set");
 			this.deliveredTime = deliveredTime;
-		}
-		else{
-			throw new UserAccessException(user, "setDeliveredTime");
-		}
 	}
 
 	/**

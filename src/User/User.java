@@ -4,7 +4,6 @@ import java.util.ArrayList;
 public class User {
 	
 	private int id;
-	ArrayList<String> approvedMethods;
 	
 	/**
 	 * Constructor of User.
@@ -14,7 +13,6 @@ public class User {
 	 */
 	public User(int id) {
 		this.setId(id);
-		approvedMethods = new ArrayList<String>();
 	}
 	
 	/**
@@ -34,25 +32,5 @@ public class User {
 	 */
 	public int getId() {
 		return this.id;
-	}
-	/**
-	 * Returns if this user is a car mechanic.
-	 * 
-	 * @return	True if this user is a car mechanic, otherwise false
-	 */
-	// Toegevoegd om te kunnen checken als de User die aan een Workstation wordt toegevoegd wel degelijk een car mechanic is.
-	public boolean isCarMechanic() {
-		return false;
-	}
-	
-	/**
-	 * Returns whether this user can perform the given method (represented by a string).
-	 * 
-	 * @param	methodName
-	 * 			the name of the method this user wants to perform
-	 * @return	true if this user can perform this method, otherwise false
-	 */
-	public boolean canPerform(String methodName) {
-		return this.approvedMethods.contains(methodName);
 	}
 }

@@ -9,15 +9,13 @@ import User.UserAccessException;
 public class AssemblyStatusView {
 
 	private String header;
-	private final User user;
 	//private returnType status;
 	private LinkedHashMap<Workstation, CarAssemblyProcess> workstations = new LinkedHashMap<Workstation, CarAssemblyProcess>();
 	
-	public AssemblyStatusView(User user, LinkedHashMap<Workstation, CarAssemblyProcess> workstations, String header){
+	public AssemblyStatusView(LinkedHashMap<Workstation, CarAssemblyProcess> workstations, String header){
 		this.header = header;
 		//this.status = status;
 		this.workstations = workstations;
-		this.user = user;
 	}
 
 	/**
@@ -49,7 +47,7 @@ public class AssemblyStatusView {
 	public LinkedList<String> getAllTasksAt(int workstationId) throws UserAccessException, DoesNotExistException{
 		LinkedList<String> tasks = new LinkedList<String>();
 		Workstation w = getWorkstation(workstationId);
-		for(AssemblyTask t : w.getAllTasks(user)){
+		for(AssemblyTask t : w.getAllTasks()){
 			//tasks.add("Type: " + t.getType() + "  -  Completed: " + t.isCompleted());
 			tasks.add(t.getType().toString());
 		}
@@ -58,7 +56,7 @@ public class AssemblyStatusView {
 
 	public boolean taskIsDoneAt(String task,int workstationId) throws UserAccessException, DoesNotExistException{
 		Workstation w = getWorkstation(workstationId);
-		for(AssemblyTask t : w.getAllTasks(user)){
+		for(AssemblyTask t : w.getAllTasks()){
 			if(t.getType().toString().compareToIgnoreCase(task) == 0){
 				return t.isCompleted();
 			}

@@ -47,12 +47,8 @@ public class Company {
 	 * @return Returns the list of all workstations if the specified user is allowed to access this information. Otherwise it returns null
 	 * @throws UserAccessException 
 	 */
-	public LinkedList<Workstation> getAllWorkstations(User user) throws UserAccessException{
-		if(user.canPerform("getAllWorkstations")){
-			return assemblyLine.getAllWorkstations(user); //moet dit een kopie zijn ivm beveiliging?
-		}else{
-			throw new UserAccessException(user, "getAllWorkstations");
-		}
+	public LinkedList<Workstation> getAllWorkstations() throws UserAccessException{
+			return assemblyLine.getAllWorkstations(); //moet dit een kopie zijn ivm beveiliging?
 	}
 
 	/**
@@ -63,13 +59,13 @@ public class Company {
 	 * @throws UserAccessException 
 	 * @throws Exception 
 	 */
-	public void selectWorkstation(User user, int workStation_id) throws UserAccessException, InternalFailureException{
+	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException, InternalFailureException{
 		if(user.canPerform("selectWorkStation")){
 			assemblyLine.selectWorkstation(user, workStation_id);
 		}else{
 			throw new UserAccessException(user, "selectWorkStation");
 		}
-	}
+	}*/
 
 	/**
 	 * Returns the company's car model catalog.
@@ -77,9 +73,7 @@ public class Company {
 	 * @throws UserAccessException 
 	 */
 	public CarModelCatalog getCatalog()  {
-		
 			return catalog;
-		
 	}
 
 
@@ -89,12 +83,8 @@ public class Company {
 	 * @return If the user is allowed to request the order manager, return the order manager, else throw UserAccessException;
 	 * @throws UserAccessException 
 	 */
-	public OrderManager getOrderManager(User user) throws UserAccessException{
-		if(user.canPerform("getOrderManager")){
+	public OrderManager getOrderManager() throws UserAccessException{
 			return orderManager;
-		}else{
-			throw new UserAccessException(user, "getOrderManager");
-		}
 	}
 
 	/**
@@ -103,12 +93,8 @@ public class Company {
 	 * @return If the user is allowed to request the assembly line, return the assembly line, else throw UserAccessException;
 	 * @throws UserAccessException
 	 */
-	public AssemblyLine getAssemblyLine(User user) throws UserAccessException{
-		if(user.canPerform("getAssemblyLine")){
+	public AssemblyLine getAssemblyLine() throws UserAccessException{
 			return this.assemblyLine;
-		}else{
-			throw new UserAccessException(user, "getAssemblyLine");
-		}
 	}
 
 

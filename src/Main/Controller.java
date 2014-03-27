@@ -72,7 +72,7 @@ public class Controller implements CommunicationTool{
 	}
 
 	private void managerCase(User user) throws UserAccessException, InternalFailureException{
-		AssemblyLine assembly = this.company.getAssemblyLine(user);
+		AssemblyLine assembly = this.company.getAssemblyLine();
 
 		//1. The user indicates he wants to advance the assembly line.
 		while(true){
@@ -101,10 +101,10 @@ public class Controller implements CommunicationTool{
 			//as well as a view of the future assembly line status (as it would be after
 			//completing this use case), including pending and finished tasks at each
 			//work post.
-			AssemblyStatusView currentStatus = assembly.currentStatus(user);
+			AssemblyStatusView currentStatus = assembly.currentStatus();
 			ui.showAssemblyLineStatus(currentStatus);
 
-			AssemblyStatusView futureStatus = assembly.futureStatus(user, timeSpent);
+			AssemblyStatusView futureStatus = assembly.futureStatus(timeSpent);
 			ui.showAssemblyLineStatus(futureStatus);
 
 			//3. The user confirms the decision to move the assembly line forward,
@@ -118,10 +118,10 @@ public class Controller implements CommunicationTool{
 			try{
 				//4. The system moves the assembly line forward one work post according
 				//to the scheduling rules.
-				assembly.advanceLine(user, timeSpent);	
+				assembly.advanceLine(timeSpent);	
 
 				//5. The system presents an overview of the new assembly line status.
-				AssemblyStatusView newCurrentStatus = assembly.currentStatus(user);
+				AssemblyStatusView newCurrentStatus = assembly.currentStatus();
 				ui.showAssemblyLineStatus(newCurrentStatus);
 			}
 			catch(CannotAdvanceException cae){
@@ -143,7 +143,7 @@ public class Controller implements CommunicationTool{
 	 * @throws UserAccessException
 	 */
 	private void garageHolderCase(User user) throws UserAccessException {
-		OrderManager ordermanager=this.company.getOrderManager(user);
+		OrderManager ordermanager=this.company.getOrderManager();
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
 		//with estimated completion times.
@@ -226,26 +226,26 @@ public class Controller implements CommunicationTool{
 		return result;
 	}
 
-	public void carMechanicCase(User carMechanic) throws UserAccessException{
+	public void carMechanicCase(CarMechanic carMechanic) throws UserAccessException{
 		// 1. The system asks the user what work post he is currently residing at
-		LinkedList<Workstation> workstations = company.getAllWorkstations(carMechanic);
+		LinkedList<Workstation> workstations = company.getAllWorkstations();
 		Workstation workstation = (Workstation) ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
 		// 2. The user selects the corresponding work post.
 		workstation.addCarMechanic(carMechanic);
 		while(true) {
 			// 3. The system presents an overview of the pending assembly tasks for the
 			// car at the current work post.
-			if (workstation.getAllPendingTasks(carMechanic).isEmpty()) {
+			if (workstation.getAllPendingTasks().isEmpty()) {
 				ui.display("This workstation has no pending assembly tasks. Please try again later or go to another workstation.");
 				break;
 			}
 			// 4. The user selects one of the assembly tasks.
-			ArrayList<AssemblyTask> tasks = workstation.getAllPendingTasks(carMechanic);
+			ArrayList<AssemblyTask> tasks = workstation.getAllPendingTasks();
 			AssemblyTask task = (AssemblyTask) ui.askWithPossibilities("Which pending task do you want to work on?", tasks.toArray().clone());
-			workstation.selectTask(carMechanic, task);
+			workstation.selectTask(task);
 			// 5. The system shows the assembly task information, including the
 			// sequence of actions to perform.
-			ui.display(workstation.getActiveTaskInformation(carMechanic).toArray());
+			ui.display(workstation.getActiveTaskInformation().toArray());
 			// 6. The user performs the assembly tasks and indicates when the assembly
 			// task is finished.
 			//TODO wel vrij stom dat je hier enkel Yes kan zeggen, want No wordt gevolgd door dezelfde vraag.

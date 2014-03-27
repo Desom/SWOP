@@ -14,15 +14,12 @@ import Car.CarOrder;
 import Car.Option;
 import Order.CarModelCatalog;
 import User.GarageHolder;
-import User.Manager;
-import User.UserAccessException;
 
 public class CarOrderTest {
 
 	public static ArrayList<Option> arrayOption;
 	public static CarModel carModel;
 	public static GarageHolder garageHolder;
-	public static Manager manager;
 
 	public CarOrder carOrder;
 	public CarOrder carOrder1;
@@ -31,21 +28,32 @@ public class CarOrderTest {
 	public GregorianCalendar now;
 	public GregorianCalendar now1;
 	public GregorianCalendar now3;
+	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 		CarModelCatalog catalog = new CarModelCatalog();
-		carModel = catalog.getCarModel("Ford");
+		carModel = null;
+		for(CarModel m : catalog.getAllModels()){
+			if(m.getName().equals("Model A")){
+				carModel = m;
+				continue;
+			}
+		}
 		arrayOption = new ArrayList<Option>();
-		arrayOption.add(catalog.getOption("sedan"));
-		arrayOption.add(catalog.getOption("manual"));
-		arrayOption.add(catalog.getOption("blue"));
-		arrayOption.add(catalog.getOption("performance 2.5l 6 cilinders"));
-		arrayOption.add(catalog.getOption("6 speed manual"));
-		arrayOption.add(catalog.getOption("leather black"));
-		arrayOption.add(catalog.getOption("comfort"));
-
-		garageHolder = new GarageHolder(50);
-		manager = new Manager(51);
+		for(Option option : catalog.getAllOptions()){
+			if(option.getDescription().equals("sedan")
+					||option.getDescription().equals("blue")
+					||option.getDescription().equals("standard 2l v4")
+					||option.getDescription().equals("5 speed manual")
+					||option.getDescription().equals("leather white")
+					||option.getDescription().equals("no airco")
+					||option.getDescription().equals("comfort")
+					||option.getDescription().equals("no spoiler")
+					)
+				arrayOption.add(option);
+		}
+		
+		garageHolder = new GarageHolder(1);
 	}
 
 	@Before
@@ -64,6 +72,7 @@ public class CarOrderTest {
 
 	@Test
 	public void testCreation() {
+		//TODO meer testen?
 		assertEquals(carModel,carOrder.getCar().getConfiguration().getModel());
 		assertEquals(0,carOrder.getCarOrderID());
 		assertEquals(now3,carOrder.getDeliveredTime());
@@ -107,29 +116,23 @@ public class CarOrderTest {
 		
 		
 		try {
-			carOrder1.setDeliveredTime(manager, now4);
+			carOrder1.setDeliveredTime(now4);
 			fail();
 		} catch (IllegalStateException e) {
 			assertEquals("Can't set deliveredTime because this CarOrder is not completed yet.",e.getMessage());
-		} catch (UserAccessException e) {
-			fail();
 		}
-		
 		try {
-			carOrder2.setDeliveredTime(manager, now4);
+			carOrder2.setDeliveredTime(now4);
 		} catch (IllegalStateException e) {
 			assertEquals("Can't set deliveredTime because this CarOrder is not completed yet.",e.getMessage());
-		} catch (UserAccessException e) {
-			fail();
 		}
 		
 		try {
-			carOrder.setDeliveredTime(manager, now4);
+			carOrder.setDeliveredTime(now4);
 		} catch (IllegalStateException e) {
 			fail();
-		} catch (UserAccessException e) {
-			fail();
 		}
+		
 	}
 
 }

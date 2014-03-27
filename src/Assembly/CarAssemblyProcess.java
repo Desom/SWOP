@@ -10,24 +10,28 @@ public class CarAssemblyProcess {
 	
 	private final ArrayList<AssemblyTask> tasks;
 	private final Car car;
-	
-	/**
-	 * 
-	 * @return The car related to this assembly process
-	 */
-	public Car getCar() {
-		return car;
-	}
 
+	/**
+	 * The constructor for the CarAssemblyProcess class
+	 * 
+	 * @param car 
+	 * 				The Car related to this assembly process
+	 * @param options 
+	 * 				The Options that are to be converted into assemblyTasks
+	 */
 	public CarAssemblyProcess(Car car, ArrayList<Option> options){
 		this(car, options, false);
 	}
 	
 	/**
+	 * The constructor for the CarAssemblyProcess class
 	 * 
-	 * @param car The car related to this assembly process
-	 * @param options The options that are to be converted into assemblyTasks
-	 * @param isCompleted Indicate if the carassemblyprocess is already completed
+	 * @param car 
+	 * 				The Car related to this assembly process
+	 * @param options 
+	 * 				The Options that are to be converted into assemblyTasks
+	 * @param isCompleted 
+	 * 				Indicate if the CarAssemblyProcess is already completed
 	 */
 	public CarAssemblyProcess(Car car, ArrayList<Option> options, boolean isCompleted){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
@@ -41,12 +45,13 @@ public class CarAssemblyProcess {
 	}
 	
 	/**
-	 * Get the tasks of this assemblyprocess that are compatible with the given workstation.
+	 * Get the tasks of this AssemblyProcess that are compatible with the given workstation.
 	 * 
-	 * @param station The workstation to check against.
-	 * @return An arraylist of assemblytasks compatible with the given workstation.
+	 * @param station
+	 * 			The workstation to check against.
+	 * @return An ArrayList of AssemblyTasks compatible with the given Workstation.
 	 */
-	public ArrayList<AssemblyTask> compatibleWith(Workstation station){
+	protected ArrayList<AssemblyTask> compatibleWith(Workstation station){
 		ArrayList<OptionType> acceptedTypes = station.getTaskTypes();
 		ArrayList<AssemblyTask> compatibleTypes = new ArrayList<AssemblyTask>();
 		for(AssemblyTask t : this.tasks){
@@ -59,8 +64,9 @@ public class CarAssemblyProcess {
 
 
 	/**
-	 * Test if this assemblyprocess is completed.
-	 * @return
+	 * Test if this AssemblyProcess is completed.
+	 * 
+	 * @return true if all tasks are completed, otherwise false.
 	 */
 	public Boolean isCompleted() {
 		boolean status = true;
@@ -70,4 +76,12 @@ public class CarAssemblyProcess {
 		return status;
 	}
 
+	
+	/**
+	 * 
+	 * @return The Car related to this assembly process
+	 */
+	public Car getCar() {
+		return car;
+	}
 }

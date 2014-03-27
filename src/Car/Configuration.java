@@ -63,17 +63,6 @@ public class Configuration {
 			options.put(optionlist.get(i).getType(), optionlist.get(i));
 			}
 		}
-
-	/**
-	 * Gives the option corresponding to the option type.
-	 * 
-	 * @param	optionType
-	 * 			The string that specifies the option type
-	 * @return	the options that corresponds to the option type
-	 */
-	protected Option getOption(String optionType){
-		return options.get(optionType);
-	}
 	
 	/**
 	 * Returns all options of this configuration.
@@ -94,14 +83,16 @@ public class Configuration {
 		}
 		return s;
 	}
+	
 	/**
-	 * returns the option of a specific type
-	 * @param type
-	 * @return the option of a specific type
-	 * 			null if no option is found of that type
+	 * Gives the option corresponding to the option type.
+	 * 
+	 * @param	optionType
+	 * 			The string that specifies the option type
+	 * @return	the option that corresponds to the option type
 	 */
-	public Option getOptionOfType(String type){
-		return this.options.get(type);
+	public Option getOptionOfType(String optionType){
+		return this.options.get(optionType);
 	}
 
 	/**

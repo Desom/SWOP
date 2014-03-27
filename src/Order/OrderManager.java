@@ -3,6 +3,7 @@ package Order;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.List;
 
 import Assembly.ProductionSchedule;
 import Car.CarModel;
@@ -17,7 +18,39 @@ public class OrderManager {
 	private ProductionSchedule productionSchedule;
 	private final HashMap<Integer,ArrayList<CarOrder>> carOrdersPerId;
 	private int highestCarOrderID;
+	
+	/**
+	 * Constructor for the OrderManager class.
+	 * This constructor is also responsible for creating objects for all the placed carOrders.
+	 * This constructor is also responsible for creating a ProductionSchedule and feeding it the unfinished carOrders.
+	 * 
+	 * @param	dataFilePath
+	 * 			The data file containing all the previously placed CarOrders. 
+	 * @param 	catalog
+	 * 			The CarModelCatalog necessary for finding the Options and CarModel objects of all CarOrders
+	 * @param	currentTime 
+	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
+	 */
+	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) {
+		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog);
+		ArrayList<CarOrder> allCarOrders = carOrderCreator.createCarOrderList();
+		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
+		for(CarOrder order : allCarOrders) {
+			this.addCarOrder(order);
+		}
 
+		ArrayList<CarOrder> allUnfinishedCarOrders = new ArrayList<CarOrder>();
+		for(CarOrder order : allCarOrders) {
+			if(order.getCarOrderID() > this.highestCarOrderID){
+				this.highestCarOrderID = order.getCarOrderID();
+			}
+			if(!order.isCompleted()){
+				allUnfinishedCarOrders.add(order);
+			}
+		}
+		this.createProductionSchedule(allUnfinishedCarOrders, currentTime);
+	}
+	
 	/**
 	 * Constructor for the OrderManager class.
 	 * This OrderManager starts without any CarOrders.
@@ -28,8 +61,8 @@ public class OrderManager {
 	 */
 	public OrderManager(GregorianCalendar currentTime) {
 		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
-
-		this.createProductionSchedule(currentTime);
+		this.highestCarOrderID = 0;
+		this.createProductionSchedule(new ArrayList<CarOrder>(), currentTime);
 	}
 	
 
@@ -104,8 +137,8 @@ public class OrderManager {
 	 * @param currentTime
 	 * 			The date at which the created ProductionSchedule starts.
 	 */
-	private void createProductionSchedule(GregorianCalendar currentTime){
-		ProductionSchedule newProductionSchedule = new ProductionSchedule(currentTime);
+	private void createProductionSchedule(List<CarOrder> carOrders, GregorianCalendar currentTime){
+		ProductionSchedule newProductionSchedule = new ProductionSchedule(carOrders, currentTime);
 		this.setProductionSchedule(newProductionSchedule);
 	}
 

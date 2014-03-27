@@ -92,7 +92,7 @@ public class AssemblyTask {
 	/**
 	 * Completes this assembly task.
 	 */
-	public void completeTask() {
+	protected void completeTask() {
 		this.isCompleted = true;
 	}
 	

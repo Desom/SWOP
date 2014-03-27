@@ -14,27 +14,27 @@ import User.UserAccessException;
 
 
 public class CarModelCatalog {
-	private ArrayList<Option> All_Options;
-	private ArrayList<CarModel> All_CarModels;
+	private ArrayList<Option> allOptions;
+	private ArrayList<CarModel> allCarModels;
 
 	/**
-	 * Create a carmodelcatalog
-	 * @param Optionfile this file is the file which contains the data of options
-	 * @param Modelfile this file is the file which contains the data of models
+	 * Create a CarModelCatalog
+	 * @param optionfile this file is the file which contains the data of options
+	 * @param modelFile this file is the file which contains the data of models
 	 * @throws IOException 
 	 * @throws CarModelCatalogException
 	 */
-	public CarModelCatalog(String Optionfile, String Modelfile) throws IOException, CarModelCatalogException{
-		
-		
-		All_Options = (new OptionCreator()).createOptions();
-		All_CarModels= (new modelCreator(this.getOptions())).createModels();
-		
+	public CarModelCatalog(String optionfile, String modelFile) throws IOException, CarModelCatalogException{
+
+
+		allOptions = (new OptionCreator()).createOptions();
+		allCarModels= (new ModelCreator(this.getAllOptions())).createModels();
+
 	}
 	public CarModelCatalog() throws IOException, CarModelCatalogException{
 		this("options.txt", "models.txt");
 	}
-	
+
 	/***
 	 * get the list of all models
 	 * @param user the user who wants to access the models
@@ -43,14 +43,14 @@ public class CarModelCatalog {
 	 */
 	@SuppressWarnings("unchecked")
 	public List<CarModel> getAllModels()  {
-	return  (List<CarModel>) All_CarModels.clone();
-		
+		return  (List<CarModel>) allCarModels.clone();
+
 	}
 	@SuppressWarnings("unchecked")
-	public List<Option> getOptions() {
-		return (List<Option>) (All_Options.clone());
+	public List<Option> getAllOptions() {
+		return (List<Option>) (allOptions.clone());
 	}
 
-	
-	
+
+
 }

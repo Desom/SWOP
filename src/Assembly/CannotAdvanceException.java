@@ -12,6 +12,7 @@ public class CannotAdvanceException extends Exception{
 		blockingWorkstations.add(w);
 	}
 	
+	@Override
 	public String getMessage(){
 		String message = "The following workstations are not finished and are preventing the assemblyline from advancing:\n";
 		for(Workstation w: blockingWorkstations){

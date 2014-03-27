@@ -10,17 +10,17 @@ import java.util.List;
 import Car.CarModel;
 import Car.Option;
 
-public class modelCreator {
+public class ModelCreator {
 	String path;
 	List<Option> options;
 	private HashMap<String, CarModel> All_CarModels;
-	public modelCreator(List<Option> options, String path){
+	public ModelCreator(List<Option> options, String path){
 		this.options = options;
 		this.path = path;
 
 	}
 
-	public modelCreator(List<Option> options){
+	public ModelCreator(List<Option> options){
 		this(options, "models.txt");
 	}
 
@@ -55,14 +55,14 @@ public class modelCreator {
 		if(All_CarModels.containsKey(input[0])) throw new CarModelCatalogException("Model name already exists: "+input[0] );
 		try{
 			ArrayList<String> a = new ArrayList<String>();
-			addall(a,input[1].split(","));
-			All_CarModels.put(input[0], new CarModel(input[0], CollectOption(a)));
+			addAll(a,input[1].split(","));
+			All_CarModels.put(input[0], new CarModel(input[0], collectOption(a)));
 		}catch(ClassCastException e){
 			throw new CarModelCatalogException("Wrong Option Type in form: " + inputline);
 		}
 	}
 
-	private void addall(ArrayList<String> incomp, String[] split) {
+	private void addAll(ArrayList<String> incomp, String[] split) {
 		for(String i: split) incomp.add(i);
 
 	}
@@ -73,7 +73,7 @@ public class modelCreator {
 	 * @return a list of options which corresponds with comp
 	 * @throws CarModelCatalogException 
 	 */
-	private ArrayList<Option> CollectOption(ArrayList<String> comp) throws CarModelCatalogException {
+	private ArrayList<Option> collectOption(ArrayList<String> comp) throws CarModelCatalogException {
 		ArrayList<Option> result = new ArrayList<Option>();
 		for(String i: comp){
 			Option e = getOption(i);

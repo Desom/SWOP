@@ -4,17 +4,11 @@ public class InternalFailureException extends Exception{
 
 
 	private static final long serialVersionUID = 1L;
-	private final String Message;
 
-	public InternalFailureException(String string) {
-		Message=string;
+	public InternalFailureException(String message) {
+		super(message);
 	}
-	
-	@Override
-	public String getMessage (){
-		return Message;
 
-	}
 
 }
 

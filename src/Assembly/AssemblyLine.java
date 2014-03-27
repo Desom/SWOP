@@ -269,7 +269,7 @@ public class AssemblyLine {
 	}
 	
 	/**
-	 * Clears the workstation of all tasks and the active task. Removes the associated car assembly process form the linked hash map.
+	 * Clears the workstation of all tasks and the active task. Removes the associated car assembly process from the linked hash map.
 	 * 
 	 * @param workstation
 	 */

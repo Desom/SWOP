@@ -6,7 +6,7 @@ import Order.OrderForm;
 
 
 
-public interface Communcatietool {
+public interface CommunicationTool {
 
 
 	

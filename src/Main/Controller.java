@@ -25,7 +25,7 @@ import User.Manager;
 import User.User;
 import User.UserAccessException;
 
-public class Controller implements Communcatietool{
+public class Controller implements CommunicationTool{
 	private UI ui;
 	private Company company;
 
@@ -321,7 +321,7 @@ public class Controller implements Communcatietool{
 	 */
 	private Option getOption(String description){
 		CarModelCatalog catalog = company.getCatalog();
-		for(Option possible: catalog.getOptions()){
+		for(Option possible: catalog.getAllOptions()){
 			if(possible.getDescription().equals(description)) return possible;
 		}
 		return null;

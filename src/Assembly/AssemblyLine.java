@@ -8,7 +8,6 @@ import Car.CarOrder;
 import Car.OptionType;
 import Main.InternalFailureException;
 import User.User;
-import User.UserAccessException;
 
 
 public class AssemblyLine {
@@ -30,7 +29,7 @@ public class AssemblyLine {
 	 * @return A linked list containing all the workStations.
 	 * @throws UserAccessException If this user is not allowed to execute this method.
 	 */
-	public LinkedList<Workstation> getAllWorkstations() throws UserAccessException{
+	public LinkedList<Workstation> getAllWorkstations(){
 		return new LinkedList<Workstation>(workstations.keySet());
 	}
 
@@ -43,7 +42,7 @@ public class AssemblyLine {
 	 * @throws CannotAdvanceException if there are workstations that are blocking the assembly line.
 	 * @throws InternalFailureException 
 	 */
-	public void advanceLine(int time) throws UserAccessException, CannotAdvanceException, InternalFailureException{
+	public void advanceLine(int time) throws CannotAdvanceException, InternalFailureException{
 		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 		boolean isReady = true;
 		CannotAdvanceException cannotAdvance = new CannotAdvanceException();
@@ -121,7 +120,7 @@ public class AssemblyLine {
 	 * @throws UserAccessException 
 	 * @throws InternalFailureException 
 	 */
-	public Workstation selectWorkstationById(int id) throws UserAccessException, InternalFailureException{
+	public Workstation selectWorkstationById(int id) throws InternalFailureException{
 			Workstation selected = null;
 			for(Workstation w : getAllWorkstations()){
 				if(w.getId() == id)
@@ -169,7 +168,7 @@ public class AssemblyLine {
 	 * @return An AssemblyStatusView representing the current status
 	 * @throws UserAccessException if the user is not allowed to invoke this method
 	 */
-	public AssemblyStatusView currentStatus() throws UserAccessException{
+	public AssemblyStatusView currentStatus(){
 			ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkstations());
 			AssemblyStatusView view = new AssemblyStatusView(workstations, "Current Status");
 			return view;
@@ -186,7 +185,7 @@ public class AssemblyLine {
 	 * @throws InternalFailureException 
 	 * @throws DoesNotExistException If a workstation with a non existing ID is requested
 	 */
-	public AssemblyStatusView futureStatus(int time) throws UserAccessException, InternalFailureException{
+	public AssemblyStatusView futureStatus(int time) throws InternalFailureException{
 			// check if the line can advance
 			boolean isReady = true;
 			for(Workstation w : getAllWorkstations()){

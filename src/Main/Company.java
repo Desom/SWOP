@@ -13,7 +13,6 @@ import User.CarMechanic;
 import User.GarageHolder;
 import User.Manager;
 import User.User;
-import User.UserAccessException;
 
 
 public class Company {
@@ -47,7 +46,7 @@ public class Company {
 	 * @return Returns the list of all workstations if the specified user is allowed to access this information. Otherwise it returns null
 	 * @throws UserAccessException 
 	 */
-	public LinkedList<Workstation> getAllWorkstations() throws UserAccessException{
+	public LinkedList<Workstation> getAllWorkstations(){
 			return assemblyLine.getAllWorkstations(); //moet dit een kopie zijn ivm beveiliging?
 	}
 
@@ -83,7 +82,7 @@ public class Company {
 	 * @return If the user is allowed to request the order manager, return the order manager, else throw UserAccessException;
 	 * @throws UserAccessException 
 	 */
-	public OrderManager getOrderManager() throws UserAccessException{
+	public OrderManager getOrderManager(){
 			return orderManager;
 	}
 
@@ -93,7 +92,7 @@ public class Company {
 	 * @return If the user is allowed to request the assembly line, return the assembly line, else throw UserAccessException;
 	 * @throws UserAccessException
 	 */
-	public AssemblyLine getAssemblyLine() throws UserAccessException{
+	public AssemblyLine getAssemblyLine(){
 			return this.assemblyLine;
 	}
 

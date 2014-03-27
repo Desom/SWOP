@@ -24,7 +24,6 @@ import Order.CarModelCatalogException;
 import Order.OrderManager;
 import User.CarMechanic;
 import User.Manager;
-import User.UserAccessException;
 
 public class AssemblyLineTest {
 
@@ -37,7 +36,7 @@ public class AssemblyLineTest {
 	private CarMechanic m3;
 
 	@Before
-	public void testCreate() throws UserAccessException, DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException {
+	public void testCreate() throws DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException {
 		manager = new Manager(1);
 		m1 = new CarMechanic(2);
 		m2 = new CarMechanic(3);
@@ -68,7 +67,7 @@ public class AssemblyLineTest {
 	}
 
 	@Test
-	public void testgetAllWorkStations() throws UserAccessException {
+	public void testgetAllWorkStations(){
 		LinkedList<Workstation> stations = line.getAllWorkstations();
 		for(Workstation w : stations){
 			assertNotNull(w);
@@ -76,7 +75,7 @@ public class AssemblyLineTest {
 	}
 
 	@Test
-	public void testSelectWorkStationId() throws DoesNotExistException, UserAccessException, InternalFailureException{
+	public void testSelectWorkStationId() throws DoesNotExistException, InternalFailureException{
 		assertNotNull(line.selectWorkstationById(1));
 		assertEquals(line.selectWorkstationById(1).getId(), 1);
 
@@ -88,7 +87,7 @@ public class AssemblyLineTest {
 	}
 
 	@Test
-	public void testAdvanceLineSucces() throws UserAccessException, DoesNotExistException, CannotAdvanceException, InternalFailureException {
+	public void testAdvanceLineSucces() throws DoesNotExistException, CannotAdvanceException, InternalFailureException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
 			while(w.getAllPendingTasks().size() > 0){ // complete alle tasks
@@ -120,7 +119,7 @@ public class AssemblyLineTest {
 	}
 
 	@Test(expected = CannotAdvanceException.class)  
-	public void testAdvanceLineBlocking() throws UserAccessException, DoesNotExistException, CannotAdvanceException, InternalFailureException {
+	public void testAdvanceLineBlocking() throws DoesNotExistException, CannotAdvanceException, InternalFailureException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
 			processesBefore.add(line.getCarAssemblyProcess(w));
@@ -155,7 +154,7 @@ public class AssemblyLineTest {
 				assertTrue(current.getHeader().compareToIgnoreCase("Current Status") == 0);
 			}
 
-		} catch (UserAccessException | DoesNotExistException e) {
+		} catch (DoesNotExistException e) {
 			fail();
 		}
 	}
@@ -180,9 +179,6 @@ public class AssemblyLineTest {
 				assertEquals(current.getAllWorkstationIds()[i], future.getAllWorkstationIds()[i]);
 			}
 			assertTrue(future.getHeader().compareToIgnoreCase("Future Status")== 0);
-
-		} catch (UserAccessException e) {
-			fail();
 		} catch (DoesNotExistException e) {
 			fail();
 		} catch (CannotAdvanceException e) {

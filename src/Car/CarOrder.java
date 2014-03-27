@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import User.User;
-import User.UserAccessException;
 
 public class CarOrder {
 	
@@ -84,7 +83,7 @@ public class CarOrder {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call this method.
 	 */
-	public void setDeliveredTime(GregorianCalendar deliveredTime) throws UserAccessException {
+	public void setDeliveredTime(GregorianCalendar deliveredTime) {
 			if(!this.isCompleted())
 				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
 			if(this.deliveredTime.equals(null))

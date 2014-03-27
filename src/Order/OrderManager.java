@@ -8,8 +8,7 @@ import Assembly.ProductionSchedule;
 import Car.CarModel;
 import Car.CarOrder;
 import Car.Option;
-import User.User;
-import User.UserAccessException;
+import User.GarageHolder;
 
 
 
@@ -46,8 +45,7 @@ public class OrderManager {
 	 * 			If the user is not authorized to call this method.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<CarOrder> getOrders(User user) throws UserAccessException{
-		this.checkUser(user, "getOrders");
+	public ArrayList<CarOrder> getOrders(GarageHolder user){
 
 		ArrayList<CarOrder> ordersOfUser = this.getCarOrdersPerId().get(user.getId());
 		if(ordersOfUser == null)
@@ -65,11 +63,10 @@ public class OrderManager {
 	 * @throws 	UserAccessException
 	 * 			If the given OrderForm is filled in by a user who is not authorized to place orders.
 	 */
-	public CarOrder placeOrder(User user , CarModel model ,ArrayList<Option> options) throws UserAccessException{
-		this.checkUser(user, "placeOrder");
+	public CarOrder placeOrder(GarageHolder user, CarModel model ,ArrayList<Option> options){
 
 		int carOrderId = this.getUniqueCarOrderId();
-		CarOrder newOrder = new CarOrder(carOrderId, user,model,options);
+		CarOrder newOrder = new CarOrder(carOrderId, user, model,options);
 		this.addCarOrder(newOrder);
 		this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
@@ -89,8 +86,7 @@ public class OrderManager {
 	 * @throws 	UserAccessException
 	 * 			If the user is not authorized to call this method.
 	 */
-	public GregorianCalendar completionEstimate(User user, CarOrder order) throws UserAccessException{
-		this.checkUser(user, "completionEstimate");
+	public GregorianCalendar completionEstimate(CarOrder order) {
 		try{
 		return order.getDeliveredTime();
 		} catch(IllegalStateException e){
@@ -159,9 +155,8 @@ public class OrderManager {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call this method.
 	 */
-	public ArrayList<CarOrder> getPendingOrders(User user) throws UserAccessException {
-		this.checkUser(user, "getPendingOrders");
-		return GetOrdersWithStatus(user,false);
+	public ArrayList<CarOrder> getPendingOrders(GarageHolder user) {
+		return GetOrdersWithStatus(user, false);
 	}
 
 	/**
@@ -173,8 +168,7 @@ public class OrderManager {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call this method.
 	 */
-	public ArrayList<CarOrder> getCompletedOrders(User user) throws UserAccessException {
-		this.checkUser(user, "getCompletedOrders");
+	public ArrayList<CarOrder> getCompletedOrders(GarageHolder user){
 		return GetOrdersWithStatus(user,true);
 	}
 	
@@ -189,26 +183,11 @@ public class OrderManager {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call this method.
 	 */
-	private ArrayList<CarOrder> GetOrdersWithStatus(User user, boolean b) throws UserAccessException {
+	private ArrayList<CarOrder> GetOrdersWithStatus(GarageHolder user, boolean b){
 		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
 		for(CarOrder i : this.getOrders(user)){
 			if(i.isCompleted().equals(b)) result.add(i);
 		}
 		return result;
-	}
-	
-	/**
-	 * Checks if the give user can perform the given method (defined by a string). 
-	 * 
-	 * @param	user
-	 * 			The user that wants to call the given method.
-	 * @param	methodString
-	 * 			The string that defines the method.
-	 * @throws	UserAccessException
-	 *			If the user is not authorized to call the given method.
-	 */
-	private void checkUser(User user, String methodString) throws UserAccessException {
-		if (!user.canPerform(methodString))
-			throw new UserAccessException(user, methodString);
 	}
 }

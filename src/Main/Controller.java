@@ -23,7 +23,6 @@ import User.CarMechanic;
 import User.GarageHolder;
 import User.Manager;
 import User.User;
-import User.UserAccessException;
 
 public class Controller implements CommunicationTool{
 	private UI ui;
@@ -47,31 +46,22 @@ public class Controller implements CommunicationTool{
 			list.add("exit");
 			String antwoord =ui.askWithPossibilities("Tell us what you are.", list);
 			if(antwoord.equals("mechanic"))
-				try {
-					this.carMechanicCase(new CarMechanic(12345));
-				} catch (UserAccessException e1) {
-					ui.display(e1.getMessage());
-				}
-			if(antwoord.equals("manager"))
+				this.carMechanicCase(new CarMechanic(12345));
+			if(antwoord.equals("manager")){
 				try {
 					this.managerCase(new Manager(12345));
-				} catch (UserAccessException e) {
-					ui.display(e.getMessage());
 				} catch (InternalFailureException e) {
 					ui.display("Internal Error");
 				}
+			}
 			if(antwoord.equals("garageholder"))
-				try {
-					this.garageHolderCase(new GarageHolder(2));
-				} catch (UserAccessException e) {
-					ui.display("Er is een fout opgeloden in ons programma gelive ons te verontschuldigen");
-				}
+				this.garageHolderCase(new GarageHolder(2));
 			if(antwoord.equals("exit"))
 				break;
 		}
 	}
 
-	private void managerCase(User user) throws UserAccessException, InternalFailureException{
+	private void managerCase(User user) throws InternalFailureException{
 		AssemblyLine assembly = this.company.getAssemblyLine();
 
 		//1. The user indicates he wants to advance the assembly line.
@@ -91,12 +81,12 @@ public class Controller implements CommunicationTool{
 		}
 	}
 
-	private void actionAdvanceLine(User user, AssemblyLine assembly) throws UserAccessException, InternalFailureException{
+	private void actionAdvanceLine(User user, AssemblyLine assembly) throws InternalFailureException{
 		boolean repeat = true;
 		while(repeat){
 
 			int timeSpent = ui.askForInteger("Give the time spent during the current phase. 0 if it's the begin of the day.(minutes)", 0);
-			
+
 			//2. The system presents an overview of the current assembly line status,
 			//as well as a view of the future assembly line status (as it would be after
 			//completing this use case), including pending and finished tasks at each
@@ -142,14 +132,14 @@ public class Controller implements CommunicationTool{
 	 * @param user The user that wants to use the garage holder use case
 	 * @throws UserAccessException
 	 */
-	private void garageHolderCase(User user) throws UserAccessException {
+	private void garageHolderCase(User user) {
 		OrderManager ordermanager=this.company.getOrderManager();
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
 		//with estimated completion times.
 		ui.display("These are your pending orders:");
 		for(CarOrder order:ordermanager.getPendingOrders(user)){
-			ui.display("order: "+order.getCarOrderID()+" delivered on:"+getTime(ordermanager.completionEstimate(user, order)));
+			ui.display("order: "+order.getCarOrderID()+" delivered on:"+getTime(ordermanager.completionEstimate(order)));
 		}
 		//1.the second part shows a history
 		//of completed orders, sorted most recent first.
@@ -159,12 +149,12 @@ public class Controller implements CommunicationTool{
 			ui.display(""+order.getCarOrderID()+" "+getTime(order.getDeliveredTime()));
 		}
 		//2.The user indicates he wants to place a new car order.
-		
+
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("Leave");
 		list.add("Place a new order");
 		String antwoord = ui.askWithPossibilities("Do you want to leave this overview or place a new order?",list);
-		
+
 		//3. The system shows a list of available car models
 		//4. The user indicates the car model he wishes to order.
 		if(antwoord.equals("Place a new order")){
@@ -202,7 +192,7 @@ public class Controller implements CommunicationTool{
 	private ArrayList<Option> getOptions(ArrayList<String> options) {
 		ArrayList<Option> result = new ArrayList<Option>();
 		for(String i:options) result.add(getOption(i));
-				return result;
+		return result;
 	}
 
 	private String getTime(GregorianCalendar calender) {
@@ -210,13 +200,13 @@ public class Controller implements CommunicationTool{
 		return date;
 	}
 
-	private ArrayList<CarOrder> getSortedCompletedOrder(User user, OrderManager ordermanager) throws UserAccessException {
-		ArrayList<CarOrder> Orders = ordermanager.getCompletedOrders(user);
+	private ArrayList<CarOrder> getSortedCompletedOrder(User user, OrderManager ordermanager)  {
+		ArrayList<CarOrder> Orders = ordermanager.getCompletedOrders();
 		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
 		while(!Orders.isEmpty()){
 			CarOrder min = Orders.get(0);
 			for(int i=1; i < Orders.size(); i++){
-				if(ordermanager.completionEstimate(user, Orders.get(i)).before(ordermanager.completionEstimate(user, min))){
+				if(ordermanager.completionEstimate(Orders.get(i)).before(ordermanager.completionEstimate(min))){
 					min = Orders.get(i);
 				}
 			}
@@ -226,7 +216,7 @@ public class Controller implements CommunicationTool{
 		return result;
 	}
 
-	public void carMechanicCase(CarMechanic carMechanic) throws UserAccessException{
+	public void carMechanicCase(CarMechanic carMechanic){
 		// 1. The system asks the user what work post he is currently residing at
 		LinkedList<Workstation> workstations = company.getAllWorkstations();
 		Workstation workstation = (Workstation) ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
@@ -262,23 +252,23 @@ public class Controller implements CommunicationTool{
 		// 9. The use case ends here.
 		ui.display("You are now logged off.");
 	}
-	
+
 	@Override
 	public List<String> getPossibleOptionsOfType(OrderForm order ,String type) {
 		List<String> result = new ArrayList<String>();
-		
+
 		CarModel model = getCarModel(order.getModel());
-			for(Option i: model.getOptions()){
-				if(i.getType().toString().equals(type)){
-					Boolean incompatible = false;
-					for(String k: order.getOptions()){
-						Option j = getOption(k);
-						incompatible=	incompatible || j.conflictsWith(i);
-					}
-					if(!incompatible) result.add(i.getDescription());
+		for(Option i: model.getOptions()){
+			if(i.getType().toString().equals(type)){
+				Boolean incompatible = false;
+				for(String k: order.getOptions()){
+					Option j = getOption(k);
+					incompatible=	incompatible || j.conflictsWith(i);
 				}
+				if(!incompatible) result.add(i.getDescription());
 			}
-			return result;
+		}
+		return result;
 	}
 
 	@Override
@@ -297,9 +287,9 @@ public class Controller implements CommunicationTool{
 	public List<String> getOptionTypes() {
 		ArrayList<String> result = new ArrayList<String>();
 		for(OptionType i:OptionType.values()) result.add(i.toString());
-				return result;
+		return result;
 	}
-	
+
 	/**
 	 * Get a car model based on the name
 	 * @param name the name

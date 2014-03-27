@@ -7,7 +7,6 @@ import java.util.Scanner;
 import Assembly.AssemblyStatusView;
 import Assembly.DoesNotExistException;
 import Order.OrderForm;
-import User.UserAccessException;
 
 public class UI{
 	Scanner scan;
@@ -114,7 +113,7 @@ public class UI{
 			return false;
 	}
 
-	public void showAssemblyLineStatus(AssemblyStatusView statusView) throws UserAccessException {
+	public void showAssemblyLineStatus(AssemblyStatusView statusView) {
 		try{
 			System.out.println(statusView.getHeader());
 			System.out.println("---");

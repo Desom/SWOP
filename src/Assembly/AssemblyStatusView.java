@@ -4,7 +4,6 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import User.User;
-import User.UserAccessException;
 
 public class AssemblyStatusView {
 
@@ -44,7 +43,7 @@ public class AssemblyStatusView {
 		return -1;
 	}
 
-	public LinkedList<String> getAllTasksAt(int workstationId) throws UserAccessException, DoesNotExistException{
+	public LinkedList<String> getAllTasksAt(int workstationId) throws DoesNotExistException{
 		LinkedList<String> tasks = new LinkedList<String>();
 		Workstation w = getWorkstation(workstationId);
 		for(AssemblyTask t : w.getAllTasks()){
@@ -54,7 +53,7 @@ public class AssemblyStatusView {
 		return tasks;
 	}
 
-	public boolean taskIsDoneAt(String task,int workstationId) throws UserAccessException, DoesNotExistException{
+	public boolean taskIsDoneAt(String task,int workstationId) throws DoesNotExistException{
 		Workstation w = getWorkstation(workstationId);
 		for(AssemblyTask t : w.getAllTasks()){
 			if(t.getType().toString().compareToIgnoreCase(task) == 0){

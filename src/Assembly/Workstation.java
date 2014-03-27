@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import Car.OptionType;
 import User.CarMechanic;
 import User.User;
-import User.UserAccessException;
 
 public class Workstation {
 
@@ -106,7 +105,7 @@ public class Workstation {
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public void addAssemblyTask(AssemblyTask task) throws UserAccessException, IllegalArgumentException {
+	public void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
 		if (this.taskTypes.contains(task.getType()))
 			this.allTasks.add(task);
 		else
@@ -127,7 +126,7 @@ public class Workstation {
 	 * @throws	IllegalArgumentException
 	 * 			If the selected task is not a pending task.
 	 */
-	public void selectTask(AssemblyTask task) throws UserAccessException, IllegalStateException, IllegalArgumentException {
+	public void selectTask(AssemblyTask task) throws IllegalStateException, IllegalArgumentException {
 		if (this.activeTask == null)
 			if (this.getAllPendingTasks().contains(task))
 				this.activeTask = task;
@@ -149,7 +148,7 @@ public class Workstation {
 	 * 			If there is no active task to complete in this workstation.
 	 * 			If there is no car mechanic to complete the active task.
 	 */
-	public void completeTask(CarMechanic user) throws UserAccessException, IllegalStateException {
+	public void completeTask(CarMechanic user) throws IllegalStateException {
 		if (this.getCarMechanic().getId() != user.getId())
 			throw new UserAccessException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {
@@ -176,7 +175,7 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<AssemblyTask> getAllPendingTasks() throws UserAccessException {
+	public ArrayList<AssemblyTask> getAllPendingTasks(){
 		ArrayList<AssemblyTask> allPendingTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
 			if (!task.isCompleted())
@@ -194,7 +193,7 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<AssemblyTask> getAllCompletedTasks() throws UserAccessException {
+	public ArrayList<AssemblyTask> getAllCompletedTasks(){
 		ArrayList<AssemblyTask> allCompletedTasks = new ArrayList<AssemblyTask>();
 		for (AssemblyTask task : this.allTasks)
 			if (task.isCompleted())
@@ -212,7 +211,7 @@ public class Workstation {
 	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<AssemblyTask> getAllTasks() throws UserAccessException {
+	public ArrayList<AssemblyTask> getAllTasks(){
 		return (ArrayList<AssemblyTask>) this.allTasks.clone();
 	}
 
@@ -225,7 +224,7 @@ public class Workstation {
 	 * @throws	UserAccessException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public boolean hasAllTasksCompleted() throws UserAccessException {
+	public boolean hasAllTasksCompleted(){
 		for (AssemblyTask task : this.allTasks)
 			if (!task.isCompleted())
 				return false;
@@ -243,7 +242,7 @@ public class Workstation {
 	 * @throws	IllegalStateException
 	 * 			If the user is not authorized to call the given method.
 	 */
-	public ArrayList<String> getActiveTaskInformation() throws UserAccessException, IllegalStateException {
+	public ArrayList<String> getActiveTaskInformation() throws IllegalStateException {
 		if (this.activeTask == null)
 			throw new IllegalStateException("There is no active task at this moment");
 		return this.activeTask.getTaskInformation();

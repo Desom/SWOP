@@ -12,33 +12,7 @@ public class Workstation {
 	private User carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
-	private CarAssemblyProcess currentCar = null;
-
-	/**
-	 * Clears the workstation of it's current tasks and other attributes related to it's current car.
-	 */
-	public void clearCar(){
-		this.allTasks = new ArrayList<AssemblyTask>();
-		this.activeTask = null;
-		this.currentCar = null;
-	}
 	
-	/**
-	 * 
-	 * @return The assemblyprocess of the car this workstation is currently working on.
-	 */
-	public CarAssemblyProcess getCurrentCar() {
-		return currentCar;
-	}
-
-	/**
-	 * 
-	 * @param currentCar The assemblyprocess of the car this workstation is currently working on.
-	 */
-	public void setCurrentCar(CarAssemblyProcess currentCar) {
-		this.currentCar = currentCar;
-	}
-
 	/**
 	 * Constructor of Workstation.
 	 * Creates a new workstation with a specific id and a list of taskTypes.
@@ -51,6 +25,14 @@ public class Workstation {
 	public Workstation(int id, ArrayList<OptionType> taskTypes) {
 		this.setId(id);
 		this.taskTypes = taskTypes;
+		this.allTasks = new ArrayList<AssemblyTask>();
+		this.activeTask = null;
+	}
+	
+	/**
+	 * Clears this workstation of tasks and the active task. Used by the AssemblyLine object in advanceLine().
+	 */
+	protected void clear() {
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
 	}

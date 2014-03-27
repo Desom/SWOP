@@ -1,6 +1,6 @@
 package Assembly;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import User.User;
@@ -11,11 +11,12 @@ public class AssemblyStatusView {
 	private String header;
 	private final User user;
 	//private returnType status;
-	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
-	public AssemblyStatusView(User user, ArrayList<Workstation> stations, String header){
+	private LinkedHashMap<Workstation, CarAssemblyProcess> workstations = new LinkedHashMap<Workstation, CarAssemblyProcess>();
+	
+	public AssemblyStatusView(User user, LinkedHashMap<Workstation, CarAssemblyProcess> workstations, String header){
 		this.header = header;
 		//this.status = status;
-		this.workstations = stations;
+		this.workstations = workstations;
 		this.user = user;
 	}
 
@@ -26,7 +27,7 @@ public class AssemblyStatusView {
 	public int[] getAllWorkstationIds(){
 		int[] IDs = new int[workstations.size()];
 		int i = 0;
-		for(Workstation w : workstations){
+		for(Workstation w : workstations.keySet()){
 			IDs[i] = w.getId();
 			i++;
 		}
@@ -39,8 +40,8 @@ public class AssemblyStatusView {
 	 * @throws DoesNotExistException
 	 */
 	public int getCarOrderIdAt(int workstationId) throws DoesNotExistException{
-		if(getWorkstation(workstationId).getCurrentCar() != null){
-			return getWorkstation(workstationId).getCurrentCar().getCar().getOrder().getCarOrderID();
+		if(workstations.get(getWorkstation(workstationId)) != null){
+			return workstations.get(getWorkstation(workstationId)).getCar().getOrder().getCarOrderID();
 		}
 		return -1;
 	}
@@ -71,7 +72,7 @@ public class AssemblyStatusView {
 
 	private Workstation getWorkstation(int ID) throws DoesNotExistException{
 		Workstation found = null;
-		for(Workstation w : workstations){
+		for(Workstation w : workstations.keySet()){
 			if(w.getId() == ID){
 				found = w;
 			}

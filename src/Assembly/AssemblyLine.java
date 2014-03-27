@@ -1,5 +1,6 @@
 package Assembly;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import Car.CarOrder;
@@ -11,7 +12,7 @@ import User.UserAccessException;
 
 public class AssemblyLine {
 
-	private LinkedList<Workstation> workstations = null;
+	private LinkedHashMap<Workstation,CarAssemblyProcess> workstations = null;
 	private final ProductionSchedule schedule;
 
 	/**
@@ -19,7 +20,7 @@ public class AssemblyLine {
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
 	public AssemblyLine(ProductionSchedule schedule){
-		workstations = new LinkedList<Workstation>(createWorkstations());
+		workstations = createWorkstations();
 		this.schedule = schedule;
 	}
 
@@ -30,7 +31,7 @@ public class AssemblyLine {
 	 */
 	public LinkedList<Workstation> getAllWorkstations(User user) throws UserAccessException{
 		if(user.canPerform("getAllWorkstations")){
-			return (LinkedList<Workstation>) workstations; //TODO GJ
+			return new LinkedList<Workstation>(workstations.keySet());
 		}else{
 			throw new UserAccessException(user, "getAllWorkStations");
 		}
@@ -60,17 +61,17 @@ public class AssemblyLine {
 				// move huidige cars 1 plek
 				//neem CarOrder van WorkStation 3
 				Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations(), user);
-				if(workstationLast.getCurrentCar() != null){
-					CarOrder finished = workstationLast.getCurrentCar().getCar().getOrder();
+				if(workstations.get(workstationLast) != null){
+					CarOrder finished = workstations.get(workstationLast).getCar().getOrder();
 					finished.setDeliveredTime(user, this.schedule.getCurrentTime());
 				}
 				for(int i = getAllWorkstations(user).size(); i>1; i--){
 					Workstation workstationNext = selectWorkstationById(i, user);
-					workstationNext.clearCar();
+					clearWorkstation(workstationNext);
 					Workstation workstationPrev = selectWorkstationById(i-1, user);
-					workstationNext.setCurrentCar(workstationPrev.getCurrentCar());
-					if(workstationNext.getCurrentCar() != null){
-						for(AssemblyTask t : workstationNext.getCurrentCar().compatibleWith(workstationNext)){
+					workstations.put(workstationNext, workstations.get(workstationPrev));
+					if(workstations.get(workstationNext) != null){
+						for(AssemblyTask t : workstations.get(workstationNext).compatibleWith(workstationNext)){
 							workstationNext.addAssemblyTask(user, t);
 						}
 					}
@@ -83,8 +84,8 @@ public class AssemblyLine {
 				}
 				
 				Workstation workstation1 = selectWorkstationById(1, user);
-				workstation1.clearCar();
-				workstation1.setCurrentCar(newCar);
+				clearWorkstation(workstation1);
+				workstations.put(workstation1, newCar);
 				if(newCar != null){
 					for(AssemblyTask t : newCar.compatibleWith(workstation1)){
 						workstation1.addAssemblyTask(user, t);
@@ -143,10 +144,12 @@ public class AssemblyLine {
 	}
 
 	/**
-	 * This method creates 3 workstations, specifies their ID's and the respective assembly tasks those workstations can perform.
+	 * This method creates 3 workstations, specifies their ID's and the respective assembly task types those workstations can perform.
+	 * 
+	 * @return	a linked hashmap with the workstations as keys and a car assembly process as value
 	 */
-	private ArrayList<Workstation> createWorkstations(){
-		ArrayList<Workstation> list = new ArrayList<Workstation>();
+	private LinkedHashMap<Workstation, CarAssemblyProcess> createWorkstations(){
+		LinkedHashMap<Workstation, CarAssemblyProcess> list = new LinkedHashMap<Workstation, CarAssemblyProcess>();
 		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);
 		taskTypes1.add(OptionType.Color);
@@ -164,9 +167,9 @@ public class AssemblyLine {
 		taskTypes3.add(OptionType.Spoiler);
 		Workstation workStation3 = new Workstation(3, taskTypes3);
 
-		list.add(workStation1);
-		list.add(workStation2);
-		list.add(workStation3);
+		list.put(workStation1, null);
+		list.put(workStation2, null);
+		list.put(workStation3, null);
 		return list;
 	}
 
@@ -180,7 +183,7 @@ public class AssemblyLine {
 	public AssemblyStatusView currentStatus(User user) throws UserAccessException{
 		if(user.canPerform("currentStatus")){
 			ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkstations(user));
-			AssemblyStatusView view = new AssemblyStatusView(user, list, "Current Status");
+			AssemblyStatusView view = new AssemblyStatusView(user, workstations, "Current Status");
 			return view;
 		}else{
 			throw new UserAccessException(user, "currentStatus");
@@ -207,8 +210,10 @@ public class AssemblyLine {
 					isReady = false;
 				}
 			}
+			LinkedHashMap<Workstation, CarAssemblyProcess> fakeWorkstations = new LinkedHashMap<Workstation, CarAssemblyProcess>();
+			
 			if(isReady){ // if the line can advance make new workstations representing the future
-				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations());
+				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations().keySet());
 				for(Workstation fake: list){ // set the corresponding car mechanics.
 					Workstation real = selectWorkstationById(fake.getId(), user);
 					try{
@@ -216,9 +221,9 @@ public class AssemblyLine {
 					}catch(IllegalStateException e){}
 					if(fake.getId() != 1){
 						Workstation realPrev = selectWorkstationById(fake.getId()-1, user);
-						fake.setCurrentCar(realPrev.getCurrentCar());
+						fakeWorkstations.put(fake, workstations.get(realPrev));
 						try{
-							for(AssemblyTask t : fake.getCurrentCar().compatibleWith(fake)){
+							for(AssemblyTask t : fakeWorkstations.get(fake).compatibleWith(fake)){
 								fake.addAssemblyTask(user, t);
 							}
 						}
@@ -227,13 +232,13 @@ public class AssemblyLine {
 						//TODO NullpointerException indien geen car uit schedule komt, Exception gooien in ProductionSchedule?
 						// of hier null checken?
 						CarAssemblyProcess futureCar = this.schedule.seeNextCarOrder(time).getCar().getAssemblyprocess();
-						fake.setCurrentCar(futureCar);
+						fakeWorkstations.put(fake, futureCar);
 						for(AssemblyTask t : futureCar.compatibleWith(fake)){
 							fake.addAssemblyTask(user, t);
 						}
 					}
 				}
-				AssemblyStatusView view = new AssemblyStatusView(user, list, "Future Status");
+				AssemblyStatusView view = new AssemblyStatusView(user, fakeWorkstations, "Future Status");
 				return view;
 			}else{ // if the line cannot advance, return the current status, because that is equal to the future status
 				return currentStatus(user);
@@ -249,7 +254,7 @@ public class AssemblyLine {
 	 */
 	public LinkedList<Integer> getWorkstationIDs(){
 		LinkedList<Integer> ids= new LinkedList<Integer>();
-		for(Workstation w: workstations){
+		for(Workstation w: workstations.keySet()){
 			ids.add(w.getId());
 		}
 		return ids;
@@ -261,5 +266,19 @@ public class AssemblyLine {
 	 */
 	public int getNumberOfWorkstations(){
 		return workstations.size();
+	}
+	
+	/**
+	 * Clears the workstation of all tasks and the active task. Removes the associated car assembly process form the linked hash map.
+	 * 
+	 * @param workstation
+	 */
+	private void clearWorkstation(Workstation workstation) {
+		workstation.clear();
+		workstations.put(workstation, null);
+	}
+	
+	public CarAssemblyProcess getCarAssemblyProcess(Workstation workstation) {
+		return workstations.get(workstation);
 	}
 }

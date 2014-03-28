@@ -25,7 +25,7 @@ public interface UIInterface {
 
 	void fillIn(OrderForm order);
 
-	Object askWithPossibilities(String string, Object[] clone);
+	int askWithPossibilities(String string, Object[] clone);
 
 	void display(Object[] array);
 

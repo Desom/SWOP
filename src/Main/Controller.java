@@ -130,7 +130,6 @@ public class Controller implements CommunicationTool{
 	/**
 	 * The use case of the garageholder: ordering a car
 	 * @param user The user that wants to use the garage holder use case
-	 * @throws UserAccessException
 	 */
 	private void garageHolderCase(GarageHolder user) {
 		OrderManager ordermanager=this.company.getOrderManager();
@@ -222,10 +221,12 @@ public class Controller implements CommunicationTool{
 		return result;
 	}
 
+	//TODO clone array -> beter clonen
 	public void carMechanicCase(CarMechanic carMechanic){
 		// 1. The system asks the user what work post he is currently residing at
 		LinkedList<Workstation> workstations = company.getAllWorkstations();
-		Workstation workstation = (Workstation) ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
+		int workstationIndex = ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
+		Workstation workstation = workstations.get(workstationIndex);
 		// 2. The user selects the corresponding work post.
 		workstation.addCarMechanic(carMechanic);
 		while(true) {
@@ -237,7 +238,8 @@ public class Controller implements CommunicationTool{
 			}
 			// 4. The user selects one of the assembly tasks.
 			ArrayList<AssemblyTask> tasks = workstation.getAllPendingTasks();
-			AssemblyTask task = (AssemblyTask) ui.askWithPossibilities("Which pending task do you want to work on?", tasks.toArray().clone());
+			int taskIndex = ui.askWithPossibilities("Which pending task do you want to work on?", tasks.toArray().clone());
+			AssemblyTask task = tasks.get(taskIndex);
 			workstation.selectTask(task);
 			// 5. The system shows the assembly task information, including the
 			// sequence of actions to perform.

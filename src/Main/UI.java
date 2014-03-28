@@ -73,8 +73,7 @@ public class UI implements UIInterface{
 	}
 	
 	//TODO mss private methode maken die door beide askWith's wordt opgeroepen...
-	//TODO mocht object terug geven wel?
-	public Object askWithPossibilities(String question, Object[] possibilities){
+	public int askWithPossibilities(String question, Object[] possibilities){
 		System.out.println(question);
 		String possOutput = "";
 		int visualInt = 1;
@@ -101,7 +100,7 @@ public class UI implements UIInterface{
 			}
 
 		}
-		return possibilities[input];
+		return input;
 	}
 
 	public boolean askYesNoQuestion(String question){

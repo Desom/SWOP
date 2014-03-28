@@ -74,8 +74,6 @@ public class OrderManager {
 	 * 			The User that wants to call this method.
 	 * 			The User whose CarOrders are requested.
 	 * @return	A copy of the list of all CarOrders made by the given user. An empty list if there are none.
-	 * @throws	UserAccessException 
-	 * 			If the user is not authorized to call this method.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<CarOrder> getOrders(GarageHolder user){
@@ -93,8 +91,6 @@ public class OrderManager {
 	 * @param 	orderForm
 	 * 			The OrderForm containing all the information necessary to place a CarOrder.
 	 * @return	The CarOrder that was made with the given OrderForm.
-	 * @throws 	UserAccessException
-	 * 			If the given OrderForm is filled in by a user who is not authorized to place orders.
 	 */
 	public CarOrder placeOrder(GarageHolder user, CarModel model ,ArrayList<Option> options){
 
@@ -116,8 +112,6 @@ public class OrderManager {
 	 * 			The CarOrder whose estimated completion date is requested.
 	 * @return	A GregorianCalendar representing the estimated completion date of order.
 	 * 			Or the actual delivery date if it was already completed.
-	 * @throws 	UserAccessException
-	 * 			If the user is not authorized to call this method.
 	 */
 	public GregorianCalendar completionEstimate(CarOrder order) {
 		try{
@@ -198,8 +192,6 @@ public class OrderManager {
 	 * 			The User that wants to call this method.
 	 * 			The User whose CarOrders are requested.
 	 * @return List of the completed CarOrders placed by the given user.
-	 * @throws UserAccessException
-	 * 			If the user is not authorized to call this method.
 	 */
 	public ArrayList<CarOrder> getCompletedOrders(GarageHolder user){
 		return GetOrdersWithStatus(user,true);
@@ -213,8 +205,6 @@ public class OrderManager {
 	 * @param b
 	 * 			The boolean indicating completion
 	 * @return List of CarOrders placed by the given user.
-	 * @throws UserAccessException
-	 * 			If the user is not authorized to call this method.
 	 */
 	private ArrayList<CarOrder> GetOrdersWithStatus(GarageHolder user, boolean b){
 		ArrayList<CarOrder> result = new ArrayList<CarOrder>();

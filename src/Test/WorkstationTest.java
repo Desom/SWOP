@@ -20,23 +20,17 @@ import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
 import User.CarMechanic;
 import User.GarageHolder;
-import User.Manager;
-import User.UserAccessException;
 
 public class WorkstationTest {
 
 	private CarMechanic carMechanic;
-	private GarageHolder garageHolder;
-	private Manager manager;
 	private Workstation workstation;
 	private AssemblyTask validTask;
 	private AssemblyTask invalidTask;
 	
 	@Before
-	public void testCreate() throws UserAccessException {
+	public void testCreate() {
 		carMechanic = new CarMechanic(1);
-		garageHolder = new GarageHolder(2);
-		manager = new Manager(3);
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
 		taskTypes.add(OptionType.Airco);
 		taskTypes.add(OptionType.Body);
@@ -44,8 +38,8 @@ public class WorkstationTest {
 		workstation = new Workstation(1, taskTypes);
 		assertEquals(1, workstation.getId());
 		assertEquals(taskTypes, workstation.getTaskTypes());
-		assertTrue(workstation.getAllCompletedTasks(carMechanic).isEmpty());
-		assertTrue(workstation.getAllPendingTasks(carMechanic).isEmpty());
+		assertTrue(workstation.getAllCompletedTasks().isEmpty());
+		assertTrue(workstation.getAllPendingTasks().isEmpty());
 		
 		ArrayList<String> actions1 = new ArrayList<String>();
 		actions1.add("action1");
@@ -61,7 +55,7 @@ public class WorkstationTest {
 	}
 	
 	@Test
-	public void testCar() throws UserAccessException, IOException, CarModelCatalogException {
+	public void testCar() throws IOException, CarModelCatalogException {
 		GarageHolder holder = new GarageHolder(1);
 		CarModelCatalog catalog = new CarModelCatalog();
 		CarModel model= catalog.getCarModel("Ford");
@@ -77,12 +71,8 @@ public class WorkstationTest {
 		CarOrder order = new CarOrder(1, holder, model, selectedOptions);
 		Car car = order.getCar();
 		CarAssemblyProcess process = car.getAssemblyprocess();
-		workstation.setCurrentCar(process);
-		assertEquals(process, workstation.getCurrentCar());
-		workstation.clearCar();
-		assertEquals(null, workstation.getCurrentCar());
 		try {
-			workstation.getActiveTaskInformation(carMechanic);
+			workstation.getActiveTaskInformation();
 			fail("No IllegalStateException was thrown");
 		}
 		catch (IllegalStateException e) {
@@ -91,48 +81,35 @@ public class WorkstationTest {
 	}
 	
 	@Test
-	public void testCompleteTask() throws IllegalStateException, UserAccessException {
-		workstation.addAssemblyTask(manager, validTask);
+	public void testCompleteTask() throws IllegalStateException {
+		workstation.addAssemblyTask(validTask);
 		workstation.addCarMechanic(carMechanic);
-		workstation.selectTask(carMechanic, validTask);
-		CarMechanic otherCarMechanic = new CarMechanic(4);
-		try {
-			workstation.completeTask(garageHolder);
-			assertTrue("UserAccessException was not thrown", false);
-		}
-		catch (UserAccessException e) {
-		}
-		try {
-			workstation.completeTask(otherCarMechanic);
-			assertTrue("UserAccessException was not thrown", false);
-		}
-		catch (UserAccessException e) {
-		}
+		workstation.selectTask(validTask);
 		workstation.completeTask(carMechanic);
-		assertTrue(workstation.getAllCompletedTasks(carMechanic).contains(validTask));
-		assertTrue(workstation.getAllPendingTasks(carMechanic).isEmpty());
-		assertTrue(workstation.hasAllTasksCompleted(manager));
+		assertTrue(workstation.getAllCompletedTasks().contains(validTask));
+		assertTrue(workstation.getAllPendingTasks().isEmpty());
+		assertTrue(workstation.hasAllTasksCompleted());
 	}
 	
 	@Test
-	public void testSelectTask() throws IllegalStateException, UserAccessException, IllegalArgumentException {
-		workstation.addAssemblyTask(manager, validTask);
+	public void testSelectTask() throws IllegalStateException, IllegalArgumentException {
+		workstation.addAssemblyTask(validTask);
 		workstation.addCarMechanic(carMechanic);
 		try {
-			workstation.selectTask(carMechanic, invalidTask);
+			workstation.selectTask(invalidTask);
 			assertTrue("IllegalArgumentException was not thrown", false);
 		}
 		catch (IllegalArgumentException e) {
 		}
-		workstation.selectTask(carMechanic, validTask);
-		assertEquals(validTask.getType().toString(), workstation.getActiveTaskInformation(carMechanic).get(0));
+		workstation.selectTask(validTask);
+		assertEquals(validTask.getType().toString(), workstation.getActiveTaskInformation().get(0));
 		try {
-			workstation.selectTask(carMechanic, validTask);
+			workstation.selectTask(validTask);
 			assertTrue("IllegalStateException was not thrown", false);
 		}
 		catch (IllegalStateException e) {
 		}
-		ArrayList<String> taskInformation = workstation.getActiveTaskInformation(carMechanic);
+		ArrayList<String> taskInformation = workstation.getActiveTaskInformation();
 		assertEquals(validTask.getType().toString(), taskInformation.get(0));
 		assertEquals(validTask.getActions().get(0), taskInformation.get(1));
 		assertEquals(validTask.getActions().get(1), taskInformation.get(2));
@@ -140,55 +117,20 @@ public class WorkstationTest {
 	
 	
 	@Test
-	public void testAddTask() throws IllegalArgumentException, UserAccessException {
+	public void testAddTask() throws IllegalArgumentException {
 		try {
-			workstation.addAssemblyTask(garageHolder, validTask);
-			assertTrue("UserAccessException was not thrown", false);
-		}
-		catch (UserAccessException e) {
-		}
-		try {
-			workstation.addAssemblyTask(carMechanic, validTask);
-			assertTrue("UserAccessException was not thrown", false);
-		}
-		catch (UserAccessException e) {
-		}
-		try {
-			workstation.addAssemblyTask(manager, invalidTask);
+			workstation.addAssemblyTask(invalidTask);
 			assertTrue("IllegalArgumentException was not thrown", false);
 		}
 		catch (IllegalArgumentException e) {
 		}
-		workstation.addAssemblyTask(manager, validTask);
-		assertTrue(workstation.getAllCompletedTasks(carMechanic).isEmpty());
-		assertTrue(workstation.getAllPendingTasks(carMechanic).contains(validTask));
+		workstation.addAssemblyTask(validTask);
+		assertTrue(workstation.getAllCompletedTasks().isEmpty());
+		assertTrue(workstation.getAllPendingTasks().contains(validTask));
 	}
 	
 	@Test
-	public void testAddCarMechanic() {
-		try {
-			workstation.addCarMechanic(garageHolder);
-			assertTrue("IllegalArgumentException was not thrown", false);
-		}
-		catch (IllegalArgumentException e) {
-		}
-		try {
-			workstation.addCarMechanic(manager);
-			assertTrue("IllegalArgumentException was not thrown", false);
-		}
-		catch (IllegalArgumentException e) {
-		}
-		workstation.addCarMechanic(carMechanic);
-	}
-	
-	@Test
-	public void testCompleteTaskWithoutCarMechanic() throws IllegalStateException, UserAccessException {
-		try {
-			workstation.completeTask(manager);
-			assertTrue("IllegalArgumentExcpetion was not thrown", false);
-		}
-		catch (UserAccessException e) {
-		}
+	public void testCompleteTaskWithoutCarMechanic() throws IllegalStateException {
 		try {
 			workstation.completeTask(carMechanic);
 			assertTrue("IllegalArgumentExcpetion was not thrown", false);

@@ -28,44 +28,4 @@ public class UserTest {
 		assertEquals(2, carMechanic.getId());
 		assertEquals(3, garageHolder.getId());
 	}
-	
-	@Test
-	public void testCanPerformUser() {
-		assertFalse(user.canPerform("unexistingMethod"));
-		assertFalse(user.canPerform("advanceLine"));
-		assertFalse(user.canPerform("getAssemblyStatus"));
-		assertFalse(user.canPerform("getOrders"));
-		assertFalse(user.canPerform("placeOrder"));
-		assertFalse(user.canPerform("selectWorkstation"));
-		assertFalse(user.canPerform("completeTask"));
-	}
-	
-	@Test
-	public void testCanPerformManager() {
-		assertFalse(manager.canPerform("unexistingMethod"));
-		assert(manager.canPerform("advanceLine"));
-		assert(manager.canPerform("hasAllTasksCompleted"));
-		assert(manager.canPerform("getAssemblyStatus"));
-		assert(manager.canPerform("getFutureStatus"));
-	}
-	
-	@Test
-	public void testCanPerformCarMechanic() {
-		assertFalse(carMechanic.canPerform("unexistingMethod"));
-		assert(carMechanic.canPerform("selectWorkstation"));
-		assert(carMechanic.canPerform("getAllPendingTasks"));
-		assert(carMechanic.canPerform("selectTask"));
-		assert(carMechanic.canPerform("getActiveTaskInformation"));
-		assert(carMechanic.canPerform("completeTask"));
-	}
-	
-	@Test
-	public void testCanPerformGarageHolder() {
-		assertFalse(garageHolder.canPerform("unexistingMethod"));
-		assert(garageHolder.canPerform("getOrders"));
-		assert(garageHolder.canPerform("getAllModels"));
-		assert(garageHolder.canPerform("placeOrder"));
-		assert(garageHolder.canPerform("getCompletionEstimate"));
-	}
-
 }

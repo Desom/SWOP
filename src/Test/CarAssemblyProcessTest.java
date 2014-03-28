@@ -18,7 +18,7 @@ import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
 import Order.OrderManager;
 
-public class CarAssemblyProccessTest {
+public class CarAssemblyProcessTest {
 
 	Workstation w1;
 	Workstation w2;

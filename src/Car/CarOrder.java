@@ -80,8 +80,6 @@ public class CarOrder {
 	 * 			The user that has ordered the delivery
 	 * @param 	deliveredTime
 	 * 			The time this car was delivered
-	 * @throws UserAccessException
-	 * 			If the user is not authorized to call this method.
 	 */
 	public void setDeliveredTime(GregorianCalendar deliveredTime) {
 			if(!this.isCompleted())

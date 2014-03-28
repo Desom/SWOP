@@ -3,11 +3,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import Car.Car;
 import Car.CarOrder;
 import Car.OptionType;
 import Main.InternalFailureException;
-import User.User;
 
 
 public class AssemblyLine {
@@ -27,7 +25,6 @@ public class AssemblyLine {
 	/**
 	 * 
 	 * @return A linked list containing all the workStations.
-	 * @throws UserAccessException If this user is not allowed to execute this method.
 	 */
 	public LinkedList<Workstation> getAllWorkstations(){
 		return new LinkedList<Workstation>(workstations.keySet());
@@ -37,7 +34,6 @@ public class AssemblyLine {
 	 * 
 	 * @param user The user trying to advance the line
 	 * @param time The time of the previous iteration. (eg the last work took 45 min instead of an hour)
-	 * @throws UserAccessException
 	 * @throws DoesNotExistException
 	 * @throws CannotAdvanceException if there are workstations that are blocking the assembly line.
 	 * @throws InternalFailureException 
@@ -96,7 +92,6 @@ public class AssemblyLine {
 	 * 
 	 * @param user The user that is to be added to the workstation
 	 * @param workStation_id The ID of the workstation the user should be added to.
-	 * @throws UserAccessException 
 	 * @throws InternalFailureException 
 	 * @throws DoesNotExistException 
 	 * @throws Exception If the Carmechanic could not be appointed to the workstation.
@@ -117,7 +112,6 @@ public class AssemblyLine {
 	 * @param id The ID of the desired workstation
 	 * @return The workstation that matches the specified ID
 	 * @throws DoesNotExistException when no workstation with the specified ID exists.
-	 * @throws UserAccessException 
 	 * @throws InternalFailureException 
 	 */
 	public Workstation selectWorkstationById(int id) throws InternalFailureException{
@@ -166,7 +160,6 @@ public class AssemblyLine {
 	 * 
 	 * @param user The user requesting the assemblyStatusview
 	 * @return An AssemblyStatusView representing the current status
-	 * @throws UserAccessException if the user is not allowed to invoke this method
 	 */
 	public AssemblyStatusView currentStatus(){
 			ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkstations());
@@ -181,7 +174,6 @@ public class AssemblyLine {
 	 * @param user The user requesting the assemblyStatusview
 	 * @param time The time that has past since the last advanceLine
 	 * @return An AssemblyStatusView representing the future status
-	 * @throws UserAccessException if the user is not allowed to invoke this method
 	 * @throws InternalFailureException 
 	 * @throws DoesNotExistException If a workstation with a non existing ID is requested
 	 */

@@ -15,10 +15,10 @@ public class Configuration {
 	 * 			The car model used for this configuration
 	 * @param	options
 	 * 			The options used for this configuration
-	 * @throws	Exception
+	 * @throws	IllegalArgumentException
 	 * 			If the given options are conflicting with each other
 	 */
-	public Configuration(CarModel model, ArrayList<Option> options) {
+	public Configuration(CarModel model, ArrayList<Option> options) throws IllegalArgumentException {
 		possible(model, options);
 		this.model = model;
 		this.options = new HashMap<OptionType,Option>();
@@ -50,7 +50,7 @@ public class Configuration {
 	 * 
 	 * @param	optionlist
 	 * 			The list of all options to be added to this configuration
-	 * @throws	Exception
+	 * @throws	IllegalArgumentException
 	 * 			If there are conflicting options to be added
 	 */
 	private void addall(ArrayList<Option> optionlist) throws IllegalArgumentException {

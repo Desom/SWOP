@@ -3,7 +3,6 @@ import java.util.ArrayList;
 
 import Car.OptionType;
 import User.CarMechanic;
-import User.User;
 
 public class Workstation {
 
@@ -102,8 +101,6 @@ public class Workstation {
 	 * 			The AssemblyTask that will be added.
 	 * @throws	IllegalArgumentException
 	 * 			If task does not match with the task types list.
-	 * @throws	UserAccessException
-	 * 			If the user is not authorized to call the given method.
 	 */
 	public void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
 		if (this.taskTypes.contains(task.getType()))
@@ -121,8 +118,6 @@ public class Workstation {
 	 * 			The task that the user wants to work on.
 	 * @throws	IllegalStateException
 	 * 			If another task is still in progress.
-	 * @throws	UserAccessException
-	 * 			If the user is not authorized to call the given method.
 	 * @throws	IllegalArgumentException
 	 * 			If the selected task is not a pending task.
 	 */
@@ -141,9 +136,6 @@ public class Workstation {
 	 * 
 	 * @param	user
 	 * 			The user that wants to call this method.
-	 * @throws	UserAccessException
-	 * 			If the user is not authorized to call the given method.
-	 * 			If the user is not operating at this workstation.
 	 * @throws	IllegalStateException
 	 * 			If there is no active task to complete in this workstation.
 	 * 			If there is no car mechanic to complete the active task.
@@ -171,8 +163,6 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A copy of the list of all pending assembly tasks.
-	 * @throws	UserAccessException
-	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllPendingTasks(){
@@ -189,8 +179,6 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A copy of the list of all completed assembly tasks.
-	 * @throws	UserAccessException
-	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllCompletedTasks(){
@@ -207,8 +195,6 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A copy of the list of all assembly tasks.
-	 * @throws	UserAccessException
-	 * 			If the user is not authorized to call the given method.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllTasks(){
@@ -221,8 +207,6 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	True if all assembly tasks are completed, otherwise false.
-	 * @throws	UserAccessException
-	 * 			If the user is not authorized to call the given method.
 	 */
 	public boolean hasAllTasksCompleted(){
 		for (AssemblyTask task : this.allTasks)
@@ -237,8 +221,6 @@ public class Workstation {
 	 * @param	user
 	 * 			The user that wants to call this method.
 	 * @return	A list with on the first line the task type of the active assembly task. The following lines indicate the actions needed to complete this task.
-	 * @throws	UserAccessException
-	 * 			If there is no active assembly task.
 	 * @throws	IllegalStateException
 	 * 			If the user is not authorized to call the given method.
 	 */

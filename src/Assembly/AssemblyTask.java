@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import Car.OptionType;
 
 public class AssemblyTask {
-	//TODO documentatie
+	
 	private ArrayList<String> actions;
 	private OptionType type;
 	private boolean isCompleted;
@@ -16,9 +16,9 @@ public class AssemblyTask {
 	 * The created assembly task is not completed by default.
 	 * 
 	 * @param	actions
-	 * 			A list of actions that is needed to complete this AssemblyTask.
+	 * 			A list of actions that is needed to complete this AssemblyTask
 	 * @param	type
-	 * 			A string that indicates the type of this AssemblyTask.
+	 * 			An enum object that indicates the type of this AssemblyTask
 	 */
 	public AssemblyTask(ArrayList<String> actions, OptionType type) {
 		this(actions, type, false);
@@ -31,7 +31,7 @@ public class AssemblyTask {
 	 * @param	actions
 	 * 			A list of actions that is needed to complete this AssemblyTask.
 	 * @param	type
-	 * 			A string that indicates the type of this AssemblyTask.
+	 * 			An enum object that indicates the type of this AssemblyTask.
 	 * @param	isCompleted
 	 * 			A boolean telling if this assembly task is already completed or not
 	 */
@@ -44,7 +44,7 @@ public class AssemblyTask {
 	/**
 	 * Gives the type of this assembly task.
 	 * 
-	 * @return	The type of this AssemblyTask.
+	 * @return	The type of this AssemblyTask indicated by an enum object.
 	 */
 	public OptionType getType() {
 		return type;
@@ -53,11 +53,11 @@ public class AssemblyTask {
 	/**
 	 * Sets the type of this assembly task. Only used in constructor.
 	 * 
-	 * @param	type2
-	 * 			The string that indicates the type of this AssemblyTask.
+	 * @param	type
+	 * 			The enum object that indicates the type of this AssemblyTask.
 	 */
-	private void setType(OptionType type2) { // DEZE MOETEN OVEREEN KOMEN MET WORKSTATION
-		this.type = type2;
+	private void setType(OptionType type) { // DEZE MOETEN OVEREEN KOMEN MET WORKSTATION
+		this.type = type;
 	}
 	
 	/**

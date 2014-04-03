@@ -7,9 +7,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import Car.CarModel;
-import Car.Option;
 import Car.OptionType;
 import Order.CarModelCatalogException;
+import Order.Option;
 
 
 public class Test_CarModel {

@@ -14,10 +14,10 @@ import Assembly.Workstation;
 import Car.Car;
 import Car.CarModel;
 import Car.CarOrder;
-import Car.Option;
 import Car.OptionType;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
+import Order.Option;
 import User.CarMechanic;
 import User.GarageHolder;
 

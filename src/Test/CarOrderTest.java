@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import Car.CarModel;
 import Car.CarOrder;
-import Car.Option;
 import Order.CarModelCatalog;
+import Order.Option;
 import User.GarageHolder;
 
 public class CarOrderTest {

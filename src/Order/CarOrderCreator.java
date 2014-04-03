@@ -10,7 +10,6 @@ import java.util.GregorianCalendar;
 
 import Car.CarModel;
 import Car.CarOrder;
-import Car.Option;
 
 public class CarOrderCreator {
 	//TODO is dit conform met het Factory pattern ???

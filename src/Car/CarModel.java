@@ -2,6 +2,7 @@ package Car;
 import java.util.ArrayList;
 
 import Order.CarModelCatalogException;
+import Order.Option;
 
 
 public class CarModel {

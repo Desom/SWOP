@@ -3,8 +3,8 @@ package Assembly;
 import java.util.ArrayList;
 
 import Car.Car;
-import Car.Option;
 import Car.OptionType;
+import Order.Option;
 
 public class CarAssemblyProcess {
 	

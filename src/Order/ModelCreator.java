@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import Car.CarModel;
-import Car.Option;
 
 public class ModelCreator {
 	String path;

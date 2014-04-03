@@ -10,9 +10,9 @@ import org.junit.Test;
 import Car.Car;
 import Car.CarModel;
 import Car.CarOrder;
-import Car.Option;
 import Order.CarModelCatalog;
 import Order.CarModelCatalogException;
+import Order.Option;
 import User.GarageHolder;
 
 public class CarTest {

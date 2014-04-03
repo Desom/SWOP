@@ -13,8 +13,8 @@ import org.junit.rules.ExpectedException;
 
 import Car.CarModel;
 import Car.CarOrder;
-import Car.Option;
 import Order.CarModelCatalog;
+import Order.Option;
 import Order.OrderManager;
 import User.GarageHolder;
 

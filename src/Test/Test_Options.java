@@ -5,9 +5,9 @@ import java.util.ArrayList;
 
 import org.junit.Test;
 
-import Car.Option;
 import Car.OptionType;
 import Order.CarModelCatalogException;
+import Order.Option;
 
 
 public class Test_Options {

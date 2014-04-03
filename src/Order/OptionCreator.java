@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 
 import Car.OptionType;
-import Car.Option;
 
 public class OptionCreator {
 	
@@ -55,7 +54,7 @@ public class OptionCreator {
 		comp.addAll(allOptions.keySet());
 		checkAndRemove(comp,incomp);
 		sameTypeFilter(comp,incomp,input[1]);
-		allOptions.put(input[0], createOption(input[0],input[1], comp,incomp));
+		allOptions.put(input[0], createOption(input[0],input[1], incomp));
 	}
 	private void addAll(ArrayList<String> incomp, String[] split) {
 		for(String i: split) incomp.add(i);
@@ -102,12 +101,18 @@ public class OptionCreator {
 	 * @return the made option
 	 * @throws CarModelCatalogException The option type is not supported
 	 */
-	private Option createOption(String description, String type, ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
+	private Option createOption(String description, String type, ArrayList<String> incomp) throws CarModelCatalogException {
 		try{
-		return new Option(description, collectOption(comp), collectOption(incomp), OptionType.valueOf(type));
+		Option result=  new Option(description,  OptionType.valueOf(type));
+		for(Option opt :collectOption(incomp)){
+			result.setIncompatible(opt);
+			opt.setIncompatible(result);
+		}
+		return result;
 		}catch(IllegalArgumentException e){
 		throw new CarModelCatalogException("no valid type: " + type);
 		}
+		
 	}
 	/**
 	 *  makes a list of option made of a list of descriptions

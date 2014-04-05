@@ -11,22 +11,26 @@ import domain.configuration.Option;
  */
 public class ConflictPolicy extends Policy {
 	
-	ConflictPolicy(Policy successor) {
+	public ConflictPolicy(Policy successor) {
 		super(successor);
 	}
 	
-	@Override
-	public boolean check(Configuration configuration) {
+	private boolean conflictsCheck(Configuration configuration){
 		ArrayList<Option> allOptions = configuration.getAllOptions();
 		for (int i = 0; i < allOptions.size(); i++)
 			for (int j = i + 1; j < allOptions.size(); j++)
 				if (allOptions.get(i).conflictsWith(allOptions.get(j)))
 					return false;
-		return proceed(configuration);
+		return true;
+	}
+	
+	@Override
+	protected boolean check(Configuration configuration) {
+		return conflictsCheck(configuration) && proceed(configuration);
 	}
 
 	@Override
 	protected boolean checkComplete(Configuration configuration) {
-		return check(configuration);
+		return conflictsCheck(configuration) && proceedComplete(configuration);
 	}
 }

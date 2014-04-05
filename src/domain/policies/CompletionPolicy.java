@@ -19,6 +19,15 @@ public class CompletionPolicy extends Policy{
 		this.requiredTypes = requiredTypes;
 	}
 
+	private boolean completionCheck(Configuration configuration){
+		ArrayList<Option> allOptions = configuration.getAllOptions();
+		ArrayList<OptionType> remainingTypes = (ArrayList<OptionType>) requiredTypes.clone();
+		for (Option option : allOptions)
+			remainingTypes.remove(option.getType());
+		
+		return remainingTypes.isEmpty();
+	}
+	
 	@Override
 	protected boolean check(Configuration configuration) {
 		return proceed(configuration);
@@ -26,14 +35,7 @@ public class CompletionPolicy extends Policy{
 
 	@Override
 	protected boolean checkComplete(Configuration configuration) {
-		ArrayList<Option> allOptions = configuration.getAllOptions();
-		ArrayList<OptionType> remainingTypes = (ArrayList<OptionType>) requiredTypes.clone();
-		for (Option option : allOptions)
-			remainingTypes.remove(option.getType());
-		if (remainingTypes.isEmpty())
-			return proceed(configuration);
-		else
-			return false;
+		return completionCheck(configuration) && proceedComplete(configuration);
 	}
 
 }

@@ -15,8 +15,7 @@ public class DependancyPolicy extends Policy {
 	// TODO implentatie in Option nodig om dependencies op te vragen, dependencies worden ook nog niet ingelezen.
 	@Override
 	protected boolean check(Configuration configuration) {
-		// TODO Auto-generated method stub
-		return false;
+		return proceed(configuration);
 	}
 
 	@Override

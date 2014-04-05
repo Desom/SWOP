@@ -258,6 +258,7 @@ public class Controller implements CommunicationTool{
 			// By restarting the while-loop.
 		}
 		// 9. The use case ends here.
+		workstation.removeCarMechanic();
 		ui.display("You are now logged off.");
 	}
 

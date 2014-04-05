@@ -83,13 +83,16 @@ public class Workstation {
 	 * 
 	 * @param	carMechanic
 	 * 			The desired car mechanic to operate at this Workstation.
-	 * @throws 	IllegalStateException
-	 * 			If there is already a car mechanic operating at this Workstation.
-	 * @throws	IllegalArgumentException
-	 * 			If the given user is not a car mechanic.
 	 */
-	public void addCarMechanic(CarMechanic carMechanic) throws IllegalStateException, IllegalArgumentException {
+	public void addCarMechanic(CarMechanic carMechanic) {
 		this.carMechanic = carMechanic;
+	}
+	
+	/**
+	 * Revmoves the current car mechanic from this workstation.
+	 */
+	public void removeCarMechanic() {
+		this.carMechanic = null;
 	}
 
 	/**

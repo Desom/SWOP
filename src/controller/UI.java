@@ -145,14 +145,14 @@ public class UI implements UIInterface{
 	}
 	public void fillIn(OrderForm order) {
 		for(String i: order.getOptionTypes()){
-			order.setOption(this.askWithPossibilities("Geef uw type "+i+" in", order.getPossibleOptionsOfType(i)));
+			order.setOption(this.askWithPossibilities("Enter your type of "+i+":", order.getPossibleOptionsOfType(i)));
 		}
 
 	}
 	@Override
 	public void displayPendingCarOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList) {
-		display("your pending orders:");
+		display("Your pending orders:");
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
 			display(tempIdList.get(i) +" will be delivered around:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
 		}
@@ -161,7 +161,7 @@ public class UI implements UIInterface{
 	@Override
 	public void displayCompletedCarOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList) {
-		display("your completed orders:");
+		display("Your completed orders:");
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
 			display(tempIdList.get(i) +" is delivered on:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
 		}

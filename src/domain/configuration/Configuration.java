@@ -69,7 +69,8 @@ public class Configuration {
 	 * 
 	 * @return	the list of all options of the configuration
 	 */
-	protected ArrayList<Option> getAllOptions(){
+	//TODO echte clonen van option objecten?
+	public ArrayList<Option> getAllOptions(){
 		return new ArrayList<Option>(options.values());
 	}
 	

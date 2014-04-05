@@ -40,23 +40,23 @@ public class Controller implements CommunicationTool{
 		while (true) {
 
 			ArrayList<String> list = new ArrayList<String>();
-			list.add("mechanic");
-			list.add("garageholder");
-			list.add("manager");
-			list.add("exit");
+			list.add("Car mechanic");
+			list.add("Garage holder");
+			list.add("Manager");
+			list.add("Exit");
 			String antwoord =ui.askWithPossibilities("Tell us what you are.", list);
-			if(antwoord.equals("mechanic"))
+			if(antwoord.equals("Car mechanic"))
 				this.carMechanicCase(new CarMechanic(12345));
-			if(antwoord.equals("manager")){
+			if(antwoord.equals("Manager")){
 				try {
 					this.managerCase(new Manager(12345));
 				} catch (InternalFailureException e) {
 					ui.display("Internal Error");
 				}
 			}
-			if(antwoord.equals("garageholder"))
+			if(antwoord.equals("Garage holder"))
 				this.garageHolderCase(new GarageHolder(2));
-			if(antwoord.equals("exit"))
+			if(antwoord.equals("Exit"))
 				break;
 		}
 	}
@@ -68,13 +68,13 @@ public class Controller implements CommunicationTool{
 		while(true){
 			String actionRequest = "What do you want to do?";
 			ArrayList<String> actionPoss = new ArrayList<String>();
-			actionPoss.add("advanceLine");
-			actionPoss.add("quit");
+			actionPoss.add("Advance assembly line");
+			actionPoss.add("Quit");
 
 			String action = ui.askWithPossibilities(actionRequest, actionPoss);
-			if("advanceLine".equals(action))
+			if("Advance assembly line".equals(action))
 				this.actionAdvanceLine(user, assembly);
-			if("quit".equals(action)){
+			if("Quit".equals(action)){
 				ui.display("You are now logged off.");
 				return;
 			}
@@ -85,7 +85,7 @@ public class Controller implements CommunicationTool{
 		boolean repeat = true;
 		while(repeat){
 
-			int timeSpent = ui.askForInteger("Give the time spent during the current phase. 0 if it's the begin of the day.(minutes)", 0);
+			int timeSpent = ui.askForInteger("Give the time spent during the current phase. 0 if it's the beginning of the day.(minutes)", 0);
 
 			//2. The system presents an overview of the current assembly line status,
 			//as well as a view of the future assembly line status (as it would be after

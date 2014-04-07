@@ -14,14 +14,31 @@ public class DependancyPolicy extends Policy {
 	
 	// TODO implentatie in Option nodig om dependencies op te vragen, dependencies worden ook nog niet ingelezen.
 	@Override
-	protected boolean check(Configuration configuration) {
-		return proceed(configuration);
+	protected void check(Configuration configuration) {
+		if(....(configuration)){
+			proceed(configuration);
+		}else{
+			try{
+				proceed(configuration);
+			}catch(NonValidConfigurationException e){
+				e.addMessage("There are options in the configuration that are dependent on other options that are not chosen.");
+			}
+			throw new NonValidConfigurationException("There are options in the configuration that are dependent on other options that are not chosen.");
+		}
 	}
 
 	@Override
-	protected boolean checkComplete(Configuration configuration) {
-		// TODO Auto-generated method stub
-		return false;
+	protected void checkComplete(Configuration configuration) {
+		if(....(configuration)){
+			proceedComplete(configuration);
+		}else{
+			try{
+				proceedComplete(configuration);
+			}catch(NonValidConfigurationException e){
+				e.addMessage("There are options in the configuration that are dependent on other options that are not chosen.");
+			}
+			throw new NonValidConfigurationException("There are options in the configuration that are dependent on other options that are not chosen.");
+		}
 	}
 
 }

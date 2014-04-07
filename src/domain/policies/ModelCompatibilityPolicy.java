@@ -26,13 +26,31 @@ public class ModelCompatibilityPolicy extends Policy {
 	}
 	
 	@Override
-	protected boolean check(Configuration configuration) {
-		return compatibilityCheck(configuration) && proceed(configuration);
+	protected void check(Configuration configuration) throws NonValidConfigurationException{
+		if(compatibilityCheck(configuration)){
+			proceed(configuration);
+		}else{
+			try{
+				proceed(configuration);
+			}catch(NonValidConfigurationException e){
+				e.addMessage("The specified options are not compatible with the specified model");
+			}
+			throw new NonValidConfigurationException("The specified options are not compatible with the specified model");
+		}
 	}
 
 	@Override
-	protected boolean checkComplete(Configuration configuration) {
-		return compatibilityCheck(configuration) && proceedComplete(configuration);
+	protected void checkComplete(Configuration configuration) throws NonValidConfigurationException{
+		if(compatibilityCheck(configuration)){
+			proceedComplete(configuration);
+		}else{
+			try{
+				proceedComplete(configuration);
+			}catch(NonValidConfigurationException e){
+				e.addMessage("The specified options are not compatible with the specified model");
+			}
+			throw new NonValidConfigurationException("The specified options are not compatible with the specified model");
+		}
 	}
 
 }

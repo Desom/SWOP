@@ -11,8 +11,9 @@ import domain.configuration.OptionType;
  *
  */
 public class CompletionPolicy extends Policy{
-	
+
 	private ArrayList<OptionType> requiredTypes;
+	private ArrayList<OptionType> missingTypes;
 
 	public CompletionPolicy(Policy successor, ArrayList<OptionType> requiredTypes) {
 		super(successor);
@@ -22,20 +23,41 @@ public class CompletionPolicy extends Policy{
 	private boolean completionCheck(Configuration configuration){
 		ArrayList<Option> allOptions = configuration.getAllOptions();
 		ArrayList<OptionType> remainingTypes = (ArrayList<OptionType>) requiredTypes.clone();
-		for (Option option : allOptions)
+		for (Option option : allOptions){
 			remainingTypes.remove(option.getType());
-		
+		}
+		this.missingTypes = remainingTypes;
 		return remainingTypes.isEmpty();
-	}
-	
-	@Override
-	protected boolean check(Configuration configuration) {
-		return proceed(configuration);
 	}
 
 	@Override
-	protected boolean checkComplete(Configuration configuration) {
-		return completionCheck(configuration) && proceedComplete(configuration);
+	protected void check(Configuration configuration) throws NonValidConfigurationException{
+		proceed(configuration);
+	}
+
+	@Override
+	protected void checkComplete(Configuration configuration) throws NonValidConfigurationException{
+		if(completionCheck(configuration)){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
+			proceedComplete(configuration);
+		}else{ // in dit geval moet gecatched worden en aangepast
+			try{
+				proceedComplete(configuration);
+			}catch(NonValidConfigurationException e){
+				e.addMessage(buildMessage());
+				throw e;
+			}
+			throw new NonValidConfigurationException(buildMessage());
+		}
+	}
+	
+	
+	
+	private String buildMessage(){
+		String message = "Your configuration is missing the following types: \n";
+		for(OptionType t : missingTypes){
+			message += "* " + t.toString() + "\n";
+		}
+		return message;
 	}
 
 }

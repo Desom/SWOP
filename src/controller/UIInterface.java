@@ -24,11 +24,11 @@ public interface UIInterface {
 
 	void fillIn(OrderForm order);
 
-	int askWithPossibilities(String string, Object[] clone);
+	int askWithPossibilities(String string, Object[] objects);
 
-	void display(Object[] array);
+	void display(Object[] aobjectsrray);
 
-	String askWithPossibilities(String string, List<String> modelList);
+	String askWithPossibilities(String string, List<String> possibilities);
 
 
 }

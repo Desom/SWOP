@@ -1,6 +1,7 @@
 package domain.assembly;
 import java.util.ArrayList;
 
+import domain.InternalFailureException;
 import domain.configuration.OptionType;
 import domain.user.CarMechanic;
 
@@ -11,6 +12,8 @@ public class Workstation {
 	private CarMechanic carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
+	private AssemblyLine assemblyLine;
+	private int timeSpend;
 
 	/**
 	 * Constructor of Workstation.
@@ -21,19 +24,23 @@ public class Workstation {
 	 * @param	taskTypes
 	 * 			the task types that can be handled at this workstation
 	 */
-	public Workstation(int id, ArrayList<OptionType> taskTypes) {
+	public Workstation(AssemblyLine assemblyLine, int id, ArrayList<OptionType> taskTypes) {
+		this.assemblyLine = assemblyLine;
 		this.setId(id);
 		this.taskTypes = taskTypes;
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
+		this.resetTimeSpend();
 	}
 
+
 	/**
-	 * Clears this workstation of tasks and the active task. Used by the AssemblyLine object in advanceLine().
+	 * Clears this workstation of tasks and the active task and resets the time spend for the current car. Used by the AssemblyLine object in advanceLine().
 	 */
 	protected void clear() {
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
+		this.resetTimeSpend();
 	}
 
 	/**
@@ -89,7 +96,9 @@ public class Workstation {
 	}
 	
 	/**
-	 * Revmoves the current car mechanic from this workstation.
+	 * Removes the current car mechanic from this workstation.
+	 *
+	 * TODO : mag een CarMechanic weg als er een activeTask is?
 	 */
 	public void removeCarMechanic() {
 		this.carMechanic = null;
@@ -137,17 +146,18 @@ public class Workstation {
 	/**
 	 * Completes the assembly task that the operating car mechanic is working on.
 	 * 
-	 * @param	user
+	 * @param	carMechanic
 	 * 			The user that wants to call this method.
 	 * @throws	IllegalStateException
 	 * 			If there is no active task to complete in this workstation.
 	 * 			If there is no car mechanic to complete the active task.
 	 */
-	public void completeTask(CarMechanic user) throws IllegalStateException {
-		if (this.getCarMechanic().getId() != user.getId())
+	private void completeTask(CarMechanic carMechanic) throws IllegalStateException {
+		if (this.getCarMechanic().getId() != carMechanic.getId())
 			throw new IllegalStateException("This user is not assigned to this workstation");
+		//TODO is dit echt IllegalStateException? mss IllegalArgument fzo?
 		if (this.activeTask != null) {
-			if (carMechanic != null) {
+			if (this.carMechanic != null) {
 				this.activeTask.completeTask();
 				this.activeTask = null;
 			}
@@ -159,7 +169,43 @@ public class Workstation {
 			throw new IllegalStateException("There is no active task in this workstation");
 		}
 	}
+	
+	/**
+	 * Completes the assembly task that the operating car mechanic is working on.
+	 * 
+	 * @param 	carMechanic
+	 * 			The user that wants to call this method.
+	 * @param 	timeSpend
+	 * 			The amount of minutes it took to complete the current activeTask.
+	 * @throws 	InternalFailureException 
+	 * 			If we made a coding error //TODO goede beschrijving?
+	 * @throws 	IllegalStateException
+	 * 			If there is no active task to complete in this workstation.
+	 * 			If there is no car mechanic to complete the active task.
+	 */
+	public void completeTask(CarMechanic carMechanic, int timeSpend) throws InternalFailureException{
+		this.completeTask(carMechanic);
+		this.addTimeSpend(timeSpend);
+		try {
+			this.assemblyLine.advanceLine();
+		} catch (CannotAdvanceException e) {
+		}
+	}
 
+	public int getTimeSpend() {
+		return timeSpend;
+	}
+
+
+	private void addTimeSpend(int timeSpend) {
+		this.timeSpend += timeSpend;
+		
+	}
+	
+	private void resetTimeSpend() {
+		this.timeSpend = 0;	
+	}
+	
 	/**
 	 * Gives a list of all pending assembly tasks.
 	 * 

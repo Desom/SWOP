@@ -1,6 +1,7 @@
 package domain.policies;
 
 import domain.configuration.Configuration;
+import domain.configuration.Option;
 
 /**
  * This policy class checks if certain options in a configuration need other options and if the configuration also has these options.
@@ -12,7 +13,6 @@ public class DependancyPolicy extends Policy {
 		super(successor);
 	}
 	
-	// TODO implentatie in Option nodig om dependencies op te vragen, dependencies worden ook nog niet ingelezen.
 	@Override
 	protected boolean check(Configuration configuration) {
 		return proceed(configuration);
@@ -20,8 +20,10 @@ public class DependancyPolicy extends Policy {
 
 	@Override
 	protected boolean checkComplete(Configuration configuration) {
-		// TODO Auto-generated method stub
-		return false;
+		for(Option i: configuration.getAllOptions()){
+			if(!i.dependancyCheck(configuration)) return false;
+		}
+		return proceed(configuration);
 	}
 
 }

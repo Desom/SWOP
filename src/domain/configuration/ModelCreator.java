@@ -23,7 +23,7 @@ public class ModelCreator {
 
 	/**
 	 * Create the models from a file
-	 * @param path of the file 
+	 * @param optionpath of the file 
 	 * @return 
 	 * @return 
 	 * @throws IOException Problems with accessing file

@@ -10,23 +10,25 @@ import java.util.List;
 public class OptionCreator {
 	
 	private HashMap<String,Option> allOptions;
-	String path;
+	private String optionpath;
+	private String dependancypath;
 	
 	public OptionCreator(){
-		this("data/options.txt");
+		this("data/options.txt","data/dependencies.txt");
 	}
-	public OptionCreator(String path){
-		this.path = path;
+	public OptionCreator(String optionpath,String dependancypath){
+		this.optionpath = optionpath;
+		this.dependancypath = dependancypath;
 	}
 	/***
 	 * Create the options from a file
-	 * @param path of the file 
+	 * @param optionpath of the file 
 	 * @return 
 	 * @throws IOException Problems with accessing file
 	 * @throws CarModelCatalogException an optionline is not in the right format
 	 */
 	public ArrayList<Option> createOptions() throws IOException, CarModelCatalogException{
-		BufferedReader input = new BufferedReader(new FileReader(path));
+		BufferedReader input = new BufferedReader(new FileReader(optionpath));
 		this.allOptions = new HashMap<String,Option>();
 		String inputline = input.readLine();
 		while( inputline!=null){
@@ -34,7 +36,21 @@ public class OptionCreator {
 			inputline = input.readLine();
 		}
 		input.close();
+		input = new BufferedReader(new FileReader(dependancypath));
+		while( inputline!=null){
+			processDependancyLine(inputline);
+			inputline = input.readLine();
+		}
+		input.close();
 		return new ArrayList<Option>(allOptions.values());
+	}
+	private void processDependancyLine(String inputline) throws CarModelCatalogException {
+		String[] input=inputline.split(";");
+		if(input.length != 2) throw new CarModelCatalogException("Dependancy: wrong input format: " + inputline);
+		if(!allOptions.containsKey(input[0])) throw new CarModelCatalogException("Option does not exist: " + input[0]);
+		ArrayList<String> optionNames = new ArrayList<String>();
+		for(String j:input[1].split(","))optionNames.add(j);
+		allOptions.get(input[0]).setDependancy(collectOption(optionNames));
 	}
 	/**
 	 * proccessing a line which stores the information of a single option

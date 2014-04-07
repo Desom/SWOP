@@ -32,13 +32,14 @@ public class AssemblyLine {
 
 	/**
 	 * 
-	 * @param user The user trying to advance the line
-	 * @param time The time of the previous iteration. (eg the last work took 45 min instead of an hour)
 	 * @throws DoesNotExistException
-	 * @throws CannotAdvanceException if there are workstations that are blocking the assembly line.
+	 * @throws CannotAdvanceException 
+	 * 				if there are workstations that are blocking the assembly line.
 	 * @throws InternalFailureException 
+	 * 				if we made a coding error
+	 * TODO InternalFailureException beschrijving in orde?
 	 */
-	public void advanceLine(int time) throws CannotAdvanceException, InternalFailureException{
+	public void advanceLine() throws CannotAdvanceException, InternalFailureException{
 		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 		boolean isReady = true;
 		CannotAdvanceException cannotAdvance = new CannotAdvanceException();
@@ -48,13 +49,17 @@ public class AssemblyLine {
 				cannotAdvance.addBlockingWorkstation(w);
 			}
 		}
-		if(isReady){
+		if(!isReady){
+			throw cannotAdvance;
+		}
+		try{
 			// move huidige cars 1 plek
 			//neem CarOrder van WorkStation 3
 			Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations());
+			CarOrder finished = null;
 			if(workstations.get(workstationLast) != null){
-				CarOrder finished = workstations.get(workstationLast).getCar().getOrder();
-				finished.setDeliveredTime(this.schedule.getCurrentTime());
+				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule no moet worden geupdate.
+				finished = workstations.get(workstationLast).getCar().getOrder();
 			}
 			for(int i = getAllWorkstations().size(); i>1; i--){
 				Workstation workstationNext = selectWorkstationById(i);
@@ -68,10 +73,17 @@ public class AssemblyLine {
 				}
 			}
 
+			//zoek de tijd die nodig was om alle tasks uit te voeren.
+			int timeSpendForTasks = 0;
+			for(Workstation workstation : this.getAllWorkstations()){
+				if(workstation.getTimeSpend() > timeSpendForTasks)
+					timeSpendForTasks = workstation.getTimeSpend();
+			}
+
 			//voeg nieuwe car toe.
 			CarAssemblyProcess newCar = null;
-			if(this.schedule.seeNextCarOrder(time) != null){
-				newCar = this.schedule.getNextCarOrder(time).getCar().getAssemblyprocess();
+			if(this.schedule.seeNextCarOrder(timeSpendForTasks) != null){
+				newCar = this.schedule.getNextCarOrder(timeSpendForTasks).getCar().getAssemblyprocess();
 			}
 
 			Workstation workstation1 = selectWorkstationById(1);
@@ -82,8 +94,11 @@ public class AssemblyLine {
 					workstation1.addAssemblyTask(t);
 				}
 			}
-		}else{
-			throw cannotAdvance;
+
+			finished.setDeliveredTime(this.schedule.getCurrentTime());
+		}
+		catch(DoesNotExistException e){
+			throw new InternalFailureException("Suddenly a Workstation disappeared while that could not be possible.");
 		}
 	}
 
@@ -112,17 +127,17 @@ public class AssemblyLine {
 	 * @param id The ID of the desired workstation
 	 * @return The workstation that matches the specified ID
 	 * @throws DoesNotExistException when no workstation with the specified ID exists.
-	 * @throws InternalFailureException 
 	 */
-	public Workstation selectWorkstationById(int id) throws InternalFailureException{
-			Workstation selected = null;
-			for(Workstation w : getAllWorkstations()){
-				if(w.getId() == id)
-					selected = w;
-			}
-			if(selected == null)
-				throw new InternalFailureException("No workstation exists with ID: " + id);
-			return selected;
+	public Workstation selectWorkstationById(int id) throws DoesNotExistException{
+		Workstation selected = null;
+		for(Workstation w : getAllWorkstations()){
+			if(w.getId() == id)
+				selected = w;
+		}
+		if(selected == null)
+			throw new DoesNotExistException("No workstation exists with ID: " + id);
+		// heb dit veranderd van InternalFailureException naar DoesNotExistException omdat InternalFailureException niet van toepassing leek.
+		return selected;
 	}
 
 	/**
@@ -135,19 +150,19 @@ public class AssemblyLine {
 		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);
 		taskTypes1.add(OptionType.Color);
-		Workstation workStation1 = new Workstation(1, taskTypes1);
+		Workstation workStation1 = new Workstation(this, 1, taskTypes1);
 
 		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
 		taskTypes2.add(OptionType.Engine);
 		taskTypes2.add(OptionType.Gearbox);
-		Workstation workStation2 = new Workstation(2, taskTypes2);
+		Workstation workStation2 = new Workstation(this, 2, taskTypes2);
 
 		ArrayList<OptionType> taskTypes3 = new ArrayList<OptionType>();
 		taskTypes3.add(OptionType.Seats);
 		taskTypes3.add(OptionType.Airco);
 		taskTypes3.add(OptionType.Wheels);
 		taskTypes3.add(OptionType.Spoiler);
-		Workstation workStation3 = new Workstation(3, taskTypes3);
+		Workstation workStation3 = new Workstation(this, 3, taskTypes3);
 
 		list.put(workStation1, null);
 		list.put(workStation2, null);
@@ -161,10 +176,10 @@ public class AssemblyLine {
 	 * @param user The user requesting the assemblyStatusview
 	 * @return An AssemblyStatusView representing the current status
 	 */
-	public AssemblyStatusView currentStatus(){
-			ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkstations());
-			AssemblyStatusView view = new AssemblyStatusView(workstations, "Current Status");
-			return view;
+	public AssemblyStatusView currentStatus(){//TODO list is niet meer nodig?
+		ArrayList<Workstation> list = new ArrayList<Workstation>(getAllWorkstations());
+		AssemblyStatusView view = new AssemblyStatusView(workstations, "Current Status");
+		return view;
 	}
 
 
@@ -174,53 +189,60 @@ public class AssemblyLine {
 	 * @param user The user requesting the assemblyStatusview
 	 * @param time The time that has past since the last advanceLine
 	 * @return An AssemblyStatusView representing the future status
-	 * @throws InternalFailureException 
-	 * @throws DoesNotExistException If a workstation with a non existing ID is requested
+	 * @throws InternalFailureException if we made a coding error
+	 * TODO goede beschrijving van InterFailureException?
 	 */
 	public AssemblyStatusView futureStatus(int time) throws InternalFailureException{
-			// check if the line can advance
-			boolean isReady = true;
-			for(Workstation w : getAllWorkstations()){
-				if(!w.hasAllTasksCompleted()){
-					isReady = false;
-				}
+		// check if the line can advance
+		boolean isReady = true;
+		for(Workstation w : getAllWorkstations()){
+			if(!w.hasAllTasksCompleted()){
+				isReady = false;
 			}
-			LinkedHashMap<Workstation, CarAssemblyProcess> fakeWorkstations = new LinkedHashMap<Workstation, CarAssemblyProcess>();
+		}
+		LinkedHashMap<Workstation, CarAssemblyProcess> fakeWorkstations = new LinkedHashMap<Workstation, CarAssemblyProcess>();
 
-			if(isReady){ // if the line can advance make new workstations representing the future
-				ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations().keySet());
-				for(Workstation fake: list){ // set the corresponding car mechanics.
-					Workstation real = selectWorkstationById(fake.getId());
+		if(!isReady){ 
+			// if the line cannot advance, return the current status, because that is equal to the future status
+			return currentStatus();
+		}
+		try{
+			// if the line can advance make new workstations representing the future
+			ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations().keySet());
+			for(Workstation fake: list){ // set the corresponding car mechanics.
+				Workstation real = selectWorkstationById(fake.getId());
+				try{
+					fake.addCarMechanic(real.getCarMechanic());
+				}catch(IllegalStateException e){}
+				if(fake.getId() != 1){
+					Workstation realPrev = selectWorkstationById(fake.getId()-1);
+					fakeWorkstations.put(fake, workstations.get(realPrev));
 					try{
-						fake.addCarMechanic(real.getCarMechanic());
-					}catch(IllegalStateException e){}
-					if(fake.getId() != 1){
-						Workstation realPrev = selectWorkstationById(fake.getId()-1);
-						fakeWorkstations.put(fake, workstations.get(realPrev));
-						try{
-							for(AssemblyTask t : fakeWorkstations.get(fake).compatibleWith(fake)){
-								fake.addAssemblyTask(t);
-							}
-						}
-						catch(NullPointerException e){}
-					}else{
-						CarOrder order = this.schedule.seeNextCarOrder(time);
-						if(order != null){
-							CarAssemblyProcess futureCar = order.getCar().getAssemblyprocess();
-							fakeWorkstations.put(fake, futureCar);
-							for(AssemblyTask t : futureCar.compatibleWith(fake)){
-								fake.addAssemblyTask(t);
-							}
-						}else{
-							fakeWorkstations.put(fake, null);
+						for(AssemblyTask t : fakeWorkstations.get(fake).compatibleWith(fake)){
+							fake.addAssemblyTask(t);
 						}
 					}
+					catch(NullPointerException e){}
+				}else{
+					CarOrder order = this.schedule.seeNextCarOrder(time);
+					if(order != null){
+						CarAssemblyProcess futureCar = order.getCar().getAssemblyprocess();
+						fakeWorkstations.put(fake, futureCar);
+						for(AssemblyTask t : futureCar.compatibleWith(fake)){
+							fake.addAssemblyTask(t);
+						}
+					}else{
+						fakeWorkstations.put(fake, null);
+					}
 				}
-				AssemblyStatusView view = new AssemblyStatusView(fakeWorkstations, "Future Status");
-				return view;
-			}else{ // if the line cannot advance, return the current status, because that is equal to the future status
-				return currentStatus();
 			}
+			AssemblyStatusView view = new AssemblyStatusView(fakeWorkstations, "Future Status");
+			return view;
+		}
+		catch(DoesNotExistException e){
+			throw new InternalFailureException("Suddenly a Workstation disappeared while that could not be possible.");
+		}
+
 	}
 
 	/**

@@ -10,17 +10,17 @@ public abstract class Policy {
 		this.successor = successor;
 	}
 	
-	protected void proceed(Configuration configuration) throws NonValidConfigurationException{
+	protected void proceed(Configuration configuration) throws InvalidConfigurationException{
 		if (successor != null)
 			successor.check(configuration);
 	}
 	
-	protected void proceedComplete(Configuration configuration) throws NonValidConfigurationException{
+	protected void proceedComplete(Configuration configuration) throws InvalidConfigurationException{
 		if (successor != null)
 			successor.checkComplete(configuration);
 	}
 	
-	abstract protected void check(Configuration configuration) throws NonValidConfigurationException;
+	abstract public void check(Configuration configuration) throws InvalidConfigurationException;
 	
-	abstract protected void checkComplete(Configuration configuration) throws NonValidConfigurationException;
+	abstract public void checkComplete(Configuration configuration) throws InvalidConfigurationException;
 }

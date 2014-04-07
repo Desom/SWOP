@@ -1,6 +1,7 @@
 package domain.policies;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 import domain.configuration.Configuration;
 import domain.configuration.Option;
@@ -12,13 +13,12 @@ import domain.configuration.OptionType;
  */
 public class ConflictPolicy extends Policy {
 	
-	private ArrayList<Option[]> conflictingOptions = new ArrayList<Option[]>();
-	
 	public ConflictPolicy(Policy successor) {
 		super(successor);
 	}
 	
-	private boolean conflictsCheck(Configuration configuration){
+	private HashSet<Option[]> conflictsCheck(Configuration configuration){
+		HashSet<Option[]> conflictingOptions = new HashSet<Option[]>();
 		ArrayList<Option> allOptions = configuration.getAllOptions();
 		for (int i = 0; i < allOptions.size(); i++)
 			for (int j = i + 1; j < allOptions.size(); j++)
@@ -26,43 +26,44 @@ public class ConflictPolicy extends Policy {
 					Option[] options = {allOptions.get(i), allOptions.get(j)};
 					conflictingOptions.add(options);
 				}
-		if(conflictingOptions.size() != 0){
-			return false;
-		}
-		return true;
+		
+		return conflictingOptions;
 	}
 	
 	@Override
-	protected void check(Configuration configuration) throws NonValidConfigurationException{
-		if(conflictsCheck(configuration)){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
+	public void check(Configuration configuration) throws InvalidConfigurationException{
+		HashSet<Option[]> conflictingOptions = conflictsCheck(configuration);
+		if(conflictingOptions.size() == 0){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
 			proceed(configuration);
 		}else{ // in dit geval moet gecatched worden en aangepast
 			try{
 				proceed(configuration);
-			}catch(NonValidConfigurationException e){
-				e.addMessage(buildMessage());
+			}catch(InvalidConfigurationException e){
+				e.addMessage(buildMessage(conflictingOptions));
 				throw e;
 			}
-			throw new NonValidConfigurationException(buildMessage());
+			throw new InvalidConfigurationException(buildMessage(conflictingOptions));
 		}
 	}
 
 	@Override
-	protected void checkComplete(Configuration configuration) throws NonValidConfigurationException {
-		if(conflictsCheck(configuration)){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
+	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
+		HashSet<Option[]> conflictingOptions = conflictsCheck(configuration);
+		if(conflictingOptions.size() == 0){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
 			proceedComplete(configuration);
 		}else{ // in dit geval moet gecatched worden en aangepast
 			try{
 				proceedComplete(configuration);
-			}catch(NonValidConfigurationException e){
-				e.addMessage(buildMessage());
+			}catch(InvalidConfigurationException e){
+				e.addMessage(buildMessage(conflictingOptions));
+				throw e;
 			}
-			throw new NonValidConfigurationException(buildMessage());
+			throw new InvalidConfigurationException(buildMessage(conflictingOptions));
 		}
 	}
 	
 	
-	private String buildMessage(){
+	private String buildMessage(HashSet<Option[]> conflictingOptions){
 		String message = "Your configuration has the following conflicting Options: \n";
 		for(Option[] o : conflictingOptions){
 			message += "* " + o[0].toString() + "conflicts with " + o[1].toString() + "\n";

@@ -11,59 +11,59 @@ import domain.configuration.Option;
  *
  */
 public class ModelCompatibilityPolicy extends Policy {
-	
-	private CarModel model = null;
-	private ArrayList<Option> conflictingOptions = new ArrayList<Option>();
 
 	public ModelCompatibilityPolicy(Policy successor) {
 		super(successor);
 	}
 
-	private boolean compatibilityCheck(Configuration configuration){
-		this.model = configuration.getModel();
+	private ArrayList<Option> compatibilityCheck(Configuration configuration){
+		ArrayList<Option> conflictingOptions = new ArrayList<Option>();
+		
+		CarModel model = configuration.getModel();
 		ArrayList<Option> possibleOptions = model.getOptions();
 		for(Option option : configuration.getAllOptions()){
 			if(!possibleOptions.contains(option)){
 				conflictingOptions.add(option);
 			}
 		}
-		if(conflictingOptions.size() != 0){
-			return false;
-		}
-		return true;
+		return conflictingOptions;
 	}
 	
 	@Override
-	protected void check(Configuration configuration) throws NonValidConfigurationException{
-		if(compatibilityCheck(configuration)){
+	public void check(Configuration configuration) throws InvalidConfigurationException{
+		ArrayList<Option> conflictingOptions = compatibilityCheck(configuration);
+		if(conflictingOptions.size() == 0){
 			proceed(configuration);
 		}else{
 			try{
 				proceed(configuration);
-			}catch(NonValidConfigurationException e){
-				e.addMessage(buildMessage());
+			}catch(InvalidConfigurationException e){
+				e.addMessage(buildMessage(configuration, conflictingOptions));
+				throw e;
 			}
-			throw new NonValidConfigurationException(buildMessage());
+			throw new InvalidConfigurationException(buildMessage(configuration, conflictingOptions));
 		}
 	}
 
 	@Override
-	protected void checkComplete(Configuration configuration) throws NonValidConfigurationException{
-		if(compatibilityCheck(configuration)){
+	public void checkComplete(Configuration configuration) throws InvalidConfigurationException{
+		ArrayList<Option> conflictingOptions = compatibilityCheck(configuration);
+		if(conflictingOptions.size() == 0){
 			proceedComplete(configuration);
 		}else{
 			try{
 				proceedComplete(configuration);
-			}catch(NonValidConfigurationException e){
-				e.addMessage(buildMessage());
+			}catch(InvalidConfigurationException e){
+				e.addMessage(buildMessage(configuration, conflictingOptions));
+				throw e;
 			}
-			throw new NonValidConfigurationException(buildMessage());
+			throw new InvalidConfigurationException(buildMessage(configuration, conflictingOptions));
 		}
 	}
 	
-	private String buildMessage(){
+	private String buildMessage(Configuration configuration, ArrayList<Option> conflictingOptions){
 		String message = "Your configuration has the following Options that are incompatible with the model: \n";
-		message += "Your model is " + this.model.toString() + "\n";
+		message += "Your model is " + configuration.getModel().toString() + "\n";
 		for(Option o : conflictingOptions){
 			message += "* " + o.toString() + "\n";
 		}

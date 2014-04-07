@@ -2,12 +2,12 @@ package domain.policies;
 
 import java.util.ArrayList;
 
-public class NonValidConfigurationException extends Exception{
+public class InvalidConfigurationException extends Exception{
 
 	private static final long serialVersionUID = 1L;
 	private ArrayList<String> messages;
 
-	public NonValidConfigurationException(String message){
+	public InvalidConfigurationException(String message){
 		this.messages = new ArrayList<String>();
 		this.messages.add(message);
 	}

@@ -13,46 +13,46 @@ import domain.configuration.OptionType;
 public class CompletionPolicy extends Policy{
 
 	private ArrayList<OptionType> requiredTypes;
-	private ArrayList<OptionType> missingTypes;
 
 	public CompletionPolicy(Policy successor, ArrayList<OptionType> requiredTypes) {
 		super(successor);
 		this.requiredTypes = requiredTypes;
 	}
 
-	private boolean completionCheck(Configuration configuration){
+	private ArrayList<OptionType> completionCheck(Configuration configuration){
 		ArrayList<Option> allOptions = configuration.getAllOptions();
 		ArrayList<OptionType> remainingTypes = (ArrayList<OptionType>) requiredTypes.clone();
 		for (Option option : allOptions){
 			remainingTypes.remove(option.getType());
 		}
-		this.missingTypes = remainingTypes;
-		return remainingTypes.isEmpty();
+		
+		return remainingTypes;
 	}
 
 	@Override
-	protected void check(Configuration configuration) throws NonValidConfigurationException{
+	public void check(Configuration configuration) throws InvalidConfigurationException{
 		proceed(configuration);
 	}
 
 	@Override
-	protected void checkComplete(Configuration configuration) throws NonValidConfigurationException{
-		if(completionCheck(configuration)){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
+	public void checkComplete(Configuration configuration) throws InvalidConfigurationException{
+		ArrayList<OptionType> missingTypes = completionCheck(configuration);
+		if(missingTypes.size() == 0){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
 			proceedComplete(configuration);
 		}else{ // in dit geval moet gecatched worden en aangepast
 			try{
 				proceedComplete(configuration);
-			}catch(NonValidConfigurationException e){
-				e.addMessage(buildMessage());
+			}catch(InvalidConfigurationException e){
+				e.addMessage(buildMessage(missingTypes));
 				throw e;
 			}
-			throw new NonValidConfigurationException(buildMessage());
+			throw new InvalidConfigurationException(buildMessage(missingTypes));
 		}
 	}
 	
 	
 	
-	private String buildMessage(){
+	private String buildMessage(ArrayList<OptionType> missingTypes){
 		String message = "Your configuration is missing the following types: \n";
 		for(OptionType t : missingTypes){
 			message += "* " + t.toString() + "\n";

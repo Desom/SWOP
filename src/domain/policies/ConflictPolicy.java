@@ -25,8 +25,10 @@ public class ConflictPolicy extends Policy {
 				if (allOptions.get(i).conflictsWith(allOptions.get(j))){
 					Option[] options = {allOptions.get(i), allOptions.get(j)};
 					conflictingOptions.add(options);
-					return false;
 				}
+		if(conflictingOptions.size() != 0){
+			return false;
+		}
 		return true;
 	}
 	

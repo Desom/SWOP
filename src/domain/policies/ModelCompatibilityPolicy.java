@@ -2,6 +2,7 @@ package domain.policies;
 
 import java.util.ArrayList;
 
+import domain.configuration.CarModel;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 
@@ -10,17 +11,24 @@ import domain.configuration.Option;
  *
  */
 public class ModelCompatibilityPolicy extends Policy {
+	
+	private CarModel model = null;
+	private ArrayList<Option> conflictingOptions = new ArrayList<Option>();
 
 	public ModelCompatibilityPolicy(Policy successor) {
 		super(successor);
 	}
 
 	private boolean compatibilityCheck(Configuration configuration){
-		ArrayList<Option> possibleOptions = configuration.getModel().getOptions();
+		this.model = configuration.getModel();
+		ArrayList<Option> possibleOptions = model.getOptions();
 		for(Option option : configuration.getAllOptions()){
 			if(!possibleOptions.contains(option)){
-				return false;
+				conflictingOptions.add(option);
 			}
+		}
+		if(conflictingOptions.size() != 0){
+			return false;
 		}
 		return true;
 	}
@@ -33,9 +41,9 @@ public class ModelCompatibilityPolicy extends Policy {
 			try{
 				proceed(configuration);
 			}catch(NonValidConfigurationException e){
-				e.addMessage("The specified options are not compatible with the specified model");
+				e.addMessage(buildMessage());
 			}
-			throw new NonValidConfigurationException("The specified options are not compatible with the specified model");
+			throw new NonValidConfigurationException(buildMessage());
 		}
 	}
 
@@ -47,10 +55,19 @@ public class ModelCompatibilityPolicy extends Policy {
 			try{
 				proceedComplete(configuration);
 			}catch(NonValidConfigurationException e){
-				e.addMessage("The specified options are not compatible with the specified model");
+				e.addMessage(buildMessage());
 			}
-			throw new NonValidConfigurationException("The specified options are not compatible with the specified model");
+			throw new NonValidConfigurationException(buildMessage());
 		}
+	}
+	
+	private String buildMessage(){
+		String message = "Your configuration has the following Options that are incompatible with the model: \n";
+		message += "Your model is " + this.model.toString() + "\n";
+		for(Option o : conflictingOptions){
+			message += "* " + o.toString() + "\n";
+		}
+		return message;
 	}
 
 }

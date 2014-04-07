@@ -1,5 +1,7 @@
 package domain.policies;
 
+import java.util.ArrayList;
+
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 
@@ -9,6 +11,8 @@ import domain.configuration.Option;
  */
 public class DependancyPolicy extends Policy {
 
+	private ArrayList<Option> conflictingOptions = new ArrayList<Option>();
+	
 	public DependancyPolicy(Policy successor) {
 		super(successor);
 	}
@@ -17,7 +21,10 @@ public class DependancyPolicy extends Policy {
 	private boolean checkDependencies(Configuration configuration){
 		for(Option i: configuration.getAllOptions()){
 			if(!i.dependancyCheck(configuration))
-				return false;
+				conflictingOptions.add(i);
+		}
+		if(conflictingOptions.size() != 0){
+			return false;
 		}
 		return true;
 	}
@@ -44,10 +51,19 @@ public class DependancyPolicy extends Policy {
 			try{
 				proceedComplete(configuration);
 			}catch(NonValidConfigurationException e){
-				e.addMessage("There are options in the configuration that are dependent on other options that are not chosen.");
+				e.addMessage(buildMessage());
 			}
-			throw new NonValidConfigurationException("There are options in the configuration that are dependent on other options that are not chosen.");
+			throw new NonValidConfigurationException(buildMessage());
 		}
+	}
+	
+	
+	private String buildMessage(){
+		String message = "Your configuration has options who's dependecies are not ok: \n";
+		for(Option o : conflictingOptions){
+			message += "* " + o.toString() + "\n";
+		}
+		return message;
 	}
 
 }

@@ -1,22 +1,11 @@
 package controller.carMechanic;
 
-import controller.ControllerInterface;
 import controller.UIInterface;
 import domain.Company;
-import domain.user.CarMechanic;
 
-public class CheckAssemblyLineStatusHandler implements ControllerInterface {
+public class CheckAssemblyLineStatusHandler {
 
-	UIInterface ui;
-	Company company;
-	
-	public CheckAssemblyLineStatusHandler(UIInterface ui, Company company) {
-		this.ui = ui;
-		this.company = company;
-	}
-
-	@Override
-	public void run() {
+	public void run(UIInterface ui, Company company) {
 		ui.showAssemblyLineStatus(company.getAssemblyLine().currentStatus());
 	}
 	

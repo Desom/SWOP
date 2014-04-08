@@ -1,23 +1,51 @@
 package controller.manager;
 
-import controller.MainController;
+import java.util.ArrayList;
+
 import controller.UIInterface;
 import domain.Company;
 import domain.user.Manager;
 
-public class ManagerController extends MainController {
+public class ManagerController {
 
-	protected Company company;
-	protected Manager manager;
+	AdaptSchedulingAlgorithmHandler adaptSchedulingAlgorithmHandler;
+	CheckProductionStatisticsHandler checkProductionStatisticsHandler;
 	
-	public ManagerController(UIInterface ui, Company company, Manager manager) {
-		super(ui);
-		this.company = company;
-		this.manager = manager;
+	/**
+	 * Constructor of ManagerController.
+	 * Constructs the appropriate handlers to:
+	 * 	1) Adapt scheduling algorithm
+	 * 	2) Check production statistics
+	 */
+	public ManagerController() {
+		adaptSchedulingAlgorithmHandler = new AdaptSchedulingAlgorithmHandler();
+		checkProductionStatisticsHandler = new CheckProductionStatisticsHandler();
 	}
 
-	@Override
-	public void run() {
-		// TODO
+	/**
+	 * Runs this ManagerController object.
+	 * 
+	 * @param ui
+	 * 		The UI used to communicate with the user.
+	 * @param company
+	 * 		The company that is handling the request of the user.
+	 * @param manager
+	 * 		The manager that does a request.
+	 */
+	public void run(UIInterface ui, Company company, Manager manager) {
+		loop: while(true) {
+			ArrayList<String> possibilities = new ArrayList<String>();
+			possibilities.add("Adapt scheduling algorithm");
+			possibilities.add("Check production statistics");
+			possibilities.add("Log out");
+			String answer = ui.askWithPossibilities("What do you want to do?", possibilities);
+			switch(answer) {
+			case "Adapt scheduling algorithm":		this.adaptSchedulingAlgorithmHandler.run(ui, company, manager);
+			break;
+			case "Check production statistics":		this.checkProductionStatisticsHandler.run(ui, company, manager);
+			break;
+			case "Log out":							break loop;
+			}
+		}
 	}
 }

@@ -13,7 +13,7 @@ import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 import domain.user.Manager;
 
-public class MainController implements ControllerInterface {
+public class MainController {
 
 	protected UIInterface ui;
 
@@ -22,9 +22,20 @@ public class MainController implements ControllerInterface {
 	private GarageHolderController garageHolderController;
 	private ManagerController managerController;
 
+	/**
+	 * Constructor of MainController.
+	 * Constructs the UI and all helper Controllers.
+	 */
 	public MainController(UIInterface ui) {
 		this.ui = ui;
 
+		this.carMechanicController = new CarMechanicController();
+		this.customShopController = new CustomShopController();
+		this.garageHolderController = new GarageHolderController();
+		this.managerController = new ManagerController();
+	}
+
+	public void run() throws InternalFailureException {
 		Company company = null;
 		try {
 			company = new Company();
@@ -36,16 +47,7 @@ public class MainController implements ControllerInterface {
 		CustomShopManager customShopManager = new CustomShopManager(2);
 		GarageHolder garageHolder = new GarageHolder(3);
 		Manager manager = new Manager(4);
-
-		this.carMechanicController = new CarMechanicController(ui, company, carMechanic);
-		this.customShopController = new CustomShopController();
 		
-		this.garageHolderController = new GarageHolderController(ui, company, garageHolder);
-		this.managerController = new ManagerController(ui, company, manager);
-	}
-
-	@Override
-	public void run() {
 		loop: while (true) {
 			ArrayList<String> possibilities = new ArrayList<String>();
 			possibilities.add("Car mechanic");
@@ -55,13 +57,13 @@ public class MainController implements ControllerInterface {
 			possibilities.add("Exit");
 			String answer =ui.askWithPossibilities("Tell us what you are.", possibilities);
 			switch(answer) {
-			case "Car mechanic":		carMechanicController.run();
+			case "Car mechanic":		carMechanicController.run(ui, company, carMechanic);
 										break;
 			case "Custom shop manager":	customShopController.run(ui, company, customShopManager);
 										break;
-			case "Garage holder":		garageHolderController.run();
+			case "Garage holder":		garageHolderController.run(ui, company, garageHolder);
 										break;
-			case "Manager":				managerController.run();
+			case "Manager":				managerController.run(ui, company, manager);
 										break;
 			case "exit":				break loop;
 			}

@@ -24,9 +24,9 @@ public interface UIInterface {
 
 	void fillIn(OrderForm order);
 
-	int askWithPossibilities(String string, Object[] objects);
+	int askWithPossibilities(String string, Object[] possibilities);
 
-	void display(Object[] aobjectsrray);
+	void display(Object[] displayableObjects);
 
 	String askWithPossibilities(String string, List<String> possibilities);
 

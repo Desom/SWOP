@@ -7,12 +7,15 @@ import domain.order.CarOrder;
 
 public class EfficiencySchedulingAlgortihm implements SchedulingAlgorithm {
 
-	public EfficiencySchedulingAlgortihm() {
-		// TODO Auto-generated constructor stub
+	private SchedulingAlgorithm innerAlgorithm;
+	
+	public EfficiencySchedulingAlgortihm(SchedulingAlgorithm innerAlgorithm) {
+		this.innerAlgorithm = innerAlgorithm;
 	}
 
 	@Override
 	public ArrayList<CarOrder> schedule(
+			ArrayList<CarOrder> orderList, 
 			AssemblyLineSchedule assemblyLineSchedule) {
 		// TODO Auto-generated method stub
 		return null;

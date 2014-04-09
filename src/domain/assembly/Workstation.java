@@ -148,17 +148,21 @@ public class Workstation {
 	 * 
 	 * @param	carMechanic
 	 * 			The user that wants to call this method.
+	 * @param 	timeSpend
+	 * 			The amount of minutes it took to complete the current activeTask.
 	 * @throws	IllegalStateException
 	 * 			If there is no active task to complete in this workstation.
 	 * 			If there is no car mechanic to complete the active task.
+	 * @throws InternalFailureException 
+	 * 			If a fatal error occurred the program could not recover from.
 	 */
-	private void completeTask(CarMechanic carMechanic) throws IllegalStateException {
+	public void completeTask(CarMechanic carMechanic, int timeSpend) throws IllegalStateException, InternalFailureException {
 		if (this.getCarMechanic().getId() != carMechanic.getId())
 			throw new IllegalStateException("This user is not assigned to this workstation");
 		//TODO is dit echt IllegalStateException? mss IllegalArgument fzo?
 		if (this.activeTask != null) {
 			if (this.carMechanic != null) {
-				this.activeTask.completeTask();
+				this.activeTask.completeTask(timeSpend);
 				this.activeTask = null;
 			}
 			else {
@@ -168,23 +172,6 @@ public class Workstation {
 		else {
 			throw new IllegalStateException("There is no active task in this workstation");
 		}
-	}
-	
-	/**
-	 * Completes the assembly task that the operating car mechanic is working on.
-	 * 
-	 * @param 	carMechanic
-	 * 			The user that wants to call this method.
-	 * @param 	timeSpend
-	 * 			The amount of minutes it took to complete the current activeTask.
-	 * @throws 	InternalFailureException 
-	 * 			If we made a coding error //TODO goede beschrijving?
-	 * @throws 	IllegalStateException
-	 * 			If there is no active task to complete in this workstation.
-	 * 			If there is no car mechanic to complete the active task.
-	 */
-	public void completeTask(CarMechanic carMechanic, int timeSpend) throws InternalFailureException{
-		this.completeTask(carMechanic);
 		this.addTimeSpend(timeSpend);
 		try {
 			this.assemblyLine.advanceLine();

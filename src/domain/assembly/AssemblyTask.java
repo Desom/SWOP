@@ -7,8 +7,9 @@ import domain.configuration.OptionType;
 public class AssemblyTask {
 	
 	private ArrayList<String> actions;
-	private OptionType type;
+	private final OptionType type;
 	private boolean isCompleted;
+	private final CarAssemblyProcess assemblyProcess;
 
 	/**
 	 * Constructor of AssemblyTask.
@@ -20,8 +21,8 @@ public class AssemblyTask {
 	 * @param	type
 	 * 			An enum object that indicates the type of this AssemblyTask
 	 */
-	public AssemblyTask(ArrayList<String> actions, OptionType type) {
-		this(actions, type, false);
+	public AssemblyTask(ArrayList<String> actions, OptionType type, CarAssemblyProcess process) {
+		this(actions, type, false, process);
 	}
 	
 	/**
@@ -35,10 +36,11 @@ public class AssemblyTask {
 	 * @param	isCompleted
 	 * 			A boolean telling if this assembly task is already completed or not
 	 */
-	public AssemblyTask(ArrayList<String> actions, OptionType type, boolean isCompleted) {
+	public AssemblyTask(ArrayList<String> actions, OptionType type, boolean isCompleted, CarAssemblyProcess process) {
 		this.setActions(actions);
-		this.setType(type);
+		this.type = type;
 		this.isCompleted = isCompleted;
+		this.assemblyProcess = process;
 	}
 	
 	/**
@@ -48,16 +50,6 @@ public class AssemblyTask {
 	 */
 	public OptionType getType() {
 		return type;
-	}
-
-	/**
-	 * Sets the type of this assembly task. Only used in constructor.
-	 * 
-	 * @param	type
-	 * 			The enum object that indicates the type of this AssemblyTask.
-	 */
-	private void setType(OptionType type) { // DEZE MOETEN OVEREEN KOMEN MET WORKSTATION
-		this.type = type;
 	}
 	
 	/**
@@ -90,10 +82,15 @@ public class AssemblyTask {
 	}
 	
 	/**
-	 * Completes this assembly task.
+	 * Completes this assembly task and adds the amount of time used to do so to the configuration this task belongs to.
+	 * 
+	 * @param minutes
+	 * 		The amount of time (in minutes) spent working on completing this assemblyTask.
+	 * 		
 	 */
-	protected void completeTask() {
+	protected void completeTask(int minutes) {
 		this.isCompleted = true;
+		this.assemblyProcess.addTimeWorked(minutes);
 	}
 	
 	/**

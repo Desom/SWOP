@@ -44,6 +44,15 @@ public class Car {
 		this.process = new CarAssemblyProcess(this, options, isDelivered);
 		this.order = order;
 	}
+	
+	/**
+	 * Get the total delay this car has accumulated at this point (in minutes).
+	 * 
+	 * @return The total time spend working on this car (in minutes) - the expected time spend working on completing this car (in minutes).
+	 */
+	public int getDelay(){
+		return this.process.getTotalTimeSpend() - this.configuration.getExpectedWorkingTime();
+	}
 
 	/**
 	 * Returns the order of this car.

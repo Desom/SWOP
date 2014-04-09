@@ -10,6 +10,7 @@ public class CarAssemblyProcess {
 	
 	private final ArrayList<AssemblyTask> tasks;
 	private final Car car;
+	private int minutesWorked = 0;
 
 	/**
 	 * The constructor for the CarAssemblyProcess class
@@ -38,7 +39,7 @@ public class CarAssemblyProcess {
 		for(Option o : options){
 			ArrayList<String> actions = new ArrayList<String>();
 			actions.add("dummy action");
-			tasks.add(new AssemblyTask(actions, o.getType(), isCompleted)); 
+			tasks.add(new AssemblyTask(actions, o.getType(), isCompleted, this)); 
 		}
 		this.tasks = tasks;
 		this.car = car;
@@ -76,6 +77,24 @@ public class CarAssemblyProcess {
 		return status;
 	}
 
+	/**
+	 * Add an amount of time spent working on this assemblyProcess (in minutes).
+	 * 
+	 * @param minutes
+	 * 			The amount of time in minutes that has to be added to the total amount of time spent on this configuration.
+	 */
+	public void addTimeWorked(int minutes){
+		this.minutesWorked += minutes;
+	}
+	
+	/**
+	 * Get the total amount of time (in minutes) spend working on this assembly process.
+	 * 
+	 * @return The amount of time (in minutes) spend working on this assembly process
+	 */
+	public int getTotalTimeSpend(){
+		return minutesWorked;
+	}
 	
 	/**
 	 * 

@@ -14,6 +14,7 @@ public class Workstation {
 	private AssemblyTask activeTask;
 	private AssemblyLine assemblyLine;
 	private int timeSpend;
+	private CarAssemblyProcess assemblyProcess;
 
 	/**
 	 * Constructor of Workstation.
@@ -41,6 +42,7 @@ public class Workstation {
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
 		this.resetTimeSpend();
+		setCarAssemblyProcess(null);
 	}
 
 	/**
@@ -273,5 +275,23 @@ public class Workstation {
 	@Override
 	public String toString() {
 		return "Workstation " + this.id;
+	}
+	
+	/**
+	 * Set the car assembly process this workstation is currently working on.
+	 * 
+	 * @param process the specified car assembly process.
+	 */
+	public void setCarAssemblyProcess(CarAssemblyProcess process){
+		this.assemblyProcess = process;
+	}
+	
+	/**
+	 * Get the car assembly process this workstation is currently working on.
+	 * 
+	 * @return the car assembly process this workstation is currently working on.
+	 */
+	public CarAssemblyProcess getCarAssemblyProcess(){
+		return this.assemblyProcess;
 	}
 }

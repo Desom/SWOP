@@ -4,6 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
 import domain.InternalFailureException;
+import domain.Statistics;
 import domain.configuration.OptionType;
 import domain.order.CarOrder;
 
@@ -11,14 +12,17 @@ import domain.order.CarOrder;
 public class AssemblyLine {
 
 	private LinkedHashMap<Workstation,CarAssemblyProcess> workstations = null;
+	//TODO CarAssemblyProcesses terug verhuizen naar workstations
 	private final ProductionSchedule schedule;
+	private final Statistics statistics;
 
 	/**
 	 * Constructor for the assembly line class.
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
-	public AssemblyLine(ProductionSchedule schedule){
-		workstations = createWorkstations();
+	public AssemblyLine(ProductionSchedule schedule, Statistics statistics){
+		this.statistics = statistics;
+		this.workstations = createWorkstations();
 		this.schedule = schedule;
 	}
 
@@ -34,10 +38,9 @@ public class AssemblyLine {
 	 * 
 	 * @throws DoesNotExistException
 	 * @throws CannotAdvanceException 
-	 * 				if there are workstations that are blocking the assembly line.
+	 * 				If there are workstations that are blocking the assembly line.
 	 * @throws InternalFailureException 
-	 * 				if we made a coding error
-	 * TODO InternalFailureException beschrijving in orde?
+	 * 				If a fatal error occurred the program could not recover from.
 	 */
 	public void advanceLine() throws CannotAdvanceException, InternalFailureException{
 		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
@@ -58,8 +61,10 @@ public class AssemblyLine {
 			Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations());
 			CarOrder finished = null;
 			if(workstations.get(workstationLast) != null){
-				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule no moet worden geupdate.
+				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
 				finished = workstations.get(workstationLast).getCar().getOrder();
+				this.statistics.carCompleted();
+				this.statistics.addDelay(finished.getCar().getDelay(), this.schedule.getCurrentTime());
 			}
 			for(int i = getAllWorkstations().size(); i>1; i--){
 				Workstation workstationNext = selectWorkstationById(i);
@@ -186,11 +191,13 @@ public class AssemblyLine {
 	/**
 	 * Creates a view of the future status of the assembly line
 	 * 
-	 * @param user The user requesting the assemblyStatusview
-	 * @param time The time that has past since the last advanceLine
+	 * @param user 
+	 * 			The user requesting the assemblyStatusview.
+	 * @param time 
+	 * 			The time that has past since the last advanceLine.
 	 * @return An AssemblyStatusView representing the future status
-	 * @throws InternalFailureException if we made a coding error
-	 * TODO goede beschrijving van InterFailureException?
+	 * @throws InternalFailureException
+	 * 			If a fatal error occurred the program could not recover from.
 	 */
 	public AssemblyStatusView futureStatus(int time) throws InternalFailureException{
 		// check if the line can advance

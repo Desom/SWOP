@@ -18,13 +18,15 @@ import domain.user.User;
 public class Company {
 
 	private AssemblyLine assemblyLine = null;
-	private CarModelCatalog catalog;
-	private OrderManager orderManager;
+	private final CarModelCatalog catalog;
+	private final OrderManager orderManager;
+	private final Statistics statistics;
 
 	/**
 	 * Constructor for the company class.
 	 * This constructor is also responsible for the creation of 1 or more assemblyLines.
-	 * This constructor is also responsible for the creation of the cat model catalog.
+	 * This constructor is also responsible for the creation of the car model catalog.
+	 * This constructor is also responsible for the creation of the statistics object
 	 * @throws InternalFailureException 
 	 * @throws CarModelCatalogException 
 	 * @throws IOException 
@@ -33,7 +35,8 @@ public class Company {
 		try {
 			this.catalog = new CarModelCatalog();
 			this.orderManager = new OrderManager(new GregorianCalendar(2014, 1, 1, 12, 0, 0));
-			this.assemblyLine = new AssemblyLine(orderManager.getProductionSchedule());
+			this.statistics = new Statistics();
+			this.assemblyLine = new AssemblyLine(orderManager.getProductionSchedule(), this.statistics);
 		} catch (IOException | CarModelCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company");
 		}

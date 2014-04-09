@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
+import domain.order.CarOrder;
 
 public class UI implements UIInterface{
 	Scanner scan;
@@ -39,6 +40,24 @@ public class UI implements UIInterface{
 			return askForInteger(question, lowerBound);
 		}
 	}
+	
+	public int askForInteger(String question, int lowerBound, int upperBound){
+		try {
+			System.out.println(question);
+			System.out.println("At least: " + lowerBound + ".");
+			System.out.println("At most: " + upperBound + ".");
+			int input = Integer.parseInt(scan.nextLine());
+			while(lowerBound > input && upperBound < input){
+				System.out.println("This is not a good number.");
+				input = Integer.parseInt(scan.nextLine());
+			}
+			return input;
+		}
+		catch (NumberFormatException e) {
+			System.out.println("This is not a valid answer.");
+			return askForInteger(question, lowerBound);
+		}
+	}
 
 	public String askWithPossibilities(String question, List<String> possibilities){
 		System.out.println(question);
@@ -52,7 +71,7 @@ public class UI implements UIInterface{
 			visualInt++;
 		}
 		System.out.println(possOutput);
-		
+
 		int input = -1;
 		try {
 			input = Integer.parseInt(scan.nextLine());
@@ -70,7 +89,7 @@ public class UI implements UIInterface{
 		}
 		return possibilities.get(input-1);
 	}
-	
+
 	//TODO mss private methode maken die door beide askWith's wordt opgeroepen...
 	public int askWithPossibilities(String question, Object[] possibilities){
 		System.out.println(question);
@@ -156,7 +175,7 @@ public class UI implements UIInterface{
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
 			display(tempIdList.get(i) +" will be delivered around:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
 		}
-		
+
 	}
 	@Override
 	public void displayCompletedCarOrders(ArrayList<Integer> tempIdList,
@@ -165,6 +184,52 @@ public class UI implements UIInterface{
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
 			display(tempIdList.get(i) +" is delivered on:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
 		}
-		
+
+	}
+
+	@Override
+	public int askForCarOrder(ArrayList<CarOrder> pendingOrders, ArrayList<CarOrder> completedOrders, ArrayList<Calendar> completionEstimates) {
+		int index = 1;
+		display("Your pending orders:");
+		for(int i =0; i< Math.max(pendingOrders.size(), completionEstimates.size());i++){
+			display(index + ". " + pendingOrders.get(i).getCarOrderID() + " will be delivered around:" + completionEstimates.get(i).get(Calendar.DAY_OF_WEEK) + " " + completionEstimates.get(i).get(Calendar.HOUR_OF_DAY) + "h" + completionEstimates.get(i).get(Calendar.MINUTE));
+			index++;
+		}
+		display("Your completed orders:");
+		for(CarOrder carOrder : completedOrders){
+			display(index + ". " + carOrder.getCarOrderID() + " is delivered on:" + carOrder.getDeliveredTime().get(Calendar.DAY_OF_WEEK) + " "+carOrder.getDeliveredTime().get(Calendar.HOUR_OF_DAY) + "h"+carOrder.getDeliveredTime().get(Calendar.MINUTE));
+			index++;
+		}
+		display("");
+		display(0 + ". Exit this view");
+		int answer = askForInteger("Please choose one of the numbered options", 0, index);
+		return answer;// Returns 0 when the user wants to leave the overwiew
+	}
+	
+	// TODO chain pendingOrder.getCar().getConfiguration().getModel() ok?
+	// dubbel checken als alles wel degelijk een clone is
+	@Override
+	public void displayPendingCarOrderInfo(CarOrder pendingOrder, Calendar completionEstimate) {
+		display("Specification:");
+		display("- Car model: " + pendingOrder.getCar().getConfiguration().getModel());
+		display("- Options: ");
+		display(pendingOrder.getCar().getConfiguration().getAllOptions().toArray());
+		display("Order time: " + pendingOrder.getOrderedTime());
+		display("Estimated deliver time: " + completionEstimate);
+		while (true)
+			if (askYesNoQuestion("Do you want to go back to the overview?"))
+				return;
+	}
+	@Override
+	public void displayCompletedCarOrderInfo(CarOrder completedOrder) {
+		display("Specification:");
+		display("- Car model: " + completedOrder.getCar().getConfiguration().getModel());
+		display("- Options: ");
+		display(completedOrder.getCar().getConfiguration().getAllOptions().toArray());
+		display("Order time: " + completedOrder.getOrderedTime());
+		display("Delivered time: " + completedOrder.getDeliveredTime());
+		while (true)
+			if (askYesNoQuestion("Do you want to go back to the overview?"))
+				return;
 	}
 }

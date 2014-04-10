@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import domain.configuration.CarModel;
+import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.user.User;
 
@@ -23,14 +24,12 @@ public class CarOrder {
 	 * 			The id of this car order
 	 * @param	user TODO
 	 * 			The user of that has placed this order
-	 * @param	model
-	 * 			The model of the car to be ordered
-	 * @param	options
-	 * 			The options of the car to be ordered
+	 * @param	configuration
+	 * 			The configuration of the specified car
 	 */
-	public CarOrder(int carOrderId, User user, CarModel model, ArrayList<Option> options) {
+	public CarOrder(int carOrderId, User user, Configuration configuration) {
 		this.carOrderID = carOrderId;
-		this.car = new Car(this, model, options);
+		this.car = new Car(this,configuration);
 		this.userID = user.getId();
 		this.orderedTime = new GregorianCalendar(); // dit geeft de tijd op het moment van constructie.
 	}
@@ -51,14 +50,15 @@ public class CarOrder {
 	 * 			The model of the car that has been ordered
 	 * @param optionsList
 	 * 			The options of the car that has been ordered
+	 * @param configuration 
 	 */
 	public CarOrder(
 			int carOrderId, 
 			int garageHolderId,
 			GregorianCalendar orderedCalendar,
 			GregorianCalendar deliveredCalendar, 
-			CarModel model,
-			ArrayList<Option> optionsList) {
+			Configuration configuration
+			) {
 		this.carOrderID = carOrderId;
 		this.userID = garageHolderId;
 		this.orderedTime = (GregorianCalendar) orderedCalendar.clone();
@@ -72,7 +72,7 @@ public class CarOrder {
 			isDelivered = false;
 		}
 
-		this.car = new Car(this, model, optionsList, isDelivered);
+		this.car = new Car(this, configuration, isDelivered);
 	}
 
 	/**

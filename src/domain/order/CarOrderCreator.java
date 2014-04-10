@@ -10,7 +10,9 @@ import java.util.GregorianCalendar;
 
 import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
+import domain.configuration.Configuration;
 import domain.configuration.Option;
+import domain.policies.Policy;
 
 public class CarOrderCreator {
 	//TODO is dit conform met het Factory pattern ???
@@ -18,17 +20,19 @@ public class CarOrderCreator {
 	
 	private String path;
 	private CarModelCatalog catalog;
-	
+	private Policy policy;
 	/**
 	 * Constructor for the CarOrderCreator class
+	 * @param carOrderPolicy 
 	 * @param	dataFile
 	 * 			The file from which the CarOrders will be read.
 	 * @param 	this.catalog
 	 * 			The CarModelthis.catalog used to convert Strings to Option and CarModel objects.
 	 */
-	public CarOrderCreator(String path, CarModelCatalog catalog){
+	public CarOrderCreator(String path, CarModelCatalog catalog, Policy carOrderPolicy){
 		this.path = path;
 		this.catalog = catalog;
+		this.policy = carOrderPolicy;
 	}
 	
 	/**
@@ -79,7 +83,11 @@ public class CarOrderCreator {
 			CarModel model = findCarModel(orderPieces[5]);
 		// 6 : options -> ArrayList<Option> (ook this.catalog nodig)
 			ArrayList<Option> optionsList = findCarOptons(orderPieces[6]);
-			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, model, optionsList));
+			Configuration config = new Configuration(model, policy);
+			for(Option i: optionsList){
+				config.setOption(i);
+			}
+			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, config));
 		}
 		
 		return allCarOrders;

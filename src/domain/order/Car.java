@@ -23,8 +23,8 @@ public class Car {
 	 * @param	options
 	 * 			The options of the car
 	 */
-	public Car(CarOrder order, CarModel model, ArrayList<Option> options) {
-		this(order, model,options, false);
+	public Car(CarOrder order, Configuration configuration) {
+		this(order, configuration, false);
 	}
 	
 	/**
@@ -39,9 +39,9 @@ public class Car {
 	 * @param	isDelivered
 	 * 			True if the car has been delivered already, otherwise false 
 	 */
-	public Car(CarOrder order, CarModel model, ArrayList<Option> options, boolean isDelivered){
-		this.configuration = new Configuration(model, options);
-		this.process = new CarAssemblyProcess(this, options, isDelivered);
+	public Car(CarOrder order, Configuration configuration, boolean isDelivered){
+		this.configuration = configuration;
+		this.process = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered);
 		this.order = order;
 	}
 	

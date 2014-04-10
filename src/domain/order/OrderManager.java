@@ -8,7 +8,14 @@ import java.util.List;
 import domain.assembly.ProductionSchedule;
 import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
+import domain.configuration.Configuration;
 import domain.configuration.Option;
+import domain.configuration.OptionType;
+import domain.policies.CompletionPolicy;
+import domain.policies.ConflictPolicy;
+import domain.policies.DependencyPolicy;
+import domain.policies.ModelCompatibilityPolicy;
+import domain.policies.Policy;
 import domain.user.GarageHolder;
 
 
@@ -18,7 +25,8 @@ public class OrderManager {
 	private ProductionSchedule productionSchedule;
 	private final HashMap<Integer,ArrayList<CarOrder>> carOrdersPerId;
 	private int highestCarOrderID;
-	
+	private Policy singleTaskPolicy;
+	private Policy CarOrderPolicy;
 	/**
 	 * Constructor for the OrderManager class.
 	 * This constructor is also responsible for creating objects for all the placed carOrders.
@@ -32,7 +40,8 @@ public class OrderManager {
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
 	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) {
-		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog);
+		this.createPolicies();
+		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.CarOrderPolicy );
 		ArrayList<CarOrder> allCarOrders = carOrderCreator.createCarOrderList();
 		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
 		for(CarOrder order : allCarOrders) {
@@ -49,6 +58,7 @@ public class OrderManager {
 			}
 		}
 		this.createProductionSchedule(allUnfinishedCarOrders, currentTime);
+		
 	}
 	
 	/**
@@ -63,6 +73,7 @@ public class OrderManager {
 		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
 		this.highestCarOrderID = 0;
 		this.createProductionSchedule(new ArrayList<CarOrder>(), currentTime);
+		this.createPolicies();
 	}
 	
 
@@ -92,10 +103,10 @@ public class OrderManager {
 	 * 			The OrderForm containing all the information necessary to place a CarOrder.
 	 * @return	The CarOrder that was made with the given OrderForm.
 	 */
-	public CarOrder placeOrder(GarageHolder user, CarModel model ,ArrayList<Option> options){
+	public CarOrder placeOrder(GarageHolder user, Configuration configuration){
 
 		int carOrderId = this.getUniqueCarOrderId();
-		CarOrder newOrder = new CarOrder(carOrderId, user, model,options);
+		CarOrder newOrder = new CarOrder(carOrderId, user, configuration);
 		this.addCarOrder(newOrder);
 		this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
@@ -212,5 +223,30 @@ public class OrderManager {
 			if(i.isCompleted().equals(b)) result.add(i);
 		}
 		return result;
+	}
+	
+	private void createPolicies(){
+		createSingleTaskPolicy();
+		createCarOrderPolicy();
+	}
+
+	private void createCarOrderPolicy() {
+		ArrayList<OptionType> List = new ArrayList<OptionType>();
+		for(OptionType i: OptionType.values()){
+			if(i != OptionType.Airco || i != OptionType.Spoiler ){
+				List.add(i);
+			}
+		}
+		Policy pol1 = new CompletionPolicy(null,List);
+		Policy pol2 = new ConflictPolicy(pol1);
+		Policy pol3 = new DependencyPolicy(pol2);
+		Policy pol4 = new ModelCompatibilityPolicy(pol3);
+		this.CarOrderPolicy= pol4;
+		
+	}
+
+	private void createSingleTaskPolicy() {
+		// TODO Auto-generated method stub
+		
 	}
 }

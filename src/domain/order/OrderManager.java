@@ -17,6 +17,8 @@ import domain.policies.DependencyPolicy;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
+import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
+import domain.policies.SingleTaskOrderTaskTypePolicy;
 import domain.user.GarageHolder;
 
 
@@ -248,7 +250,16 @@ public class OrderManager {
 	}
 
 	private void createSingleTaskPolicy() {
-		// TODO Auto-generated method stub
-		
+		Policy pol1 = new SingleTaskOrderTaskTypePolicy(null);
+		Policy pol2 = new SingleTaskOrderNumbersOfTasksPolicy(pol1);
+		this.singleTaskPolicy = pol2;
 	}
+	 public Configuration giveCarOrderConfiguration(CarModel model){
+		return new Configuration(model,CarOrderPolicy);
+		 
+	 }
+	 public Configuration SingleTaskOrderConfiguration(){
+			return new Configuration(null,singleTaskPolicy);
+			 
+		 }
 }

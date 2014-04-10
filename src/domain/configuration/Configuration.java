@@ -3,12 +3,15 @@ package domain.configuration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import domain.policies.InvalidConfigurationException;
+import domain.policies.Policy;
+
 public class Configuration {
 	
 	private final CarModel model;
-	private final HashMap<OptionType,Option> options;
-	
-	
+	private ArrayList<Option> options;
+	private Policy polucychain;
+	private boolean iscomplete;
 	/**
 	 * Constructor of Configuration.
 	 * 
@@ -19,13 +22,35 @@ public class Configuration {
 	 * @throws	IllegalArgumentException
 	 * 			If the given options are conflicting with each other
 	 */
-	public Configuration(CarModel model, ArrayList<Option> options) throws IllegalArgumentException {
-		possible(model, options);
+	public Configuration(CarModel model, Policy policychain) throws IllegalArgumentException {
 		this.model = model;
-		this.options = new HashMap<OptionType,Option>();
-		addall(options);
-		searchmissingoptions();
-		
+		this.options = new ArrayList<Option>();
+		this.polucychain = policychain;
+		this.iscomplete = false;
+	}
+	public void complete() throws InvalidConfigurationException{
+		if(! this.iscomplete){
+			this.polucychain.checkComplete(this);
+			this.iscomplete = true;
+		}
+	}
+	public void setOption(Option opt) throws InvalidConfigurationException {
+		this.options.add(this.options.size(), opt);
+		try {
+			this.polucychain.check(this);
+		} catch (InvalidConfigurationException e) {
+			this.options.remove(this.options.size()-1);
+			throw e;
+		}
+	}
+	/**
+	 * Returns all options of this configuration.
+	 * 
+	 * @return	the list of all options of the configuration
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<Option> getAllOptions(){
+		return (ArrayList<Option>) options.clone();
 	}
 	
 	/**
@@ -40,61 +65,14 @@ public class Configuration {
 		}
 		return this.model.getExpectedTaskTime()*this.options.size();
 	}
-	
-	
-	private void possible(CarModel model, ArrayList<Option> options) {
-		for(Option i: options){
-			if(!model.getOptions().contains(i)){
-				throw new IllegalArgumentException("dit model bevat deze optie niet");
-			}
-		}
-	}
 
-	/**
-	 * Fills the hashmap options with all options of this configuration and adds the default options for that car model
-	 * 		if the option is missing.
-	 */
-	private void searchmissingoptions() {
-		for(OptionType i : OptionType.values()){
-			if(!options.containsKey(i))throw new IllegalArgumentException();
-		}	
-	}
 
-	/**
-	 * Adds all options to this configuration and checks for conflicting options.
-	 * 
-	 * @param	optionlist
-	 * 			The list of all options to be added to this configuration
-	 * @throws	IllegalArgumentException
-	 * 			If there are conflicting options to be added
-	 */
-	private void addall(ArrayList<Option> optionlist) throws IllegalArgumentException {
-		for(int i=0; i< optionlist.size();i++){
-			for(int j= i+1; j<optionlist.size();j++){
-				if(optionlist.get(i).conflictsWith(optionlist.get(j))){
-					throw new IllegalArgumentException("There are conflicting options");
-				}
-			}
-			options.put(optionlist.get(i).getType(), optionlist.get(i));
-			}
-		}
-	
-	/**
-	 * Returns all options of this configuration.
-	 * 
-	 * @return	the list of all options of the configuration
-	 */
-	//TODO echte clonen van option objecten?
-	public ArrayList<Option> getAllOptions(){
-		return new ArrayList<Option>(options.values());
-	}
-	
 	/**
 	 * Returns the string that represents this configuration.
 	 */
 	public String toString(){
 		String s = model.toString() + "\n Options: \n";
-		for(Option o: options.values()){
+		for(Option o: options){
 			s += o.toString() + "\n";
 		}
 		return s;
@@ -107,8 +85,11 @@ public class Configuration {
 	 * 			The string that specifies the option type
 	 * @return	the option that corresponds to the option type
 	 */
-	public Option getOptionOfType(String optionType){
-		return this.options.get(optionType);
+	public Option getOptionOfType(OptionType optionType){
+		for(Option i:options) {
+			if(i.getType() == optionType) return i;
+		}
+		return null;
 	}
 
 	/**

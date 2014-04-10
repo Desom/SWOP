@@ -14,6 +14,7 @@ import domain.configuration.OptionType;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
+import domain.policies.InvalidConfigurationException;
 import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.user.GarageHolder;
@@ -38,8 +39,9 @@ public class OrderManager {
 	 * 			The CarModelCatalog necessary for finding the Options and CarModel objects of all CarOrders
 	 * @param	currentTime 
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
+	 * @throws InvalidConfigurationException 
 	 */
-	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) {
+	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException {
 		this.createPolicies();
 		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.CarOrderPolicy );
 		ArrayList<CarOrder> allCarOrders = carOrderCreator.createCarOrderList();

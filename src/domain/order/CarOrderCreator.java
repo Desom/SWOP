@@ -12,6 +12,7 @@ import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
+import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 
 public class CarOrderCreator {
@@ -39,8 +40,9 @@ public class CarOrderCreator {
 	 * Creates all the placed CarOrders.
 	 * 
 	 * @return	A list of all the placed CarOrders.
+	 * @throws InvalidConfigurationException 
 	 */
-	public ArrayList<CarOrder> createCarOrderList(){
+	public ArrayList<CarOrder> createCarOrderList() throws InvalidConfigurationException{
 		ArrayList<CarOrder> allCarOrders = new ArrayList<CarOrder>();
 		ArrayList<String> allCarOrderInfo = new ArrayList<String>();
 		try {

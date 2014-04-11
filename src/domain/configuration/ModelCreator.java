@@ -47,13 +47,21 @@ public class ModelCreator {
 	 * 									or an option type is missing.	 * 
 	 */
 	private void processModelLine(String inputline) throws CarModelCatalogException {
+		// Determine default task time
+		int defaultTaskTime = 60;
+		if(inputline.contains("%")){
+			String[] original = inputline.split("%");
+			defaultTaskTime = Integer.parseInt(original[1]);
+			inputline = original[0];
+		}
+		// continue loading the options
 		String[] input=inputline.split(";");
 		if(input.length != 2) throw new CarModelCatalogException("Model: wrong input format: " + inputline);
 		if(allCarModels.containsKey(input[0])) throw new CarModelCatalogException("Model name already exists: "+input[0] );
 		try{
 			ArrayList<String> a = new ArrayList<String>();
 			addAll(a,input[1].split(","));
-			allCarModels.put(input[0], new CarModel(input[0], collectOption(a)));
+			allCarModels.put(input[0], new CarModel(input[0], collectOption(a), defaultTaskTime));
 		}catch(ClassCastException e){
 			throw new CarModelCatalogException("Wrong Option Type in form: " + inputline);
 		}

@@ -1,7 +1,6 @@
 package domain.configuration;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
@@ -10,34 +9,52 @@ public class Configuration {
 	
 	private final CarModel model;
 	private ArrayList<Option> options;
-	private Policy polucychain;
+	private Policy policychain;
 	private boolean iscomplete;
+	
 	/**
 	 * Constructor of Configuration.
 	 * 
-	 * @param	model
-	 * 			The car model used for this configuration
-	 * @param	options
-	 * 			The options used for this configuration
-	 * @throws	IllegalArgumentException
-	 * 			If the given options are conflicting with each other
+	 * @param model
+	 * 		The car model used for this configuration
+	 * @param policyChain
+	 * 		The chain of policy to check whether this configuration is conform to the company policies
+	 * @throws IllegalArgumentException
+	 * 		If the given options are conflicting with each other
 	 */
-	public Configuration(CarModel model, Policy policychain) throws IllegalArgumentException {
+	public Configuration(CarModel model, Policy policyChain) throws IllegalArgumentException {
 		this.model = model;
 		this.options = new ArrayList<Option>();
-		this.polucychain = policychain;
+		this.policychain = policyChain;
 		this.iscomplete = false;
 	}
+	
+	/**
+	 * This method is called by to indicate that this configuration is complete.
+	 * It will check if this configuration is valid.
+	 * 
+	 * @throws InvalidConfigurationException
+	 * 		If this configuration is a valid one. 
+	 */
 	public void complete() throws InvalidConfigurationException{
 		if(! this.iscomplete){
-			this.polucychain.checkComplete(this);
+			this.policychain.checkComplete(this);
 			this.iscomplete = true;
 		}
 	}
-	public void setOption(Option opt) throws InvalidConfigurationException {
-		this.options.add(this.options.size(), opt);
+	
+	/**
+	 * Adds an option to this configuration while checking the policies to make sure this configuration is still valid.
+	 * 
+	 * @param option
+	 * 		The option to be added
+	 * @throws InvalidConfigurationException
+	 * 		If the new configuration won't be valid if the option would be added
+	 */
+	public void addOption(Option option) throws InvalidConfigurationException {
+		this.options.add(this.options.size(), option);
 		try {
-			this.polucychain.check(this);
+			this.policychain.check(this);
 		} catch (InvalidConfigurationException e) {
 			this.options.remove(this.options.size()-1);
 			throw e;
@@ -70,6 +87,7 @@ public class Configuration {
 	/**
 	 * Returns the string that represents this configuration.
 	 */
+	@Override
 	public String toString(){
 		String s = model.toString() + "\n Options: \n";
 		for(Option o: options){

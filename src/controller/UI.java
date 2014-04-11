@@ -8,6 +8,7 @@ import java.util.Scanner;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
 import domain.order.CarOrder;
+import domain.policies.InvalidConfigurationException;
 
 public class UI implements UIInterface{
 	Scanner scan;
@@ -44,10 +45,8 @@ public class UI implements UIInterface{
 	public int askForInteger(String question, int lowerBound, int upperBound){
 		try {
 			System.out.println(question);
-			System.out.println("At least: " + lowerBound + ".");
-			System.out.println("At most: " + upperBound + ".");
 			int input = Integer.parseInt(scan.nextLine());
-			while(lowerBound > input && upperBound < input){
+			while(lowerBound > input || upperBound < input){
 				System.out.println("This is not a good number.");
 				input = Integer.parseInt(scan.nextLine());
 			}
@@ -162,9 +161,10 @@ public class UI implements UIInterface{
 			System.out.println("There is an internal problem : " + exc.getMessage());
 		}
 	}
-	public void fillIn(OrderForm order) {
+	
+	public void fillIn(OrderForm order) throws InvalidConfigurationException {
 		for(String i: order.getOptionTypes()){
-			order.setOption(this.askWithPossibilities("Enter your type of "+i+":", order.getPossibleOptionsOfType(i)));
+			order.addOption(this.askWithPossibilities("Enter your type of "+i+":", order.getPossibleOptionsOfType(i)));
 		}
 
 	}
@@ -202,7 +202,7 @@ public class UI implements UIInterface{
 		}
 		display("");
 		display(0 + ". Exit this view");
-		int answer = askForInteger("Please choose one of the numbered options", 0, index);
+		int answer = askForInteger("Please choose one of the numbered options", 0, index - 1);
 		return answer;// Returns 0 when the user wants to leave the overwiew
 	}
 	

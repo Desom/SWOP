@@ -87,7 +87,7 @@ public class CarOrderCreator {
 			ArrayList<Option> optionsList = findCarOptons(orderPieces[6]);
 			Configuration config = new Configuration(model, policy);
 			for(Option i: optionsList){
-				config.setOption(i);
+				config.addOption(i);
 			}
 			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, config));
 		}

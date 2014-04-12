@@ -29,7 +29,8 @@ public class OrderManager {
 	private final HashMap<Integer,ArrayList<CarOrder>> carOrdersPerId;
 	private int highestCarOrderID;
 	private Policy singleTaskPolicy;
-	private Policy CarOrderPolicy;
+	private Policy carOrderPolicy;
+	
 	/**
 	 * Constructor for the OrderManager class.
 	 * This constructor is also responsible for creating objects for all the placed carOrders.
@@ -45,7 +46,7 @@ public class OrderManager {
 	 */
 	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException {
 		this.createPolicies();
-		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.CarOrderPolicy );
+		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy );
 		ArrayList<CarOrder> allCarOrders = carOrderCreator.createCarOrderList();
 		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
 		for(CarOrder order : allCarOrders) {
@@ -175,15 +176,18 @@ public class OrderManager {
 		this.highestCarOrderID += 1;
 		return this.highestCarOrderID;
 	}
-	
+
+	 //TODO docs
 	public ProductionSchedule getProductionSchedule() {
 		return productionSchedule;
 	}
 
+	 //TODO docs
 	private void setProductionSchedule(ProductionSchedule productionSchedule) {
 		this.productionSchedule = productionSchedule;
 	}
 
+	 //TODO docs
 	private HashMap<Integer, ArrayList<CarOrder>> getCarOrdersPerId() {
 		return carOrdersPerId;
 	}
@@ -198,7 +202,7 @@ public class OrderManager {
 	 * 			If the user is not authorized to call this method.
 	 */
 	public ArrayList<CarOrder> getPendingOrders(GarageHolder user) {
-		return GetOrdersWithStatus(user, false);
+		return getOrdersWithStatus(user, false);
 	}
 
 	/**
@@ -209,7 +213,7 @@ public class OrderManager {
 	 * @return List of the completed CarOrders placed by the given user.
 	 */
 	public ArrayList<CarOrder> getCompletedOrders(GarageHolder user){
-		return GetOrdersWithStatus(user,true);
+		return getOrdersWithStatus(user,true);
 	}
 	
 	/**
@@ -217,23 +221,25 @@ public class OrderManager {
 	 * @param user
 	 * 			The User that wants to call this method.
 	 * 			The User whose CarOrders are requested.
-	 * @param b
+	 * @param bool
 	 * 			The boolean indicating completion
 	 * @return List of CarOrders placed by the given user.
 	 */
-	private ArrayList<CarOrder> GetOrdersWithStatus(GarageHolder user, boolean b){
+	private ArrayList<CarOrder> getOrdersWithStatus(GarageHolder user, boolean bool){
 		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
 		for(CarOrder i : this.getOrders(user)){
-			if(i.isCompleted().equals(b)) result.add(i);
+			if(i.isCompleted().equals(bool)) result.add(i);
 		}
 		return result;
 	}
-	
+
+	 //TODO docs
 	private void createPolicies(){
 		createSingleTaskPolicy();
 		createCarOrderPolicy();
 	}
 
+	 //TODO docs
 	private void createCarOrderPolicy() {
 		ArrayList<OptionType> List = new ArrayList<OptionType>();
 		for(OptionType i: OptionType.values()){
@@ -245,21 +251,44 @@ public class OrderManager {
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
-		this.CarOrderPolicy= pol4;
+		this.carOrderPolicy= pol4;
 		
 	}
 
+	 //TODO docs
 	private void createSingleTaskPolicy() {
 		Policy pol1 = new SingleTaskOrderTaskTypePolicy(null);
 		Policy pol2 = new SingleTaskOrderNumbersOfTasksPolicy(pol1);
 		this.singleTaskPolicy = pol2;
 	}
-	 public Configuration giveCarOrderConfiguration(CarModel model){
-		return new Configuration(model,CarOrderPolicy);
+
+	 //TODO docs
+	public Configuration giveCarOrderConfiguration(CarModel model){
+		return new Configuration(model,carOrderPolicy);
 		 
 	 }
-	 public Configuration SingleTaskOrderConfiguration(){
+	 
+	 //TODO docs
+	 public Configuration singleTaskOrderConfiguration(){
 			return new Configuration(null,singleTaskPolicy);
 			 
 		 }
+
+	 /**
+	  * Returns all the CarOrders that are not completed yet.
+	  * 
+	  * @return ArrayList of incomplete CarOrders.
+	  */
+	public ArrayList<CarOrder> getAllUnfinishedOrders() {
+		ArrayList<CarOrder> unfinished = new ArrayList<CarOrder>();
+		
+		for(ArrayList<CarOrder> carOrders : this.carOrdersPerId.values()){
+			for(CarOrder order : carOrders){
+				if(!order.isCompleted()){
+					unfinished.add(order);
+				}
+			}
+		}
+		return unfinished;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
+import domain.StatisticsView;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
 import domain.order.CarOrder;
@@ -235,6 +236,25 @@ public class UI implements UIInterface{
 		display(completedOrder.getCar().getConfiguration().getAllOptions().toArray());
 		display("Order time: " + completedOrder.getOrderedTime());
 		display("Delivered time: " + completedOrder.getDeliveredTime());
+		while (true)
+			if (askYesNoQuestion("Do you want to go back to the overview?"))
+				return;
+	}
+	@Override
+	public void showStatistics(StatisticsView view) {
+		display("Current statistics:");
+		display("Average number of cars completed per day: " + view.getAverageCarsPerDay());
+		display("Median number of cars completed per day: " + view.getMedianCarsPerDay());
+		
+		display("Cars produced yesterday: " + view.getAmountOfCars1DayAgo());
+		display("Cars produced 2 days ago: " + view.getAmountOfCars2DaysAgo());
+		
+		display("Average delay of all cars that had a delay: " + view.getAverageDelay());
+		display("Median delay of all cars that had a delay: " + view.getMedianDelay());
+		
+		display("Last delay : " + view.getLastDelay() + " occurred on " + view.getLastDelayDay());
+		display("Second to last delay : " + view.getSecondToLastDelay() + " occurred on " + view.getSecondToLastDelayDay());
+		
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
 				return;

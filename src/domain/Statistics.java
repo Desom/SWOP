@@ -59,8 +59,11 @@ public class Statistics {
 	 * 
 	 * @return a view on this statistics object.
 	 */
+	@SuppressWarnings("unchecked")
 	public StatisticsView getView() {
-		return new StatisticsView(carsPerDay, delays, cars1DayAgo, cars2DaysAgo, lastDelay, lastDelayDay, secondToLastDelay, secondToLastDelayDay);
+		ArrayList<Integer> carsClone = (ArrayList<Integer>) carsPerDay.clone();
+		ArrayList<Integer> delayClone = (ArrayList<Integer>) delays.clone();
+		return new StatisticsView(carsClone, delayClone, cars1DayAgo, cars2DaysAgo, lastDelay, lastDelayDay, secondToLastDelay, secondToLastDelayDay);
 	}
 
 }

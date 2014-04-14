@@ -119,5 +119,14 @@ public class Company {
 			throw new DoesNotExistException("user type " + userName + " does not exist");
 		}
 	}
+	
+	/**
+	 * Get a view of the current statistics. This view has all kinds of getters to get a better overview of the data.
+	 * 
+	 * @return a view on the current statistics.
+	 */
+	public StatisticsView viewStatistics(){
+		return this.statistics.getView();
+	}
 
 }

@@ -27,17 +27,6 @@ public interface OrderForm {
 	 * @return
 	 */
 	public List<String> getPossibleOptionsOfType(String type);
-	/**
-	 * See if you can place an option of a specified type.
-	 * @param Type
-	 * @return true if you can place an option of a specified type
-	 */
-	
-	public boolean canPlaceType(String Type);
-	/**
-	 * get a list of all option types.
-	 * @return a list of all option types.
-	 */
-	
+
 	public List<String> getOptionTypes();
 }

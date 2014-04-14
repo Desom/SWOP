@@ -162,9 +162,16 @@ public class UI implements UIInterface{
 		}
 	}
 	
-	public void fillIn(OrderForm order) throws InvalidConfigurationException {
+	public void fillIn(OrderForm order) {
 		for(String i: order.getOptionTypes()){
-			order.addOption(this.askWithPossibilities("Enter your type of "+i+":", order.getPossibleOptionsOfType(i)));
+			boolean inOrde = false;
+			while(!inOrde )
+			try {
+				order.addOption(this.askWithPossibilities("Enter your type of "+i+":", order.getPossibleOptionsOfType(i)));
+				inOrde = true;
+			} catch (InvalidConfigurationException e) {
+				this.display(e.getMessage());
+			}
 		}
 
 	}

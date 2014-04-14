@@ -263,14 +263,14 @@ public class OrderManager {
 	}
 
 	 //TODO docs
-	public Configuration giveCarOrderConfiguration(CarModel model){
-		return new Configuration(model,carOrderPolicy);
+	public Policy getCarOrderPolicies(){
+		return this.carOrderPolicy;
 		 
 	 }
 	 
 	 //TODO docs
-	 public Configuration singleTaskOrderConfiguration(){
-			return new Configuration(null,singleTaskPolicy);
+	 public Policy getSingleTaskOrderPolicies(){
+			return this.singleTaskPolicy;
 			 
 		 }
 

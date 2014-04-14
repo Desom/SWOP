@@ -68,16 +68,15 @@ public class OrderNewCarHandler implements CommunicationTool{
 				String modelname = ui.askWithPossibilities("Please input your car model", modelList);
 				model =getCarModel(modelname, company);			
 			}
-			Configuration config = ordermanager.giveCarOrderConfiguration(model);
 			//5. The system displays the ordering form.
 			//6. The user completes the ordering form.
-			OurOrderform order = new OurOrderform(ordermanager.giveCarOrderConfiguration(model),this);
+			OurOrderform order = new OurOrderform(model, ordermanager.getCarOrderPolicies(),this);
 			ui.fillIn(order);
 			boolean antwoord2 = ui.askYesNoQuestion("Do you want to confirm this order?");
 			if(antwoord2){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
-				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeOrder(garageHolder, config));
+				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeOrder(garageHolder, order.getConfiguration()));
 				String time = getTime(calender);
 				ui.display("Your order should be ready at "+ time+".");
 			}else{

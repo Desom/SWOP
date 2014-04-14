@@ -3,6 +3,7 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.configuration.Configuration;
 import domain.policies.InvalidConfigurationException;
 
 
@@ -29,4 +30,6 @@ public interface OrderForm {
 	public List<String> getPossibleOptionsOfType(String type);
 
 	public List<String> getOptionTypes();
+
+	public Configuration getConfiguration();
 }

@@ -4,10 +4,12 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.configuration.CarModel;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.policies.InvalidConfigurationException;
+import domain.policies.Policy;
 
 public class OurOrderform implements OrderForm{
 	
@@ -15,9 +17,9 @@ public class OurOrderform implements OrderForm{
 
 	private CommunicationTool controller;	
 	
-	public OurOrderform(  Configuration configuration, CommunicationTool controller) throws IllegalArgumentException{
+	public OurOrderform(CarModel model, Policy policies, CommunicationTool controller) throws IllegalArgumentException{
 		this.controller = controller;
-		this.configuration = configuration;
+		this.configuration = new Configuration( model, policies );
 	}
 	
 	/**
@@ -56,6 +58,10 @@ public class OurOrderform implements OrderForm{
 	@Override
 	public List<String> getOptionTypes() {
 		return this.controller.getOptionTypes();
+	}
+	@Override
+	public Configuration getConfiguration() {
+		return this.configuration;
 	}
 
 	

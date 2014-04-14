@@ -1,9 +1,10 @@
 package controller;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import domain.configuration.Configuration;
+import domain.configuration.Option;
+import domain.configuration.OptionType;
 import domain.policies.InvalidConfigurationException;
 
 
@@ -11,11 +12,11 @@ public interface OrderForm {
 	
 	/**
 	 * Stores an option in the form.
-	 * @param option description of the option you want to store
+	 * @param opties description of the option you want to store
 	 * @return true if you placed the option false otherwise
 	 * **/
 	
-	public void addOption(String option) throws InvalidConfigurationException;
+	public void addOption(Option opties) throws InvalidConfigurationException;
 	
 	/**
 	 * Completes the configuration.
@@ -27,9 +28,7 @@ public interface OrderForm {
 	 * @param type
 	 * @return
 	 */
-	public List<String> getPossibleOptionsOfType(String type);
-
-	public List<String> getOptionTypes();
+	public List<Option> getPossibleOptionsOfType(OptionType type);
 
 	public Configuration getConfiguration();
 }

@@ -70,7 +70,7 @@ public class OrderNewCarHandler implements CommunicationTool{
 			}
 			//5. The system displays the ordering form.
 			//6. The user completes the ordering form.
-			OurOrderform order = new OurOrderform(model, ordermanager.getCarOrderPolicies(),this);
+			OurOrderform order = new OurOrderform(model, ordermanager.getCarOrderPolicies());
 			ui.fillIn(order);
 			boolean antwoord2 = ui.askYesNoQuestion("Do you want to confirm this order?");
 			if(antwoord2){

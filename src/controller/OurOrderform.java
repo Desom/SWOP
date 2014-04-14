@@ -12,13 +12,11 @@ import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 
 public class OurOrderform implements OrderForm{
-	
-	private Configuration configuration;
 
-	private CommunicationTool controller;	
+
+	private Configuration configuration;
 	
-	public OurOrderform(CarModel model, Policy policies, CommunicationTool controller) throws IllegalArgumentException{
-		this.controller = controller;
+	public OurOrderform(CarModel model, Policy policies) throws IllegalArgumentException{
 		this.configuration = new Configuration( model, policies );
 	}
 	
@@ -29,8 +27,7 @@ public class OurOrderform implements OrderForm{
 	 * 		If the configuration is invalid
 	 */
 	@Override
-	public void addOption(String optionDescription) throws InvalidConfigurationException {
-		Option option = controller.getOption(optionDescription);
+	public void addOption(Option option) throws InvalidConfigurationException {
 		this.configuration.addOption(option);
 	}
 	
@@ -46,19 +43,16 @@ public class OurOrderform implements OrderForm{
 	}
 
 	@Override
-	public List<String> getPossibleOptionsOfType(String type) {
-		List<String> result = new ArrayList<String>();
-		for(Option i:this.configuration.getModel().getOfOptionType(OptionType.valueOf(type))){
-			result.add(i.toString());
+	public List<Option> getPossibleOptionsOfType(OptionType type) {
+		List<Option> result = new ArrayList<Option>();
+		for(Option i:this.configuration.getModel().getOfOptionType(type)){
+			result.add(i);
 		}
 		
 		return result;
 	}
 
-	@Override
-	public List<String> getOptionTypes() {
-		return this.controller.getOptionTypes();
-	}
+
 	@Override
 	public Configuration getConfiguration() {
 		return this.configuration;

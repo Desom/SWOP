@@ -8,6 +8,8 @@ import java.util.Scanner;
 import domain.StatisticsView;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
+import domain.configuration.Option;
+import domain.configuration.OptionType;
 import domain.order.CarOrder;
 import domain.policies.InvalidConfigurationException;
 
@@ -164,15 +166,23 @@ public class UI implements UIInterface{
 	}
 	
 	public void fillIn(OrderForm order) {
-		for(String i: order.getOptionTypes()){
+		for(OptionType i:OptionType.values()){
 			boolean inOrde = false;
 			while(!inOrde )
 			try {
-				order.addOption(this.askWithPossibilities("Enter your type of "+i+":", order.getPossibleOptionsOfType(i)));
+				Option[] opties = (Option[]) order.getPossibleOptionsOfType(i).toArray();
+				int nummer = this.askWithPossibilities("Enter your type of "+i+":", opties);
+				order.addOption(opties[nummer]);
 				inOrde = true;
 			} catch (InvalidConfigurationException e) {
 				this.display(e.getMessage());
 			}
+		}
+		try {
+			order.completeConfiguration();
+		} catch (InvalidConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 	}

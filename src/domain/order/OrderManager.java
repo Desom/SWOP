@@ -6,10 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import domain.assembly.ProductionSchedule;
-import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
@@ -19,6 +17,7 @@ import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
 import domain.policies.SingleTaskOrderTaskTypePolicy;
+import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
 
@@ -290,5 +289,17 @@ public class OrderManager {
 			}
 		}
 		return unfinished;
+	}
+
+	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, Configuration configuration,
+			GregorianCalendar deadline) {
+		//TODO zelfde map voor car en SingleTaskOrders???
+		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration,deadline);
+		int carOrderId = this.getUniqueCarOrderId();
+		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration,deadline);
+		this.addCarOrder(newOrder);
+		this.getProductionSchedule().addOrder(newOrder);
+		return newOrder;
+
 	}
 }

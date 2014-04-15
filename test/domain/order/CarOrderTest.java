@@ -1,4 +1,4 @@
-package test.order;
+package domain.order;
 
 import static org.junit.Assert.*;
 
@@ -73,7 +73,7 @@ public class CarOrderTest {
 	@Test
 	public void testCreation() {
 		//TODO meer testen?
-		assertEquals(carModel,carOrder.getCar().getConfiguration().getModel());
+		assertEquals(carModel,carOrder.getOrder().getConfiguration().getModel());
 		assertEquals(0,carOrder.getCarOrderID());
 		assertEquals(now3,carOrder.getDeliveredTime());
 		assertEquals(now,carOrder.getOrderedTime());

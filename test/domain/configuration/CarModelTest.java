@@ -1,18 +1,16 @@
-package test.configuration;
-import static org.junit.Assert.*;
+package domain.configuration;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalogException;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
 
-
-public class Test_CarModel {
+public class CarModelTest {
 	ArrayList<Option> a;
 	Option A;
 	Option B;

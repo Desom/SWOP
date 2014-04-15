@@ -1,4 +1,4 @@
-package test.assembly;
+package domain.assembly;
 
 import static org.junit.Assert.*;
 
@@ -101,7 +101,7 @@ public class AssemblyLineTest {
 		CarOrder order = schedule.seeNextCarOrder(100);
 		CarAssemblyProcess next;
 		if(order != null){
-			next = order.getCar().getAssemblyprocess();
+			next = order.getOrder().getAssemblyprocess();
 		}else{
 			next = null;
 		}
@@ -150,7 +150,7 @@ public class AssemblyLineTest {
 				}
 				assertEquals(current.getAllTasksAt(i), list);
 				if(current.getCarOrderIdAt(i) != -1){
-					assertEquals(current.getCarOrderIdAt(i), line.getCarAssemblyProcess(line.selectWorkstationById(i)).getCar().getOrder().getCarOrderID());
+					assertEquals(current.getCarOrderIdAt(i), line.getCarAssemblyProcess(line.selectWorkstationById(i)).getOrder().getOrder().getCarOrderID());
 				}
 				assertTrue(current.getHeader().compareToIgnoreCase("Current Status") == 0);
 			}

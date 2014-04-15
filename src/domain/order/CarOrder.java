@@ -6,16 +6,10 @@ import java.util.GregorianCalendar;
 import domain.configuration.CarModel;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
+import domain.user.GarageHolder;
 import domain.user.User;
 
-public class CarOrder {
-	
-	private final int carOrderID;
-	private final int userID;
-	private final GregorianCalendar orderedTime;
-	private GregorianCalendar deliveredTime;
-
-	private final Car car;
+public class CarOrder extends Order {
 	
 	/**
 	 * Constructor of CarOrder.
@@ -27,11 +21,9 @@ public class CarOrder {
 	 * @param	configuration
 	 * 			The configuration of the specified car
 	 */
-	public CarOrder(int carOrderId, User user, Configuration configuration) {
-		this.carOrderID = carOrderId;
-		this.car = new Car(this,configuration);
-		this.userID = user.getId();
-		this.orderedTime = new GregorianCalendar(); // dit geeft de tijd op het moment van constructie.
+	public CarOrder(int carOrderId, GarageHolder garageHolder, Configuration configuration) {
+		super(carOrderId, garageHolder, configuration, false);
+		this.setOrderedTime(new GregorianCalendar()); // dit geeft de tijd op het moment van constructie.
 	}
 
 	/**
@@ -52,125 +44,6 @@ public class CarOrder {
 	 * 			The options of the car that has been ordered
 	 * @param configuration 
 	 */
-	public CarOrder(
-			int carOrderId, 
-			int garageHolderId,
-			GregorianCalendar orderedCalendar,
-			GregorianCalendar deliveredCalendar, 
-			Configuration configuration
-			) {
-		this.carOrderID = carOrderId;
-		this.userID = garageHolderId;
-		this.orderedTime = (GregorianCalendar) orderedCalendar.clone();
-		boolean isDelivered;
-		if(deliveredCalendar != null){
-			this.deliveredTime = (GregorianCalendar) deliveredCalendar.clone();
-			isDelivered = true;
-		}
-		else{
-			this.deliveredTime = null;
-			isDelivered = false;
-		}
 
-		this.car = new Car(this, configuration, isDelivered);
-	}
-
-	/**
-	 * Sets the time this car was delivered.
-	 * 
-	 * @param	user
-	 * 			The user that has ordered the delivery
-	 * @param 	deliveredTime
-	 * 			The time this car was delivered
-	 */
-	public void setDeliveredTime(GregorianCalendar deliveredTime) {
-			if(!this.isCompleted())
-				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
-			if(this.deliveredTime!=null)
-				throw new IllegalStateException("DeliveredTime already set");
-			this.deliveredTime = deliveredTime;
-	}
-
-	/**
-	 * Returns the id of this car order.
-	 * 
-	 * @return the id of this car order
-	 */
-	public int getCarOrderID() {
-		return carOrderID;
-	}
-
-	/**
-	 * Returns the time the car was delivered.
-	 * 
-	 * @return	the time the car was delivered
-	 * @throws	IllegalStateException
-	 * 			If this car hasn't been delivered yet
-	 */
-	public GregorianCalendar getDeliveredTime() throws IllegalStateException{
-		if (deliveredTime == null)
-			throw new IllegalStateException("This car hasn't been delivered yet");
-		return (GregorianCalendar) deliveredTime.clone();
-	}
-
-	/**
-	 * Returns the car that has been ordered.
-	 * 
-	 * @return	the car that has been ordered
-	 */
-	public Car getCar() {
-		return car;
-	}
-
-	/**
-	 * Returns the user id of the user that has placed the order.
-	 * 
-	 * @return	the user id of the user that has placed the order
-	 */
-	public int getUserId() {
-		return this.userID;
-	}
-
-	/**
-	 * Returns the time the order was placed.
-	 * 
-	 * @return	the time the order was placed
-	 */
-	public GregorianCalendar getOrderedTime() {
-		return (GregorianCalendar) this.orderedTime.clone();
-	}
-	
-	/**
-	 * Returns if this car is already completed or not.
-	 * 
-	 * @return true if the car is already completed, else false
-	 */
-	public Boolean isCompleted() {
-		return this.getCar().isCompleted();
-	}
-	
-	/**
-	 * Returns a string representation of the CarOrder
-	 */
-	@Override
-	public String toString(){
-		String ordered = "  Ordered on: " + this.orderedTime.get(GregorianCalendar.DAY_OF_MONTH) 
-				+ "-" + this.orderedTime.get(GregorianCalendar.MONTH)
-				+ "-" + this.orderedTime.get(GregorianCalendar.YEAR)
-				+ " " + this.orderedTime.get(GregorianCalendar.HOUR_OF_DAY)
-				+ ":" + this.orderedTime.get(GregorianCalendar.MINUTE)
-				+ ":" + this.orderedTime.get(GregorianCalendar.SECOND);
-		String delivered ="";
-		if(this.deliveredTime != null){
-			delivered = "  Delivered on: " + this.deliveredTime.get(GregorianCalendar.DAY_OF_MONTH) 
-					+ "-" + this.deliveredTime.get(GregorianCalendar.MONTH)
-					+ "-" + this.deliveredTime.get(GregorianCalendar.YEAR)
-					+ " " + this.deliveredTime.get(GregorianCalendar.HOUR_OF_DAY)
-					+ ":" + this.deliveredTime.get(GregorianCalendar.MINUTE)
-					+ ":" + this.deliveredTime.get(GregorianCalendar.SECOND);
-		}
-		return "CarOrder: " + this.carOrderID + "  User: " + this.userID + ordered + delivered;
-		
-	}
 
 }

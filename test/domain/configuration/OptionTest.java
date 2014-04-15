@@ -1,4 +1,4 @@
-package test.configuration;
+package domain.configuration;
 import static org.junit.Assert.*;
 
 import java.util.ArrayList;
@@ -10,7 +10,7 @@ import domain.configuration.Option;
 import domain.configuration.OptionType;
 
 
-public class Test_Options {
+public class OptionTest {
 	
 	@Test
 	public void testcreate() throws CarModelCatalogException {

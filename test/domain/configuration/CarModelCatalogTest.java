@@ -1,4 +1,4 @@
-package test.configuration;
+package domain.configuration;
 import static org.junit.Assert.*;
 
 import java.io.BufferedWriter;
@@ -12,7 +12,7 @@ import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
 
 
-public class Test_CarModelCatalog {
+public class CarModelCatalogTest {
 	@Before
 	public void setUp() throws Exception {
 		BufferedWriter write = new BufferedWriter(new FileWriter("testData/test_option.txt"));

@@ -5,37 +5,37 @@ import java.util.List;
 
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.Car;
+import domain.order.Order;
 
 public class CarAssemblyProcess {
 	
 	private final ArrayList<AssemblyTask> tasks;
-	private final Car car;
+	private final Order order;
 	private int minutesWorked = 0;
 
 	/**
 	 * The constructor for the CarAssemblyProcess class
 	 * 
-	 * @param car 
-	 * 				The Car related to this assembly process
+	 * @param order 
+	 * 				The order related to this assembly process
 	 * @param options 
 	 * 				The Options that are to be converted into assemblyTasks
 	 */
-	public CarAssemblyProcess(Car car, ArrayList<Option> options){
-		this(car, options, false);
+	public CarAssemblyProcess(Order order, ArrayList<Option> options){
+		this(order, options, false);
 	}
 	
 	/**
 	 * The constructor for the CarAssemblyProcess class
 	 * 
-	 * @param car 
-	 * 				The Car related to this assembly process
+	 * @param order 
+	 * 				The order related to this assembly process
 	 * @param options 
 	 * 				The Options that are to be converted into assemblyTasks
 	 * @param isCompleted 
 	 * 				Indicate if the CarAssemblyProcess is already completed
 	 */
-	public CarAssemblyProcess(Car car, ArrayList<Option> options, boolean isCompleted){
+	public CarAssemblyProcess(Order order, ArrayList<Option> options, boolean isCompleted){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
 		for(Option o : options){
 			ArrayList<String> actions = new ArrayList<String>();
@@ -43,7 +43,7 @@ public class CarAssemblyProcess {
 			tasks.add(new AssemblyTask(actions, o.getType(), isCompleted, this)); 
 		}
 		this.tasks = tasks;
-		this.car = car;
+		this.order = order;
 	}
 	
 	/**
@@ -99,10 +99,10 @@ public class CarAssemblyProcess {
 	
 	/**
 	 * 
-	 * @return The Car related to this assembly process
+	 * @return The order related to this assembly process
 	 */
-	public Car getCar() {
-		return car;
+	public Order getOrder() {
+		return this.order;
 	}
 	
 	/**

@@ -1,4 +1,4 @@
-package test.assembly;
+package domain.assembly;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -37,7 +37,7 @@ public class CarAssemblyProcessTest {
 		
 		OrderManager orderManager = new OrderManager("testData/testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1, 12, 0, 0));
 		ProductionSchedule schedule = orderManager.getProductionSchedule();
-		process = schedule.getNextCarOrder(100).getCar().getAssemblyprocess();
+		process = schedule.getNextCarOrder(100).getOrder().getAssemblyprocess();
 		
 		taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);

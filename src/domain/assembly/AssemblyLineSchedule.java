@@ -5,6 +5,7 @@ import java.util.GregorianCalendar;
 
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.order.CarOrder;
+import domain.order.Order;
 
 public class AssemblyLineSchedule {
 
@@ -25,7 +26,7 @@ public class AssemblyLineSchedule {
 	}
 
 	 //TODO docs
-	public GregorianCalendar completionEstimate(CarOrder carOrder){
+	public GregorianCalendar completionEstimate(Order order){
 		//TODO
 		return null;
 	}

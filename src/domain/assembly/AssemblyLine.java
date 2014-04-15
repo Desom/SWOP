@@ -6,6 +6,7 @@ import domain.InternalFailureException;
 import domain.Statistics;
 import domain.configuration.OptionType;
 import domain.order.CarOrder;
+import domain.order.Order;
 
 
 public class AssemblyLine {
@@ -57,12 +58,12 @@ public class AssemblyLine {
 			// move huidige cars 1 plek
 			//neem CarOrder van WorkStation 3
 			Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations());
-			CarOrder finished = null;
+			Order finished = null;
 			if(workstationLast.getCarAssemblyProcess() != null){
 				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
-				finished = workstationLast.getCarAssemblyProcess().getCar().getOrder();
+				finished = workstationLast.getCarAssemblyProcess().getOrder();
 				this.statistics.carCompleted();
-				this.statistics.addDelay(finished.getCar().getDelay(getAllWorkstations()), this.schedule.getCurrentTime());
+				this.statistics.addDelay(finished.getDelay(getAllWorkstations()), this.schedule.getCurrentTime());
 			}
 			for(int i = getAllWorkstations().size(); i>1; i--){
 				Workstation workstationNext = selectWorkstationById(i);
@@ -86,7 +87,7 @@ public class AssemblyLine {
 			//voeg nieuwe car toe.
 			CarAssemblyProcess newCar = null;
 			if(this.schedule.seeNextCarOrder(timeSpendForTasks) != null){
-				newCar = this.schedule.getNextCarOrder(timeSpendForTasks).getCar().getAssemblyprocess();
+				newCar = this.schedule.getNextCarOrder(timeSpendForTasks).getAssemblyprocess();
 			}
 
 			Workstation workstation1 = selectWorkstationById(1);
@@ -230,7 +231,7 @@ public class AssemblyLine {
 				}else{
 					CarOrder order = this.schedule.seeNextCarOrder(time);
 					if(order != null){
-						CarAssemblyProcess futureCar = order.getCar().getAssemblyprocess();
+						CarAssemblyProcess futureCar = order.getAssemblyprocess();
 						fake.setCarAssemblyProcess(futureCar);
 						for(AssemblyTask t : futureCar.compatibleWith(fake)){
 							fake.addAssemblyTask(t);

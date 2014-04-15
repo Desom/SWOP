@@ -5,14 +5,16 @@ import java.util.GregorianCalendar;
 import domain.configuration.Configuration;
 import domain.user.User;
 
-public class SingleTaskOrder extends CarOrder {
+public class SingleTaskOrder extends Order {
+	
 	private GregorianCalendar deadline;
-	public SingleTaskOrder(int carOrderId, User user,
-			Configuration configuration, GregorianCalendar deadline) {
+
+	public SingleTaskOrder(int carOrderId, User user, Configuration configuration, GregorianCalendar deadline) {
 		super(carOrderId, user, configuration);
 		this.deadline = deadline;
 	}
-	public GregorianCalendar getDeadLine(){
+
+	public GregorianCalendar getDeadLine() {
 		return this.deadline;
 	}
 }

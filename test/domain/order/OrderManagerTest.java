@@ -1,4 +1,4 @@
-package test.order;
+package domain.order;
 
 import static org.junit.Assert.*;
 

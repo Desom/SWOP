@@ -76,7 +76,7 @@ public class OrderNewCarHandler implements CommunicationTool{
 			if(antwoord2){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
-				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeOrder(garageHolder, order.getConfiguration()));
+				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeCarOrder(garageHolder, order.getConfiguration()));
 				String time = getTime(calender);
 				ui.display("Your order should be ready at "+ time+".");
 			}else{

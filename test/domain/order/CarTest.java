@@ -1,4 +1,4 @@
-package test.order;
+package domain.order;
 
 import static org.junit.Assert.*;
 
@@ -32,7 +32,7 @@ public class CarTest {
 		selectedOptions.add(allOptions.get(5));
 		selectedOptions.add(allOptions.get(6));
 		CarOrder order = new CarOrder(1, holder, model, selectedOptions);
-		Car car = order.getCar();
+		Car car = order.getOrder();
 		
 		assertEquals(order, car.getOrder());
 		assertEquals(false, car.isCompleted());

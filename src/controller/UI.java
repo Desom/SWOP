@@ -229,9 +229,9 @@ public class UI implements UIInterface{
 	@Override
 	public void displayPendingCarOrderInfo(CarOrder pendingOrder, Calendar completionEstimate) {
 		display("Specification:");
-		display("- Car model: " + pendingOrder.getCar().getConfiguration().getModel());
+		display("- Car model: " + pendingOrder.getOrder().getConfiguration().getModel());
 		display("- Options: ");
-		display(pendingOrder.getCar().getConfiguration().getAllOptions().toArray());
+		display(pendingOrder.getOrder().getConfiguration().getAllOptions().toArray());
 		display("Order time: " + pendingOrder.getOrderedTime());
 		display("Estimated deliver time: " + completionEstimate);
 		while (true)
@@ -241,9 +241,9 @@ public class UI implements UIInterface{
 	@Override
 	public void displayCompletedCarOrderInfo(CarOrder completedOrder) {
 		display("Specification:");
-		display("- Car model: " + completedOrder.getCar().getConfiguration().getModel());
+		display("- Car model: " + completedOrder.getOrder().getConfiguration().getModel());
 		display("- Options: ");
-		display(completedOrder.getCar().getConfiguration().getAllOptions().toArray());
+		display(completedOrder.getOrder().getConfiguration().getAllOptions().toArray());
 		display("Order time: " + completedOrder.getOrderedTime());
 		display("Delivered time: " + completedOrder.getDeliveredTime());
 		while (true)

@@ -36,7 +36,7 @@ public class AssemblyStatusView {
 	 */
 	public int getCarOrderIdAt(int workstationId) throws DoesNotExistException{
 		if(getWorkstation(workstationId) != null && getWorkstation(workstationId).getCarAssemblyProcess() != null){
-			return getWorkstation(workstationId).getCarAssemblyProcess().getCar().getOrder().getCarOrderID();
+			return getWorkstation(workstationId).getCarAssemblyProcess().getOrder().getCarOrderID();
 		}
 		return -1;
 	}

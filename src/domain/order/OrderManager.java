@@ -25,7 +25,7 @@ import domain.user.GarageHolder;
 public class OrderManager {
 
 	private ProductionSchedule productionSchedule;
-	private final HashMap<Integer,ArrayList<CarOrder>> carOrdersPerId;
+	private final HashMap<Integer,ArrayList<Order>> ordersPerId;
 	private int highestCarOrderID;
 	private Policy singleTaskPolicy;
 	private Policy carOrderPolicy;
@@ -47,9 +47,10 @@ public class OrderManager {
 		this.createPolicies();
 		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy );
 		ArrayList<CarOrder> allCarOrders = carOrderCreator.createCarOrderList();
-		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
+		//TODO create single task order list?
+		this.ordersPerId = new HashMap<Integer,ArrayList<Order>>();
 		for(CarOrder order : allCarOrders) {
-			this.addCarOrder(order);
+			this.addOrder(order);
 		}
 
 		ArrayList<CarOrder> allUnfinishedCarOrders = new ArrayList<CarOrder>();
@@ -74,7 +75,7 @@ public class OrderManager {
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
 	public OrderManager(GregorianCalendar currentTime) {
-		this.carOrdersPerId = new HashMap<Integer,ArrayList<CarOrder>>();
+		this.ordersPerId = new HashMap<Integer,ArrayList<Order>>();
 		this.highestCarOrderID = 0;
 		this.createProductionSchedule(new ArrayList<CarOrder>(), currentTime);
 		this.createPolicies();
@@ -83,38 +84,36 @@ public class OrderManager {
 
 	
 	/**
-	 * Give a list of all the CarOrders placed by a given user.
+	 * Give a list of all the orders placed by a given user.
 	 * 
 	 * @param 	user
 	 * 			The User that wants to call this method.
 	 * 			The User whose CarOrders are requested.
-	 * @return	A copy of the list of all CarOrders made by the given user. An empty list if there are none.
+	 * @return	A copy of the list of all orders made by the given user. An empty list if there are none.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<CarOrder> getOrders(GarageHolder user){
+	public ArrayList<Order> getOrders(GarageHolder user){
 
-		ArrayList<CarOrder> ordersOfUser = this.getCarOrdersPerId().get(user.getId());
+		ArrayList<Order> ordersOfUser = this.getAllOrdersPerId().get(user.getId());
 		if(ordersOfUser == null)
-			return new ArrayList<CarOrder>();
+			return new ArrayList<Order>();
 		else
-			return (ArrayList<CarOrder>) ordersOfUser.clone();
+			return (ArrayList<Order>) ordersOfUser.clone();
 	}
 	
 	/**
-	 * Create a CarOrder based on the given OrderForm and put it in a ProductionSchedule.
+	 * Create an order based on the given OrderForm and put it in a ProductionSchedule.
 	 * 
 	 * @param 	orderForm
 	 * 			The OrderForm containing all the information necessary to place a CarOrder.
-	 * @return	The CarOrder that was made with the given OrderForm.
+	 * @return	The order that was made with the given OrderForm.
 	 */
-	public CarOrder placeOrder(GarageHolder user, Configuration configuration){
-
+	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration){
 		int carOrderId = this.getUniqueCarOrderId();
 		CarOrder newOrder = new CarOrder(carOrderId, user, configuration);
-		this.addCarOrder(newOrder);
+		this.addOrder(newOrder);
 		this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
-
 	}
 
 
@@ -153,23 +152,23 @@ public class OrderManager {
 
 	
 	/**
-	 * Add a new CarOrder to the OrderManager 
+	 * Add a new order to the OrderManager 
 	 * 
 	 * @param 	newOrder
-	 * 			The CarOrder which will be added.
+	 * 			The order which will be added.
 	 */
-	private void addCarOrder(CarOrder newOrder) {
-		if(!this.getCarOrdersPerId().containsKey(newOrder.getUserId()))
+	private void addOrder(Order newOrder) {
+		if(!this.getAllOrdersPerId().containsKey(newOrder.getUserId()))
 		{
-			this.getCarOrdersPerId().put(newOrder.getUserId(), new ArrayList<CarOrder>());
+			this.getAllOrdersPerId().put(newOrder.getUserId(), new ArrayList<Order>());
 		}
-		this.getCarOrdersPerId().get(newOrder.getUserId()).add(newOrder);
+		this.getAllOrdersPerId().get(newOrder.getUserId()).add(newOrder);
 	}
 	
 	/**
-	 * Returns a CarOrderId which is higher than all other carOrderId of the CarOrders in this OrderManager
+	 * Returns a orderId which is higher than all other orderId of the orders in this OrderManager.
 	 * 
-	 * @return a CarOrderId
+	 * @return a orderId
 	 */
 	private int getUniqueCarOrderId() {
 		this.highestCarOrderID += 1;
@@ -187,8 +186,8 @@ public class OrderManager {
 	}
 
 	 //TODO docs
-	private HashMap<Integer, ArrayList<CarOrder>> getCarOrdersPerId() {
-		return carOrdersPerId;
+	private HashMap<Integer, ArrayList<Order>> getAllOrdersPerId() {
+		return ordersPerId;
 	}
 
 	/**
@@ -200,7 +199,7 @@ public class OrderManager {
 	 * @throws UserAccessException
 	 * 			If the user is not authorized to call this method.
 	 */
-	public ArrayList<CarOrder> getPendingOrders(GarageHolder user) {
+	public ArrayList<Order> getPendingOrders(GarageHolder user) {
 		return getOrdersWithStatus(user, false);
 	}
 
@@ -211,22 +210,22 @@ public class OrderManager {
 	 * 			The User whose CarOrders are requested.
 	 * @return List of the completed CarOrders placed by the given user.
 	 */
-	public ArrayList<CarOrder> getCompletedOrders(GarageHolder user){
+	public ArrayList<Order> getCompletedOrders(GarageHolder user){
 		return getOrdersWithStatus(user,true);
 	}
 	
 	/**
-	 * Give a list of  CarOrders placed by a given user, with the boolean indicating if they have to be completed or not.
+	 * Give a list of orders placed by a given user, with the boolean indicating if they have to be completed or not.
 	 * @param user
 	 * 			The User that wants to call this method.
-	 * 			The User whose CarOrders are requested.
+	 * 			The User whose orders are requested.
 	 * @param bool
 	 * 			The boolean indicating completion
-	 * @return List of CarOrders placed by the given user.
+	 * @return List of orders placed by the given user.
 	 */
-	private ArrayList<CarOrder> getOrdersWithStatus(GarageHolder user, boolean bool){
-		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
-		for(CarOrder i : this.getOrders(user)){
+	private ArrayList<Order> getOrdersWithStatus(GarageHolder user, boolean bool){
+		ArrayList<Order> result = new ArrayList<Order>();
+		for(Order i : this.getOrders(user)){
 			if(i.isCompleted().equals(bool)) result.add(i);
 		}
 		return result;
@@ -274,15 +273,15 @@ public class OrderManager {
 		 }
 
 	 /**
-	  * Returns all the CarOrders that are not completed yet.
+	  * Returns all the orders that are not completed yet.
 	  * 
-	  * @return ArrayList of incomplete CarOrders.
+	  * @return ArrayList of incomplete orders.
 	  */
-	public ArrayList<CarOrder> getAllUnfinishedOrders() {
-		ArrayList<CarOrder> unfinished = new ArrayList<CarOrder>();
+	public ArrayList<Order> getAllUnfinishedOrders() {
+		ArrayList<Order> unfinished = new ArrayList<Order>();
 		
-		for(ArrayList<CarOrder> carOrders : this.carOrdersPerId.values()){
-			for(CarOrder order : carOrders){
+		for(ArrayList<Order> carOrders : this.ordersPerId.values()){
+			for(Order order : carOrders){
 				if(!order.isCompleted()){
 					unfinished.add(order);
 				}
@@ -296,7 +295,7 @@ public class OrderManager {
 		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration,deadline);
 		int carOrderId = this.getUniqueCarOrderId();
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration,deadline);
-		this.addCarOrder(newOrder);
+		this.addOrder(newOrder);
 		this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
 

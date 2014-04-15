@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import domain.order.CarOrder;
+import domain.order.Order;
 import domain.order.OrderManager;
 
 public class GeneralSchedule {
@@ -19,19 +20,19 @@ public class GeneralSchedule {
 	}
 
 	 //TODO docs
-	public ArrayList<CarOrder> getOrdersFor(
+	public ArrayList<Order> getOrdersFor(
 			AssemblyLineSchedule assemblyLineSchedule) {
 		// TODO Auto-generated method stub
 		return this.orderManager.getAllUnfinishedOrders();
 	}
 	
-	public GregorianCalendar completionEstimate(CarOrder carOrder){
-		for(Entry<AssemblyLineSchedule, ArrayList<CarOrder>> entry : this.getAllOrdersPerAssemblyLineSchedule().entrySet()){
-			if(entry.getValue().contains(carOrder)){
-				return entry.getKey().completionEstimate(carOrder);
+	public GregorianCalendar completionEstimate(Order order){
+		for(Entry<AssemblyLineSchedule, ArrayList<Order>> entry : this.getAllOrdersPerAssemblyLineSchedule().entrySet()){
+			if(entry.getValue().contains(order)){
+				return entry.getKey().completionEstimate(order);
 			}
 		}
-		throw new IllegalArgumentException("The given is unknown or already finished : "+ carOrder.toString());
+		throw new IllegalArgumentException("The given is unknown or already finished : "+ order.toString());
 	}
 	
 	/**
@@ -40,8 +41,8 @@ public class GeneralSchedule {
 	 * 
 	 * @return A HashMap containing a mapping between the AssemblyLineSchedules and the CarOrders that will be scheduled on them.
 	 */
-	private HashMap<AssemblyLineSchedule,ArrayList<CarOrder>> getAllOrdersPerAssemblyLineSchedule(){
-		HashMap<AssemblyLineSchedule, ArrayList<CarOrder>> hashMap = new HashMap<AssemblyLineSchedule,ArrayList<CarOrder>>();
+	private HashMap<AssemblyLineSchedule,ArrayList<Order>> getAllOrdersPerAssemblyLineSchedule(){
+		HashMap<AssemblyLineSchedule, ArrayList<Order>> hashMap = new HashMap<AssemblyLineSchedule,ArrayList<Order>>();
 		//TODO verwijder de carOrders die al op de assemblyLine staan uit getAllUnfinishedOrders
 		// of steek ze bij de juiste schedule
 		hashMap.put(this.assemblyLineSchedules.get(0), this.orderManager.getAllUnfinishedOrders());

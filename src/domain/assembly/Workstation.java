@@ -103,6 +103,9 @@ public class Workstation {
 	 * TODO : mag een CarMechanic weg als er een activeTask is?
 	 */
 	public void removeCarMechanic() {
+		if(activeTask != null){
+			throw new IllegalStateException("A CarMechanic cannot leave when there is an active ");
+		}
 		this.carMechanic = null;
 	}
 

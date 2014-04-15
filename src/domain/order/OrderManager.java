@@ -293,7 +293,6 @@ public class OrderManager {
 
 	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, Configuration configuration,
 			GregorianCalendar deadline) {
-		//TODO zelfde map voor car en SingleTaskOrders???
 		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration,deadline);
 		int carOrderId = this.getUniqueCarOrderId();
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration,deadline);

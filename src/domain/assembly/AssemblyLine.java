@@ -62,7 +62,7 @@ public class AssemblyLine {
 				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
 				finished = workstationLast.getCarAssemblyProcess().getCar().getOrder();
 				this.statistics.carCompleted();
-				this.statistics.addDelay(finished.getCar().getDelay(), this.schedule.getCurrentTime());
+				this.statistics.addDelay(finished.getCar().getDelay(getAllWorkstations()), this.schedule.getCurrentTime());
 			}
 			for(int i = getAllWorkstations().size(); i>1; i--){
 				Workstation workstationNext = selectWorkstationById(i);

@@ -1,6 +1,7 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import domain.configuration.Option;
 import domain.configuration.OptionType;
@@ -102,5 +103,22 @@ public class CarAssemblyProcess {
 	 */
 	public Car getCar() {
 		return car;
+	}
+	
+	/**
+	 * This method filters all workstations not usefull for this assembly process from
+	 * 		 the given list and returns the remainder.
+	 * 
+	 * @param stations list of all workstations
+	 * @return The list of all workstations required to complete all the tasks of this car assembly process.
+	 */
+	public ArrayList<Workstation> filterWorkstations(List<Workstation> stations){
+		ArrayList<Workstation> filtered = new ArrayList<Workstation>();
+		for(Workstation w : stations){
+			if(compatibleWith(w).size() > 0){
+				filtered.add(w);
+			}
+		}
+		return filtered;
 	}
 }

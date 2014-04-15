@@ -1,11 +1,10 @@
 package domain.order;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import domain.assembly.CarAssemblyProcess;
-import domain.configuration.CarModel;
+import domain.assembly.Workstation;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
 
 public class Car {
 	
@@ -50,8 +49,8 @@ public class Car {
 	 * 
 	 * @return The total time spend working on this car (in minutes) - the expected time spend working on completing this car (in minutes).
 	 */
-	public int getDelay(){
-		return this.process.getTotalTimeSpend() - this.configuration.getExpectedWorkingTime();
+	public int getDelay(List<Workstation> workstations){
+		return this.process.getTotalTimeSpend() - this.configuration.getExpectedWorkingTime()*this.process.filterWorkstations(workstations).size();
 	}
 
 	/**

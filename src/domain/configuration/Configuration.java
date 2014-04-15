@@ -71,16 +71,15 @@ public class Configuration {
 	}
 	
 	/**
-	 * Get the expected time that will be spent working on completing all options taking into account the model of this configuration 
+	 * Get the expected time that will be spent working per workstation taking into account the model of this configuration 
 	 * 
-	 * @return The amount of options multiplied with the expected time it takes to complete an option for the current model.
-	 * 			If no model is specified, the default time per option is 60 minutes.
+	 * @return the expected time that will be spent working per workstation
 	 */
 	public int getExpectedWorkingTime(){
 		if(this.model == null){
-			return 60*this.options.size();
+			return 60;
 		}
-		return this.model.getExpectedTaskTime()*this.options.size();
+		return this.model.getExpectedTaskTime();
 	}
 
 

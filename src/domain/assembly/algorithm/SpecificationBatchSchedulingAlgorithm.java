@@ -2,9 +2,11 @@ package domain.assembly.algorithm;
 
 import java.util.ArrayList;
 
-import domain.assembly.AssemblyLineSchedule;
+import domain.assembly.AssemblyLineScheduler;
+import domain.assembly.ScheduledOrder;
 import domain.configuration.Configuration;
 import domain.order.CarOrder;
+import domain.order.Order;
 
 public class SpecificationBatchSchedulingAlgorithm implements
 		SchedulingAlgorithm {
@@ -17,14 +19,15 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		this.innerAlgorithm = innerAlgorithm;
 	}
 
+
 	@Override
-	public ArrayList<CarOrder> schedule(
-			ArrayList<CarOrder> orderList, 
-			AssemblyLineSchedule assemblyLineSchedule) {
-		ArrayList<CarOrder> batchList = new ArrayList<CarOrder>();
-		ArrayList<CarOrder> standardList = new ArrayList<CarOrder>();
+	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList,
+			AssemblyLineScheduler assemblyLineSchedule) {
+
+		ArrayList<Order> batchList = new ArrayList<Order>();
+		ArrayList<Order> standardList = new ArrayList<Order>();
 		
-		for(CarOrder order : orderList){
+		for(Order order : orderList){
 			if(this.batchConfiguration.equals(order)){
 				batchList.add(order);
 			}
@@ -34,10 +37,18 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		}
 		
 
-		ArrayList<CarOrder> orderedList = this.innerAlgorithm.schedule(batchList, assemblyLineSchedule);
+		ArrayList<Order> orderedList = this.innerAlgorithm.scheduleToList(batchList, assemblyLineSchedule);
 		
-		orderedList.addAll(this.innerAlgorithm.schedule(standardList, assemblyLineSchedule));
+		orderedList.addAll(this.innerAlgorithm.scheduleToList(standardList, assemblyLineSchedule));
 		return orderedList;
+	}
+
+	@Override
+	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
+			ArrayList<Order> orderList,
+			AssemblyLineScheduler assemblyLineSchedule) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

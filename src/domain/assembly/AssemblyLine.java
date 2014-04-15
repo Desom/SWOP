@@ -12,14 +12,14 @@ import domain.order.Order;
 public class AssemblyLine {
 
 	private ArrayList<Workstation> workstations = null;
-	private final ProductionSchedule schedule;
+	private final AssemblyLineScheduler schedule;
 	private final Statistics statistics;
 
 	/**
 	 * Constructor for the assembly line class.
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
-	public AssemblyLine(ProductionSchedule schedule, Statistics statistics){
+	public AssemblyLine(AssemblyLineScheduler schedule, Statistics statistics){
 		this.statistics = statistics;
 		this.workstations = createWorkstations();
 		this.schedule = schedule;
@@ -268,6 +268,13 @@ public class AssemblyLine {
 	 */
 	public int getNumberOfWorkstations(){
 		return workstations.size();
+	}
+
+	
+	public ArrayList<Order> getAllOrders() {
+		// TODO ik veronderstelde dat een assemblyLine wist aan welke orders hij
+		// werkt. Dit is blijkbaar toch niet zo makkelijk te vinden.
+		return null;
 	}
 
 }

@@ -7,23 +7,24 @@ import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.order.CarOrder;
 import domain.order.Order;
 
-public class AssemblyLineSchedule {
+public class AssemblyLineScheduler implements Scheduler{
 
-	private GeneralSchedule generalScheduler;
+	public static final int END_OF_DAY = 22;
+	public static final int BEGIN_OF_DAY = 6;
 	private AssemblyLine assemblyLine;
 	private ArrayList<SchedulingAlgorithm> possibleAlgorithms;
 	private SchedulingAlgorithm currentAlgorithm;
 	private GregorianCalendar currentTime;
 
 	 //TODO docs
-	public AssemblyLineSchedule() {
+	public AssemblyLineScheduler() {
 		// TODO Auto-generated constructor stub
 	}
 
 	 //TODO docs
-	private ArrayList<CarOrder> schedule(){
-		return this.currentAlgorithm.schedule(this.generalScheduler.getOrdersFor(this), this);
-	}
+//	private ArrayList<CarOrder> schedule(){
+//		return this.currentAlgorithm.schedule(this.generalScheduler.getOrdersFor(this), this);
+//	}
 
 	 //TODO docs
 	public GregorianCalendar completionEstimate(Order order){
@@ -39,7 +40,7 @@ public class AssemblyLineSchedule {
 	 * @return	The CarOrder that is scheduled to be built next.
 	 */
 	//TODO docs
-	public CarOrder getNextCar(int time){
+	public CarOrder getNextCarOrder(int time){
 		//TODO
 		return null;
 	}
@@ -52,7 +53,7 @@ public class AssemblyLineSchedule {
 	 * @return The CarOrder that is scheduled to be built next.
 	 */
 	//TODO docs
-	public CarOrder seeNextCar(int time){
+	public CarOrder seeNextCarOrder(int time){
 		//TODO
 		return null;
 	}
@@ -76,4 +77,9 @@ public class AssemblyLineSchedule {
 	private void addCurrentTime(int time){
 		this.currentTime.add(GregorianCalendar.MINUTE, time);
 	}
+
+	public AssemblyLine getAssemblyLine() {
+		return assemblyLine;
+	}
+	
 }

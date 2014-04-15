@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.List;
 
-import domain.assembly.ProductionSchedule;
+import domain.assembly.Scheduler;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.OptionType;
@@ -24,7 +24,7 @@ import domain.user.GarageHolder;
 
 public class OrderManager {
 
-	private ProductionSchedule productionSchedule;
+	private Scheduler scheduler;
 	private final HashMap<Integer,ArrayList<Order>> ordersPerId;
 	private int highestCarOrderID;
 	private Policy singleTaskPolicy;
@@ -112,7 +112,7 @@ public class OrderManager {
 		int carOrderId = this.getUniqueCarOrderId();
 		CarOrder newOrder = new CarOrder(carOrderId, user, configuration);
 		this.addOrder(newOrder);
-		this.getProductionSchedule().addOrder(newOrder);
+		//this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
 	}
 
@@ -131,12 +131,14 @@ public class OrderManager {
 		try{
 		return order.getDeliveredTime();
 		} catch(IllegalStateException e){
-			return this.getProductionSchedule().completionEstimateCarOrder(order);
+			return this.getScheduler().completionEstimate(order);
 		}
 		
 			
 	}
-
+	
+	
+//	TODO dit is niet meer nodig, niet? (sinds we de schedule meegeven aan orderManager
 	/**
 	 * Creates a ProductionSchedule which is initialized with the given CarOrders.
 	 * 
@@ -176,13 +178,13 @@ public class OrderManager {
 	}
 
 	 //TODO docs
-	public ProductionSchedule getProductionSchedule() {
-		return productionSchedule;
+	public Scheduler getScheduler() {
+		return this.scheduler;
 	}
 
 	 //TODO docs
-	private void setProductionSchedule(ProductionSchedule productionSchedule) {
-		this.productionSchedule = productionSchedule;
+	private void setProductionSchedule(Scheduler scheduler) {
+		this.scheduler = scheduler;
 	}
 
 	 //TODO docs
@@ -296,7 +298,7 @@ public class OrderManager {
 		int carOrderId = this.getUniqueCarOrderId();
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration,deadline);
 		this.addOrder(newOrder);
-		this.getProductionSchedule().addOrder(newOrder);
+		//this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
 
 	}

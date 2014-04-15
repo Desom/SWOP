@@ -35,13 +35,11 @@ public class MainController {
 		this.managerController = new ManagerController();
 	}
 
-	public void run() throws InternalFailureException {
+	public void run(){
 		Company company = null;
 		try {
 			company = new Company();
-		} catch (InternalFailureException e2) {
-			ui.display("Internal Error");
-		}
+		
 
 		CarMechanic carMechanic = new CarMechanic(1);
 		CustomShopManager customShopManager = new CustomShopManager(2);
@@ -67,6 +65,10 @@ public class MainController {
 										break;
 			case "exit":				break loop;
 			}
+		}
+		
+		} catch (InternalFailureException e2) {
+			ui.printException(e2);
 		}
 	}
 

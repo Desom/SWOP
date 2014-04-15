@@ -41,6 +41,8 @@ public interface UIInterface {
 	String askWithPossibilities(String string, List<String> possibilities);
 	
 	void showStatistics(StatisticsView view);
+	
+	void printException(Exception e);
 
 
 }

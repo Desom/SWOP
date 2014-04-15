@@ -269,4 +269,11 @@ public class UI implements UIInterface{
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
 				return;
 	}
+	@Override
+	public void printException(Exception e) {
+		display("Internal Error: " + e.getMessage());
+	}
+	
+	
+	
 }

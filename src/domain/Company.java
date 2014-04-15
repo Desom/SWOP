@@ -10,6 +10,7 @@ import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
 import domain.order.OrderManager;
 import domain.user.CarMechanic;
+import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 import domain.user.Manager;
 import domain.user.User;
@@ -50,7 +51,7 @@ public class Company {
 	 * @throws UserAccessException 
 	 */
 	public LinkedList<Workstation> getAllWorkstations(){
-			return assemblyLine.getAllWorkstations(); //moet dit een kopie zijn ivm beveiliging?
+		return assemblyLine.getAllWorkstations(); //moet dit een kopie zijn ivm beveiliging?
 	}
 
 	/**
@@ -75,7 +76,7 @@ public class Company {
 	 * @throws UserAccessException 
 	 */
 	public CarModelCatalog getCatalog()  {
-			return catalog;
+		return catalog;
 	}
 
 
@@ -86,7 +87,7 @@ public class Company {
 	 * @throws UserAccessException 
 	 */
 	public OrderManager getOrderManager(){
-			return orderManager;
+		return orderManager;
 	}
 
 	/**
@@ -96,30 +97,10 @@ public class Company {
 	 * @throws UserAccessException
 	 */
 	public AssemblyLine getAssemblyLine(){
-			return this.assemblyLine;
+		return this.assemblyLine;
 	}
 
 
-	/**
-	 * Creates a user when requested
-	 * @param userName type of the user to create
-	 * @param ID The Id that is to be associated with this user
-	 * @return The user object that was created
-	 * @throws DoesNotExistException
-	 */
-	public User createUser(String userName, int ID) throws DoesNotExistException{
-		switch(userName){
-		case "manager":
-			return new Manager(ID);
-		case "garageholder":
-			return new GarageHolder(ID);
-		case "carmechanic":
-			return new CarMechanic(ID);
-		default:
-			throw new DoesNotExistException("user type " + userName + " does not exist");
-		}
-	}
-	
 	/**
 	 * Get a view of the current statistics. This view has all kinds of getters to get a better overview of the data.
 	 * 
@@ -128,5 +109,43 @@ public class Company {
 	public StatisticsView viewStatistics(){
 		return this.statistics.getView();
 	}
+
+
+	/**
+	 * Creates a manager when requested
+	 * @param ID The Id that is to be associated with this user
+	 * @return The user object that was created
+	 */
+	public User createManager(int ID){
+		return new Manager(ID);
+	}
+	
+	/**
+	 * Creates a car mechanic when requested
+	 * @param ID The Id that is to be associated with this user
+	 * @return The user object that was created
+	 */
+	public User createCarmechanic(int ID){
+		return new CarMechanic(ID);
+	}
+	
+	/**
+	 * Creates a garage holder when requested
+	 * @param ID The Id that is to be associated with this user
+	 * @return The user object that was created
+	 */
+	public User createGarageHolder(int ID){
+		return new GarageHolder(ID);
+	}
+	
+	/**
+	 * Creates a custom shop owner when requested
+	 * @param ID The Id that is to be associated with this user
+	 * @return The user object that was created
+	 */
+	public User createCustomShopOwner(int ID){
+		return new CustomShopManager(ID);
+	}
+
 
 }

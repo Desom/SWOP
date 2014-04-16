@@ -24,22 +24,20 @@ import domain.configuration.CarModelCatalogException;
 import domain.configuration.OptionType;
 import domain.order.Order;
 import domain.order.OrderManager;
+import domain.policies.InvalidConfigurationException;
 import domain.user.CarMechanic;
-import domain.user.Manager;
 
 public class AssemblyLineTest {
 
 
 	private AssemblyLine line;
 	private Scheduler scheduler;
-	private Manager manager;
 	private CarMechanic m1;
 	private CarMechanic m2;
 	private CarMechanic m3;
 
 	@Before
-	public void testCreate() throws DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException {
-		manager = new Manager(1);
+	public void testCreate() throws DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
 		m1 = new CarMechanic(2);
 		m2 = new CarMechanic(3);
 		m3 = new CarMechanic(4);
@@ -58,14 +56,14 @@ public class AssemblyLineTest {
 		line.selectWorkstationById(3).addCarMechanic(m3);
 		assertEquals(line.selectWorkstationById(3).getCarMechanic(), m3);
 
-		line.advanceLine(100);
+		line.advanceLine();
 		for(Workstation w : line.getAllWorkstations()){
 			while(w.getAllPendingTasks().size() > 0){ // complete alle tasks
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(w.getCarMechanic());
+				w.completeTask(w.getCarMechanic(),60);
 			}
 		}
-		line.advanceLine(100);
+		line.advanceLine();
 	}
 
 	@Test

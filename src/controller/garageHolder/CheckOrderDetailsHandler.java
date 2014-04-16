@@ -7,7 +7,7 @@ import java.util.Collections;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.order.CarOrder;
+import domain.order.Order;
 import domain.order.OrderManager;
 import domain.user.GarageHolder;
 
@@ -20,12 +20,12 @@ public class CheckOrderDetailsHandler {
 			// with estimated completion times, and the second part shows a history
 			// of completed orders, sorted most recent first.
 			OrderManager orderManager = company.getOrderManager();
-			ArrayList<CarOrder> pendingOrders = orderManager.getPendingOrders(garageHolder);
-			ArrayList<CarOrder> completedOrders = orderManager.getCompletedOrders(garageHolder);
+			ArrayList<Order> pendingOrders = orderManager.getPendingOrders(garageHolder);
+			ArrayList<Order> completedOrders = orderManager.getCompletedOrders(garageHolder);
 
-			Comparator<CarOrder> comparator = new Comparator<CarOrder>() {
+			Comparator<Order> comparator = new Comparator<Order>() {
 				@Override
-				public int compare(CarOrder order1, CarOrder order2) {
+				public int compare(Order order1, Order order2) {
 					return order1.getOrderedTime().compareTo(order2.getOrderedTime());
 				}
 			};
@@ -34,7 +34,7 @@ public class CheckOrderDetailsHandler {
 			// TODO ik ging ervan uit dat met "recent first" de ordered time bedoeld werd. Is dat goed?
 
 			ArrayList<Calendar> completionEstimates = new ArrayList<Calendar>();
-			for (CarOrder carOrder : pendingOrders)
+			for (Order carOrder : pendingOrders)
 				completionEstimates.add(orderManager.completionEstimate(carOrder));
 			
 			// 2. The user indicates the order he wants to check the details for.

@@ -127,7 +127,7 @@ public class OrderManager {
 	 * @return	A GregorianCalendar representing the estimated completion date of order.
 	 * 			Or the actual delivery date if it was already completed.
 	 */
-	public GregorianCalendar completionEstimate(CarOrder order) {
+	public GregorianCalendar completionEstimate(Order order) {
 		try{
 		return order.getDeliveredTime();
 		} catch(IllegalStateException e){

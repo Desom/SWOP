@@ -8,7 +8,6 @@ import controller.OrderForm;
 import controller.OurOrderform;
 import controller.UIInterface;
 import domain.Company;
-import domain.assembly.AssemblyTask;
 import domain.configuration.OptionType;
 import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;

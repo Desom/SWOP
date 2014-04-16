@@ -89,7 +89,7 @@ public class CarOrderCreator {
 			for(Option i: optionsList){
 				config.addOption(i);
 			}
-			allCarOrders.add(new Order(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, config));
+			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, config));
 		}
 		
 		return allCarOrders;

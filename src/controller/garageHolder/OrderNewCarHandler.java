@@ -11,10 +11,9 @@ import controller.UIInterface;
 import domain.Company;
 import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
-import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.Order;
 import domain.order.OrderManager;
 import domain.user.GarageHolder;
 
@@ -33,7 +32,7 @@ public class OrderNewCarHandler implements CommunicationTool{
 		//with estimated completion times.
 		ArrayList<Integer> tempIdList= new ArrayList<Integer>();
 		ArrayList<Calendar> tempCalendarList= new ArrayList<Calendar>();
-		for(CarOrder order:ordermanager.getPendingOrders(garageHolder)){
+		for(Order order:ordermanager.getPendingOrders(garageHolder)){
 			tempIdList.add(order.getUserId());
 			tempCalendarList.add(ordermanager.completionEstimate(order));
 		}
@@ -42,8 +41,8 @@ public class OrderNewCarHandler implements CommunicationTool{
 		tempCalendarList= new ArrayList<Calendar>();
 		//1.the second part shows a history
 		//of completed orders, sorted most recent first.
-		ArrayList<CarOrder> orders = getSortedCompletedOrder(garageHolder, ordermanager);
-		for(CarOrder order:orders){
+		ArrayList<Order> orders = getSortedCompletedOrder(garageHolder, ordermanager);
+		for(Order order:orders){
 			tempIdList.add(order.getUserId());
 			tempCalendarList.add(order.getDeliveredTime());
 		}
@@ -109,11 +108,11 @@ public class OrderNewCarHandler implements CommunicationTool{
 		return date;
 	}
 
-	private ArrayList<CarOrder> getSortedCompletedOrder(GarageHolder user, OrderManager ordermanager)  {
-		ArrayList<CarOrder> Orders = ordermanager.getCompletedOrders(user);
-		ArrayList<CarOrder> result = new ArrayList<CarOrder>();
+	private ArrayList<Order> getSortedCompletedOrder(GarageHolder user, OrderManager ordermanager)  {
+		ArrayList<Order> Orders = ordermanager.getCompletedOrders(user);
+		ArrayList<Order> result = new ArrayList<Order>();
 		while(!Orders.isEmpty()){
-			CarOrder min = Orders.get(0);
+			Order min = Orders.get(0);
 			for(int i=1; i < Orders.size(); i++){
 				if(ordermanager.completionEstimate(Orders.get(i)).before(ordermanager.completionEstimate(min))){
 					min = Orders.get(i);

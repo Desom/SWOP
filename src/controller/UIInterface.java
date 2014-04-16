@@ -2,11 +2,13 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import domain.Statistics;
 import domain.assembly.AssemblyStatusView;
 import domain.order.CarOrder;
+import domain.order.Order;
 
 public interface UIInterface {
 
@@ -20,9 +22,9 @@ public interface UIInterface {
 
 	boolean askYesNoQuestion(String string);
 	
-	void displayPendingCarOrderInfo(CarOrder pendingOrder, Calendar completionEstimate);
+	void displayPendingCarOrderInfo(Order pendingOrder, Calendar completionEstimate);
 	
-	void displayCompletedCarOrderInfo(CarOrder completedOrder);
+	void displayCompletedCarOrderInfo(Order completedOrder);
 
 	void displayPendingCarOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList);
@@ -30,7 +32,7 @@ public interface UIInterface {
 	void displayCompletedCarOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList);
 	
-	int askForCarOrder(ArrayList<CarOrder> pendingOrders, ArrayList<CarOrder> completedOrders, ArrayList<Calendar> completionEstimates);
+	int askForCarOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates);
 
 	void fillIn(OrderForm order);
 
@@ -43,6 +45,8 @@ public interface UIInterface {
 	void showStatistics(Statistics view);
 	
 	void printException(Exception e);
+
+	GregorianCalendar fillInSingleTaskOrder(OrderForm orderForm);
 
 
 }

@@ -2,6 +2,7 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ import domain.assembly.DoesNotExistException;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.order.CarOrder;
+import domain.order.Order;
 import domain.policies.InvalidConfigurationException;
 
 public class UI implements UIInterface{
@@ -206,7 +208,7 @@ public class UI implements UIInterface{
 	}
 
 	@Override
-	public int askForCarOrder(ArrayList<CarOrder> pendingOrders, ArrayList<CarOrder> completedOrders, ArrayList<Calendar> completionEstimates) {
+	public int askForCarOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates) {
 		int index = 1;
 		display("Your pending orders:");
 		for(int i =0; i< Math.max(pendingOrders.size(), completionEstimates.size());i++){
@@ -214,7 +216,7 @@ public class UI implements UIInterface{
 			index++;
 		}
 		display("Your completed orders:");
-		for(CarOrder carOrder : completedOrders){
+		for(Order carOrder : completedOrders){
 			display(index + ". " + carOrder.getCarOrderID() + " is delivered on:" + carOrder.getDeliveredTime().get(Calendar.DAY_OF_WEEK) + " "+carOrder.getDeliveredTime().get(Calendar.HOUR_OF_DAY) + "h"+carOrder.getDeliveredTime().get(Calendar.MINUTE));
 			index++;
 		}
@@ -227,11 +229,11 @@ public class UI implements UIInterface{
 	// TODO chain pendingOrder.getCar().getConfiguration().getModel() ok?
 	// dubbel checken als alles wel degelijk een clone is
 	@Override
-	public void displayPendingCarOrderInfo(CarOrder pendingOrder, Calendar completionEstimate) {
+	public void displayPendingCarOrderInfo(Order pendingOrder, Calendar completionEstimate) {
 		display("Specification:");
-		display("- Car model: " + pendingOrder.getOrder().getConfiguration().getModel());
+		display("- Car model: " + pendingOrder.getConfiguration().getModel());
 		display("- Options: ");
-		display(pendingOrder.getOrder().getConfiguration().getAllOptions().toArray());
+		display(pendingOrder.getConfiguration().getAllOptions().toArray());
 		display("Order time: " + pendingOrder.getOrderedTime());
 		display("Estimated deliver time: " + completionEstimate);
 		while (true)
@@ -239,11 +241,11 @@ public class UI implements UIInterface{
 				return;
 	}
 	@Override
-	public void displayCompletedCarOrderInfo(CarOrder completedOrder) {
+	public void displayCompletedCarOrderInfo(Order completedOrder) {
 		display("Specification:");
-		display("- Car model: " + completedOrder.getOrder().getConfiguration().getModel());
+		display("- Car model: " + completedOrder.getConfiguration().getModel());
 		display("- Options: ");
-		display(completedOrder.getOrder().getConfiguration().getAllOptions().toArray());
+		display(completedOrder.getConfiguration().getAllOptions().toArray());
 		display("Order time: " + completedOrder.getOrderedTime());
 		display("Delivered time: " + completedOrder.getDeliveredTime());
 		while (true)
@@ -273,6 +275,7 @@ public class UI implements UIInterface{
 	public void printException(Exception e) {
 		display("Internal Error: " + e.getMessage());
 	}
+
 	
 	
 	

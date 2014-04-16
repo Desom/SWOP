@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
+import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.Workstation;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
@@ -33,12 +34,15 @@ public class Company {
 	 */
 	public Company() throws InternalFailureException {
 		try {
+			GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 			this.catalog = new CarModelCatalog();
-			this.orderManager = new OrderManager(new GregorianCalendar(2014, 1, 1, 12, 0, 0));
+			this.orderManager = new OrderManager(new AssemblyLineScheduler(time), time);
 			this.statistics = new Statistics(this.orderManager);
 			this.assemblyLine = new AssemblyLine(orderManager.getScheduler(), this.statistics);
-		} catch (IOException | CarModelCatalogException e) {
-			throw new InternalFailureException("Failed to initialise Company");
+		} catch (IOException e) {
+			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
+		} catch (CarModelCatalogException e) {
+			throw new InternalFailureException("Failed to initialise Company due to an CarModelCatalog exception");
 		}
 	}
 

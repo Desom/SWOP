@@ -14,6 +14,7 @@ import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
+import domain.user.GarageHolder;
 
 public class CarOrderCreator {
 	//TODO is dit conform met het Factory pattern ???
@@ -67,7 +68,7 @@ public class CarOrderCreator {
 		// 0 : carOrderId
 			int carOrderId = Integer.parseInt(orderPieces[0]);
 		// 1 : garageHolderId
-			int garageHolderId = Integer.parseInt(orderPieces[1]);
+			GarageHolder garageHolder = new GarageHolder(Integer.parseInt(orderPieces[1]));
 		// 2 : isDelivered -> Boolean
 			boolean isDelivered = false;
 			if(orderPieces[2].equals("1")){
@@ -89,7 +90,7 @@ public class CarOrderCreator {
 			for(Option i: optionsList){
 				config.addOption(i);
 			}
-			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, config));
+			allCarOrders.add(new CarOrder(carOrderId, garageHolder, config, orderedCalendar, deliveredCalendar, isDelivered));
 		}
 		
 		return allCarOrders;

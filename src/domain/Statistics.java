@@ -28,7 +28,7 @@ public class Statistics {
 		LinkedList<Integer> carsPerDay = getCarsPerDay();
 		Collections.sort(carsPerDay);
 		if(carsPerDay.size() == 0){
-			return -1;
+			return 0;
 		}else{
 			return carsPerDay.get((int) Math.floor(carsPerDay.size()/2));
 		}
@@ -42,7 +42,7 @@ public class Statistics {
 	public int getAverageCarsPerDay(){
 		LinkedList<Integer> carsPerDay = getCarsPerDay();
 		if(carsPerDay.size() == 0){
-			return -1;
+			return 0;
 		}
 		int average = 0;
 		for(int i : carsPerDay){
@@ -61,7 +61,7 @@ public class Statistics {
 		LinkedList<Integer> delays = getDelays();
 		Collections.sort(delays);
 		if(delays.size() == 0){
-			return -1;
+			return 0;
 		}else{
 			return delays.get((int) Math.floor(delays.size()/2));
 		}
@@ -75,7 +75,7 @@ public class Statistics {
 	public int getAverageDelay(){
 		LinkedList<Integer> delays = getDelays();
 		if(delays.size() == 0){
-			return -1;
+			return 0;
 		}
 		int average = 0;
 		for(int i : delays){
@@ -92,6 +92,9 @@ public class Statistics {
 	 */
 	public int getAmountOfCars1DayAgo(){
 		int yesterday = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -1;
+		if(dailyMapping.get(yesterday) == null){
+			return 0;
+		}
 		return dailyMapping.get(yesterday).size();
 	}
 
@@ -101,8 +104,11 @@ public class Statistics {
 	 * @return The amount of cars completed 2 days ago.
 	 */
 	public int getAmountOfCars2DaysAgo(){
-		int yesterday = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -2;
-		return dailyMapping.get(yesterday).size();
+		int day = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -2;
+		if(dailyMapping.get(day) == null){
+			return 0;
+		}
+		return dailyMapping.get(day).size();
 	}
 
 	/**

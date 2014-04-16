@@ -17,8 +17,8 @@ public class AssemblyLineScheduler implements Scheduler{
 	private GregorianCalendar currentTime;
 
 	 //TODO docs
-	public AssemblyLineScheduler() {
-		// TODO Auto-generated constructor stub
+	public AssemblyLineScheduler(GregorianCalendar time) {
+		this.currentTime = time;
 	}
 
 	 //TODO docs

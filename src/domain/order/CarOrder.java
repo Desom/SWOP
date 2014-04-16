@@ -28,22 +28,22 @@ public class CarOrder extends Order {
 
 	/**
 	 * Constructor of CarOrder.
-	 * Creates a car using model and options
+	 * Creates a car using specifying it's ordered and deliveredTime
 	 * 
 	 * @param carOrderId
 	 * 			The id of this car order
-	 * @param userId
-	 * 			The id of the garageHolder that has placed this order
+	 * @param user
+	 * 			The garageHolder that has placed this order
 	 * @param orderedCalendar
 	 * 			The time when it was ordered
 	 * @param deliveredCalendar
 	 * 			The time when it was delivered; the car is already completed if deliveredCalendar is not null
-	 * @param model
-	 * 			The model of the car that has been ordered
-	 * @param optionsList
-	 * 			The options of the car that has been ordered
 	 * @param configuration 
 	 */
-
+	public CarOrder(int carOrderId, GarageHolder garageHolder, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deliveredTime, boolean isCompleted) {
+		super(carOrderId, garageHolder, configuration, isCompleted);
+		this.setOrderedTime(orderedTime);
+		this.setDeliveredTime(deliveredTime);
+	}
 
 }

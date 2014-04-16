@@ -3,7 +3,6 @@ package domain.order;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
-import java.util.List;
 
 import domain.assembly.Scheduler;
 import domain.configuration.CarModelCatalog;
@@ -24,7 +23,7 @@ import domain.user.GarageHolder;
 
 public class OrderManager {
 
-	private Scheduler scheduler;
+	private final Scheduler scheduler;
 	private final HashMap<Integer,ArrayList<Order>> ordersPerId;
 	private int highestCarOrderID;
 	private Policy singleTaskPolicy;
@@ -43,18 +42,19 @@ public class OrderManager {
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 * @throws InvalidConfigurationException 
 	 */
-	public OrderManager(String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException {
+	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException {
+		this.scheduler = scheduler;
 		this.createPolicies();
 		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy );
-		ArrayList<CarOrder> allCarOrders = carOrderCreator.createCarOrderList();
+		ArrayList<Order> allCarOrders = carOrderCreator.createCarOrderList();
 		//TODO create single task order list?
 		this.ordersPerId = new HashMap<Integer,ArrayList<Order>>();
-		for(CarOrder order : allCarOrders) {
+		for(Order order : allCarOrders) {
 			this.addOrder(order);
 		}
 
-		ArrayList<CarOrder> allUnfinishedCarOrders = new ArrayList<CarOrder>();
-		for(CarOrder order : allCarOrders) {
+		ArrayList<Order> allUnfinishedCarOrders = new ArrayList<Order>();
+		for(Order order : allCarOrders) {
 			if(order.getCarOrderID() > this.highestCarOrderID){
 				this.highestCarOrderID = order.getCarOrderID();
 			}
@@ -62,8 +62,6 @@ public class OrderManager {
 				allUnfinishedCarOrders.add(order);
 			}
 		}
-		this.createProductionSchedule(allUnfinishedCarOrders, currentTime);
-		
 	}
 	
 	/**
@@ -74,10 +72,10 @@ public class OrderManager {
 	 * @param	currentTime 
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
-	public OrderManager(GregorianCalendar currentTime) {
+	public OrderManager(Scheduler scheduler, GregorianCalendar currentTime) {
+		this.scheduler = scheduler;
 		this.ordersPerId = new HashMap<Integer,ArrayList<Order>>();
 		this.highestCarOrderID = 0;
-		this.createProductionSchedule(new ArrayList<CarOrder>(), currentTime);
 		this.createPolicies();
 	}
 	
@@ -136,21 +134,6 @@ public class OrderManager {
 		
 			
 	}
-	
-	
-//	TODO dit is niet meer nodig, niet? (sinds we de schedule meegeven aan orderManager
-	/**
-	 * Creates a ProductionSchedule which is initialized with the given CarOrders.
-	 * 
-	 * @param orderList
-	 * 			The list of orders that has to be scheduled on the create ProductionSchedule.
-	 * @param currentTime
-	 * 			The date at which the created ProductionSchedule starts.
-	 */
-	private void createProductionSchedule(List<CarOrder> carOrders, GregorianCalendar currentTime){
-		ProductionSchedule newProductionSchedule = new ProductionSchedule(carOrders, currentTime);
-		this.setProductionSchedule(newProductionSchedule);
-	}
 
 	
 	/**
@@ -182,10 +165,6 @@ public class OrderManager {
 		return this.scheduler;
 	}
 
-	 //TODO docs
-	private void setProductionSchedule(Scheduler scheduler) {
-		this.scheduler = scheduler;
-	}
 
 	 //TODO docs
 	private HashMap<Integer, ArrayList<Order>> getAllOrdersPerId() {

@@ -6,6 +6,7 @@ import domain.InternalFailureException;
 import domain.Statistics;
 import domain.configuration.OptionType;
 import domain.order.Order;
+import domain.user.CarMechanic;
 
 
 public class AssemblyLine {
@@ -284,6 +285,36 @@ public class AssemblyLine {
 			}
 		}
 		return orders;
+	}
+	
+	
+	/**
+	 * This method is only to be used for testing. It will complete all tasks the workstations are currently working on.
+	 * It will complete those tasks in a way where the time spent on each workstation is the expected time for that specific car order.
+	 * When the last workstation finishes it's last task the line will ofcourse automatically advance.
+	 * @throws InternalFailureException 
+	 * @throws IllegalStateException 
+	 */
+	private void fullDefaultAdvance() throws IllegalStateException, InternalFailureException{
+		LinkedList<Workstation> wList = getAllWorkstations();
+		for(Workstation w: wList){ // filter the already completed workstations so the line won't accidentally advance twice.
+			if(w.hasAllTasksCompleted()){
+				wList.remove(w);
+			}
+		}
+		for(Workstation w : wList){
+			CarMechanic mechanic = w.getCarMechanic();
+			if(mechanic == null)
+				mechanic = new CarMechanic(100*w.getId()); // randomize ID een beetje
+			while(w.getAllPendingTasks().size() > 1){
+				w.selectTask(w.getAllPendingTasks().get(0));
+				w.completeTask(mechanic,0);
+			}
+			if(w.getAllPendingTasks().size() != 0){
+				w.selectTask(w.getAllPendingTasks().get(0));
+				w.completeTask(mechanic,w.getCarAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+			}
+		}
 	}
 
 }

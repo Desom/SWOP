@@ -22,7 +22,7 @@ public class AssemblyTaskTest {
 		actions.add("action3");
 		actions.add("action4");
 		OptionType type = OptionType.Airco;
-		task = new AssemblyTask(actions, type);
+		task = new AssemblyTask(actions, type,false,null);
 		assert(task.isCompleted());
 		assertEquals(actions, task.getActions());
 		assertEquals(type, task.getType());
@@ -30,7 +30,7 @@ public class AssemblyTaskTest {
 	
 	@Test
 	public void testCompleteTask() {
-		task.completeTask();
+		task.completeTask(60);
 		assert(task.isCompleted());
 	}
 	

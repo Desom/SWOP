@@ -62,8 +62,6 @@ public class AssemblyLine {
 			if(workstationLast.getCarAssemblyProcess() != null){
 				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
 				finished = workstationLast.getCarAssemblyProcess().getOrder();
-				this.statistics.carCompleted();
-				this.statistics.addDelay(finished.getDelay(getAllWorkstations()), this.schedule.getCurrentTime());
 			}
 			for(int i = getAllWorkstations().size(); i>1; i--){
 				Workstation workstationNext = selectWorkstationById(i);
@@ -99,10 +97,14 @@ public class AssemblyLine {
 				}
 			}
 
-			finished.setDeliveredTime(this.schedule.getCurrentTime());
+			if(finished != null){
+				finished.setDeliveredTime(this.schedule.getCurrentTime());
+				finished.registerDelay(getAllWorkstations());
+				this.statistics.update();
+			}
 		}
 		catch(DoesNotExistException e){
-			throw new InternalFailureException("Suddenly a Workstation disappeared while that could not be possible.");
+			throw new InternalFailureException("Suddenly a Workstation disappeared while that should not be possible.");
 		}
 	}
 

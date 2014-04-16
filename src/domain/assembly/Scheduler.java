@@ -6,7 +6,11 @@ import domain.order.Order;
 
 public interface Scheduler {
 	
+	public GregorianCalendar getCurrentTime();
+	
 	public GregorianCalendar completionEstimate(Order order);
+	
+	
 	
 	//TODO wat returned dit? of is deze methode toch onnodig.
 	//public ??? getSchedule();

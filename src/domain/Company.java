@@ -36,7 +36,7 @@ public class Company {
 		try {
 			this.catalog = new CarModelCatalog();
 			this.orderManager = new OrderManager(new GregorianCalendar(2014, 1, 1, 12, 0, 0));
-			this.statistics = new Statistics();
+			this.statistics = new Statistics(this.orderManager);
 			this.assemblyLine = new AssemblyLine(orderManager.getProductionSchedule(), this.statistics);
 		} catch (IOException | CarModelCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company");
@@ -102,12 +102,12 @@ public class Company {
 
 
 	/**
-	 * Get a view of the current statistics. This view has all kinds of getters to get a better overview of the data.
+	 * Get the current statistics. This view has all kinds of getters to get a better overview of the data.
 	 * 
-	 * @return a view on the current statistics.
+	 * @return the current statistics.
 	 */
-	public StatisticsView viewStatistics(){
-		return this.statistics.getView();
+	public Statistics viewStatistics(){
+		return this.statistics;
 	}
 
 

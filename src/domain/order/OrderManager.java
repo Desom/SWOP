@@ -302,4 +302,20 @@ public class OrderManager {
 		return newOrder;
 
 	}
+	
+	/**
+	 * Returns a list of all completed orders for all users.
+	 * 
+	 * @return an ArrayList of all completed orders.
+	 */
+	public ArrayList<Order> getAllCompletedOrders(){
+		ArrayList<Order> completed = new ArrayList<Order>();
+		for(ArrayList<Order> olist : this.ordersPerId.values()){
+			for(Order o : olist){
+				if(o.isCompleted())
+				completed.add(o);			
+			}
+		}
+		return completed;
+	}
 }

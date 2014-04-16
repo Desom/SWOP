@@ -16,6 +16,7 @@ public abstract class Order {
 	private CarAssemblyProcess assemblyProcess;
 	private GregorianCalendar orderedTime;
 	private GregorianCalendar deliveredTime;
+	private int delay = -1;
 	
 	
 	/**
@@ -146,12 +147,19 @@ public abstract class Order {
 	}
 	
 	/**
-	 * Get the total delay this car order has accumulated at this point (in minutes).
+	 * calculate and set the total delay this car order has accumulated at this point (in minutes).
 	 * 
-	 * @return The total time spend working on this car (in minutes) - the expected time spend working on completing this car (in minutes).
 	 */
-	public int getDelay(List<Workstation> workstations){
-		return this.assemblyProcess.getTotalTimeSpend() - this.configuration.getExpectedWorkingTime()*this.assemblyProcess.filterWorkstations(workstations).size();
+	public void registerDelay(List<Workstation> workstations){
+		this.delay = this.assemblyProcess.getTotalTimeSpend() - this.configuration.getExpectedWorkingTime()*this.assemblyProcess.filterWorkstations(workstations).size();
+	}
+	
+	/**
+	 * Get the previously set delay accumulated for this order.
+	 * @return the delay of this order.
+	 */
+	public int getDelay(){
+		return this.delay;
 	}
 	
 	/**

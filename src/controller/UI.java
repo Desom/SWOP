@@ -5,7 +5,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Scanner;
 
-import domain.StatisticsView;
+import domain.Statistics;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
 import domain.configuration.Option;
@@ -251,7 +251,7 @@ public class UI implements UIInterface{
 				return;
 	}
 	@Override
-	public void showStatistics(StatisticsView view) {
+	public void showStatistics(Statistics view) {
 		display("Current statistics:");
 		display("Average number of cars completed per day: " + view.getAverageCarsPerDay());
 		display("Median number of cars completed per day: " + view.getMedianCarsPerDay());

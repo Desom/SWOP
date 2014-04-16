@@ -11,17 +11,18 @@ import org.junit.Before;
 import org.junit.Test;
 
 import domain.InternalFailureException;
+import domain.Statistics;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.CannotAdvanceException;
 import domain.assembly.CarAssemblyProcess;
 import domain.assembly.DoesNotExistException;
-import domain.assembly.ProductionSchedule;
+import domain.assembly.Scheduler;
 import domain.assembly.Workstation;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.Order;
 import domain.order.OrderManager;
 import domain.user.CarMechanic;
 import domain.user.Manager;
@@ -30,7 +31,7 @@ public class AssemblyLineTest {
 
 
 	private AssemblyLine line;
-	private ProductionSchedule schedule;
+	private Scheduler scheduler;
 	private Manager manager;
 	private CarMechanic m1;
 	private CarMechanic m2;
@@ -45,8 +46,8 @@ public class AssemblyLineTest {
 
 		// maak een andere orderManager met enkele voorbeeld orders
 		OrderManager orderManager = new OrderManager("testData/testData_OrderManager.txt", new CarModelCatalog() , new GregorianCalendar(2014, 1, 1, 12, 0, 0));
-		schedule = orderManager.getProductionSchedule();
-		line = new AssemblyLine(schedule);
+		scheduler = orderManager.getScheduler();
+		line = new AssemblyLine(scheduler, new Statistics(orderManager));
 
 		line.selectWorkstationById(1).addCarMechanic(m1);
 		assertEquals(line.selectWorkstationById(1).getCarMechanic(), m1);
@@ -93,24 +94,24 @@ public class AssemblyLineTest {
 		for(Workstation w : line.getAllWorkstations()){
 			while(w.getAllPendingTasks().size() > 0){ // complete alle tasks
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(w.getCarMechanic());
+				w.completeTask(w.getCarMechanic(),60);
 			}
-			processesBefore.add(line.getCarAssemblyProcess(w));
+			processesBefore.add(w.getCarAssemblyProcess());
 		}
 
-		CarOrder order = schedule.seeNextCarOrder(100);
+		Order order = scheduler.seeNextCarOrder(100);
 		CarAssemblyProcess next;
 		if(order != null){
-			next = order.getOrder().getAssemblyprocess();
+			next = order.getAssemblyprocess();
 		}else{
 			next = null;
 		}
 		
-		line.advanceLine(100);
+		line.advanceLine();
 
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			processesAfter.add(line.getCarAssemblyProcess(w));
+			processesAfter.add(w.getCarAssemblyProcess());
 		}
 
 		assertEquals(processesAfter.get(0), next);
@@ -123,14 +124,14 @@ public class AssemblyLineTest {
 	public void testAdvanceLineBlocking() throws DoesNotExistException, CannotAdvanceException, InternalFailureException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			processesBefore.add(line.getCarAssemblyProcess(w));
+			processesBefore.add(w.getCarAssemblyProcess());
 		}
 
-		line.advanceLine(100);
+		line.advanceLine();
 
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			processesAfter.add(line.getCarAssemblyProcess(w));
+			processesAfter.add(w.getCarAssemblyProcess());
 		}
 
 		for(int i = 0; i<processesAfter.size(); i++){
@@ -150,7 +151,7 @@ public class AssemblyLineTest {
 				}
 				assertEquals(current.getAllTasksAt(i), list);
 				if(current.getCarOrderIdAt(i) != -1){
-					assertEquals(current.getCarOrderIdAt(i), line.getCarAssemblyProcess(line.selectWorkstationById(i)).getOrder().getOrder().getCarOrderID());
+					assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i).getCarAssemblyProcess().getOrder().getCarOrderID());
 				}
 				assertTrue(current.getHeader().compareToIgnoreCase("Current Status") == 0);
 			}
@@ -166,11 +167,11 @@ public class AssemblyLineTest {
 			for(Workstation w : line.getAllWorkstations()){
 				while(w.getAllPendingTasks().size() > 0){ // complete alle tasks
 					w.selectTask(w.getAllPendingTasks().get(0));
-					w.completeTask(w.getCarMechanic());
+					w.completeTask(w.getCarMechanic(),60);
 				}
 			}
 			AssemblyStatusView future = line.futureStatus(100);
-			line.advanceLine(100);
+			line.advanceLine();
 			AssemblyStatusView current = line.currentStatus();
 			for(int i : line.getWorkstationIDs()){
 				assertEquals(current.getAllTasksAt(i), future.getAllTasksAt(i));

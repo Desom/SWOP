@@ -42,8 +42,8 @@ public class CarOrderCreator {
 	 * @return	A list of all the placed CarOrders.
 	 * @throws InvalidConfigurationException 
 	 */
-	public ArrayList<CarOrder> createCarOrderList() throws InvalidConfigurationException{
-		ArrayList<CarOrder> allCarOrders = new ArrayList<CarOrder>();
+	public ArrayList<Order> createCarOrderList() throws InvalidConfigurationException{
+		ArrayList<Order> allCarOrders = new ArrayList<Order>();
 		ArrayList<String> allCarOrderInfo = new ArrayList<String>();
 		try {
 			FileInputStream fStream = new FileInputStream(this.path);
@@ -89,7 +89,7 @@ public class CarOrderCreator {
 			for(Option i: optionsList){
 				config.addOption(i);
 			}
-			allCarOrders.add(new CarOrder(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, config));
+			allCarOrders.add(new Order(carOrderId, garageHolderId, orderedCalendar, deliveredCalendar, config));
 		}
 		
 		return allCarOrders;

@@ -5,21 +5,20 @@ import java.util.LinkedList;
 import domain.InternalFailureException;
 import domain.Statistics;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
 import domain.order.Order;
 
 
 public class AssemblyLine {
 
 	private ArrayList<Workstation> workstations = null;
-	private final AssemblyLineScheduler schedule;
+	private final Scheduler schedule;
 	private final Statistics statistics;
 
 	/**
 	 * Constructor for the assembly line class.
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
-	public AssemblyLine(AssemblyLineScheduler schedule, Statistics statistics){
+	public AssemblyLine(Scheduler schedule, Statistics statistics){
 		this.statistics = statistics;
 		this.workstations = createWorkstations();
 		this.schedule = schedule;
@@ -231,7 +230,7 @@ public class AssemblyLine {
 					}
 					catch(NullPointerException e){}
 				}else{
-					CarOrder order = this.schedule.seeNextCarOrder(time);
+					Order order = this.schedule.seeNextCarOrder(time);
 					if(order != null){
 						CarAssemblyProcess futureCar = order.getAssemblyprocess();
 						fake.setCarAssemblyProcess(futureCar);
@@ -272,11 +271,19 @@ public class AssemblyLine {
 		return workstations.size();
 	}
 
-	
+	/**
+	 * Returns a list of all orders the assemblyLine is currently working on.
+	 * 
+	 * @return a list of all orders currently on the assemblyLine
+	 */
 	public ArrayList<Order> getAllOrders() {
-		// TODO ik veronderstelde dat een assemblyLine wist aan welke orders hij
-		// werkt. Dit is blijkbaar toch niet zo makkelijk te vinden.
-		return null;
+		ArrayList<Order> orders = new ArrayList<Order>();
+		for(Workstation w : getAllWorkstations()){
+			if(w.getCarAssemblyProcess() != null){
+				orders.add(w.getCarAssemblyProcess().getOrder());
+			}
+		}
+		return orders;
 	}
 
 }

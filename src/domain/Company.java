@@ -4,7 +4,6 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
-import domain.assembly.DoesNotExistException;
 import domain.assembly.Workstation;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
@@ -37,7 +36,7 @@ public class Company {
 			this.catalog = new CarModelCatalog();
 			this.orderManager = new OrderManager(new GregorianCalendar(2014, 1, 1, 12, 0, 0));
 			this.statistics = new Statistics(this.orderManager);
-			this.assemblyLine = new AssemblyLine(orderManager.getProductionSchedule(), this.statistics);
+			this.assemblyLine = new AssemblyLine(orderManager.getScheduler(), this.statistics);
 		} catch (IOException | CarModelCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company");
 		}

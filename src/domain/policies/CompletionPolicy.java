@@ -19,6 +19,7 @@ public class CompletionPolicy extends Policy{
 		this.requiredTypes = requiredTypes;
 	}
 
+	@SuppressWarnings("unchecked")
 	private ArrayList<OptionType> completionCheck(Configuration configuration){
 		ArrayList<Option> allOptions = configuration.getAllOptions();
 		ArrayList<OptionType> remainingTypes = (ArrayList<OptionType>) requiredTypes.clone();

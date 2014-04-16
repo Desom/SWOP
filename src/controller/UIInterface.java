@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-import domain.StatisticsView;
+import domain.Statistics;
 import domain.assembly.AssemblyStatusView;
 import domain.order.CarOrder;
 
@@ -40,7 +40,7 @@ public interface UIInterface {
 
 	String askWithPossibilities(String string, List<String> possibilities);
 	
-	void showStatistics(StatisticsView view);
+	void showStatistics(Statistics view);
 	
 	void printException(Exception e);
 

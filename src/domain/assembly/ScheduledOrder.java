@@ -15,7 +15,7 @@ public class ScheduledOrder {
 	}
 
 	public GregorianCalendar getScheduledTime() {
-		return scheduledTime;
+		return (GregorianCalendar) scheduledTime.clone();
 	}
 
 	public Order getScheduledOrder() {

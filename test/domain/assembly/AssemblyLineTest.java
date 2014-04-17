@@ -97,7 +97,7 @@ public class AssemblyLineTest {
 			processesBefore.add(w.getCarAssemblyProcess());
 		}
 
-		Order order = scheduler.seeNextCarOrder(100);
+		Order order = scheduler.seeNextOrder(100);
 		CarAssemblyProcess next;
 		if(order != null){
 			next = order.getAssemblyprocess();

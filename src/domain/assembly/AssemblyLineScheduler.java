@@ -40,7 +40,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @return	The CarOrder that is scheduled to be built next.
 	 */
 	//TODO docs
-	public CarOrder getNextCarOrder(int time){
+	public CarOrder getNextOrder(int time){
 		//TODO
 		return null;
 	}
@@ -53,7 +53,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @return The CarOrder that is scheduled to be built next.
 	 */
 	//TODO docs
-	public CarOrder seeNextCarOrder(int time){
+	public CarOrder seeNextOrder(int time){
 		//TODO
 		return null;
 	}

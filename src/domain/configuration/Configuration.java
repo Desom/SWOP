@@ -117,4 +117,25 @@ public class Configuration {
 	public CarModel getModel() {
 		return model;
 	}
+	
+	//TODO is dit goed zo? of moet er equals(Object other) staan?
+	// hashCode() moeten we niet maken denk ik? (stond ergens iets van dat dat nodig was als je equals override)
+	public boolean equals(Configuration other){
+		if(other == null){
+			return false;
+		}
+		if(!this.getModel().equals(other.getModel())){
+			return false;
+		}
+		if(this.getAllOptions().size() != other.getAllOptions().size()){
+			return false;
+		}
+		//ik neem hier aan dat alle options verschillend zijn.
+		for(Option option : this.getAllOptions()){
+			if(!other.getAllOptions().contains(option)){
+				return false;
+			}
+		}
+		return true;
+	}
 }

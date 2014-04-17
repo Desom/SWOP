@@ -1,6 +1,7 @@
 package domain.assembly.algorithm;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
@@ -24,7 +25,8 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 
 	@Override
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
-			ArrayList<Order> orderList,
+			ArrayList<Order> orderList, 
+			GregorianCalendar allTasksCompletedTime,
 			AssemblyLineScheduler assemblyLineSchedule) {
 		// TODO Auto-generated method stub
 		return null;

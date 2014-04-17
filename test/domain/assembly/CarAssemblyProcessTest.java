@@ -38,7 +38,7 @@ public class CarAssemblyProcessTest {
 		
 		OrderManager orderManager = new OrderManager("testData/testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1, 12, 0, 0));
 		Scheduler schedule = orderManager.getScheduler();
-		process = schedule.getNextCarOrder(100).getAssemblyprocess();
+		process = schedule.getNextOrder(100).getAssemblyprocess();
 		
 		taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);

@@ -12,17 +12,17 @@ import domain.user.CarMechanic;
 public class AssemblyLine {
 
 	private ArrayList<Workstation> workstations = null;
-	private final Scheduler schedule;
+	private final AssemblyLineScheduler assemblyLineScheduler;
 	private final Statistics statistics;
 
 	/**
 	 * Constructor for the assembly line class.
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
-	public AssemblyLine(Scheduler schedule, Statistics statistics){
+	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, Statistics statistics){
 		this.statistics = statistics;
 		this.workstations = createWorkstations();
-		this.schedule = schedule;
+		this.assemblyLineScheduler = assemblyLineScheduler;
 	}
 
 	/**
@@ -83,14 +83,16 @@ public class AssemblyLine {
 			}
 
 			//voeg nieuwe car toe.
+			Order newOrder = this.assemblyLineScheduler.getNextOrder(timeSpendForTasks);
 			CarAssemblyProcess newCar = null;
-			if(this.schedule.seeNextCarOrder(timeSpendForTasks) != null){
-				newCar = this.schedule.getNextCarOrder(timeSpendForTasks).getAssemblyprocess();
+			if(newOrder != null){
+				newCar = newOrder.getAssemblyprocess();
 			}
 
 			Workstation workstation1 = selectWorkstationById(1);
 			workstation1.clear();;
 			workstation1.setCarAssemblyProcess(newCar);
+			//TODO moet dit niet automatisch gebeuren wanneer je workstation een CarAssemblyProcess geeft?
 			if(newCar != null){
 				for(AssemblyTask t : newCar.compatibleWith(workstation1)){
 					workstation1.addAssemblyTask(t);
@@ -98,7 +100,7 @@ public class AssemblyLine {
 			}
 
 			if(finished != null){
-				finished.setDeliveredTime(this.schedule.getCurrentTime());
+				finished.setDeliveredTime(this.assemblyLineScheduler.getCurrentTime());
 				finished.registerDelay(getAllWorkstations());
 				this.statistics.update();
 			}
@@ -231,7 +233,7 @@ public class AssemblyLine {
 					}
 					catch(NullPointerException e){}
 				}else{
-					Order order = this.schedule.seeNextCarOrder(time);
+					Order order = this.assemblyLineScheduler.seeNextOrder(time);
 					if(order != null){
 						CarAssemblyProcess futureCar = order.getAssemblyprocess();
 						fake.setCarAssemblyProcess(futureCar);
@@ -292,6 +294,7 @@ public class AssemblyLine {
 	 * This method is only to be used for testing. It will complete all tasks the workstations are currently working on.
 	 * It will complete those tasks in a way where the time spent on each workstation is the expected time for that specific car order.
 	 * When the last workstation finishes it's last task the line will ofcourse automatically advance.
+	 * 
 	 * @throws InternalFailureException 
 	 * @throws IllegalStateException 
 	 */
@@ -315,6 +318,46 @@ public class AssemblyLine {
 				w.completeTask(mechanic,w.getCarAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
 			}
 		}
+	}
+
+	/**
+	 * Calculates the estimated time necessary to empty the assemblyLine, based on the given orders.
+	 * 
+	 * @param assembly
+	 * 		A list of Orders which represents the assemblyLine. ( null if there is no order on that respective Workstation.)
+	 * @return The calculated amount of minutes it will take to empty the given assemblyLine; 
+	 */
+	public int calculateTimeTillEmpty(LinkedList<Order> assembly) {
+		LinkedList<Order> simulAssembly = (LinkedList<Order>) assembly.clone();
+		int time = 0;
+		for(int i = 0; i < 3; i++){
+			time += this.calculateTimeTillAdvance(simulAssembly);
+			simulAssembly.removeLast();
+			simulAssembly.addFirst(null);
+		}
+		
+		return time;
+	}
+
+	/**
+	 * Calculates the estimated amount of minutes it will take to complete all
+	 * tasks on all workstations if the given Orders are on the assemblyLine.
+	 * 
+	 * @param assembly
+	 *            The Orders that are on the assemblyLine.
+	 * @return The amount of minutes it will take to complete all tasks on all workstations.
+	 */
+	public int calculateTimeTillAdvance(LinkedList<Order> assembly) {
+		LinkedList<Workstation> allWorkstations = this.getAllWorkstations();
+		int maxTime = 0;
+		for(int j = 0; j < 3; j++){
+			if(assembly.get(j) != null
+					&& (assembly.get(j).getAssemblyprocess().filterWorkstations(allWorkstations)).contains(allWorkstations.get(j))
+					&& assembly.get(j).getConfiguration().getExpectedWorkingTime() > maxTime){
+				maxTime = assembly.get(j).getConfiguration().getExpectedWorkingTime();
+			}
+		}
+		return maxTime;
 	}
 
 }

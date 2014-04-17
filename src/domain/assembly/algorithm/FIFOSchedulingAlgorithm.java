@@ -6,9 +6,9 @@ import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
-import domain.order.CarOrder;
 import domain.order.Order;
 
 public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
@@ -35,36 +35,32 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 
 	@Override
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
-			ArrayList<Order> orderList,
+			ArrayList<Order> orderList, 
+			GregorianCalendar allTasksCompletedTime,
 			AssemblyLineScheduler assemblyLineScheduler) {
-		
+
+		AssemblyLine assemblyLine = assemblyLineScheduler.getAssemblyLine();
 		//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
-		LinkedList<Order> assembly = new LinkedList<Order>(assemblyLineScheduler.getAssemblyLine().getAllOrders());
+		LinkedList<Order> assembly = new LinkedList<Order>(assemblyLine.getAllOrders());
 		ArrayList<Order> sList = this.scheduleToList(orderList, assemblyLineScheduler);
-		
-		GregorianCalendar movingTime = assemblyLineScheduler.getCurrentTime();
+		GregorianCalendar movingTime = (GregorianCalendar) allTasksCompletedTime.clone();
 
 		ArrayList<ScheduledOrder> scheduledList = new ArrayList<ScheduledOrder>();
 		
-		//Simuleer heel het toekomstig proces.
+		//Simuleer heel het toekomstig proces, waarbij aan het begin van de loop alle tasks completed zijn.
 		for(Order order : sList){
-			//verschuif tijd totdat alle workstations klaar zijn.
-			movingTime.add(GregorianCalendar.MINUTE, this.findDuration(assembly));
-			//haal de laatste order uit de lijst als er een achteraan staat.
-			if(assembly.size() == 3){
-				assembly.remove(2);
-			}
+			
+			//haal de laatste order van de assemblyLine
+			assembly.removeLast();
+			//Zet volgende op assembly
+			assembly.addFirst(order);
 			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een CarOrder is.
-			//TODO voor alle orders bruikbaar maken?
-			int totalDuration = this.findTotalDurationFor(order,assembly);
+			int totalDuration = assemblyLine.calculateTimeTillEmpty(assembly);
 			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
-			if(this.checkEnoughTimeLeftFor(movingTime,totalDuration)){
-				//Ja, genoeg tijd. Voeg de order vooraan toe.
-				assembly.addFirst(order);
-			}
-			else{
-				//Nee, tijd te kort. Simuleer leeg maken aan het einde van de dag.
-				while(assembly.size()!= 0){
+			if(!this.checkEnoughTimeLeftFor(movingTime,totalDuration)){
+				
+				//Simuleer leeg maken aan het einde van de dag.
+				for(int i = 0; i < assembly.size(); i++){
 					assembly.remove();
 					assembly.addFirst(null);
 				}
@@ -75,33 +71,13 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 
 			// voeg een scheduledOrder toe, movingTime is het moment dat de order op de AssemblyLine gaat.
 			scheduledList.add(new ScheduledOrder(movingTime,order));
+			//verschuif tijd totdat alle workstations klaar zijn.
+			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvance(assembly));
 		}
 		
 		return scheduledList;
 	}
 
-
-	
-	/**
-	 * Calculates the minimum time necessary to do the given Order, based on the given assemblyLine.
-	 * 
-	 * @param order
-	 * 		The Order that will go on the assemblyLine.
-	 * @param assembly
-	 * 		A list of Orders containing the 2 orders that went on the assemblyLine before it. ( null if there were none before order)
-	 * @return The calculated amount of minutes it will take to finish the given Order while considering the other Orders in assembly. 
-	 */
-	private int findTotalDurationFor(Order order, LinkedList<Order> assembly) {
-		int duration = 0;
-		int timeForOrder = order.getConfiguration().getExpectedWorkingTime();
-		
-		duration += Math.max(timeForOrder, this.findDuration(assembly));
-		if(assembly.getFirst() != null){
-			duration += Math.max(timeForOrder, assembly.getFirst().getConfiguration().getExpectedWorkingTime());		
-		}
-		duration += timeForOrder;
-		return duration;
-	}
 
 
 	/**
@@ -152,27 +128,4 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 		
 		return time.before(endOfDay);
 	}
-
-
-	/**
-	 * Calculates the estimated amount of minutes it will take to complete all
-	 * tasks on all workstations if the given Orders are on the assembleLine.
-	 * 
-	 * @param assembly
-	 *            The Orders that will be on the assemblyLine.
-	 * @return The amount of minutes it will take to comlete all tasks on all workstations.
-	 */
-	private int findDuration(LinkedList<Order> assembly) {
-		int duration = 0;
-		for(Order order : assembly){
-			if(order != null){
-				int temp = order.getConfiguration().getExpectedWorkingTime();
-				if(temp > duration){
-					duration = temp;
-				}
-			}
-		}
-		return duration;
-	}
-
 }

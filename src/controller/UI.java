@@ -46,7 +46,7 @@ public class UI implements UIInterface{
 			return askForInteger(question, lowerBound);
 		}
 	}
-	
+
 	public int askForInteger(String question, int lowerBound, int upperBound){
 		try {
 			System.out.println(question);
@@ -166,27 +166,28 @@ public class UI implements UIInterface{
 			System.out.println("There is an internal problem : " + exc.getMessage());
 		}
 	}
-	
+
 	public void fillIn(OrderForm order) {
 		for(OptionType i:OptionType.values()){
 			boolean inOrde = false;
-			while(!inOrde )
-			try {
-				Option[] opties = (Option[]) order.getPossibleOptionsOfType(i).toArray();
-				int nummer = this.askWithPossibilities("Enter your type of "+i+":", opties);
-				order.addOption(opties[nummer]);
-				inOrde = true;
-			} catch (InvalidConfigurationException e) {
-				this.display(e.getMessage());
+			while(!inOrde ){
+				if(!i.isMandatory() && askYesNoQuestion("Do you want to add a " + i.toString() +" to your order?")){
+					try {
+						Option[] opties = (Option[]) order.getPossibleOptionsOfType(i).toArray();
+						int nummer = this.askWithPossibilities("Enter your type of "+i+":", opties);
+						order.addOption(opties[nummer]);
+						inOrde = true;
+					} catch (InvalidConfigurationException e) {
+						this.display(e.getMessage());
+					}
+				}
 			}
 		}
 		try {
 			order.completeConfiguration();
 		} catch (InvalidConfigurationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println(e.getMessage());
 		}
-
 	}
 	@Override
 	public void displayPendingCarOrders(ArrayList<Integer> tempIdList,
@@ -225,7 +226,7 @@ public class UI implements UIInterface{
 		int answer = askForInteger("Please choose one of the numbered options", 0, index - 1);
 		return answer;// Returns 0 when the user wants to leave the overwiew
 	}
-	
+
 	// TODO chain pendingOrder.getCar().getConfiguration().getModel() ok?
 	// dubbel checken als alles wel degelijk een clone is
 	@Override
@@ -257,16 +258,16 @@ public class UI implements UIInterface{
 		display("Current statistics:");
 		display("Average number of cars completed per day: " + view.getAverageCarsPerDay());
 		display("Median number of cars completed per day: " + view.getMedianCarsPerDay());
-		
+
 		display("Cars produced yesterday: " + view.getAmountOfCars1DayAgo());
 		display("Cars produced 2 days ago: " + view.getAmountOfCars2DaysAgo());
-		
+
 		display("Average delay of all cars that had a delay: " + view.getAverageDelay());
 		display("Median delay of all cars that had a delay: " + view.getMedianDelay());
-		
+
 		display("Last delay : " + view.getLastDelay() + " occurred on " + view.getLastDelayDay());
 		display("Second to last delay : " + view.getSecondToLastDelay() + " occurred on " + view.getSecondToLastDelayDay());
-		
+
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
 				return;
@@ -276,7 +277,7 @@ public class UI implements UIInterface{
 		display("Internal Error: " + e.getMessage());
 	}
 
-	
-	
-	
+
+
+
 }

@@ -275,15 +275,20 @@ public class AssemblyLine {
 	}
 
 	/**
-	 * Returns a list of all orders the assemblyLine is currently working on.
+	 * Returns a list of the Orders the Workstations are working on.
 	 * 
-	 * @return a list of all orders currently on the assemblyLine
+	 * @return a list of all orders currently in the respective Workstation as
+	 *         indicated by the position in the list. (null if Workstation is
+	 *         empty.)
 	 */
-	public ArrayList<Order> getAllOrders() {
-		ArrayList<Order> orders = new ArrayList<Order>();
+	public LinkedList<Order> getAllOrders() {
+		LinkedList<Order> orders = new LinkedList<Order>();
 		for(Workstation w : getAllWorkstations()){
 			if(w.getCarAssemblyProcess() != null){
-				orders.add(w.getCarAssemblyProcess().getOrder());
+				orders.addLast(w.getCarAssemblyProcess().getOrder());
+			}
+			else{
+				orders.addLast(null);
 			}
 		}
 		return orders;
@@ -327,11 +332,11 @@ public class AssemblyLine {
 	 * 		A list of Orders which represents the assemblyLine. ( null if there is no order on that respective Workstation.)
 	 * @return The calculated amount of minutes it will take to empty the given assemblyLine; 
 	 */
-	public int calculateTimeTillEmpty(LinkedList<Order> assembly) {
+	public int calculateTimeTillEmptyFor(LinkedList<Order> assembly) {
 		LinkedList<Order> simulAssembly = (LinkedList<Order>) assembly.clone();
 		int time = 0;
 		for(int i = 0; i < 3; i++){
-			time += this.calculateTimeTillAdvance(simulAssembly);
+			time += this.calculateTimeTillAdvanceFor(simulAssembly);
 			simulAssembly.removeLast();
 			simulAssembly.addFirst(null);
 		}
@@ -347,7 +352,7 @@ public class AssemblyLine {
 	 *            The Orders that are on the assemblyLine.
 	 * @return The amount of minutes it will take to complete all tasks on all workstations.
 	 */
-	public int calculateTimeTillAdvance(LinkedList<Order> assembly) {
+	public int calculateTimeTillAdvanceFor(LinkedList<Order> assembly) {
 		LinkedList<Workstation> allWorkstations = this.getAllWorkstations();
 		int maxTime = 0;
 		for(int j = 0; j < 3; j++){

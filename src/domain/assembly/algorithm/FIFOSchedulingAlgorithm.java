@@ -55,16 +55,24 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 			//Zet volgende op assembly
 			assembly.addFirst(order);
 			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een CarOrder is.
-			int totalDuration = assemblyLine.calculateTimeTillEmpty(assembly);
+			int totalDuration = assemblyLine.calculateTimeTillEmptyFor(assembly);
 			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
 			if(!this.checkEnoughTimeLeftFor(movingTime,totalDuration)){
-				
+				// haal order er weer af, omdat het toch niet gaat.
+				assembly.removeFirst();
+				// zet een null in de plaats
+				assembly.addFirst(null);
+				scheduledList.add(new ScheduledOrder(movingTime,null));
+
 				//Simuleer leeg maken aan het einde van de dag.
-				for(int i = 0; i < assembly.size(); i++){
-					assembly.remove();
+				while(!this.isEmptyAssembly(assembly)){
+					assembly.removeLast();
 					assembly.addFirst(null);
+					movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
+					scheduledList.add(new ScheduledOrder(movingTime,null));
 				}
 				// Voeg de order voorraan toe en zet de time op het begin van de volgende dag.
+				assembly.removeLast();
 				assembly.addFirst(order);
 				movingTime = this.nextDay(movingTime);
 			}
@@ -72,12 +80,23 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 			// voeg een scheduledOrder toe, movingTime is het moment dat de order op de AssemblyLine gaat.
 			scheduledList.add(new ScheduledOrder(movingTime,order));
 			//verschuif tijd totdat alle workstations klaar zijn.
-			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvance(assembly));
+			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
 		}
 		
 		return scheduledList;
 	}
 
+
+
+	private boolean isEmptyAssembly(LinkedList<Order> assembly) {
+		// TODO Auto-generated method stub
+		for(Order order : assembly){
+			if(order != null){
+				return false;
+			}
+		}
+		return true;
+	}
 
 
 	/**

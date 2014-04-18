@@ -18,12 +18,14 @@ public class Workstation {
 
 	/**
 	 * Constructor of Workstation.
-	 * Creates a new workstation with a specific id and a list of taskTypes.
+	 * Creates a new workstation with an assembly line, specific id and a list of taskTypes.
 	 * 
-	 * @param	id
-	 * 			the id of this workstation
-	 * @param	taskTypes
-	 * 			the task types that can be handled at this workstation
+	 * @param assemblyLine
+	 * 		The assembly line of which this workstation is a part of.
+	 * @param id
+	 * 		The id of this workstation
+	 * @param taskTypes
+	 * 		The task types that can be handled at this workstation
 	 */
 	public Workstation(AssemblyLine assemblyLine, int id, ArrayList<OptionType> taskTypes) {
 		this.assemblyLine = assemblyLine;
@@ -57,8 +59,8 @@ public class Workstation {
 	/**
 	 * Sets the id of this workstation. Only used in constructor.
 	 * 
-	 * @param	id
-	 * 			The id that is given to this Workstation.
+	 * @param id
+	 * 		The id that is given to this Workstation.
 	 */
 	private void setId(int id) {
 		this.id = id;
@@ -77,9 +79,9 @@ public class Workstation {
 	/**
 	 * Gives the car mechanic that is operating at this workstation.
 	 * 
-	 * @return	The CarMechanic operating at this Workstation.
-	 * @throws	IllegalStateException
-	 * 			If there is no car mechanic at this workstation.
+	 * @return The CarMechanic operating at this Workstation.
+	 * @throws IllegalStateException
+	 * 		If there is no car mechanic at this workstation.
 	 */
 	public CarMechanic getCarMechanic() throws IllegalStateException{
 		if (carMechanic == null)
@@ -90,8 +92,8 @@ public class Workstation {
 	/**
 	 * Add a given car mechanic to this workstation.
 	 * 
-	 * @param	carMechanic
-	 * 			The desired car mechanic to operate at this Workstation.
+	 * @param carMechanic
+	 * 		The desired car mechanic to operate at this Workstation.
 	 */
 	public void addCarMechanic(CarMechanic carMechanic) {
 		this.carMechanic = carMechanic;
@@ -99,8 +101,9 @@ public class Workstation {
 	
 	/**
 	 * Removes the current car mechanic from this workstation.
-	 *
-	 * TODO : mag een CarMechanic weg als er een activeTask is?
+	 * 
+	 * @throws IllegalStateException
+	 * 		If there is an active task in this workstation.
 	 */
 	public void removeCarMechanic() {
 		if(activeTask != null){
@@ -112,12 +115,10 @@ public class Workstation {
 	/**
 	 * Adds an assembly task to this workstation.
 	 * 
-	 * @param	user
-	 * 			The User that wants to call this method.
-	 * @param	task
-	 * 			The AssemblyTask that will be added.
-	 * @throws	IllegalArgumentException
-	 * 			If task does not match with the task types list.
+	 * @param task
+	 * 		The AssemblyTask that will be added.
+	 * @throws IllegalArgumentException
+	 * 		If task does not match with the task types list.
 	 */
 	public void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
 		if (this.taskTypes.contains(task.getType()))
@@ -128,15 +129,12 @@ public class Workstation {
 
 	/**
 	 * Selects the given task to be the active task of this workstation.
-	 * 
-	 * @param	user
-	 * 			The user that wants to call this method.
-	 * @param	task
-	 * 			The task that the user wants to work on.
-	 * @throws	IllegalStateException
-	 * 			If another task is still in progress.
-	 * @throws	IllegalArgumentException
-	 * 			If the selected task is not a pending task.
+	 * @param task
+	 * 		The task that the user wants to work on.
+	 * @throws IllegalStateException
+	 * 		If another task is still in progress.
+	 * @throws IllegalArgumentException
+	 * 		If the selected task is not a pending task.
 	 */
 	public void selectTask(AssemblyTask task) throws IllegalStateException, IllegalArgumentException {
 		if (this.activeTask == null)
@@ -151,20 +149,19 @@ public class Workstation {
 	/**
 	 * Completes the assembly task that the operating car mechanic is working on.
 	 * 
-	 * @param	carMechanic
-	 * 			The user that wants to call this method.
-	 * @param 	timeSpend
-	 * 			The amount of minutes it took to complete the current activeTask.
-	 * @throws	IllegalStateException
-	 * 			If there is no active task to complete in this workstation.
-	 * 			If there is no car mechanic to complete the active task.
+	 * @param carMechanic
+	 * 		The user that wants to call this method.
+	 * @param timeSpend
+	 * 		The amount of minutes it took to complete the current activeTask.
+	 * @throws IllegalArgumentException
+	 * 		If there is no active task to complete in this workstation.
+	 * 		If there is no car mechanic to complete the active task.
 	 * @throws InternalFailureException 
-	 * 			If a fatal error occurred the program could not recover from.
+	 * 		If a fatal error occurred the program could not recover from.
 	 */
 	public void completeTask(CarMechanic carMechanic, int timeSpend) throws IllegalStateException, InternalFailureException {
 		if (this.getCarMechanic().getId() != carMechanic.getId())
-			throw new IllegalStateException("This user is not assigned to this workstation");
-		//TODO is dit echt IllegalStateException? mss IllegalArgument fzo?
+			throw new IllegalArgumentException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {
 			if (this.carMechanic != null) {
 				this.activeTask.completeTask(timeSpend);
@@ -180,20 +177,34 @@ public class Workstation {
 		this.addTimeSpend(timeSpend);
 		try {
 			this.assemblyLine.advanceLine();
-		} catch (CannotAdvanceException e) {
+		}
+		catch (CannotAdvanceException e) {
 		}
 	}
 
+	/**
+	 * Gets the time already spent on the current assembly process.
+	 * 
+	 * @return the time already spent on the current assembly process
+	 */
 	public int getTimeSpend() {
 		return timeSpend;
 	}
 
 
+	/**
+	 * Adds time to the time already spent on the current assembly process.
+	 * @param timeSpend
+	 * 		time to be added to the time alreadyt spent on the current assembly process
+	 */
 	private void addTimeSpend(int timeSpend) {
 		this.timeSpend += timeSpend;
 		
 	}
 	
+	/**
+	 * Resets the time already spent on the current assembly process.
+	 */
 	private void resetTimeSpend() {
 		this.timeSpend = 0;	
 	}
@@ -201,9 +212,7 @@ public class Workstation {
 	/**
 	 * Gives a list of all pending assembly tasks.
 	 * 
-	 * @param	user
-	 * 			The user that wants to call this method.
-	 * @return	A copy of the list of all pending assembly tasks.
+	 * @return A copy of the list of all pending assembly tasks.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllPendingTasks(){
@@ -217,9 +226,7 @@ public class Workstation {
 	/**
 	 * Gives a list of all completed assembly tasks.
 	 * 
-	 * @param	user
-	 * 			The user that wants to call this method.
-	 * @return	A copy of the list of all completed assembly tasks.
+	 * @return A copy of the list of all completed assembly tasks.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllCompletedTasks(){
@@ -233,9 +240,7 @@ public class Workstation {
 	/**
 	 * Gives a list of all assembly tasks.
 	 * 
-	 * @param	user
-	 * 			The user that wants to call this method.
-	 * @return	A copy of the list of all assembly tasks.
+	 * @return A copy of the list of all assembly tasks.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyTask> getAllTasks(){
@@ -245,9 +250,7 @@ public class Workstation {
 	/**
 	 * Returns true if all assembly tasks of this workstation are completed, otherwise false.
 	 * 
-	 * @param	user
-	 * 			The user that wants to call this method.
-	 * @return	True if all assembly tasks are completed, otherwise false.
+	 * @return True if all assembly tasks are completed, otherwise false.
 	 */
 	public boolean hasAllTasksCompleted(){
 		for (AssemblyTask task : this.allTasks)
@@ -259,11 +262,9 @@ public class Workstation {
 	/**
 	 * Returns the task type of the active assembly task of this workstation along with the actions needed to complete this task.
 	 * 
-	 * @param	user
-	 * 			The user that wants to call this method.
-	 * @return	A list with on the first line the task type of the active assembly task. The following lines indicate the actions needed to complete this task.
-	 * @throws	IllegalStateException
-	 * 			If the user is not authorized to call the given method.
+	 * @return A list with on the first line the task type of the active assembly task. The following lines indicate the actions needed to complete this task.
+	 * @throws IllegalStateException
+	 * 		If there is no active task.
 	 */
 	public ArrayList<String> getActiveTaskInformation() throws IllegalStateException {
 		if (this.activeTask == null)
@@ -273,7 +274,7 @@ public class Workstation {
 
 
 	/**
-	 * Returns the name of the workstation.
+	 * Returns the string which represents this workstation.
 	 */
 	@Override
 	public String toString() {
@@ -281,16 +282,17 @@ public class Workstation {
 	}
 	
 	/**
-	 * Set the car assembly process this workstation is currently working on.
+	 * Sets the car assembly process this workstation is currently working on.
 	 * 
-	 * @param process the specified car assembly process.
+	 * @param process
+	 * 		the specified car assembly process
 	 */
 	public void setCarAssemblyProcess(CarAssemblyProcess process){
 		this.assemblyProcess = process;
 	}
 	
 	/**
-	 * Get the car assembly process this workstation is currently working on.
+	 * Gets the car assembly process this workstation is currently working on.
 	 * 
 	 * @return the car assembly process this workstation is currently working on.
 	 */

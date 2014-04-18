@@ -62,6 +62,16 @@ public class UI implements UIInterface{
 			return askForInteger(question, lowerBound);
 		}
 	}
+	
+	public GregorianCalendar askForDate(String question) {
+		this.display(question);
+		GregorianCalendar date = (GregorianCalendar) GregorianCalendar.getInstance();
+		date.set(GregorianCalendar.YEAR, this.askForInteger("Enter the year: ", 1));
+		date.set(GregorianCalendar.MONTH, this.askForInteger("Enter the month in numbers: ", 1, 12));
+		int numberOfDays = date.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
+		date.set(GregorianCalendar.DAY_OF_MONTH, this.askForInteger("Enter the day: ", 0, numberOfDays));
+		return date;
+	}
 
 	public String askWithPossibilities(String question, List<String> possibilities){
 		System.out.println(question);
@@ -167,15 +177,15 @@ public class UI implements UIInterface{
 		}
 	}
 
-	public void fillIn(OrderForm order) {
+	public void fillIn(OrderFormInterface orderForm) {
 		for(OptionType i:OptionType.values()){
 			boolean inOrde = false;
 			while(!inOrde ){
 				if(!i.isMandatory() && askYesNoQuestion("Do you want to add a " + i.toString() +" to your order?")){
 					try {
-						Option[] opties = (Option[]) order.getPossibleOptionsOfType(i).toArray();
+						Option[] opties = (Option[]) orderForm.getPossibleOptionsOfType(i).toArray();
 						int nummer = this.askWithPossibilities("Enter your type of "+i+":", opties);
-						order.addOption(opties[nummer]);
+						orderForm.addOption(opties[nummer]);
 						inOrde = true;
 					} catch (InvalidConfigurationException e) {
 						this.display(e.getMessage());
@@ -184,11 +194,26 @@ public class UI implements UIInterface{
 			}
 		}
 		try {
-			order.completeConfiguration();
+			orderForm.completeConfiguration();
 		} catch (InvalidConfigurationException e) {
 			System.out.println(e.getMessage());
 		}
 	}
+	
+	public GregorianCalendar fillIn(SingleTaskOrderForm orderForm) {
+		//TODO voorlopig nog gewoon gevraagd met option types ipb tasks/options
+		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
+		for (OptionType type : OptionType.values())
+			if (type.isSingleTaskPossible())
+				possibleTypes.add(type);
+		int answer = this.askWithPossibilities("What do you want to order", possibleTypes.toArray());
+		
+		// TODO hier moet dan de overeenkomstige option nog opgehaald worden
+		orderForm.addOption(option);
+		
+		return this.askForDate("Set a deadline.");
+	}
+	
 	@Override
 	public void displayPendingCarOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList) {

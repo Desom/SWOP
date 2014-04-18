@@ -34,7 +34,7 @@ public interface UIInterface {
 	
 	int askForCarOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates);
 
-	void fillIn(OrderForm order);
+	void fillIn(OrderFormInterface order);
 
 	int askWithPossibilities(String string, Object[] possibilities);
 
@@ -46,7 +46,7 @@ public interface UIInterface {
 	
 	void printException(Exception e);
 
-	GregorianCalendar fillInSingleTaskOrder(OrderForm orderForm);
+	GregorianCalendar fillIn(SingleTaskOrderForm orderForm);
 
 
 }

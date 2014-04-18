@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
-import controller.OrderForm;
-import controller.OurOrderform;
+import controller.SingleTaskOrderForm;
 import controller.UIInterface;
 import domain.Company;
 import domain.configuration.OptionType;
@@ -20,21 +19,16 @@ public class OrderSingleTaskHandler {
 		// 2. The system shows a list of available tasks.
 		OrderManager orderManager = company.getOrderManager();
 		// 3. The user selects the task he wants to order.
-		int i=-1;
-		ArrayList<OptionType> soortenOpties = this.getAvailableSingleTastOptionTypes();
-		while( i-1 < soortenOpties.size() && i-1>=0  )
-		 i=ui.askWithPossibilities("Which kind of task has to be executed?", this.getAvailableSingleTastOptionTypes().toArray());
 		// 4. The system asks the user for a deadline, as well as the required task options (e.g. Color).
-		OrderForm orderForm = new OurOrderform(null,orderManager.getSingleTaskOrderPolicies());
+		SingleTaskOrderForm orderForm = new SingleTaskOrderForm(orderManager.getSingleTaskOrderPolicies());
 		
 		// 5. The user enters the required details.
-		GregorianCalendar deadline = ui.fillInSingleTaskOrder(orderForm);
-		
+		GregorianCalendar deadline = ui.fillIn(orderForm);
 		
 		boolean antwoord = ui.askYesNoQuestion("Do you want to confirm this order?");
 		if(antwoord){
 			// 6. The system stores the new order and updates the production schedule.
-			SingleTaskOrder order=orderManager.placeSingleTaskOrder(customShopManager,orderForm.getConfiguration(), deadline );
+			SingleTaskOrder order = orderManager.placeSingleTaskOrder(customShopManager,orderForm.getConfiguration(), deadline);
 			// 7. The system presents an estimated completion date for the new order.
 			GregorianCalendar calender = orderManager.completionEstimate(order);
 			String time = getTime(calender);
@@ -52,7 +46,7 @@ public class OrderSingleTaskHandler {
 		return date;
 	}
 	
-	private ArrayList<OptionType> getAvailableSingleTastOptionTypes() {
+	private ArrayList<OptionType> getAvailableSingleTaskOptionTypes() {
 		ArrayList<OptionType> singleTaskOptionTypes = new ArrayList<OptionType>();
 		for (OptionType optionType : OptionType.values())
 			if (optionType.isSingleTaskPossible())

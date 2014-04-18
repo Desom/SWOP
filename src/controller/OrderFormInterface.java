@@ -8,7 +8,7 @@ import domain.configuration.OptionType;
 import domain.policies.InvalidConfigurationException;
 
 
-public interface OrderForm {
+public interface OrderFormInterface {
 	
 	/**
 	 * Stores an option in the form.

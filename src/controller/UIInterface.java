@@ -34,7 +34,7 @@ public interface UIInterface {
 	
 	int askForCarOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates);
 
-	void fillIn(OrderFormInterface order);
+	void fillIn(CarOrderForm order);
 
 	int askWithPossibilities(String string, Object[] possibilities);
 

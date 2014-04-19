@@ -177,7 +177,7 @@ public class UI implements UIInterface{
 		}
 	}
 
-	public void fillIn(OrderFormInterface orderForm) {
+	public void fillIn(CarOrderForm orderForm) {
 		for(OptionType i:OptionType.values()){
 			boolean inOrde = false;
 			while(!inOrde ){
@@ -201,7 +201,7 @@ public class UI implements UIInterface{
 	}
 	
 	public GregorianCalendar fillIn(SingleTaskOrderForm orderForm) {
-		//TODO voorlopig nog gewoon gevraagd met option types ipb tasks/options
+		//TODO voorlopig nog gewoon gevraagd met option types ipv tasks/options
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
 		for (OptionType type : OptionType.values())
 			if (type.isSingleTaskPossible())

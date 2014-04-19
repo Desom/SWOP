@@ -13,6 +13,7 @@ public class AssemblyLineScheduler implements Scheduler{
 
 	public static final int END_OF_DAY = 22;
 	public static final int BEGIN_OF_DAY = 6;
+	private int overTimeInMinutes; //TODO updaten
 	private AssemblyLine assemblyLine;
 	private ArrayList<SchedulingAlgorithm> possibleAlgorithms;
 	private SchedulingAlgorithm currentAlgorithm;
@@ -136,6 +137,16 @@ public class AssemblyLineScheduler implements Scheduler{
 	//TODO docs
 	private void addCurrentTime(int time){
 		this.currentTime.add(GregorianCalendar.MINUTE, time);
+	}
+	
+	/**
+	 * Gets the end of the day with overtime taken into account.
+	 */
+	public GregorianCalendar getRealEndOfDay() {
+		GregorianCalendar endOfDay = (GregorianCalendar) GregorianCalendar.getInstance();
+		endOfDay.set(GregorianCalendar.HOUR_OF_DAY, 22);
+		endOfDay.add(GregorianCalendar.MINUTE, - this.overTimeInMinutes);
+		return endOfDay;
 	}
 
 	public AssemblyLine getAssemblyLine() {

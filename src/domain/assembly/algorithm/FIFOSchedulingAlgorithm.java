@@ -102,22 +102,18 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	/**
 	 * Makes a GregorianCalendar which represents the beginning of the first workday after the given calendar.
 	 * 
-	 * @param calendar
+	 * @param currentTime
 	 * 		The current time and date.
 	 * @return The GregorianCalendar representing the beginning of the first workday after the day in calendar. 
 	 */
-	private GregorianCalendar nextDay(GregorianCalendar calendar) {
-		//TODO alle mogelijke uitzonderlijke situaties controleren?? 
-		// bv calendar = 1-1-1000 01h00 => nextDay == 1-1-1000 06h00 of nextDay == 2-1-1000 06h00
-		GregorianCalendar nextDay = new GregorianCalendar(
-				calendar.get(GregorianCalendar.YEAR),
-				calendar.get(GregorianCalendar.MONTH),
-				calendar.get(GregorianCalendar.DAY_OF_MONTH),
-				AssemblyLineScheduler.BEGIN_OF_DAY,
-				0,
-				0);
-		
-		nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
+	private GregorianCalendar nextDay(GregorianCalendar currentTime) {
+		//TODO zijn er nog uitzonderlijke gevallen?
+		GregorianCalendar nextDay = (GregorianCalendar) currentTime.clone();
+		if (currentTime.get(GregorianCalendar.HOUR_OF_DAY) > 6)
+			nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
+		nextDay.set(GregorianCalendar.HOUR_OF_DAY, AssemblyLineScheduler.BEGIN_OF_DAY);
+		nextDay.set(GregorianCalendar.MINUTE, 0);
+		nextDay.set(GregorianCalendar.SECOND, 0);
 		return nextDay;
 	}
 

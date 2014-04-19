@@ -58,10 +58,10 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		GregorianCalendar movingTime = (GregorianCalendar) allTasksCompletedTime.clone();
 
 		ArrayList<ScheduledOrder> scheduledList = new ArrayList<ScheduledOrder>();
-		
+
 		//Simuleer heel het toekomstig proces, waarbij aan het begin van de loop alle tasks completed zijn.
 		for(Order order : sList){
-			
+
 			//haal de laatste order van de assemblyLine
 			assembly.removeLast();
 			//Zet volgende op assembly
@@ -69,7 +69,7 @@ public class SpecificationBatchSchedulingAlgorithm implements
 			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een CarOrder is.
 			int totalDuration = assemblyLine.calculateTimeTillEmptyFor(assembly);
 			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
-			if(!this.checkEnoughTimeLeftFor(movingTime,totalDuration)){
+			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLineScheduler)){
 				// haal order er weer af, omdat het toch niet gaat.
 				assembly.removeFirst();
 				// zet een null in de plaats
@@ -94,12 +94,19 @@ public class SpecificationBatchSchedulingAlgorithm implements
 			//verschuif tijd totdat alle workstations klaar zijn.
 			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
 		}
-		
+
 		return scheduledList;
 	}
 
 
 
+	/**
+	 * Checks if the given list of Orders only contains null.
+	 * 
+	 * @param assembly
+	 * 		The list that needs to be checked.
+	 * @return True if assembly only contains null, false otherwise.
+	 */
 	private boolean isEmptyAssembly(LinkedList<Order> assembly) {
 		// TODO Auto-generated method stub
 		for(Order order : assembly){
@@ -114,49 +121,71 @@ public class SpecificationBatchSchedulingAlgorithm implements
 	/**
 	 * Makes a GregorianCalendar which represents the beginning of the first workday after the given calendar.
 	 * 
-	 * @param calendar
+	 * @param currentTime
 	 * 		The current time and date.
-	 * @return The GregorianCalendar representing the beginning of the first workday after the day in calendar. 
+	 * @return The GregorianCalendar representing the beginning of the first workday after the day in currentTime. 
 	 */
-	private GregorianCalendar nextDay(GregorianCalendar calendar) {
-		//TODO alle mogelijke uitzonderlijke situaties controleren?? 
-		// bv calendar = 1-1-1000 01h00 => nextDay == 1-1-1000 06h00 of nextDay == 2-1-1000 06h00
-		GregorianCalendar nextDay = new GregorianCalendar(
-				calendar.get(GregorianCalendar.YEAR),
-				calendar.get(GregorianCalendar.MONTH),
-				calendar.get(GregorianCalendar.DAY_OF_MONTH),
-				AssemblyLineScheduler.BEGIN_OF_DAY,
-				0,
-				0);
-		
-		nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
+	private GregorianCalendar nextDay(GregorianCalendar currentTime) {
+		//TODO zijn er nog uitzonderlijke gevallen?
+		GregorianCalendar nextDay = (GregorianCalendar) currentTime.clone();
+		if (currentTime.get(GregorianCalendar.HOUR_OF_DAY) > 6)
+			nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
+		nextDay.set(GregorianCalendar.HOUR_OF_DAY, AssemblyLineScheduler.BEGIN_OF_DAY);
+		nextDay.set(GregorianCalendar.MINUTE, 0);
+		nextDay.set(GregorianCalendar.SECOND, 0);
 		return nextDay;
 	}
 
 	/**
 	 * Checks if there is enough minutes left in the workday after the given calendar before the workday ends.
 	 * 
-	 * @param calendar
+	 * @param currentTime
 	 * 		The time it currently is.
 	 * @param minutes
 	 * 		The amount of minutes for which will be checked.
 	 * @return True if there are enough minutes left after the given calendar before the end of the workday, false otherwise.
 	 */
 	private boolean checkEnoughTimeLeftFor(
-			GregorianCalendar calendar, int minutes) {
+			GregorianCalendar currentTime, int minutes, AssemblyLineScheduler assemblyLineScheduler) {
 		//TODO hier moet ergens overtime worden behandeld...
-		
-		GregorianCalendar endOfDay = new GregorianCalendar(
-				calendar.get(GregorianCalendar.YEAR),
-				calendar.get(GregorianCalendar.MONTH),
-				calendar.get(GregorianCalendar.DAY_OF_MONTH),
-				AssemblyLineScheduler.END_OF_DAY,
-				0,
-				0);
-
-		GregorianCalendar time = (GregorianCalendar) calendar.clone();
+		GregorianCalendar endOfDay;
+		if(this.sameDayAsScheduler(currentTime, assemblyLineScheduler)){
+			endOfDay = assemblyLineScheduler.getRealEndOfDay();
+		}
+		else{
+			endOfDay = new GregorianCalendar(
+					currentTime.get(GregorianCalendar.YEAR),
+					currentTime.get(GregorianCalendar.MONTH),
+					currentTime.get(GregorianCalendar.DAY_OF_MONTH),
+					AssemblyLineScheduler.END_OF_DAY,
+					0,
+					0);
+		}
+		GregorianCalendar time = (GregorianCalendar) currentTime.clone();
 		time.add(GregorianCalendar.MINUTE, minutes);
-		
+
 		return time.before(endOfDay);
+	}
+
+
+	private boolean sameDayAsScheduler(GregorianCalendar currentTime,
+			AssemblyLineScheduler assemblyLineScheduler) {
+		GregorianCalendar schedulerTime = assemblyLineScheduler.getCurrentTime();
+		if(schedulerTime.get(GregorianCalendar.YEAR) == currentTime.get(GregorianCalendar.YEAR)
+				&& schedulerTime.get(GregorianCalendar.MONTH) == currentTime.get(GregorianCalendar.MONTH)
+				&& schedulerTime.get(GregorianCalendar.DAY_OF_MONTH) == currentTime.get(GregorianCalendar.DAY_OF_MONTH)){
+			return true;
+		}
+		
+		GregorianCalendar nextDayTime = this.nextDay(schedulerTime);
+		
+		if(currentTime.before(nextDayTime)
+				&& nextDayTime.get(GregorianCalendar.YEAR) == currentTime.get(GregorianCalendar.YEAR)
+				&& nextDayTime.get(GregorianCalendar.MONTH) == currentTime.get(GregorianCalendar.MONTH)
+				&& nextDayTime.get(GregorianCalendar.DAY_OF_MONTH) == currentTime.get(GregorianCalendar.DAY_OF_MONTH)){
+			return true;
+		}
+		
+		return false;
 	}
 }

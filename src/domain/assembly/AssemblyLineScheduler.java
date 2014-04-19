@@ -33,17 +33,21 @@ public class AssemblyLineScheduler implements Scheduler{
 
 	//TODO docs
 	public GregorianCalendar completionEstimate(Order order){
+		//TODO estimated time terug geven voor Orders die al op de assemblyLine staan?
 		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, time);
 		ArrayList<ScheduledOrder> scheduledOrders = this.currentAlgorithm.scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
-		//TODO order test...
 
 		int position = 0;
 		for(; position < scheduledOrders.size(); position++){
 			if(scheduledOrders.get(position).equals(order)){
 				break;
 			}
+		}
+		if(position >= scheduledOrders.size()){
+			//TODO goede exception?
+			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
 		}
 		GregorianCalendar simulTime = scheduledOrders.get(position).getScheduledTime();
 		LinkedList<Order> assembly;
@@ -79,34 +83,43 @@ public class AssemblyLineScheduler implements Scheduler{
 	}
 
 	/**
-	 * Returns the next CarOrder to be built and removes it from the front of the schedule.
+	 * Returns the Order that will be put on the AssemblyLine immediately after updating
+	 * the currentTime with the given amount of minutes.
 	 * 
-	 * @param time
-	 * 		The time past since the last time this method was called today. (in minutes)
-	 * @return	The CarOrder that is scheduled to be built next.
+	 * @param minutes
+	 *            The amount of minutes it took to complete the tasks in the Workstations. (in minutes)
+	 * @return The Order that is scheduled to be built now.
 	 */
 	//TODO docs
-	public Order getNextOrder(int time){
-		this.addCurrentTime(time);
+	public Order getNextOrder(int minutes){
+		this.addCurrentTime(minutes);
 		GregorianCalendar now = this.getCurrentTime();
 		ArrayList<ScheduledOrder> scheduledOrders = this.currentAlgorithm.scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), now, this);
-		return scheduledOrders.get(0).getScheduledOrder();
+		if(scheduledOrders.get(0).getScheduledTime().equals(this.getCurrentTime())){
+			return scheduledOrders.get(0).getScheduledOrder();
+		}
+		return null;
 		
 	}
 
 	/**
-	 * Returns the next CarOrder to be built, but without removing it from the front of the schedule.
+	 * Returns the Order that will be put on the assembly after the given amount
+	 * of minutes, but without updating currentTime.
 	 * 
-	 * @param time
-	 * 		The time past since the last time getNextCarOrder was called today. (in minutes)
-	 * @return The CarOrder that is scheduled to be built next.
+	 * @param minutes
+	 *            The amount of minutes it took to complete the tasks in the
+	 *            Workstations. (in minutes)
+	 * @return The CarOrder that is scheduled to be built after the given amount of minutes.
 	 */
 	//TODO docs
-	public Order seeNextOrder(int time){
+	public Order seeNextOrder(int minutes){
 		GregorianCalendar futureTime = this.getCurrentTime();
-		futureTime.add(GregorianCalendar.MINUTE, time);
+		futureTime.add(GregorianCalendar.MINUTE, minutes);
 		ArrayList<ScheduledOrder> scheduledOrders = this.currentAlgorithm.scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
-		return scheduledOrders.get(0).getScheduledOrder();
+		if(scheduledOrders.get(0).getScheduledTime().equals(futureTime)){
+			return scheduledOrders.get(0).getScheduledOrder();
+		}
+		return null;
 	}
 	
 

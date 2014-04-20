@@ -10,17 +10,19 @@ import domain.Company;
 import domain.configuration.OptionType;
 import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
+import domain.policies.InvalidConfigurationException;
 import domain.user.CustomShopManager;
 
 public class OrderSingleTaskHandler {
 
 	public void run(UIInterface ui, Company company, CustomShopManager customShopManager) {
+		try {
 		// 1. The user wants to order a single task.
 		// 2. The system shows a list of available tasks.
 		OrderManager orderManager = company.getOrderManager();
 		// 3. The user selects the task he wants to order.
 		// 4. The system asks the user for a deadline, as well as the required task options (e.g. Color).
-		SingleTaskOrderForm orderForm = new SingleTaskOrderForm(orderManager.getSingleTaskOrderPolicies());
+		SingleTaskOrderForm orderForm = new SingleTaskOrderForm(company.getCatalog(), orderManager.getSingleTaskOrderPolicies());
 		
 		// 5. The user enters the required details.
 		GregorianCalendar deadline = ui.fillIn(orderForm);
@@ -38,6 +40,10 @@ public class OrderSingleTaskHandler {
 			
 			// 6. The use case returns to step 1.
 			this.run(ui, company, customShopManager);
+		}	
+		}
+		catch (InvalidConfigurationException e) {
+			
 		}
 	}
 		

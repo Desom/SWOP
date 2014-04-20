@@ -147,9 +147,19 @@ public class AssemblyLineScheduler implements Scheduler{
 		return (GregorianCalendar) currentTime.clone();
 	}
 
-	//TODO docs
+	/**
+	 * Adds minutes to the current time of this assembly line scheduler.
+	 * If a new work day is started (if the resulting current time equals BEGIN_OF_DAY) overtime will be recalculated.
+	 * 
+	 * @param time
+	 * 		Advance of time in minutes.
+	 */
 	private void addCurrentTime(int time){
-		this.currentTime.add(GregorianCalendar.MINUTE, time);
+		GregorianCalendar futureTime = (GregorianCalendar) this.currentTime.clone();
+		futureTime.add(GregorianCalendar.MINUTE, time);
+		if (futureTime.get(GregorianCalendar.HOUR_OF_DAY) == this.BEGIN_OF_DAY) {
+			// nieuwe overtime berekenen
+		}
 	}
 	
 	/**

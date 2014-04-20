@@ -11,7 +11,7 @@ import domain.policies.Policy;
 
 public abstract class OrderForm {
 
-	protected Configuration configuration;
+	private Configuration configuration;
 	
 	/**
 	 * Constructor of OrderForm.

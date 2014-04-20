@@ -28,7 +28,7 @@ public class CarOrderForm extends OrderForm {
 	@Override
 	public List<Option> getPossibleOptionsOfType(OptionType type) {
 		List<Option> result = new ArrayList<Option>();
-		for(Option i:this.configuration.getModel().getOfOptionType(type)){
+		for(Option i:this.getConfiguration().getModel().getOfOptionType(type)){
 			result.add(i);
 		}
 		return result;

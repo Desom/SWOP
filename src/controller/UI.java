@@ -200,17 +200,15 @@ public class UI implements UIInterface{
 		}
 	}
 	
-	public GregorianCalendar fillIn(SingleTaskOrderForm orderForm) {
-		//TODO voorlopig nog gewoon gevraagd met option types ipv tasks/options
+	public GregorianCalendar fillIn(SingleTaskOrderForm orderForm) throws InvalidConfigurationException {
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
 		for (OptionType type : OptionType.values())
 			if (type.isSingleTaskPossible())
 				possibleTypes.add(type);
-		int answer = this.askWithPossibilities("What do you want to order", possibleTypes.toArray());
-		
-		// TODO hier moet dan de overeenkomstige option nog opgehaald worden
-		orderForm.addOption(option);
-		
+		int answer1 = this.askWithPossibilities("What do you want to order?", possibleTypes.toArray());
+		List<Option> possibleOptions = orderForm.getPossibleOptionsOfType(possibleTypes.get(answer1));
+		int answer2 = this.askWithPossibilities("Which option do you want to order?", possibleOptions.toArray());
+		orderForm.addOption(possibleOptions.get(answer2));
 		return this.askForDate("Set a deadline.");
 	}
 	

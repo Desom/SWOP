@@ -9,6 +9,7 @@ import domain.Statistics;
 import domain.assembly.AssemblyStatusView;
 import domain.order.CarOrder;
 import domain.order.Order;
+import domain.policies.InvalidConfigurationException;
 
 public interface UIInterface {
 
@@ -46,7 +47,7 @@ public interface UIInterface {
 	
 	void printException(Exception e);
 
-	GregorianCalendar fillIn(SingleTaskOrderForm orderForm);
+	GregorianCalendar fillIn(SingleTaskOrderForm orderForm) throws InvalidConfigurationException;
 
 
 }

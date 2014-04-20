@@ -14,16 +14,18 @@ public class CarOrder extends Order {
 	/**
 	 * Constructor of CarOrder.
 	 * 
-	 * @param	carOrderId
-	 * 			The id of this car order
-	 * @param	user TODO
-	 * 			The user of that has placed this order
-	 * @param	configuration
-	 * 			The configuration of the specified car
+	 * @param carOrderId
+	 * 		The id of this car order
+	 * @param garageHolder
+	 * 		The GarageHolder that has placed this order
+	 * @param configuration
+	 * 		The configuration of the specified car
+	 * @param orderedTime
+	 * 		The time at which this CarOrder is ordered.
 	 */
-	public CarOrder(int carOrderId, GarageHolder garageHolder, Configuration configuration) {
+	public CarOrder(int carOrderId, GarageHolder garageHolder, Configuration configuration, GregorianCalendar orderedTime) {
 		super(carOrderId, garageHolder, configuration, false);
-		this.setOrderedTime(new GregorianCalendar()); // dit geeft de tijd op het moment van constructie.
+		this.setOrderedTime(orderedTime);
 	}
 
 	/**

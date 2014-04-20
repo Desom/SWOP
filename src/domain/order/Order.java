@@ -60,7 +60,7 @@ public abstract class Order {
 	 * 		The time the order was placed.
 	 */
 	protected void setOrderedTime(GregorianCalendar orderedTime) {
-		this.orderedTime = orderedTime;
+		this.orderedTime = (GregorianCalendar) orderedTime.clone();
 	}
 	
 	/**

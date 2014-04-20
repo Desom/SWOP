@@ -63,13 +63,14 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 				// zet een null in de plaats
 				assembly.addFirst(null);
 				scheduledList.add(new ScheduledOrder(movingTime,null));
-
+				movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
+				
 				//Simuleer leeg maken aan het einde van de dag.
 				while(!this.isEmptyAssembly(assembly)){
 					assembly.removeLast();
 					assembly.addFirst(null);
-					movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
 					scheduledList.add(new ScheduledOrder(movingTime,null));
+					movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
 				}
 				// Voeg de order voorraan toe en zet de time op het begin van de volgende dag.
 				assembly.removeLast();

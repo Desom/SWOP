@@ -166,12 +166,18 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * Gets the end of the day with overtime taken into account.
 	 */
 	public GregorianCalendar getRealEndOfDay() {
-		GregorianCalendar endOfDay = (GregorianCalendar) GregorianCalendar.getInstance();
+		GregorianCalendar endOfDay = (GregorianCalendar) this.currentTime.clone();
 		endOfDay.set(GregorianCalendar.HOUR_OF_DAY, 22);
 		endOfDay.add(GregorianCalendar.MINUTE, - this.overTimeInMinutes);
 		return endOfDay;
 	}
 
+
+	//TODO dit is een slechte manier, moet worden aangepast;
+	public void setAssemblyLine(AssemblyLine assemblyLine){
+		this.assemblyLine = assemblyLine;
+	}
+	
 	public AssemblyLine getAssemblyLine() {
 		return assemblyLine;
 	}

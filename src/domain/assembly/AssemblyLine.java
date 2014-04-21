@@ -23,6 +23,7 @@ public class AssemblyLine {
 		this.statistics = statistics;
 		this.workstations = createWorkstations();
 		this.assemblyLineScheduler = assemblyLineScheduler;
+		this.assemblyLineScheduler.setAssemblyLine(this);
 	}
 
 	/**
@@ -31,6 +32,10 @@ public class AssemblyLine {
 	 */
 	public LinkedList<Workstation> getAllWorkstations(){
 		return new LinkedList<Workstation>(workstations);
+	}
+
+	public AssemblyLineScheduler getAssemblyLineScheduler() {
+		return assemblyLineScheduler;
 	}
 
 	/**
@@ -363,6 +368,15 @@ public class AssemblyLine {
 			}
 		}
 		return maxTime;
+	}
+
+	public boolean isEmpty() {
+		for(Workstation w : getAllWorkstations()){
+			if(w.getCarAssemblyProcess() != null){
+				return false;
+			}
+		}
+		return true;
 	}
 
 }

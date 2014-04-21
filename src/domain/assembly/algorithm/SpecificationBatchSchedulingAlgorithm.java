@@ -16,9 +16,13 @@ public class SpecificationBatchSchedulingAlgorithm implements
 	private Configuration batchConfiguration;
 	private SchedulingAlgorithm innerAlgorithm;
 	
-	public SpecificationBatchSchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm, Configuration batchConfiguration) {
-		this.batchConfiguration = batchConfiguration;
+	public SpecificationBatchSchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
+		this.batchConfiguration = null;
 		this.innerAlgorithm = innerAlgorithm;
+	}
+	
+	public void setConfiguration(Configuration configuration){
+		this.batchConfiguration = configuration;
 	}
 
 

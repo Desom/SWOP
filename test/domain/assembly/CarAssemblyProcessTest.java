@@ -10,13 +10,21 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
+import domain.configuration.Configuration;
+import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.OrderManager;
+import domain.order.CarOrder;
+import domain.policies.CompletionPolicy;
+import domain.policies.ConflictPolicy;
+import domain.policies.DependencyPolicy;
 import domain.policies.InvalidConfigurationException;
+import domain.policies.ModelCompatibilityPolicy;
+import domain.policies.Policy;
+import domain.user.GarageHolder;
 import domain.assembly.CarAssemblyProcess;
-import domain.assembly.Scheduler;
 import domain.assembly.Workstation;
 
 public class CarAssemblyProcessTest {
@@ -30,16 +38,16 @@ public class CarAssemblyProcessTest {
 	ArrayList<OptionType> taskTypes3;
 	
 	CarAssemblyProcess process;
+
 	
 	@Before
 	public void testCreate() throws IOException, CarModelCatalogException, InvalidConfigurationException{
 		
 		// MAAK EEN AUTO MET OPTIONS EN MODEL AAN
 		
-		OrderManager orderManager = new OrderManager("testData/testData_OrderManager.txt", new CarModelCatalog(), new GregorianCalendar(2014, 1, 1, 12, 0, 0));
-		Scheduler schedule = orderManager.getScheduler();
-		process = schedule.getNextOrder(100).getAssemblyprocess();
 		
+		process = createCar().getAssemblyprocess();
+	
 		taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);
 		taskTypes1.add(OptionType.Color);
@@ -74,6 +82,52 @@ public class CarAssemblyProcessTest {
 		for(int i = 0; i<process.compatibleWith(w3).size(); i++){
 			assertTrue(taskTypes3.contains(process.compatibleWith(w3).get(i).getType()));
 		}
+	}
+	
+	
+	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
+		ArrayList<OptionType> List = new ArrayList<OptionType>();
+		for(OptionType i: OptionType.values()){
+			if(i != OptionType.Airco || i != OptionType.Spoiler ){
+				List.add(i);
+			}
+		}
+		Policy pol1 = new CompletionPolicy(null,List);
+		Policy pol2 = new ConflictPolicy(pol1);
+		Policy pol3 = new DependencyPolicy(pol2);
+		Policy pol4 = new ModelCompatibilityPolicy(pol3);
+		Policy carOrderPolicy= pol4;
+		
+		
+		CarModelCatalog catalog = new CarModelCatalog();
+		CarModel carModel = null;
+		for(CarModel m : catalog.getAllModels()){
+			if(m.getName().equals("Model A")){
+				carModel = m;
+				continue;
+			}
+		}
+		
+		Configuration config = new Configuration(carModel, carOrderPolicy);
+		
+		for(Option option : catalog.getAllOptions()){
+			if(option.getDescription().equals("sedan")
+					||option.getDescription().equals("blue")
+					||option.getDescription().equals("standard 2l v4")
+					||option.getDescription().equals("5 speed manual")
+					||option.getDescription().equals("leather white")
+					||option.getDescription().equals("no airco")
+					||option.getDescription().equals("comfort")
+					||option.getDescription().equals("no spoiler")
+					)
+				config.addOption(option);
+		}
+		
+		GarageHolder garageHolder = new GarageHolder(1);
+		
+		GregorianCalendar now = new GregorianCalendar();
+		CarOrder carOrder = new CarOrder(1, garageHolder, config, now);
+		return carOrder;
 	}
 	
 	

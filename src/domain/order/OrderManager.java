@@ -62,6 +62,7 @@ public class OrderManager {
 				allUnfinishedCarOrders.add(order);
 			}
 		}
+		scheduler.setOrderManager(this);
 	}
 	
 	/**
@@ -77,6 +78,7 @@ public class OrderManager {
 		this.ordersPerId = new HashMap<Integer,ArrayList<Order>>();
 		this.highestCarOrderID = 0;
 		this.createPolicies();
+		scheduler.setOrderManager(this);
 	}
 	
 

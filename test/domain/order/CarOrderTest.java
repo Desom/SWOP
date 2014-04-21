@@ -11,8 +11,15 @@ import org.junit.Test;
 
 import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
+import domain.configuration.Configuration;
 import domain.configuration.Option;
+import domain.configuration.OptionType;
 import domain.order.CarOrder;
+import domain.policies.CompletionPolicy;
+import domain.policies.ConflictPolicy;
+import domain.policies.DependencyPolicy;
+import domain.policies.ModelCompatibilityPolicy;
+import domain.policies.Policy;
 import domain.user.GarageHolder;
 
 public class CarOrderTest {
@@ -20,6 +27,8 @@ public class CarOrderTest {
 	public static ArrayList<Option> arrayOption;
 	public static CarModel carModel;
 	public static GarageHolder garageHolder;
+	public static Configuration config;
+	public static Policy carOrderPolicy;
 
 	public CarOrder carOrder;
 	public CarOrder carOrder1;
@@ -31,6 +40,19 @@ public class CarOrderTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
+		ArrayList<OptionType> List = new ArrayList<OptionType>();
+		for(OptionType i: OptionType.values()){
+			if(i != OptionType.Airco || i != OptionType.Spoiler ){
+				List.add(i);
+			}
+		}
+		Policy pol1 = new CompletionPolicy(null,List);
+		Policy pol2 = new ConflictPolicy(pol1);
+		Policy pol3 = new DependencyPolicy(pol2);
+		Policy pol4 = new ModelCompatibilityPolicy(pol3);
+		carOrderPolicy= pol4;
+		
+		
 		CarModelCatalog catalog = new CarModelCatalog();
 		carModel = null;
 		for(CarModel m : catalog.getAllModels()){
@@ -39,7 +61,9 @@ public class CarOrderTest {
 				continue;
 			}
 		}
-		arrayOption = new ArrayList<Option>();
+		
+		config = new Configuration(carModel, carOrderPolicy);
+		
 		for(Option option : catalog.getAllOptions()){
 			if(option.getDescription().equals("sedan")
 					||option.getDescription().equals("blue")
@@ -50,7 +74,7 @@ public class CarOrderTest {
 					||option.getDescription().equals("comfort")
 					||option.getDescription().equals("no spoiler")
 					)
-				arrayOption.add(option);
+				config.addOption(option);
 		}
 		
 		garageHolder = new GarageHolder(1);
@@ -64,20 +88,20 @@ public class CarOrderTest {
 		now1.add(GregorianCalendar.HOUR_OF_DAY, 1);
 		now3 = (GregorianCalendar) now.clone();
 		now3.add(GregorianCalendar.HOUR_OF_DAY, 3);
-		carOrder = new CarOrder(0, 0, now, now3, carModel, arrayOption);
-		carOrder1 = new CarOrder(1, 0, now1, null, carModel, arrayOption);
-		carOrder2 = new CarOrder(3, 0, now3, null, carModel, arrayOption);
-		carOrderNew = new CarOrder(5, garageHolder,carModel, arrayOption);
+		carOrder = new CarOrder(0, garageHolder, config, now, now3, true);
+		carOrder1 = new CarOrder(1, garageHolder, config, now1);
+		carOrder2 = new CarOrder(3, garageHolder, config, now3);
+		//carOrderNew = new CarOrder(5, garageHolder,carModel, arrayOption);
 	}
 
 	@Test
 	public void testCreation() {
 		//TODO meer testen?
-		assertEquals(carModel,carOrder.getOrder().getConfiguration().getModel());
+		assertEquals(carModel,carOrder.getConfiguration().getModel());
 		assertEquals(0,carOrder.getCarOrderID());
 		assertEquals(now3,carOrder.getDeliveredTime());
 		assertEquals(now,carOrder.getOrderedTime());
-		assertEquals(0,carOrder.getUserId());
+		assertEquals(garageHolder.getId(),carOrder.getUserId());
 	}
 
 	@Test
@@ -94,14 +118,6 @@ public class CarOrderTest {
 		
 		try{
 			carOrder2.getDeliveredTime();
-			fail();
-		}
-		catch(IllegalStateException e){
-			assertEquals("This car hasn't been delivered yet",e.getMessage());
-		}
-		
-		try{
-			carOrderNew.getDeliveredTime();
 			fail();
 		}
 		catch(IllegalStateException e){
@@ -130,7 +146,7 @@ public class CarOrderTest {
 		try {
 			carOrder.setDeliveredTime(now4);
 		} catch (IllegalStateException e) {
-			fail();
+			assertEquals("DeliveredTime already set",e.getMessage());
 		}
 		
 	}

@@ -101,7 +101,7 @@ public class ConflictPolicy extends Policy {
 	private String buildMessage(HashSet<Option[]> conflictingOptions){
 		String message = "Your configuration has the following conflicting Options: \n";
 		for(Option[] o : conflictingOptions){
-			message += "* " + o[0].toString() + "conflicts with " + o[1].toString() + "\n";
+			message += "* " + o[0].toString() + " conflicts with " + o[1].toString() + "\n";
 		}
 		return message;
 	}

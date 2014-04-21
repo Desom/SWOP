@@ -45,7 +45,9 @@ public class CarOrder extends Order {
 	public CarOrder(int carOrderId, GarageHolder garageHolder, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deliveredTime, boolean isCompleted) {
 		super(carOrderId, garageHolder, configuration, isCompleted);
 		this.setOrderedTime(orderedTime);
-		this.setDeliveredTime(deliveredTime);
+		if(isCompleted){
+			this.setDeliveredTime(deliveredTime);			
+		}
 	}
 
 }

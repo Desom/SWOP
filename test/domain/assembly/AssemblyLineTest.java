@@ -17,8 +17,10 @@ import domain.assembly.AssemblyStatusView;
 import domain.assembly.CannotAdvanceException;
 import domain.assembly.CarAssemblyProcess;
 import domain.assembly.DoesNotExistException;
-import domain.assembly.Scheduler;
 import domain.assembly.Workstation;
+import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
+import domain.assembly.algorithm.SchedulingAlgorithm;
+import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
 import domain.configuration.OptionType;
@@ -31,7 +33,7 @@ public class AssemblyLineTest {
 
 
 	private AssemblyLine line;
-	private Scheduler scheduler;
+	private AssemblyLineScheduler scheduler;
 	private CarMechanic m1;
 	private CarMechanic m2;
 	private CarMechanic m3;
@@ -42,10 +44,15 @@ public class AssemblyLineTest {
 		m2 = new CarMechanic(3);
 		m3 = new CarMechanic(4);
 
-		// maak een andere orderManager met enkele voorbeeld orders
-		OrderManager orderManager = new OrderManager("testData/testData_OrderManager.txt", new CarModelCatalog() , new GregorianCalendar(2014, 1, 1, 12, 0, 0));
-		scheduler = orderManager.getScheduler();
-		line = new AssemblyLine(scheduler, new Statistics(orderManager));
+		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
+		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
+		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
+		CarModelCatalog catalog = new CarModelCatalog();
+		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
+		Statistics statistics = new Statistics(orderManager);
+		line = new AssemblyLine(scheduler, statistics);
 
 		line.selectWorkstationById(1).addCarMechanic(m1);
 		assertEquals(line.selectWorkstationById(1).getCarMechanic(), m1);
@@ -56,14 +63,8 @@ public class AssemblyLineTest {
 		line.selectWorkstationById(3).addCarMechanic(m3);
 		assertEquals(line.selectWorkstationById(3).getCarMechanic(), m3);
 
-		line.advanceLine();
-		for(Workstation w : line.getAllWorkstations()){
-			while(w.getAllPendingTasks().size() > 0){ // complete alle tasks
-				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(w.getCarMechanic(),60);
-			}
-		}
-		line.advanceLine();
+		fullDefaultAdvance();
+
 	}
 
 	@Test
@@ -86,18 +87,15 @@ public class AssemblyLineTest {
 		assertEquals(line.selectWorkstationById(3).getId(), 3);
 	}
 
+	
 	@Test
 	public void testAdvanceLineSucces() throws DoesNotExistException, CannotAdvanceException, InternalFailureException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			while(w.getAllPendingTasks().size() > 0){ // complete alle tasks
-				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(w.getCarMechanic(),60);
-			}
 			processesBefore.add(w.getCarAssemblyProcess());
 		}
 
-		Order order = scheduler.seeNextOrder(100);
+		Order order = scheduler.seeNextOrder(60);
 		CarAssemblyProcess next;
 		if(order != null){
 			next = order.getAssemblyprocess();
@@ -105,7 +103,7 @@ public class AssemblyLineTest {
 			next = null;
 		}
 		
-		line.advanceLine();
+		fullDefaultAdvance();
 
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
@@ -186,29 +184,39 @@ public class AssemblyLineTest {
 		}
 	}
 
-	/*@Test
-	public void testAccessOk() throws InternalFailureException, CannotAdvanceException, IllegalStateException, IllegalArgumentException, UserAccessException{
-		Manager manager = new Manager(1);
-		CarMechanic mechanic = new CarMechanic(2);
-		
-		for(Workstation w : line.getAllWorkstations(manager)){
-			while(w.getAllPendingTasks(w.getCarMechanic()).size() > 0){ // complete alle tasks
-				w.selectTask(w.getCarMechanic(), w.getAllPendingTasks(w.getCarMechanic()).get(0));
-				w.completeTask(w.getCarMechanic());
+	
+	/**
+	 * This method is only to be used for testing. It will complete all tasks the workstations are currently working on.
+	 * It will complete those tasks in a way where the time spent on each workstation is the expected time for that specific car order.
+	 * When the last workstation finishes it's last task the line will ofcourse automatically advance.
+	 * 
+	 * @throws InternalFailureException 
+	 * @throws IllegalStateException 
+	 */
+	private void fullDefaultAdvance() throws IllegalStateException, InternalFailureException{
+		LinkedList<Workstation> wList = line.getAllWorkstations();
+		LinkedList<Workstation> remove = new LinkedList<Workstation>();
+		for(Workstation w: wList){ // filter the already completed workstations so the line won't accidentally advance twice.
+			if(w.hasAllTasksCompleted()){
+				remove.add(w);
 			}
 		}
+		wList.removeAll(remove);
 		
-		try {
-			line.advanceLine(manager, 100);
-			line.currentStatus(manager);
-			line.futureStatus(manager, 100);
-			line.selectWorkstationById(1, manager);
-			line.getAllWorkstations(manager);
-			
-			line.selectWorkstationById(1, mechanic);
-			line.getAllWorkstations(mechanic);
-		} catch (UserAccessException e) {
-			fail();
+		for(Workstation w : wList){
+			CarMechanic mechanic = w.getCarMechanic();
+			if(mechanic == null)
+				mechanic = new CarMechanic(100*w.getId()); // randomize ID een beetje
+			while(w.getAllPendingTasks().size() > 1){
+				w.selectTask(w.getAllPendingTasks().get(0));
+				w.completeTask(mechanic,0);
+			}
+			if(w.getAllPendingTasks().size() != 0){
+				w.selectTask(w.getAllPendingTasks().get(0));
+				w.completeTask(mechanic,w.getCarAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+			}
 		}
-	}*/
+	}
+	
+	
 }

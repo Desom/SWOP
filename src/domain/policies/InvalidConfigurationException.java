@@ -15,4 +15,13 @@ public class InvalidConfigurationException extends Exception{
 	public void addMessage(String message){
 		this.messages.add(message);
 	}
+	
+	@Override
+	public String getMessage(){
+		String message = "";
+		for(String m : messages){
+			message += m + "\n";
+		}
+		return message;
+	}
 }

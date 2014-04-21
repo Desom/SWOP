@@ -1,11 +1,15 @@
 package domain;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.Workstation;
+import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
+import domain.assembly.algorithm.SchedulingAlgorithm;
+import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
 import domain.order.OrderManager;
@@ -34,11 +38,15 @@ public class Company {
 	 */
 	public Company() throws InternalFailureException {
 		try {
+			ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
+			possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
+			possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 			GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 			this.catalog = new CarModelCatalog();
-			this.orderManager = new OrderManager(new AssemblyLineScheduler(time), time);
+			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+			this.orderManager = new OrderManager(scheduler, time);
 			this.statistics = new Statistics(this.orderManager);
-			this.assemblyLine = new AssemblyLine(orderManager.getScheduler(), this.statistics);
+			this.assemblyLine = new AssemblyLine(scheduler, this.statistics);
 		} catch (IOException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
 		} catch (CarModelCatalogException e) {

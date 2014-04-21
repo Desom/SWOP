@@ -108,7 +108,7 @@ public class OrderManager {
 	 */
 	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration){
 		int carOrderId = this.getUniqueCarOrderId();
-		CarOrder newOrder = new CarOrder(carOrderId, user, configuration);
+		CarOrder newOrder = new CarOrder(carOrderId, user, configuration, scheduler.getCurrentTime());
 		this.addOrder(newOrder);
 		//this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;

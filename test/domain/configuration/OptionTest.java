@@ -49,20 +49,18 @@ public class OptionTest {
 	
 	@Test
 	public void testconflictsWith_False() throws CarModelCatalogException {
-		ArrayList<Option> a = new ArrayList<Option>();
 		Option opt = new Option("green", OptionType.Color);
-		a.add(opt);
-		Option opt2 = new Option("red", OptionType.Color);
+		Option opt2 = new Option("red", OptionType.Seats);
 		assertFalse(opt.conflictsWith(opt2));
 		assertFalse(opt2.conflictsWith(opt));
 	}
 
 	@Test
 	public void testconflictsWith_True() throws CarModelCatalogException {
-		ArrayList<Option> a = new ArrayList<Option>();
 		Option opt = new Option("green", OptionType.Color);
-		a.add(opt);
-		Option opt2 = new Option("red",  OptionType.Color);
+		Option opt2 = new Option("red",  OptionType.Seats);
+		opt.setIncompatible(opt2);
+		opt2.setIncompatible(opt);
 		assertTrue(opt.conflictsWith(opt2));
 		assertTrue(opt2.conflictsWith(opt));
 	}

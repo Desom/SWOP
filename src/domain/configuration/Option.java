@@ -40,6 +40,7 @@ public class Option {
 	 * @return true if the option can be in the same configuration as this option else no
 	 */
 	public Boolean conflictsWith(Option opt){
+		if(type == opt.getType()) return true;
 		if(this.incompatibles.contains(opt)) return true;
 		return false;
 	}

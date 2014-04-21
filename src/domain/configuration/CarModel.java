@@ -25,6 +25,15 @@ public class CarModel {
 		this.expectedTaskTime = expectedTaskTime;
 	}
 	
+	/**
+	 * create a car model with a default expected working time of 60 minutes.
+	 * @param name name of the model
+	 * @param optionList the options which are possible in this model
+	 * @throws CarModelCatalogException a paramater is null or a type of option is not represented
+	 */
+	public CarModel(String name,ArrayList<Option> optionList) throws CarModelCatalogException{
+		this(name, optionList, 60);
+	}
 	
 	/**
 	 * looks if a type of options is represented in a list

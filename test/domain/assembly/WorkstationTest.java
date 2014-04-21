@@ -4,20 +4,28 @@ import static org.junit.Assert.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.Company;
+import domain.InternalFailureException;
 import domain.assembly.AssemblyTask;
-import domain.assembly.CarAssemblyProcess;
 import domain.assembly.Workstation;
 import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
+import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.Car;
 import domain.order.CarOrder;
+import domain.policies.CompletionPolicy;
+import domain.policies.ConflictPolicy;
+import domain.policies.DependencyPolicy;
+import domain.policies.InvalidConfigurationException;
+import domain.policies.ModelCompatibilityPolicy;
+import domain.policies.Policy;
 import domain.user.CarMechanic;
 import domain.user.GarageHolder;
 
@@ -29,48 +37,32 @@ public class WorkstationTest {
 	private AssemblyTask invalidTask;
 	
 	@Before
-	public void testCreate() {
+	public void testCreate() throws InvalidConfigurationException, IOException, CarModelCatalogException, InternalFailureException {
 		carMechanic = new CarMechanic(1);
+		Company comp = new Company();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
-		taskTypes.add(OptionType.Airco);
 		taskTypes.add(OptionType.Body);
 		taskTypes.add(OptionType.Color);
-		workstation = new Workstation(1, taskTypes);
+		workstation = comp.getAllWorkstations().getFirst();
 		assertEquals(1, workstation.getId());
 		assertEquals(taskTypes, workstation.getTaskTypes());
 		assertTrue(workstation.getAllCompletedTasks().isEmpty());
 		assertTrue(workstation.getAllPendingTasks().isEmpty());
 		
-		ArrayList<String> actions1 = new ArrayList<String>();
-		actions1.add("action1");
-		actions1.add("action2");
-		OptionType type1 = OptionType.Body;
-		validTask = new AssemblyTask(actions1, type1);
 		
-		ArrayList<String> actions2 = new ArrayList<String>();
-		actions2.add("action1");
-		actions2.add("action2");
-		OptionType type2 = OptionType.Gearbox;
-		invalidTask = new AssemblyTask(actions2, type2);
+		CarOrder order = createCar();
+		validTask = order.getAssemblyprocess().compatibleWith(workstation).get(0);
+		
+		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
+		taskTypes2.add(OptionType.Gearbox);
+		Workstation workstation2 = new Workstation(null, 1, taskTypes2);
+		invalidTask = order.getAssemblyprocess().compatibleWith(workstation2).get(0);
+		
 	}
 	
 	@Test
 	public void testCar() throws IOException, CarModelCatalogException {
-		GarageHolder holder = new GarageHolder(1);
-		CarModelCatalog catalog = new CarModelCatalog();
-		CarModel model= catalog.getCarModel("Ford");
-		ArrayList<Option> allOptions = model.getOptions();
-		ArrayList<Option> selectedOptions = new ArrayList<Option>();
-		selectedOptions.add(allOptions.get(0));
-		selectedOptions.add(allOptions.get(1));
-		selectedOptions.add(allOptions.get(2));
-		selectedOptions.add(allOptions.get(3));
-		selectedOptions.add(allOptions.get(4));
-		selectedOptions.add(allOptions.get(5));
-		selectedOptions.add(allOptions.get(6));
-		CarOrder order = new CarOrder(1, holder, model, selectedOptions);
-		Car car = order.getOrder();
-		CarAssemblyProcess process = car.getAssemblyprocess();
+		workstation.clear();
 		try {
 			workstation.getActiveTaskInformation();
 			fail("No IllegalStateException was thrown");
@@ -81,11 +73,11 @@ public class WorkstationTest {
 	}
 	
 	@Test
-	public void testCompleteTask() throws IllegalStateException {
+	public void testCompleteTask() throws IllegalStateException, InternalFailureException {
 		workstation.addAssemblyTask(validTask);
 		workstation.addCarMechanic(carMechanic);
 		workstation.selectTask(validTask);
-		workstation.completeTask(carMechanic);
+		workstation.completeTask(carMechanic,60);
 		assertTrue(workstation.getAllCompletedTasks().contains(validTask));
 		assertTrue(workstation.getAllPendingTasks().isEmpty());
 		assertTrue(workstation.hasAllTasksCompleted());
@@ -112,7 +104,6 @@ public class WorkstationTest {
 		ArrayList<String> taskInformation = workstation.getActiveTaskInformation();
 		assertEquals(validTask.getType().toString(), taskInformation.get(0));
 		assertEquals(validTask.getActions().get(0), taskInformation.get(1));
-		assertEquals(validTask.getActions().get(1), taskInformation.get(2));
 	}
 	
 	
@@ -130,12 +121,59 @@ public class WorkstationTest {
 	}
 	
 	@Test
-	public void testCompleteTaskWithoutCarMechanic() throws IllegalStateException {
+	public void testCompleteTaskWithoutCarMechanic() throws IllegalStateException, InternalFailureException {
 		try {
-			workstation.completeTask(carMechanic);
+			workstation.completeTask(carMechanic,60);
 			assertTrue("IllegalArgumentExcpetion was not thrown", false);
 		}
 		catch (IllegalStateException e) {
 		}
+	}
+	
+	
+	
+	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
+		ArrayList<OptionType> List = new ArrayList<OptionType>();
+		for(OptionType i: OptionType.values()){
+			if(i != OptionType.Airco || i != OptionType.Spoiler ){
+				List.add(i);
+			}
+		}
+		Policy pol1 = new CompletionPolicy(null,List);
+		Policy pol2 = new ConflictPolicy(pol1);
+		Policy pol3 = new DependencyPolicy(pol2);
+		Policy pol4 = new ModelCompatibilityPolicy(pol3);
+		Policy carOrderPolicy= pol4;
+		
+		
+		CarModelCatalog catalog = new CarModelCatalog();
+		CarModel carModel = null;
+		for(CarModel m : catalog.getAllModels()){
+			if(m.getName().equals("Model A")){
+				carModel = m;
+				continue;
+			}
+		}
+		
+		Configuration config = new Configuration(carModel, carOrderPolicy);
+		
+		for(Option option : catalog.getAllOptions()){
+			if(option.getDescription().equals("sedan")
+					||option.getDescription().equals("blue")
+					||option.getDescription().equals("standard 2l v4")
+					||option.getDescription().equals("5 speed manual")
+					||option.getDescription().equals("leather white")
+					||option.getDescription().equals("no airco")
+					||option.getDescription().equals("comfort")
+					||option.getDescription().equals("no spoiler")
+					)
+				config.addOption(option);
+		}
+		
+		GarageHolder garageHolder = new GarageHolder(1);
+		
+		GregorianCalendar now = new GregorianCalendar();
+		CarOrder carOrder = new CarOrder(1, garageHolder, config, now);
+		return carOrder;
 	}
 }

@@ -14,64 +14,45 @@ public class OptionTest {
 	
 	@Test
 	public void testcreate() throws CarModelCatalogException {
-		ArrayList<Option> a = new ArrayList<Option>();
-		ArrayList<Option> b = new ArrayList<Option>();
-		Option opt = new Option("green", a, b, OptionType.Color);
+		Option opt = new Option("green", OptionType.Color);
 		assertEquals(opt.getDescription(), "green");
-		assertEquals(opt.getCompatibles(),a);
-		assertEquals(opt.getIncompatibles(),b);
-		assertFalse(opt.getCompatibles() == b);
-		assertFalse(opt.getIncompatibles()== a);
 	}
 
 	@Test
 	public void nulltest(){
-		ArrayList<Option> a = new ArrayList<Option>();
 		try {
-			 new Option("red", null , a,OptionType.Color);
+			 new Option("red", null);
 			 fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
-			 new Option("green", a , null,OptionType.Color);
+			 new Option("green", null);
 			 fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
-			 new Option(null, a , a,OptionType.Color);
+			 new Option(null, OptionType.Color);
 			 fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
-			 new Option("red", null , a, null);
+			 new Option("red", null);
 			 fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 	}
 	
-	@Test
-	public void paradoxtest() throws CarModelCatalogException{
-		ArrayList<Option> a = new ArrayList<Option>();
-		ArrayList<Option> b = new ArrayList<Option>();
-		b.add(new Option("blue", a, a,OptionType.Color));
-		try {
-			 new Option("red", b , b,OptionType.Color);
-			 fail();
-		} catch (CarModelCatalogException e) {
-			assertEquals("Option is both Compatible and incompatiblle with another option at the same type" , e.getMessage());
-		}
-	}
 	
 	@Test
 	public void testconflictsWith_False() throws CarModelCatalogException {
 		ArrayList<Option> a = new ArrayList<Option>();
-		Option opt = new Option("green", new ArrayList<Option>(), new ArrayList<Option>(),OptionType.Color);
+		Option opt = new Option("green", OptionType.Color);
 		a.add(opt);
-		Option opt2 = new Option("red", a, new ArrayList<Option>(),OptionType.Color);
+		Option opt2 = new Option("red", OptionType.Color);
 		assertFalse(opt.conflictsWith(opt2));
 		assertFalse(opt2.conflictsWith(opt));
 	}
@@ -79,9 +60,9 @@ public class OptionTest {
 	@Test
 	public void testconflictsWith_True() throws CarModelCatalogException {
 		ArrayList<Option> a = new ArrayList<Option>();
-		Option opt = new Option("green", new ArrayList<Option>(), new ArrayList<Option>(),OptionType.Color);
+		Option opt = new Option("green", OptionType.Color);
 		a.add(opt);
-		Option opt2 = new Option("red",  new ArrayList<Option>(),a,OptionType.Color);
+		Option opt2 = new Option("red",  OptionType.Color);
 		assertTrue(opt.conflictsWith(opt2));
 		assertTrue(opt2.conflictsWith(opt));
 	}

@@ -25,16 +25,14 @@ public class CarModelTest {
 	@Before
 	public void setUp() throws Exception {
 		a = new ArrayList<Option>();
-		ArrayList<Option> b = new ArrayList<Option>();
-		ArrayList<Option> c = new ArrayList<Option>();
-		A = new Option("a",b,c, OptionType.Airco);
-		B = new Option("b",b,c,OptionType.Body);
-		C = new Option("c",b,c,OptionType.Color);
-		E = new Option("e",b,c,OptionType.Engine);
-		G = new Option("g",b,c,OptionType.Gearbox);
-		S = new Option("s",b,c,OptionType.Seats);
-		W = new Option("w",b,c,OptionType.Wheels);
-		Sp = new Option("sp",b,c,OptionType.Spoiler);
+		A = new Option("a",OptionType.Airco);
+		B = new Option("b",OptionType.Body);
+		C = new Option("c",OptionType.Color);
+		E = new Option("e",OptionType.Engine);
+		G = new Option("g",OptionType.Gearbox);
+		S = new Option("s",OptionType.Seats);
+		W = new Option("w",OptionType.Wheels);
+		Sp = new Option("sp",OptionType.Spoiler);
 		Name = "BMW";
 		a.add(E);
 		a.add(A);
@@ -48,7 +46,7 @@ public class CarModelTest {
 
 	@Test
 	public void testconstructer() throws CarModelCatalogException {
-		CarModel car = new CarModel(Name,a);
+		CarModel car = new CarModel(Name,a,60);
 		
 		assertEquals(Name, car.getName());
 		assertEquals(a, car.getOptions());
@@ -69,14 +67,12 @@ public class CarModelTest {
 			new CarModel(null,a);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"null in non null value of Model");
 		}
 		try {
 			new CarModel(Name,null);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"null in non null value of Model");
 		}
 	
@@ -87,7 +83,6 @@ public class CarModelTest {
 			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"Missing type: Airco");
 		}
 		try {
@@ -96,7 +91,6 @@ public class CarModelTest {
 			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"Missing type: Body");
 		}
 		try {
@@ -105,7 +99,6 @@ public class CarModelTest {
 			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"Missing type: Color");
 		}
 		try {
@@ -114,7 +107,6 @@ public class CarModelTest {
 			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"Missing type: Engine");
 		}
 		try {
@@ -123,7 +115,6 @@ public class CarModelTest {
 			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"Missing type: Gearbox");
 		}
 		try {
@@ -132,7 +123,6 @@ public class CarModelTest {
 			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"Missing type: Seats");
 		}
 		try {
@@ -141,7 +131,6 @@ public class CarModelTest {
 			new CarModel(Name,fake);
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals(e.getMessage(),"Missing type: Spoiler");
 		}
 		

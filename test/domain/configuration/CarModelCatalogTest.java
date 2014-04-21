@@ -39,6 +39,7 @@ public class CarModelCatalogTest {
 		write2.write("Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue,no spoiler");
 		write2.close();
 	}
+	@SuppressWarnings("unused")
 	@Test
 	public void testcreate() throws IOException, CarModelCatalogException {
 		CarModelCatalog catalog =new CarModelCatalog("testData/test_option.txt","testData/init_model.txt");
@@ -54,7 +55,6 @@ public class CarModelCatalogTest {
 			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals("Option: wrong input format: a;Body",e.getMessage());
 		}
 	}
@@ -68,7 +68,6 @@ public class CarModelCatalogTest {
 			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals("Option already exists: a",e.getMessage());
 		}
 	}
@@ -82,7 +81,6 @@ public class CarModelCatalogTest {
 			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals("Option does not exists: b",e.getMessage());
 		}
 	}
@@ -96,7 +94,6 @@ public class CarModelCatalogTest {
 			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals("no valid type: fake",e.getMessage());
 		}
 	}
@@ -109,7 +106,6 @@ public class CarModelCatalogTest {
 			new CarModelCatalog("testData/test_option.txt","testData/test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals("Model: wrong input format: a;Body;,",e.getMessage());
 		}
 	}
@@ -123,7 +119,6 @@ public class CarModelCatalogTest {
 			new CarModelCatalog("testData/test_option.txt","testData/test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals("Model name already exists: a",e.getMessage());
 		}
 	}
@@ -136,7 +131,6 @@ public class CarModelCatalogTest {
 			new CarModelCatalog("testData/test_option.txt","testData/test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
-			// TODO Auto-generated catch block
 			assertEquals("Option does not exists: nospoiler",e.getMessage());
 		}
 	}

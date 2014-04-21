@@ -6,7 +6,7 @@ public class Option {
 	private String description; 
 	private ArrayList<Option> incompatibles;
 	private OptionType type;
-	private ArrayList<ArrayList<Option>> dependancies;// elke arrayList bevat een lijst van opties waarvan slechts 1 aanwezig moet zijn voor correctheid
+	private ArrayList<ArrayList<Option>> dependencies;// elke arrayList bevat een lijst van opties waarvan minstens 1 aanwezig moet zijn voor correctheid
 	/**
 	 * creates an option
 	 * @param description the description of the option
@@ -20,7 +20,7 @@ public class Option {
 		this.description =description;
 		this.type = type;
 		incompatibles.add(this);
-		this.dependancies = new ArrayList<ArrayList<Option>>();
+		this.dependencies = new ArrayList<ArrayList<Option>>();
 	}
 
 	public String getDescription(){
@@ -32,7 +32,7 @@ public class Option {
 		}
 	}
 	void setDependancy(ArrayList<Option> dependency){
-		this.dependancies.add(dependency);
+		this.dependencies.add(dependency);
 	}
 	/**
 	 * looks if an option can be in the same configuration as this option
@@ -50,13 +50,18 @@ public class Option {
 	public OptionType getType(){
 		return type;
 	}
+	
+	/**
+	 * TODO hoort dit niet beter thuis in configuration?
+	 * Als dependencyCheck(Option option) en via option.getDependencies kom je dan aan de dependencies.
+	 * Heb de spellingsfout nog niet verbeterd owv andere klassen die dan mss aangepast worden.
+	 */
 	public boolean dependancyCheck(Configuration config){
-		for(ArrayList<Option> i:dependancies){
-			boolean t =false;
-			for(Option j:i){
-				if(config.getAllOptions().contains(j))t = true;
-			}
-			if(!t) return false;
+		loop : for(ArrayList<Option> dependency : dependencies){
+			for(Option option : dependency)
+				if(config.getAllOptions().contains(option))
+					continue loop;
+			return false;
 		}
 		return true;
 	}

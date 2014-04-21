@@ -1,16 +1,14 @@
 package domain.user;
 
-
 public class GarageHolder extends User {
 
 	/**
-	 * Contructor of GarageHolder.
+	 * Constructor of GarageHolder.
 	 * 
-	 * @param	id
-	 * 			id of this garage holder
+	 * @param id
+	 * 		Id of the new garage holder.
 	 */
 	public GarageHolder(int id) {
 		super(id);
 	}
-
 }

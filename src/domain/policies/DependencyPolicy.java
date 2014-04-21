@@ -6,24 +6,34 @@ import domain.configuration.Configuration;
 import domain.configuration.Option;
 
 /**
- * This policy class checks if certain options in a configuration need other options and if the configuration also has these options.
+ * This policy class checks if certain options in a configuration need other options and if the configuration has these options.
  *
  */
 public class DependencyPolicy extends Policy {
 	
+	/**
+	 * Constructor of DependencyPolicy
+	 * @param successor
+	 * 		The next policy in the policy chain.
+	 */
 	public DependencyPolicy(Policy successor) {
 		super(successor);
 	}
 
-
+	/**
+	 * Returns a list of options which have still unfulfilled dependencies in the configuration.
+	 * 
+	 * @param configuration
+	 * 		The configuration to be checked on unfulfilled dependencies.
+	 * @return A list of all options which have still unfulfilled dependencies in the configuration.
+	 */
 	private ArrayList<Option> dependencyCheck(Configuration configuration){
-		ArrayList<Option> conflictingOptions = new ArrayList<Option>();
-		for(Option i: configuration.getAllOptions()){
-			if(!i.dependancyCheck(configuration))
-				conflictingOptions.add(i);
+		ArrayList<Option> optionsWithUnfulfilledDependencies = new ArrayList<Option>();
+		for(Option option: configuration.getAllOptions()){
+			if(!option.dependancyCheck(configuration))
+				optionsWithUnfulfilledDependencies.add(option);
 		}
-		
-		return conflictingOptions;
+		return optionsWithUnfulfilledDependencies;
 	}
 
 	@Override

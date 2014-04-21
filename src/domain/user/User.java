@@ -1,6 +1,5 @@
 package domain.user;
 
-
 public class User {
 	
 	private int id;
@@ -8,18 +7,18 @@ public class User {
 	/**
 	 * Constructor of User.
 	 * 
-	 * @param	id
-	 * 			id of this user
+	 * @param id
+	 * 		Id of the new user.
 	 */
 	public User(int id) {
 		this.setId(id);
 	}
 	
 	/**
-	 * Sets the id.
+	 * Sets the id of this user.
 	 * 
-	 * @param	id
-	 * 			number that will be the id of this user
+	 * @param id
+	 * 		The id of this user.
 	 */
 	private void setId(int id) {
 		this.id = id;
@@ -28,7 +27,7 @@ public class User {
 	/**
 	 * Returns the id of this user.
 	 * 
-	 * @return	the id of this user
+	 * @return the id of this user
 	 */
 	public int getId() {
 		return this.id;

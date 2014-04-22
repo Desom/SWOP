@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.Workstation;
+import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
@@ -39,8 +40,8 @@ public class Company {
 	public Company() throws InternalFailureException {
 		try {
 			ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
-			possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
-			possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 			GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 			this.catalog = new CarModelCatalog();
 			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);

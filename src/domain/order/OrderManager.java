@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import domain.InternalFailureException;
 import domain.assembly.Scheduler;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
@@ -41,13 +42,14 @@ public class OrderManager {
 	 * @param	currentTime 
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 * @throws InvalidConfigurationException 
+	 * @throws InternalFailureException 
 	 */
-	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException {
+	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException, InternalFailureException {
 		this.scheduler = scheduler;
 		this.createPolicies();
 		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy );
 		ArrayList<Order> allCarOrders = carOrderCreator.createCarOrderList();
-		//TODO create single task order list?
+		
 		this.ordersPerId = new HashMap<Integer,ArrayList<Order>>();
 		for(Order order : allCarOrders) {
 			this.addOrder(order);
@@ -107,8 +109,9 @@ public class OrderManager {
 	 * @param 	orderForm
 	 * 			The OrderForm containing all the information necessary to place a CarOrder.
 	 * @return	The order that was made with the given OrderForm.
+	 * @throws InternalFailureException 
 	 */
-	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration){
+	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration) throws InternalFailureException{
 		int carOrderId = this.getUniqueCarOrderId();
 		CarOrder newOrder = new CarOrder(carOrderId, user, configuration, scheduler.getCurrentTime());
 		this.addOrder(newOrder);
@@ -143,13 +146,15 @@ public class OrderManager {
 	 * 
 	 * @param 	newOrder
 	 * 			The order which will be added.
+	 * @throws InternalFailureException 
 	 */
-	private void addOrder(Order newOrder) {
+	private void addOrder(Order newOrder) throws InternalFailureException {
 		if(!this.getAllOrdersPerId().containsKey(newOrder.getUserId()))
 		{
 			this.getAllOrdersPerId().put(newOrder.getUserId(), new ArrayList<Order>());
 		}
 		this.getAllOrdersPerId().get(newOrder.getUserId()).add(newOrder);
+		this.getScheduler().updateSchedule();
 	}
 	
 	/**
@@ -273,8 +278,10 @@ public class OrderManager {
 		return unfinished;
 	}
 
-	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, Configuration configuration,
-			GregorianCalendar deadline) {
+	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, 
+			Configuration configuration,
+			GregorianCalendar deadline) 
+					throws InternalFailureException {
 		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration,deadline);
 		int carOrderId = this.getUniqueCarOrderId();
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration,deadline);

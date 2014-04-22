@@ -4,9 +4,8 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
+import domain.InternalFailureException;
 import domain.assembly.algorithm.SchedulingAlgorithm;
-import domain.order.CarOrder;
 import domain.order.Order;
 import domain.order.OrderManager;
 
@@ -18,16 +17,18 @@ public class AssemblyLineScheduler implements Scheduler{
 	private AssemblyLine assemblyLine;
 	private ArrayList<SchedulingAlgorithm> possibleAlgorithms;
 	private SchedulingAlgorithm currentAlgorithm;
-	private EfficiencySchedulingAlgorithm algorithmToBeUsed;
 	private GregorianCalendar currentTime;
 	private OrderManager orderManager;
+	private ArrayList<ScheduledOrder> schedule;
+	private boolean outDated;
 
 	//TODO docs
 	//eerste algorithm van de possibleAlgorithms is het default algorithm.
 	public AssemblyLineScheduler(GregorianCalendar time, ArrayList<SchedulingAlgorithm> possibleAlgorithms) {
-		this.currentTime = time;
-		this.possibleAlgorithms = possibleAlgorithms;
-		this.algorithmToBeUsed = new EfficiencySchedulingAlgorithm(this.possibleAlgorithms.get(0));
+		this.currentTime = (GregorianCalendar) time.clone();
+		this.possibleAlgorithms = (ArrayList<SchedulingAlgorithm>) possibleAlgorithms.clone();
+		this.currentAlgorithm = this.possibleAlgorithms.get(0);
+		this.outDated = true;
 	}
 	
 	//TODO docs
@@ -36,7 +37,7 @@ public class AssemblyLineScheduler implements Scheduler{
 		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, time);
-		ArrayList<ScheduledOrder> scheduledOrders = this.algorithmToBeUsed.scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
+		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(futureTime);
 
 		int position = 0;
 		for(; position < scheduledOrders.size(); position++){
@@ -89,15 +90,14 @@ public class AssemblyLineScheduler implements Scheduler{
 	 *            The amount of minutes it took to complete the tasks in the Workstations. (in minutes)
 	 * @return The Order that is scheduled to be built now.
 	 */
-	//TODO docs
 	protected Order getNextOrder(int minutes){
 		this.addCurrentTime(minutes);
 		GregorianCalendar now = this.getCurrentTime();
-		ArrayList<ScheduledOrder> scheduledOrders = this.algorithmToBeUsed.scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), now, this);
+		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(now);
 		if(scheduledOrders.get(0).getScheduledTime().equals(this.getCurrentTime())){
 			return scheduledOrders.get(0).getScheduledOrder();
 		}
-		if(this.getAssemblyLine().isEmpty() && scheduledOrders.get(0).getScheduledTime().get(GregorianCalendar.HOUR_OF_DAY) == this.BEGIN_OF_DAY){
+		if(this.getAssemblyLine().isEmpty() && scheduledOrders.get(0).getScheduledTime().get(GregorianCalendar.HOUR_OF_DAY) == AssemblyLineScheduler.BEGIN_OF_DAY){
 			this.startNewDay();
 			return scheduledOrders.get(0).getScheduledOrder();
 		}
@@ -114,20 +114,44 @@ public class AssemblyLineScheduler implements Scheduler{
 	 *            Workstations. (in minutes)
 	 * @return The CarOrder that is scheduled to be built after the given amount of minutes.
 	 */
-	//TODO docs
 	protected Order seeNextOrder(int minutes){
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, minutes);
-		ArrayList<ScheduledOrder> scheduledOrders = this.algorithmToBeUsed.scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
+		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(futureTime);
 		if(scheduledOrders.get(0).getScheduledTime().equals(futureTime)){
 			return scheduledOrders.get(0).getScheduledOrder();
 		}
 		return null;
 	}
+
+	/**
+	 * @param futureTime
+	 * @return
+	 */
+	private ArrayList<ScheduledOrder> getSchedule(GregorianCalendar futureTime) {
+		if(this.outDated 
+				|| this.schedule == null 
+				|| !futureTime.equals(this.schedule.get(0).getScheduledTime())){
+			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
+			this.outDated = false;
+		}
+		return this.schedule;
+	}
 	
+	public void updateSchedule() throws InternalFailureException{
+		this.outDated = true;
+		if(this.getAssemblyLine().isEmpty()){
+			try{
+				this.getAssemblyLine().advanceLine();
+			}
+			catch(CannotAdvanceException e){
+				throw new InternalFailureException("The AssemblyLine couldn't advance even though it was empty.");
+			}
+		}
+	}
 
 	// TODO docs
-	private ArrayList<Order> getOrdersToBeScheduled() {
+	public ArrayList<Order> getOrdersToBeScheduled() {
 		ArrayList<Order> orders = this.getOrderManager().getAllUnfinishedOrders();
 		LinkedList<Order> onAssembly = this.getAssemblyLine().getAllOrders();
 		orders.removeAll(onAssembly);
@@ -140,7 +164,11 @@ public class AssemblyLineScheduler implements Scheduler{
 			throw new IllegalArgumentException("This SchedulingAlgorithm is not one of the possible SchedulingAlgorithms");
 		//TODO goede exception?
 		this.currentAlgorithm = algorithm;
-		this.algorithmToBeUsed.setInnerAlgorithm(this.currentAlgorithm);
+	}
+	
+	//TODO docs
+	public void setSchedulingAlgorithmToDefault() {
+		this.currentAlgorithm = this.getPossibleAlgorithms().get(0);
 	}
 
 	public ArrayList<SchedulingAlgorithm> getPossibleAlgorithms() {
@@ -171,14 +199,14 @@ public class AssemblyLineScheduler implements Scheduler{
 //			// nieuwe overtime berekenen
 //		}
 	}
-	
 
 	private void startNewDay() {
+		this.updateOverTime();
 		GregorianCalendar newDay = new GregorianCalendar(
 				this.currentTime.get(GregorianCalendar.YEAR),
 				this.currentTime.get(GregorianCalendar.MONTH),
 				this.currentTime.get(GregorianCalendar.DAY_OF_MONTH),
-				this.BEGIN_OF_DAY,
+				AssemblyLineScheduler.BEGIN_OF_DAY,
 				0,
 				0);
 		if(newDay.before(this.currentTime))
@@ -186,12 +214,40 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.currentTime = newDay;
 	}
 	
+	//TODO docs
+	private void updateOverTime() {
+		GregorianCalendar time = this.getCurrentTime();
+		GregorianCalendar endOfDay = this.getRealEndOfDay();
+		if(time.before(endOfDay)){
+			this.overTimeInMinutes = 0;
+			return;
+		}
+		
+		//TODO is dit ok?
+		int newOverTime = 0;
+		while(!time.equals(endOfDay)){
+			time.add(GregorianCalendar.MINUTE, 1);
+			newOverTime++;
+		}
+		
+		this.overTimeInMinutes = newOverTime;
+	}
+
 	/**
 	 * Gets the end of the day with overtime taken into account.
 	 */
 	public GregorianCalendar getRealEndOfDay() {
-		GregorianCalendar endOfDay = (GregorianCalendar) this.currentTime.clone();
-		endOfDay.set(GregorianCalendar.HOUR_OF_DAY, 22);
+		GregorianCalendar current = this.getCurrentTime();
+		GregorianCalendar endOfDay = new GregorianCalendar(
+				current.get(GregorianCalendar.YEAR),
+				current.get(GregorianCalendar.MONTH),
+				current.get(GregorianCalendar.DAY_OF_MONTH),
+				AssemblyLineScheduler.END_OF_DAY,
+				0,
+				0);
+		if(current.get(GregorianCalendar.HOUR_OF_DAY) < AssemblyLineScheduler.BEGIN_OF_DAY){
+			endOfDay.add(GregorianCalendar.DAY_OF_MONTH, -1);
+		}
 		endOfDay.add(GregorianCalendar.MINUTE, - this.overTimeInMinutes);
 		return endOfDay;
 	}
@@ -214,6 +270,7 @@ public class AssemblyLineScheduler implements Scheduler{
 		return assemblyLine;
 	}
 
+	//TODO stom dat deze public is...
 	public void setOrderManager(OrderManager orderManager){
 		if(this.orderManager != null){
 			if(this.orderManager.getScheduler() == this){
@@ -230,5 +287,8 @@ public class AssemblyLineScheduler implements Scheduler{
 	private OrderManager getOrderManager() {
 		return orderManager;
 	}
+	
+
+
 
 }

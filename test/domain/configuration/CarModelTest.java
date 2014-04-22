@@ -49,8 +49,8 @@ public class CarModelTest {
 		CarModel car = new CarModel(Name,a,60);
 		
 		assertEquals(Name, car.getName());
-		assertEquals(a, car.getOptions());
-		assertFalse(a == car.getOptions());
+		assertEquals(a, car.getPossibleOptions());
+		assertFalse(a == car.getPossibleOptions());
 		assertTrue(car.getOfOptionType(OptionType.Airco).contains(A));
 		assertTrue( car.getOfOptionType(OptionType.Body).contains(B));
 		assertTrue(car.getOfOptionType(OptionType.Color).contains(C));

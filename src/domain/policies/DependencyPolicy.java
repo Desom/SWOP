@@ -38,8 +38,7 @@ public class DependencyPolicy extends Policy {
 	}
 
 	/**
-	 * Proceeds to the next policy in the chain if all dependencies are satisfied.
-	 * Otherwise it will throw an exception indicating the remaining unfulfilled dependencies or modify an already thrown exception by another policy.
+	 * Just proceeds to the next policy in the chain, because this policy can't check incomplete configurations for missing dependencies.
 	 * 
 	 * @param configuration
 	 * 		The incomplete configuration to be checked.
@@ -48,18 +47,7 @@ public class DependencyPolicy extends Policy {
 	 */
 	@Override
 	public void check(Configuration configuration) throws InvalidConfigurationException {
-		ArrayList<Option> conflictingOptions = dependencyCheck(configuration);
-		if(conflictingOptions.isEmpty()){
-			proceed(configuration);
-		}else{
-			try{
-				proceed(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(conflictingOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(conflictingOptions));
-		}
+		proceed(configuration);
 	}
 
 	/**

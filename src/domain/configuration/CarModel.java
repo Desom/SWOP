@@ -51,7 +51,7 @@ public class CarModel {
 	}
 
 	@SuppressWarnings("unchecked")
-	public ArrayList<Option> getOptions() {
+	public ArrayList<Option> getPossibleOptions() {
 		return (ArrayList<Option>) possibleOptions.clone();
 	}
 

@@ -56,7 +56,7 @@ public class CarTest {
 		config = new Configuration(carModel, pol4);
 				
 				
-		allOptions = carModel.getOptions();
+		allOptions = carModel.getPossibleOptions();
 		try {
 			config.addOption(allOptions.get(0));
 			config.addOption(allOptions.get(2));

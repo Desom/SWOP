@@ -4,27 +4,43 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 
 public class OptionCreator {
-	
+
 	private HashMap<String,Option> allOptions;
 	private String optionpath;
 	private String dependancypath;
-	
+
+	/**
+	 * Constructor of OptionCreator.
+	 * Uses the default file paths.
+	 */
 	public OptionCreator(){
-		this("data/options.txt","data/dependencies.txt");
+		this("data/options.txt", "data/dependencies.txt");
 	}
-	public OptionCreator(String optionpath,String dependancypath){
-		this.optionpath = optionpath;
-		this.dependancypath = dependancypath;
+
+	/**
+	 * Constructor of OptionCreator.
+	 * 
+	 * @param optionPath
+	 * 		The path to the file containing all options.
+	 * @param dependancyPath
+	 * 		The path to the file containing all dependencies.
+	 */
+	public OptionCreator(String optionPath,String dependancyPath){
+		this.optionpath = optionPath;
+		this.dependancypath = dependancyPath;
 	}
-	/***
-	 * Create the options from a file
-	 * @param optionpath of the file 
-	 * @return 
-	 * @throws IOException Problems with accessing file
-	 * @throws CarModelCatalogException an optionline is not in the right format
+
+	/**
+	 * Creates the options from the file.
+	 * 
+	 * @return all options contained in the file.
+	 * @throws IOException
+	 * @throws CarModelCatalogException
+	 * 		If an option line is not in the right format.
 	 */
 	public ArrayList<Option> createOptions() throws IOException, CarModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(optionpath));
@@ -43,6 +59,7 @@ public class OptionCreator {
 		input.close();
 		return new ArrayList<Option>(allOptions.values());
 	}
+
 	private void processDependancyLine(String inputline) throws CarModelCatalogException {
 		String[] input=inputline.split(";");
 		if(input.length != 2) throw new CarModelCatalogException("Dependancy: wrong input format: " + inputline);
@@ -52,98 +69,113 @@ public class OptionCreator {
 		allOptions.get(input[0]).setDependancy(collectOption(optionNames));
 	}
 	/**
-	 * proccessing a line which stores the information of a single option
-	 * @param inputline the line to be processed
-	 * @throws CarModelCatalogException The option the line describes alreasy exist , the line isn't in the right format,
-	 * 									the option the line describes is of the wrong subtype or the lines use an option that does not exist
+	 * Processes a line which stores the information of a single option.
+	 * @param inputline
+	 * 		The line to be processed.
+	 * @throws CarModelCatalogException 
+	 * 		If the option the line describes already exists
+	 * 		If the line isn't in the right format
+	 * 		If the option the line describes is of the wrong subtype
+	 * 		IF the lines use an option that does not exist
 	 */
 	private void processOptionLine(String inputline) throws CarModelCatalogException   {
 		String[] input=inputline.split(";");
 		if(input.length != 3) throw new CarModelCatalogException("Option: wrong input format: " + inputline);
 		if(allOptions.containsKey(input[0])) throw new CarModelCatalogException("Option already exists: " + input[0]);
-		ArrayList<String> incomp = new ArrayList<String>();
-		addAll(incomp , input[2].split(","));
+		ArrayList<String> incomp = new ArrayList<String>(Arrays.asList(input[2].split(",")));
 		ArrayList<String> comp = new ArrayList<String>();
 		comp.addAll(allOptions.keySet());
 		checkAndRemove(comp,incomp);
 		sameTypeFilter(comp,incomp,input[1]);
 		allOptions.put(input[0], createOption(input[0],input[1], incomp));
 	}
-	private void addAll(ArrayList<String> incomp, String[] split) {
-		for(String i: split) incomp.add(i);
-	
-	}
+
 	/**
-	 * this moves all option of a specific type that reside in one list to another list
-	 * @param comp the list that contains options may move from
-	 * @param incomp the list where may move to
-	 * @param string the specified type
+	 * Adds all options from the first given list to the second given list that have the given option type.
+	 * 
+	 * @param from
+	 * 		The list that contains options.
+	 * @param to
+	 * 		The list that will contain all options of the from list with the corresponding type.
+	 * @param typeName
+	 * 		The name of the option type which the options have to have.
 	 * 
 	 */
-	private void sameTypeFilter(ArrayList<String> comp, ArrayList<String> incomp,
-			String string) {
+	private void sameTypeFilter(ArrayList<String> from, ArrayList<String> to, String typeName) {
 		ArrayList<String> temp = new ArrayList<String>() ;
-		for(String i: comp){
-			if(allOptions.get(i).getType().toString().equals(string)) {
-				incomp.add(i);
+		for(String i: from){
+			if(allOptions.get(i).getType().equals(typeName)) {
+				to.add(i);
 				temp.add(i);
 			}
 		}
 		for(String i: temp){
-			comp.remove(i);
+			from.remove(i);
 		}
 	}
+
 	/**
-	 * this removes all strings that reside in a certain list, from another list
-	 * @param comp the list where string may be removed from
-	 * @param incomp the list which strings will be removed
-	 * @throws CarModelCatalogException a string in incomp is not in comp
+	 * Removes all strings that reside in a list, from another list.
+	 * 
+	 * @param strings
+	 * 		The list in which strings will be removed.
+	 * @param stringsToBeRemoved
+	 * 		The list of strings that have to be removed.
+	 * @throws CarModelCatalogException
+	 * 		If a string in stringsToBeRemoved is not in strings.
 	 */
-	private void checkAndRemove(ArrayList<String> comp, ArrayList<String> incomp) throws CarModelCatalogException {
-		if(comp == incomp) return;
-		for(String i: incomp){
-			if( !comp.remove(i)) throw new CarModelCatalogException("Option does not exists: "+ i);
+	private void checkAndRemove(ArrayList<String> strings, ArrayList<String> stringsToBeRemoved) throws CarModelCatalogException {
+		if(strings == stringsToBeRemoved) return;
+		for(String i: stringsToBeRemoved){
+			if( !strings.remove(i)) throw new CarModelCatalogException("Option does not exists: "+ i);
 		}
 	}
+
 	/**
-	 * creates an option
-	 * @param description the description of the made option
-	 * @param type the type of the made option
-	 * @param comp the list containing the descriptions compatible with the made option
-	 * @param incomp the list containing the descriptions incompatible with the made option
-	 * @return the made option
-	 * @throws CarModelCatalogException The option type is not supported
+	 * Creates an option.
+	 * 
+	 * @param description
+	 * 		The description of the option to be made.
+	 * @param typeName
+	 * 		The name of the type of the option to be made.
+	 * @param incompatibles
+	 * 		The list containing descriptions of options incompatible with the option to be made.
+	 * @return the new option
+	 * @throws CarModelCatalogException
+	 * 		If the option type is not supported.
 	 */
-	private Option createOption(String description, String type, ArrayList<String> incomp) throws CarModelCatalogException {
+	private Option createOption(String description, String typeName, ArrayList<String> incompatibles) throws CarModelCatalogException {
 		try{
-		Option result=  new Option(description,  OptionType.valueOf(type));
-		for(Option opt :collectOption(incomp)){
-			result.setIncompatible(opt);
-			opt.setIncompatible(result);
-		}
-		return result;
+			Option result = new Option(description,  OptionType.valueOf(typeName));
+			for(Option option : collectOption(incompatibles)){
+				result.setIncompatible(option);
+				option.setIncompatible(result);
+			}
+			return result;
 		}catch(IllegalArgumentException e){
-		throw new CarModelCatalogException("no valid type: " + type);
+			throw new CarModelCatalogException("no valid type: " + typeName);
 		}
-		
+
 	}
 	/**
-	 *  makes a list of option made of a list of descriptions
-	 * @param comp the list of descriptions of options
-	 * @return a list of options which corresponds with comp
+	 * Makes a list of options made from a list of option descriptions.
+	 * 
+	 * @param descriptions
+	 * 		The list of descriptions of the options to be made.
+	 * @return a list of options corresponding to the given option descriptions
 	 * @throws CarModelCatalogException 
+	 * 		If the option does not exist.
 	 */
-	private ArrayList<Option> collectOption(ArrayList<String> comp) throws CarModelCatalogException {
-		ArrayList<Option> result = new ArrayList<Option>();
-		for(String i: comp){
-			Option e = allOptions.get(i);
-			if(e !=null)result.add(e);
+	private ArrayList<Option> collectOption(ArrayList<String> descriptions) throws CarModelCatalogException {
+		ArrayList<Option> options = new ArrayList<Option>();
+		for(String description : descriptions){
+			Option option = allOptions.get(description);
+			if(option != null)
+				options.add(option);
 			else {
-				throw new CarModelCatalogException("Option does not exists: "+ i);
+				throw new CarModelCatalogException("Option does not exists: "+ description);
 			}
 		}
-		return result;
+		return options;
 	}
-	
-	
 }

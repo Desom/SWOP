@@ -9,24 +9,22 @@ public class Configuration {
 	
 	private final CarModel model;
 	private ArrayList<Option> options;
-	private Policy policychain;
-	private boolean iscomplete;
+	private Policy policyChain;
+	private boolean isComplete;
 	
 	/**
 	 * Constructor of Configuration.
 	 * 
 	 * @param model
-	 * 		The car model used for this configuration
+	 * 		The car model used for this configuration.
 	 * @param policyChain
-	 * 		The chain of policy to check whether this configuration is conform to the company policies
-	 * @throws IllegalArgumentException
-	 * 		If the given options are conflicting with each other
+	 * 		The chain of policies to check whether this configuration is conform to the company policies.
 	 */
-	public Configuration(CarModel model, Policy policyChain) throws IllegalArgumentException {
+	public Configuration(CarModel model, Policy policyChain) {
 		this.model = model;
 		this.options = new ArrayList<Option>();
-		this.policychain = policyChain;
-		this.iscomplete = false;
+		this.policyChain = policyChain;
+		this.isComplete = false;
 	}
 	
 	/**
@@ -34,12 +32,12 @@ public class Configuration {
 	 * It will check if this configuration is valid.
 	 * 
 	 * @throws InvalidConfigurationException
-	 * 		If this configuration is a valid one. 
+	 * 		If this configuration is an invalid one. 
 	 */
-	public void complete() throws InvalidConfigurationException{
-		if(! this.iscomplete){
-			this.policychain.checkComplete(this);
-			this.iscomplete = true;
+	public void complete() throws InvalidConfigurationException {
+		if(!this.isComplete){
+			this.policyChain.checkComplete(this);
+			this.isComplete = true;
 		}
 	}
 	
@@ -47,14 +45,14 @@ public class Configuration {
 	 * Adds an option to this configuration while checking the policies to make sure this configuration is still valid.
 	 * 
 	 * @param option
-	 * 		The option to be added
+	 * 		The option to be added.
 	 * @throws InvalidConfigurationException
-	 * 		If the new configuration won't be valid if the option would be added
+	 * 		If the new configuration won't be valid if the option would be added.
 	 */
 	public void addOption(Option option) throws InvalidConfigurationException {
 		this.options.add(this.options.size(), option);
 		try {
-			this.policychain.check(this);
+			this.policyChain.check(this);
 		} catch (InvalidConfigurationException e) {
 			this.options.remove(this.options.size()-1);
 			throw e;
@@ -63,7 +61,7 @@ public class Configuration {
 	/**
 	 * Returns all options of this configuration.
 	 * 
-	 * @return	the list of all options of the configuration
+	 * @return the list of all options of this configuration
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Option> getAllOptions(){
@@ -71,7 +69,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * Get the expected time that will be spent working per workstation taking into account the model of this configuration 
+	 * Get the expected time that will be spent working per workstation taking into account the model of this configuration.
 	 * 
 	 * @return the expected time that will be spent working per workstation
 	 */
@@ -81,49 +79,43 @@ public class Configuration {
 		}
 		return this.model.getExpectedTaskTime();
 	}
-
-
-	/**
-	 * Returns the string that represents this configuration.
-	 */
-	@Override
-	public String toString(){
-		String s = model.toString() + "\n Options: \n";
-		for(Option o: options){
-			s += o.toString() + "\n";
-		}
-		return s;
-	}
 	
 	/**
 	 * Gives the option corresponding to the option type.
 	 * 
-	 * @param	optionType
-	 * 			The string that specifies the option type
-	 * @return	the option that corresponds to the option type
+	 * @param optionType
+	 * 		The option type of which the corresponding options has to be returned.
+	 * @return the option that corresponds to the option type, but if there is none it returns null
 	 */
 	public Option getOptionOfType(OptionType optionType){
-		for(Option i:options) {
-			if(i.getType() == optionType) return i;
+		for(Option option : this.options) {
+			if(option.getType() == optionType)
+				return option;
 		}
 		return null;
 	}
 
 	/**
-	 * Returns the CarModel from this configuration 
+	 * Returns the car model of this configuration. 
 	 * 
-	 * @return The CarModel of this configuration
+	 * @return the car model of this configuration
 	 */
 	public CarModel getModel() {
-		return model;
+		return this.model;
 	}
 	
-	//TODO is dit goed zo? of moet er equals(Object other) staan?
-	// hashCode() moeten we niet maken denk ik? (stond ergens iets van dat dat nodig was als je equals override)
-	public boolean equals(Configuration other){
-		if(other == null){
+	/**
+	 * Checks whether this configuration and the given configuration are equal.
+	 */
+	@Override
+	public boolean equals(Object obj){
+		if(obj == null){
 			return false;
 		}
+		if (!(this.getClass() != obj.getClass())) {
+			return false;
+		}
+		final Configuration other = (Configuration) obj;
 		if(!this.getModel().equals(other.getModel())){
 			return false;
 		}
@@ -137,5 +129,17 @@ public class Configuration {
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Returns the string that represents this configuration.
+	 */
+	@Override
+	public String toString(){
+		String s = model.toString() + "\n Options: \n";
+		for(Option o: options){
+			s += o.toString() + "\n";
+		}
+		return s;
 	}
 }

@@ -3,51 +3,83 @@ import java.util.ArrayList;
 
 
 public class Option {
+	
 	private String description; 
 	private ArrayList<Option> incompatibles;
 	private OptionType type;
 	private ArrayList<ArrayList<Option>> dependencies;// elke arrayList bevat een lijst van opties waarvan minstens 1 aanwezig moet zijn voor correctheid
+	
 	/**
-	 * creates an option
-	 * @param description the description of the option
-	 * @param compatibles the options this option is compatible is
-	 * @param incompatibles the options this option is incompatible is
-	 * @throws CarModelCatalogException a parameter is null or an option is both compatible and incompatible with  this option
+	 * Constructor of Option.
+	 * 
+	 * @param description
+	 * 		The description of the option.
+	 * @param type
+	 * 		The type of this option.
+	 * @throws CarModelCatalogException
+	 * 		If the description is null.
+	 * 		If the type is null.
 	 */
-	public Option(String description, OptionType type) throws CarModelCatalogException{
-		if(description == null ||  type == null) throw new CarModelCatalogException("null in non null value of Option");
+	public Option(String description, OptionType type) throws CarModelCatalogException {
+		if(description == null || type == null)
+			throw new CarModelCatalogException("null in non null value of Option");
 		this.incompatibles = new ArrayList<Option>();
-		this.description =description;
+		this.description = description;
 		this.type = type;
 		incompatibles.add(this);
 		this.dependencies = new ArrayList<ArrayList<Option>>();
 	}
 
+	/**
+	 * Returns the description of this option.
+	 * 
+	 * @return the description of this option
+	 */
 	public String getDescription(){
 		return description;
 	}
+	
+	/**
+	 * Adds an incompatible option to this option.
+	 * 
+	 * @param option
+	 * 		The incompatible option.
+	 */
 	void setIncompatible(Option option){
-		if(!this.incompatibles.contains(option)){
+		if(!this.incompatibles.contains(option))
 			this.incompatibles.add(option);
-		}
 	}
+	
+	/**
+	 * Adds options of which this option is dependent of.
+	 * 
+	 * @param dependency
+	 * 		The new dependency to be added.
+	 */
 	void setDependancy(ArrayList<Option> dependency){
 		this.dependencies.add(dependency);
 	}
+	
 	/**
-	 * looks if an option can be in the same configuration as this option
-	 * @param opt the other option
-	 * @return true if the option can be in the same configuration as this option else no
+	 * Checks whether this option conflicts with the given option.
+	 * 
+	 * @param other
+	 * 		The other option.
+	 * @return true if this option conflicts with the other option, otherwise false
 	 */
-	public Boolean conflictsWith(Option opt){
-		if(type == opt.getType()) return true;
-		if(this.incompatibles.contains(opt)) return true;
+	public Boolean conflictsWith(Option other){
+		if(type == other.getType())
+			return true;
+		if(this.incompatibles.contains(other))
+			return true;
 		return false;
 	}
-	public String toString(){
-		return description;
-	}
 
+	/**
+	 * Returns the type of this option.
+	 * 
+	 * @return the type of this option
+	 */
 	public OptionType getType(){
 		return type;
 	}
@@ -68,5 +100,9 @@ public class Option {
 		return true;
 	}
 
+	@Override
+	public String toString(){
+		return description;
+	}
 }
 

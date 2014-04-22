@@ -53,14 +53,15 @@ public class Option {
 	}
 	
 	/**
-	 * TODO hoort dit niet beter thuis in configuration?
-	 * Als dependencyCheck(Option option) en via option.getDependencies kom je dan aan de dependencies.
-	 * Heb de spellingsfout nog niet verbeterd owv andere klassen die dan mss aangepast worden.
+	 * Checks whether a list of options satisfies all dependencies of this option.
+	 * 
+	 * @param allOptions
+	 * 		The list that has to be checked to satisfy all dependencies of this option.
 	 */
-	public boolean dependancyCheck(Configuration config){
+	public boolean dependencyCheck(ArrayList<Option> allOptions){
 		loop : for(ArrayList<Option> dependency : dependencies){
 			for(Option option : dependency)
-				if(config.getAllOptions().contains(option))
+				if(allOptions.contains(option))
 					continue loop;
 			return false;
 		}

@@ -33,10 +33,12 @@ public class FIFOSchedulingAlgorithmTest {
 	@Before
 	public void testCreate() throws IOException, CarModelCatalogException {
 		this.algorithm = new FIFOSchedulingAlgorithm();
+		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
+		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.cmc = new CarModelCatalog();
-		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), null);
-		this.als.setAssemblyLine(new AssemblyLine(als, null));
+		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
+		AssemblyLine assembly = new AssemblyLine(als, null);
 	}
 	
 	@Test

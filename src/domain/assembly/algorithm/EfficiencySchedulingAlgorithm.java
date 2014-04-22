@@ -796,21 +796,21 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	 * @return the amount of SingleTaskOrders can be done till the end of the day
 	 */
 	private int canDoSingleTaskOrders(AssemblyLineScheduler assemblyLineSchedule, GregorianCalendar allTaskCompleted) {
-		int result = 1;
+		int result = 0;
 		GregorianCalendar time = (GregorianCalendar) allTaskCompleted.clone();
 		while(time.get(GregorianCalendar.HOUR_OF_DAY) < AssemblyLineScheduler.END_OF_DAY){
+			if(result ==0){
+				time.add(GregorianCalendar.MINUTE, Math.max(0,  Math.max(getEstimateTime(assemblyLineSchedule.getAssemblyLine().getAllOrders().get(0),2), getEstimateTime(assemblyLineSchedule.getAssemblyLine().getAllOrders().get(1),3))));
+			}
 			if(result ==1){
-				time.add(GregorianCalendar.MINUTE, Math.max(0,  Math.max(getEstimateTime(assemblyLineSchedule.getAssemblyLine().getAllOrders().get(0)), getEstimateTime(assemblyLineSchedule.getAssemblyLine().getAllOrders().get(1)))));
+				time.add(GregorianCalendar.MINUTE, Math.max(0,getEstimateTime(assemblyLineSchedule.getAssemblyLine().getAllOrders().get(0),3)  ));
 			}
-			if(result ==2){
-				time.add(GregorianCalendar.MINUTE, Math.max(0,getEstimateTime(assemblyLineSchedule.getAssemblyLine().getAllOrders().get(0))  ));
-			}
-			if(result >2){
+			if(result >1){
 				time.add(GregorianCalendar.MINUTE, 60);
 			}
 			result++;
 		}
-		return result-1;
+		return result;
 	}
 	/**
 	 * Gets an estimate time to finish a single workstation of an order
@@ -818,8 +818,13 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	 * 		The order where the time will be retrieved from
 	 * @return an estimate time to finish a single workstation of the order
 	 */
-	private int getEstimateTime(Order order) {
+	private int getEstimateTime(Order order, int workstation) {
 		if(order == null) return 0;
+		if(order instanceof SingleTaskOrder){
+			if(getType((SingleTaskOrder) order) == OptionType.Color && workstation==1) return 60;
+			if(getType((SingleTaskOrder) order) == OptionType.Seats && workstation==3) return 60;
+			return 0;
+		}
 		return order.getConfiguration().getModel().getExpectedTaskTime();
 	}
 

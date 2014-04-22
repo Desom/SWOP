@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.InternalFailureException;
 import domain.user.CarMechanic;
 
 public class CarMechanicController {
@@ -33,7 +32,7 @@ public class CarMechanicController {
 	 * @param carMechanic
 	 * 		The car mechanic that does a request.
 	 */
-	public void run(UIInterface ui, Company company, CarMechanic carMechanic) throws InternalFailureException {
+	public void run(UIInterface ui, Company company, CarMechanic carMechanic) {
 		loop: while(true) {
 			ArrayList<String> possibilities = new ArrayList<String>();
 			possibilities.add("Perform assembly tasks");

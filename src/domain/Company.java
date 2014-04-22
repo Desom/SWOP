@@ -37,7 +37,7 @@ public class Company {
 	 * @throws CarModelCatalogException 
 	 * @throws IOException 
 	 */
-	public Company() throws InternalFailureException {
+	public Company() {
 		try {
 			ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
 			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
@@ -72,9 +72,8 @@ public class Company {
 	 * @param user The user that wants to be added to the given workstation.
 	 * @param workStation_id The id of the workstation the user wants to be added to.
 	 * @throws UserAccessException 
-	 * @throws Exception 
 	 */
-	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException, InternalFailureException{
+	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException{
 		if(user.canPerform("selectWorkStation")){
 			assemblyLine.selectWorkstation(user, workStation_id);
 		}else{

@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.InternalFailureException;
 import domain.assembly.AssemblyTask;
 import domain.assembly.Workstation;
 import domain.user.CarMechanic;
@@ -13,7 +12,7 @@ import domain.user.CarMechanic;
 public class PerformAssemblyTaskHandler {
 
 	//TODO clone array -> beter clonen (bij workstations en tasks)
-	public void run(UIInterface ui, Company company, CarMechanic carMechanic) throws InternalFailureException {
+	public void run(UIInterface ui, Company company, CarMechanic carMechanic) {
 		// 1. The system asks the user what work post he is currently residing at
 		LinkedList<Workstation> workstations = company.getAllWorkstations();
 		int workstationIndex = ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());

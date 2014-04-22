@@ -70,7 +70,7 @@ public class OrderManagerTest {
 		ArrayList<Order> orders3 = orderManager.getOrders(user3);
 		
 		assertEquals(1,orders1.size());
-		assertEquals(3,orders2.size());
+		assertEquals(82,orders2.size());
 		assertEquals(0,orders3.size());
 		
 		assertEquals(1,orders1.get(0).getCarOrderID());
@@ -119,7 +119,7 @@ public class OrderManagerTest {
 		}
 		orderManager.placeCarOrder(user3, config);
 		ArrayList<Order> orders = orderManager.getOrders(user3);
-		assertEquals(5,orders.get(0).getCarOrderID());
+		assertEquals(84,orders.get(0).getCarOrderID());
 		assertEquals(3,orders.get(0).getUserId());
 	}
 
@@ -148,7 +148,7 @@ public class OrderManagerTest {
 		assertEquals(0,pendOrder1.size());
 
 		ArrayList<Order> pendOrder2 = orderManager.getPendingOrders(user2);
-		assertEquals(3,pendOrder2.size());
+		assertEquals(82,pendOrder2.size());
 		assertEquals(2,pendOrder2.get(0).getCarOrderID());
 		assertEquals(3,pendOrder2.get(1).getCarOrderID());
 		assertEquals(4,pendOrder2.get(2).getCarOrderID());

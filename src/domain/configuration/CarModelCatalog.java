@@ -19,6 +19,11 @@ public class CarModelCatalog {
 		allCarModels= (new ModelCreator(this.getAllOptions())).createModels();
 	}
 
+	public CarModelCatalog(String optionFile, String dependancyPath, String modelFile) throws IOException, CarModelCatalogException{
+		allOptions = (new OptionCreator(optionFile,dependancyPath)).createOptions();
+		allCarModels= (new ModelCreator(this.getAllOptions(),modelFile)).createModels();
+	}
+
 	/**
 	 * Gets the list of all models.
 	 * 

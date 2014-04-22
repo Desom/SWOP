@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.Workstation;
+import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
@@ -36,11 +37,11 @@ public class Company {
 	 * @throws CarModelCatalogException 
 	 * @throws IOException 
 	 */
-	public Company() throws InternalFailureException {
+	public Company() {
 		try {
 			ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
-			possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
-			possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 			GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 			this.catalog = new CarModelCatalog();
 			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
@@ -71,9 +72,8 @@ public class Company {
 	 * @param user The user that wants to be added to the given workstation.
 	 * @param workStation_id The id of the workstation the user wants to be added to.
 	 * @throws UserAccessException 
-	 * @throws Exception 
 	 */
-	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException, InternalFailureException{
+	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException{
 		if(user.canPerform("selectWorkStation")){
 			assemblyLine.selectWorkstation(user, workStation_id);
 		}else{

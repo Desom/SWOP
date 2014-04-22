@@ -13,7 +13,7 @@ public interface Scheduler {
 	
 	public void setOrderManager(OrderManager orderManager);
 	
-	
+	public void updateSchedule();
 	
 	//TODO wat returned dit? of is deze methode toch onnodig.
 	//public ??? getSchedule();

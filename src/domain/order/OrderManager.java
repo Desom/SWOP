@@ -47,7 +47,7 @@ public class OrderManager {
 		this.createPolicies();
 		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy );
 		ArrayList<Order> allCarOrders = carOrderCreator.createCarOrderList();
-		//TODO create single task order list?
+		
 		this.ordersPerId = new HashMap<Integer,ArrayList<Order>>();
 		for(Order order : allCarOrders) {
 			this.addOrder(order);
@@ -144,12 +144,13 @@ public class OrderManager {
 	 * @param 	newOrder
 	 * 			The order which will be added.
 	 */
-	private void addOrder(Order newOrder) {
+	private void addOrder(Order newOrder){
 		if(!this.getAllOrdersPerId().containsKey(newOrder.getUserId()))
 		{
 			this.getAllOrdersPerId().put(newOrder.getUserId(), new ArrayList<Order>());
 		}
 		this.getAllOrdersPerId().get(newOrder.getUserId()).add(newOrder);
+		this.getScheduler().updateSchedule();
 	}
 	
 	/**
@@ -273,7 +274,8 @@ public class OrderManager {
 		return unfinished;
 	}
 
-	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, Configuration configuration,
+	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, 
+			Configuration configuration,
 			GregorianCalendar deadline) {
 		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration,deadline);
 		int carOrderId = this.getUniqueCarOrderId();

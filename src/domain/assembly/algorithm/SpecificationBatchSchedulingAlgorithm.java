@@ -28,13 +28,13 @@ public class SpecificationBatchSchedulingAlgorithm implements
 
 	@Override
 	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList,
-			AssemblyLineScheduler assemblyLineSchedule) {
+			AssemblyLineScheduler assemblyLineScheduler) {
 
 		ArrayList<Order> batchList = new ArrayList<Order>();
 		ArrayList<Order> standardList = new ArrayList<Order>();
 		
 		for(Order order : orderList){
-			if(this.batchConfiguration.equals(order.getConfiguration())){
+			if(this.batchConfiguration != null && this.batchConfiguration.equals(order.getConfiguration())){
 				batchList.add(order);
 			}
 			else{
@@ -42,10 +42,13 @@ public class SpecificationBatchSchedulingAlgorithm implements
 			}
 		}
 		
+		if(batchList.isEmpty()){
+			assemblyLineScheduler.setSchedulingAlgorithmToDefault();
+		}
 
-		ArrayList<Order> orderedList = this.innerAlgorithm.scheduleToList(batchList, assemblyLineSchedule);
+		ArrayList<Order> orderedList = this.innerAlgorithm.scheduleToList(batchList, assemblyLineScheduler);
 		
-		orderedList.addAll(this.innerAlgorithm.scheduleToList(standardList, assemblyLineSchedule));
+		orderedList.addAll(this.innerAlgorithm.scheduleToList(standardList, assemblyLineScheduler));
 		return orderedList;
 	}
 
@@ -192,5 +195,41 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		}
 		
 		return false;
+	}
+	
+	/**
+	 * Searches for Configurations that can be executed in batch. 
+	 * These Configurations must be used by more than 3 Orders.
+	 * 
+	 * @param assemblyLineScheduler
+	 * 		The AssemblyLineScheduler from which the orders will be fetched.
+	 * @return A list of Configuration which are all used by more than 3 orders.
+	 */
+	public ArrayList<Configuration> searchForBatchConfiguration(AssemblyLineScheduler assemblyLineScheduler){
+		ArrayList<Configuration> batchList = new ArrayList<Configuration>();
+		
+		ArrayList<Order> orders = assemblyLineScheduler.getOrdersToBeScheduled();
+		for(int i = 0; i < orders.size() - 2; i++){
+			if(batchList.contains(orders.get(i).getConfiguration())){
+				continue;
+			}
+			for(int j = i+1; j < orders.size() - 1; j++){
+				if(!orders.get(i).getConfiguration().equals(orders.get(j).getConfiguration())){
+					continue;
+				}
+				for(int k = j + 1; k < orders.size(); k++){
+					if(orders.get(i).getConfiguration().equals(orders.get(k).getConfiguration())){
+						batchList.add(orders.get(i).getConfiguration());
+					}
+				}
+			}
+		}
+		
+		return batchList;
+	}
+	
+	@Override
+	public String toString(){
+		return "Specification Batch with " + this.innerAlgorithm.toString();
 	}
 }

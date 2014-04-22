@@ -3,6 +3,8 @@ package domain.assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import domain.configuration.OptionType;
+
 public class AssemblyStatusView {
 
 	private String header;
@@ -41,12 +43,12 @@ public class AssemblyStatusView {
 		return -1;
 	}
 
-	public LinkedList<String> getAllTasksAt(int workstationId) throws DoesNotExistException{
-		LinkedList<String> tasks = new LinkedList<String>();
+	public LinkedList<OptionType> getAllTasksAt(int workstationId) throws DoesNotExistException{
+		LinkedList<OptionType> tasks = new LinkedList<OptionType>();
 		Workstation w = getWorkstation(workstationId);
 		for(AssemblyTask t : w.getAllTasks()){
 			//tasks.add("Type: " + t.getType() + "  -  Completed: " + t.isCompleted());
-			tasks.add(t.getType().toString());
+			tasks.add(t.getType());
 		}
 		return tasks;
 	}

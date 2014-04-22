@@ -11,11 +11,24 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import domain.assembly.AssemblyLineScheduler;
+import domain.assembly.Scheduler;
+import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
+import domain.assembly.algorithm.SchedulingAlgorithm;
+import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
+import domain.configuration.Configuration;
 import domain.configuration.Option;
+import domain.configuration.OptionType;
 import domain.order.CarOrder;
 import domain.order.OrderManager;
+import domain.policies.CompletionPolicy;
+import domain.policies.ConflictPolicy;
+import domain.policies.DependencyPolicy;
+import domain.policies.InvalidConfigurationException;
+import domain.policies.ModelCompatibilityPolicy;
+import domain.policies.Policy;
 import domain.user.GarageHolder;
 
 
@@ -40,15 +53,21 @@ public class OrderManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		orderManager = new OrderManager("testData/testData_OrderManager.txt", catalog, new GregorianCalendar(2014, 1, 1,12,0,0));
+		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
+		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
+		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
+		CarModelCatalog catalog = new CarModelCatalog();
+		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+		orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 	}
 
 
 	@Test
 	public void testGetOrders(){
-		ArrayList<CarOrder> orders1 = orderManager.getOrders(user1);
-		ArrayList<CarOrder> orders2 = orderManager.getOrders(user2);
-		ArrayList<CarOrder> orders3 = orderManager.getOrders(user3);
+		ArrayList<Order> orders1 = orderManager.getOrders(user1);
+		ArrayList<Order> orders2 = orderManager.getOrders(user2);
+		ArrayList<Order> orders3 = orderManager.getOrders(user3);
 		
 		assertEquals(1,orders1.size());
 		assertEquals(3,orders2.size());
@@ -62,7 +81,7 @@ public class OrderManagerTest {
 
 	
 	@Test
-	public void testPlaceOrder(){
+	public void testPlaceOrder() throws InvalidConfigurationException{
 		//TODO is er een betere manier dan telkens equals met een option description?
 		CarModel model = null;
 		for(CarModel m : catalog.getAllModels()){
@@ -82,27 +101,42 @@ public class OrderManagerTest {
 					)
 				options.add(option);
 		}
+		ArrayList<OptionType> List = new ArrayList<OptionType>();
+		for(OptionType i: OptionType.values()){
+			if(i != OptionType.Airco || i != OptionType.Spoiler ){
+				List.add(i);
+			}
+		}
+		Policy pol1 = new CompletionPolicy(null,List);
+		Policy pol2 = new ConflictPolicy(pol1);
+		Policy pol3 = new DependencyPolicy(pol2);
+		Policy pol4 = new ModelCompatibilityPolicy(pol3);
+		Policy carOrderPolicy= pol4;
 		
-		orderManager.placeOrder(user3, model, options);
-		ArrayList<CarOrder> orders = orderManager.getOrders(user3);
+		Configuration config = new Configuration(model, pol4);
+		for(Option option: options){			
+			config.addOption(option);
+		}
+		orderManager.placeCarOrder(user3, config);
+		ArrayList<Order> orders = orderManager.getOrders(user3);
 		assertEquals(5,orders.get(0).getCarOrderID());
 		assertEquals(3,orders.get(0).getUserId());
 	}
 
 	@Test
 	public void testCompletionEstimate(){
-		ArrayList<CarOrder> orders1 = orderManager.getOrders(user1);
+		ArrayList<Order> orders1 = orderManager.getOrders(user1);
 		GregorianCalendar cal = orderManager.completionEstimate(orders1.get(0));
 		assertEquals(2013,orderManager.completionEstimate(orders1.get(0)).get(GregorianCalendar.YEAR));
-		ArrayList<CarOrder> orders2 = orderManager.getOrders(user2);
+		ArrayList<Order> orders2 = orderManager.getOrders(user2);
 
-		CarOrder order2_0 = orders2.get(0);
+		Order order2_0 = orders2.get(0);
 		assertTrue(order2_0.toString().startsWith("CarOrder: 2"));
 		assertEquals(15,orderManager.completionEstimate(order2_0).get(GregorianCalendar.HOUR_OF_DAY));
-		CarOrder order2_1 = orders2.get(1);
+		Order order2_1 = orders2.get(1);
 		assertTrue(order2_1.toString().startsWith("CarOrder: 3"));
 		assertEquals(16,orderManager.completionEstimate(order2_1).get(GregorianCalendar.HOUR_OF_DAY));
-		CarOrder order2_2 = orders2.get(2);
+		Order order2_2 = orders2.get(2);
 		assertTrue(order2_2.toString().startsWith("CarOrder: 4"));
 		assertEquals(17,orderManager.completionEstimate(order2_2).get(GregorianCalendar.HOUR_OF_DAY));
 	}
@@ -110,30 +144,30 @@ public class OrderManagerTest {
 	
 	@Test
 	public void testGetPendingOrders(){
-		ArrayList<CarOrder> pendOrder1 = orderManager.getPendingOrders(user1);
+		ArrayList<Order> pendOrder1 = orderManager.getPendingOrders(user1);
 		assertEquals(0,pendOrder1.size());
 
-		ArrayList<CarOrder> pendOrder2 = orderManager.getPendingOrders(user2);
+		ArrayList<Order> pendOrder2 = orderManager.getPendingOrders(user2);
 		assertEquals(3,pendOrder2.size());
 		assertEquals(2,pendOrder2.get(0).getCarOrderID());
 		assertEquals(3,pendOrder2.get(1).getCarOrderID());
 		assertEquals(4,pendOrder2.get(2).getCarOrderID());
 
-		ArrayList<CarOrder> pendOrder3 = orderManager.getPendingOrders(user3);
+		ArrayList<Order> pendOrder3 = orderManager.getPendingOrders(user3);
 		assertEquals(0,pendOrder3.size());
 	}
 
 	
 	@Test
 	public void testGetCompletedOrders(){
-		ArrayList<CarOrder> compOrder1 = orderManager.getCompletedOrders(user1);
+		ArrayList<Order> compOrder1 = orderManager.getCompletedOrders(user1);
 		assertEquals(1,compOrder1.size());
 		
 		assertEquals(1,compOrder1.get(0).getCarOrderID());
 		
-		ArrayList<CarOrder> compOrder2 = orderManager.getCompletedOrders(user2);
+		ArrayList<Order> compOrder2 = orderManager.getCompletedOrders(user2);
 		assertEquals(0,compOrder2.size());
-		ArrayList<CarOrder> compOrder3 = orderManager.getCompletedOrders(user3);
+		ArrayList<Order> compOrder3 = orderManager.getCompletedOrders(user3);
 		assertEquals(0,compOrder3.size());
 	}
 	

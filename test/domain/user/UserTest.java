@@ -3,6 +3,7 @@ package domain.user;
 import static org.junit.Assert.*;
 
 import org.junit.BeforeClass;
+import org.junit.Test;
 
 import domain.user.CarMechanic;
 import domain.user.GarageHolder;
@@ -16,8 +17,8 @@ public class UserTest {
 	private static CarMechanic carMechanic;
 	private static GarageHolder garageHolder;
 	
-	@BeforeClass
-	public static void testCreate() {
+	@Test
+	public void testCreate() {
 		user = new User(0);
 		manager = new Manager(1);
 		carMechanic = new CarMechanic(2);

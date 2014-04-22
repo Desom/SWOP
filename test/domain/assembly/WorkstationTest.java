@@ -34,6 +34,7 @@ public class WorkstationTest {
 	private CarMechanic carMechanic;
 	private Workstation workstation;
 	private AssemblyTask validTask;
+	private AssemblyTask validTask2;
 	private AssemblyTask invalidTask;
 	
 	@Before
@@ -41,10 +42,12 @@ public class WorkstationTest {
 		carMechanic = new CarMechanic(1);
 		Company comp = new Company();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
-		taskTypes.add(OptionType.Body);
-		taskTypes.add(OptionType.Color);
-		workstation = comp.getAllWorkstations().getFirst();
-		assertEquals(1, workstation.getId());
+		taskTypes.add(OptionType.Seats);
+		taskTypes.add(OptionType.Airco);
+		taskTypes.add(OptionType.Wheels);
+		taskTypes.add(OptionType.Spoiler);
+		workstation = comp.getAllWorkstations().get(2);
+		assertEquals(3, workstation.getId());
 		assertEquals(taskTypes, workstation.getTaskTypes());
 		assertTrue(workstation.getAllCompletedTasks().isEmpty());
 		assertTrue(workstation.getAllPendingTasks().isEmpty());
@@ -52,6 +55,7 @@ public class WorkstationTest {
 		
 		CarOrder order = createCar();
 		validTask = order.getAssemblyprocess().compatibleWith(workstation).get(0);
+		validTask2 = order.getAssemblyprocess().compatibleWith(workstation).get(1);
 		
 		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
 		taskTypes2.add(OptionType.Gearbox);
@@ -75,10 +79,13 @@ public class WorkstationTest {
 	@Test
 	public void testCompleteTask() throws IllegalStateException, InternalFailureException {
 		workstation.addAssemblyTask(validTask);
+		workstation.addAssemblyTask(validTask2);
 		workstation.addCarMechanic(carMechanic);
 		workstation.selectTask(validTask);
 		workstation.completeTask(carMechanic,60);
 		assertTrue(workstation.getAllCompletedTasks().contains(validTask));
+		workstation.selectTask(validTask2);
+		workstation.completeTask(carMechanic,60);
 		assertTrue(workstation.getAllPendingTasks().isEmpty());
 		assertTrue(workstation.hasAllTasksCompleted());
 	}
@@ -163,7 +170,7 @@ public class WorkstationTest {
 					||option.getDescription().equals("standard 2l v4")
 					||option.getDescription().equals("5 speed manual")
 					||option.getDescription().equals("leather white")
-					||option.getDescription().equals("no airco")
+					||option.getDescription().equals("manual")
 					||option.getDescription().equals("comfort")
 					||option.getDescription().equals("no spoiler")
 					)

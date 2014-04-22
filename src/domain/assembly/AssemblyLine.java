@@ -194,8 +194,8 @@ public class AssemblyLine {
 		return view;
 	}
 
-
-	/**
+/*
+	
 	 * Creates a view of the future status of the assembly line
 	 * 
 	 * @param user 
@@ -205,7 +205,7 @@ public class AssemblyLine {
 	 * @return An AssemblyStatusView representing the future status
 	 * @throws InternalFailureException
 	 * 			If a fatal error occurred the program could not recover from.
-	 */
+	 
 	public AssemblyStatusView futureStatus(int time) throws InternalFailureException{
 		// check if the line can advance
 		boolean isReady = true;
@@ -258,7 +258,7 @@ public class AssemblyLine {
 		}
 
 	}
-
+*/
 	/**
 	 * Get an array of all workstation id's
 	 * @return all workstation id's

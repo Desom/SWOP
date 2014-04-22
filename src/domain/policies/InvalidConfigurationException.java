@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class InvalidConfigurationException extends Exception{
 
-	//private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 	private ArrayList<String> messages;
 
 	/**

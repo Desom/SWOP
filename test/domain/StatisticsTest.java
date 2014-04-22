@@ -34,7 +34,7 @@ public class StatisticsTest {
 		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
 		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
 		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
-		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 6, 0, 0);
+		GregorianCalendar time = new GregorianCalendar(2015, 1, 1, 6, 0, 0);
 		CarModelCatalog catalog = new CarModelCatalog();
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
@@ -54,14 +54,71 @@ public class StatisticsTest {
 
 		line.selectWorkstationById(3).addCarMechanic(m3);
 		assertEquals(line.selectWorkstationById(3).getCarMechanic(), m3);
-		for(int i=0; i<100; i++){
+		
+		// advance alle behalve laatste order
+		while(orderManager.getAllUnfinishedOrders().size() != 1){
 			fullDefaultAdvance();
+		}
+		
+		
+		//advance laatste order met delay
+		
+		LinkedList<Workstation> wList = line.getAllWorkstations();
+		LinkedList<Workstation> remove = new LinkedList<Workstation>();
+		for(Workstation w: wList){ // filter the already completed workstations so the line won't accidentally advance twice.
+			if(w.hasAllTasksCompleted()){
+				remove.add(w);
+			}
+		}
+		wList.removeAll(remove);
+		
+		if(wList.isEmpty())
+			line.advanceLine();
+		for(Workstation w : wList){
+			CarMechanic mechanic = w.getCarMechanic();
+			if(mechanic == null)
+				mechanic = new CarMechanic(100*w.getId()); // randomize ID een beetje
+			while(w.getAllPendingTasks().size() > 1){
+				w.selectTask(w.getAllPendingTasks().get(0));
+				w.completeTask(mechanic,0);
+			}
+			if(w.getAllPendingTasks().size() != 0){
+				w.selectTask(w.getAllPendingTasks().get(0));
+				w.completeTask(mechanic,500);
+			}
 		}
 	}
 	
 	@Test
-	public void testAverage(){
-		assertEquals(12, stat.getAverageCarsPerDay());
+	public void testAverageCars(){
+		assertEquals(14, stat.getAverageCarsPerDay());
+	}
+	
+	@Test
+	public void testMedianCars(){
+		assertEquals(14, stat.getMedianCarsPerDay());
+	}
+	
+	@Test
+	public void amountOfCarsLastDays(){
+		assertEquals(14, stat.getAmountOfCars1DayAgo());
+		assertEquals(14, stat.getAmountOfCars2DaysAgo());
+	}
+	
+	public void testAverageDelay(){
+		assertEquals(500, stat.getMedianDelay());
+	}
+	
+	public void testMedianDelay(){
+		assertEquals(500, stat.getAverageDelay());
+	}
+	
+	public void testLastDelay(){
+		assertEquals(500, stat.getLastDelay());
+	}
+	
+	public void testSecondToLastDelay(){
+		assertEquals(-1, stat.getSecondToLastDelay());
 	}
 	
 	

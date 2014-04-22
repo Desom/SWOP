@@ -12,7 +12,7 @@ import domain.order.OrderManager;
 
 public class Statistics {
 
-	private LinkedHashMap<Integer,LinkedList<Order>> dailyMapping = new LinkedHashMap<Integer,LinkedList<Order>>();
+	private LinkedHashMap<Integer,LinkedList<Order>> dailyMapping = null;
 	private final OrderManager orderManager;
 
 	public Statistics(OrderManager om){
@@ -188,6 +188,7 @@ public class Statistics {
 	 */
 	public void update(){
 		ArrayList<Order> orderList = this.orderManager.getAllCompletedOrders();
+		dailyMapping = new LinkedHashMap<Integer,LinkedList<Order>>();
 		for(Order o : orderList){
 			// alleen orders toevoegen van de vorige dagen, niet vandaag
 			if(o.getDeliveredTime().get(GregorianCalendar.DAY_OF_YEAR) != this.orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR)){

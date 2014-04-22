@@ -341,9 +341,9 @@ public class EffinciencySchedulingAlgorithmTest {
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(), als);
 		orderList.remove(scheduleList.get(0).getScheduledOrder());
 		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
-		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(), als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		time.add(GregorianCalendar.MINUTE, 70);//7u10
+		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,(GregorianCalendar) time.clone(), als);
 		assertEquals(11,scheduleList2.get(0).getScheduledOrder().getCarOrderID());//50
 		assertEquals(time,scheduleList2.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u20

@@ -168,7 +168,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			temp.add(null);
 			temp.add(null);
 			timeOfBelt(temp, time, assemblyLineSchedule, deadlines);
-			return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
+			return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineSchedule);
 		}
 		// places a SingleTaskOrder  at the end of the day
 		if(!sTOrderList1.isEmpty()){
@@ -182,7 +182,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			temp.add(null);
 			temp.add(null);
 			timeOfBelt(temp, time, assemblyLineSchedule, deadlines);
-			return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
+			return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineSchedule);
 		}
 		// places an extra SingleTaskOrder at the end of the day
 		if(!sTOrderList1.isEmpty()){
@@ -220,7 +220,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 					temp.add(null);
 					temp.add(null);
 					timeOfBelt(temp, time, assemblyLineSchedule,deadlines);
-					return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
+					return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineSchedule);
 				}
 				//make the dummy the real situation 
 				temp = (ArrayList<Order>) temp2.clone();
@@ -270,7 +270,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		temp.add(null);
 		temp.add(null);
 		timeOfBelt(temp, time, assemblyLineSchedule,deadlines);
-		return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
+		return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineSchedule);
 	}
 
 	private void timeOfBelt(ArrayList<Order> temp,
@@ -305,223 +305,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}
 	}
 
-	/*
-	@SuppressWarnings("unchecked")
-	private ArrayList<ScheduledOrder> completeDay(
-			ArrayList<SingleTaskOrder> sTOrderList1,
-			ArrayList<SingleTaskOrder> sTOrderList3,
-			ArrayList<Order> orderList2, GregorianCalendar time,
-			AssemblyLineScheduler assemblyLineSchedule) {
-		ArrayList<ScheduledOrder> result = new ArrayList<ScheduledOrder>();
-		if(this.startOfDay(assemblyLineSchedule)){
-			ArrayList<Order> temp = new ArrayList<Order>();
-			ArrayList<Order> temp2 = new ArrayList<Order>();
-
-			if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.get(0));
-			GregorianCalendar temporayTime = (GregorianCalendar) time.clone();
-			temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-			if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)){
-				 result = this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-				 this.nextDay(time);
-				 return result;
-
-			}
-			temp = (ArrayList<Order>) temp2.clone();
-			if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
-
-			if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.get(0));
-			temporayTime = (GregorianCalendar) time.clone();
-			temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-			if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)){
-				 result = this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-				 this.nextDay(time);
-				 return result;
-
-			}
-			temp = (ArrayList<Order>) temp2.clone();
-			if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
-
-
-			if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-			temporayTime = (GregorianCalendar) time.clone();
-			temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-			if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)){
-				 result = this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-				 this.nextDay(time);
-				 return result;
-
-			}
-			temp = (ArrayList<Order>) temp2.clone();
-			if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-
-
-			if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-			temporayTime = (GregorianCalendar) time.clone();
-			temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-			if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)){
-				 result = this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-				 this.nextDay(time);
-				 return result;
-
-			}
-			temp = (ArrayList<Order>) temp2.clone();
-			if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-			if(!orderList2.isEmpty())temp2.add(temp2.size() -2, orderList2.get(0));
-			else{
-				if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.get(0));
-				temp2.add(null);
-				if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-			}
-			temporayTime = (GregorianCalendar) time.clone();
-			temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-			while(assemblyLineSchedule.getRealEndOfDay().after(temporayTime)){
-				temp = (ArrayList<Order>) temp2.clone();
-				if(temp2.get(temp2.size()-1) != null && temp2.get(temp2.size()-1) instanceof CarOrder){
-					orderList2.remove(0);
-				}
-				else{
-					if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
-					temp2.add(null);
-					if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-				}
-				if(!orderList2.isEmpty())temp2.add(temp2.size() -2, orderList2.remove(0));
-				else{
-					if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.remove(0));
-					temp2.add(null);
-					if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.remove(0));
-				}
-				temporayTime = (GregorianCalendar) time.clone();
-				temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-			}
-			return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-		}else{
-			if(secondAdvance(assemblyLineSchedule)){
-				ArrayList<Order> temp = new ArrayList<Order>();
-				ArrayList<Order> temp2 = new ArrayList<Order>();
-
-
-				if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.get(0));
-				GregorianCalendar temporayTime = (GregorianCalendar) time.clone();
-				temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-				if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)) return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-				temp = (ArrayList<Order>) temp2.clone();
-				if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
-
-
-				if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-				temporayTime = (GregorianCalendar) time.clone();
-				temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-				if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)) return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-				temp = (ArrayList<Order>) temp2.clone();
-				if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-
-
-				if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-				temporayTime = (GregorianCalendar) time.clone();
-				temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-				if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)) return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-				if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-				if(!orderList2.isEmpty())temp2.add(temp2.size() -2, orderList2.get(0));
-				else{
-					if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.get(0));
-					temp2.add(null);
-					if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-				}
-				temporayTime = (GregorianCalendar) time.clone();
-				temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-				while(assemblyLineSchedule.getRealEndOfDay().after(temporayTime)){
-					temp = (ArrayList<Order>) temp2.clone();
-					if(temp2.get(temp2.size()-1) != null && temp2.get(temp2.size()-1) instanceof CarOrder){
-						orderList2.remove(0);
-					}
-					else{
-						if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
-						temp2.add(null);
-						if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-					}
-					if(!orderList2.isEmpty())temp2.add(temp2.size() -2, orderList2.remove(0));
-					else{
-						if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.remove(0));
-						temp2.add(null);
-						if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.remove(0));
-					}
-					temporayTime = (GregorianCalendar) time.clone();
-					temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-				}
-				return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-			}else{
-				if(canDoSingleTaskOrders(assemblyLineSchedule, time) == 2){
-					ArrayList<Order> temp = new ArrayList<Order>();
-					if(!sTOrderList1.isEmpty())temp .add(sTOrderList1.remove(0));
-					if(!sTOrderList1.isEmpty())temp.add(sTOrderList1.remove(0));
-
-					result = this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-					time = this.nextDay(time);
-					return result;
-				} else{
-					if(canDoSingleTaskOrders(assemblyLineSchedule, time) == 1){
-						ArrayList<Order> temp = new ArrayList<Order>();
-						if(!sTOrderList1.isEmpty())temp.add(sTOrderList1.remove(0));
-						result = this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-						time = this.nextDay(time);
-						return result;
-					}else{
-						if(canDoSingleTaskOrders(assemblyLineSchedule, time) == 0){
-							time = this.nextDay(time);
-							return result;
-						}
-						else{
-							ArrayList<Order> temp = new ArrayList<Order>();
-							ArrayList<Order> temp2 = new ArrayList<Order>();
-							if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-							GregorianCalendar temporayTime = (GregorianCalendar) time.clone();
-							temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-							if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)) return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-							temp = (ArrayList<Order>) temp2.clone();
-							if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-
-
-							if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-							temporayTime = (GregorianCalendar) time.clone();
-							temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-							if(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)) return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-							if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-							if(!orderList2.isEmpty())temp2.add(temp2.size() -2, orderList2.get(0));
-							else{
-								if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.get(0));
-								temp2.add(null);
-								if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-							}
-							temporayTime = (GregorianCalendar) time.clone();
-							temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-							while(assemblyLineSchedule.getRealEndOfDay().before(temporayTime)){
-								temp = (ArrayList<Order>) temp2.clone();
-								if(temp2.get(temp2.size()-1) != null && temp2.get(temp2.size()-1) instanceof CarOrder){
-									orderList2.remove(0);
-								}
-								else{
-									if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
-									temp2.add(null);
-									if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-								}
-								if(!orderList2.isEmpty())temp2.add(temp2.size() -2, orderList2.remove(0));
-								else{
-									if(!sTOrderList3.isEmpty())temp2.add(sTOrderList3.remove(0));
-									temp2.add(null);
-									if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.remove(0));
-								}
-								temporayTime = (GregorianCalendar) time.clone();
-								temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-							}
-							return this.transformToScheduledOrder(temp, time, assemblyLineSchedule);
-						}
-					}
-				}
-			}
-		}
-
-	}
-	 */
+	
 	/**
 	 * Calculates the time necessary to finish the schedule given the current state of the assemblyLine
 	 * @param temp
@@ -682,6 +466,25 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			simulator.addFirst(i);
 			timespent += assemblyLineSchedule.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 		}
+		return result;
+
+	}
+		private ArrayList<ScheduledOrder> transformToScheduledOrderWithAssembly(
+				ArrayList<Order> temp, GregorianCalendar time,
+				AssemblyLineScheduler assemblyLineSchedule) {
+			LinkedList<Order> simulator = assemblyLineSchedule.getAssemblyLine().getAllOrders();
+			ArrayList<ScheduledOrder> result = new ArrayList<ScheduledOrder>();
+			int timespent = 0;
+			// places  the orders one by one and remove the last one which will be added to result
+			for(Order i : temp){
+				GregorianCalendar clone = (GregorianCalendar) time.clone();
+				clone.add(GregorianCalendar.MINUTE, timespent);
+				result.add(new ScheduledOrder(clone, i));
+				simulator.removeLast();
+				simulator.addFirst(i);
+				timespent += assemblyLineSchedule.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
+			}
+		
 		/*
 		// finishes the orders and move them to result
 		while(simulator.get(0) != null || simulator.get(1) != null || simulator.get(2) != null){

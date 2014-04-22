@@ -24,6 +24,11 @@ public class AssemblyLine {
 		this.workstations = createWorkstations();
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
+		try {
+			this.advanceLine();
+		} catch (CannotAdvanceException e) {
+			//geen probleem dan moet de assemblyLine maar wachten.
+		}
 	}
 
 	/**
@@ -43,10 +48,8 @@ public class AssemblyLine {
 	 * @throws DoesNotExistException
 	 * @throws CannotAdvanceException 
 	 * 				If there are workstations that are blocking the assembly line.
-	 * @throws InternalFailureException 
-	 * 				If a fatal error occurred the program could not recover from.
 	 */
-	public void advanceLine() throws CannotAdvanceException, InternalFailureException{
+	public void advanceLine() throws CannotAdvanceException {
 		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 		boolean isReady = true;
 		CannotAdvanceException cannotAdvance = new CannotAdvanceException();
@@ -88,7 +91,14 @@ public class AssemblyLine {
 			}
 
 			//voeg nieuwe car toe.
-			Order newOrder = this.assemblyLineScheduler.getNextOrder(timeSpendForTasks);
+			boolean tryNextAdvance = true;
+			Order newOrder = null;
+			try {
+				newOrder = this.assemblyLineScheduler.getNextOrder(timeSpendForTasks);
+			} catch (NoOrdersToBeScheduledException e) {
+				tryNextAdvance = false;
+			}
+			
 			CarAssemblyProcess newCar = null;
 			if(newOrder != null){
 				newCar = newOrder.getAssemblyprocess();
@@ -109,6 +119,15 @@ public class AssemblyLine {
 				finished.registerDelay(getAllWorkstations());
 				this.statistics.update();
 			}
+			
+			if(tryNextAdvance){
+				try{
+					this.advanceLine();
+				}
+				catch(CannotAdvanceException e){
+					//TODO beter een canAdvance() methode en dan InternalFailure gooien als toch CannotAdvance.
+				}
+			}
 		}
 		catch(DoesNotExistException e){
 			throw new InternalFailureException("Suddenly a Workstation disappeared while that should not be possible.");
@@ -120,11 +139,10 @@ public class AssemblyLine {
 	 * 
 	 * @param user The user that is to be added to the workstation
 	 * @param workStation_id The ID of the workstation the user should be added to.
-	 * @throws InternalFailureException 
 	 * @throws DoesNotExistException 
 	 * @throws Exception If the Carmechanic could not be appointed to the workstation.
 	 */
-	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException, InternalFailureException{
+	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException{
 		if(user.canPerform("selectWorkstation")){
 			Workstation selected;
 			selected = selectWorkstationById(workStation_id, user);
@@ -149,7 +167,6 @@ public class AssemblyLine {
 		}
 		if(selected == null)
 			throw new DoesNotExistException("No workstation exists with ID: " + id);
-		// heb dit veranderd van InternalFailureException naar DoesNotExistException omdat InternalFailureException niet van toepassing leek.
 		return selected;
 	}
 
@@ -203,10 +220,8 @@ public class AssemblyLine {
 	 * @param time 
 	 * 			The time that has past since the last advanceLine.
 	 * @return An AssemblyStatusView representing the future status
-	 * @throws InternalFailureException
-	 * 			If a fatal error occurred the program could not recover from.
 	 
-	public AssemblyStatusView futureStatus(int time) throws InternalFailureException{
+	public AssemblyStatusView futureStatus(int time){
 		// check if the line can advance
 		boolean isReady = true;
 		for(Workstation w : getAllWorkstations()){

@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
-import domain.InternalFailureException;
 import domain.assembly.Scheduler;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
@@ -42,9 +41,8 @@ public class OrderManager {
 	 * @param	currentTime 
 	 * 			The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 * @throws InvalidConfigurationException 
-	 * @throws InternalFailureException 
 	 */
-	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException, InternalFailureException {
+	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException {
 		this.scheduler = scheduler;
 		this.createPolicies();
 		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy );
@@ -109,9 +107,8 @@ public class OrderManager {
 	 * @param 	orderForm
 	 * 			The OrderForm containing all the information necessary to place a CarOrder.
 	 * @return	The order that was made with the given OrderForm.
-	 * @throws InternalFailureException 
 	 */
-	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration) throws InternalFailureException{
+	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration){
 		int carOrderId = this.getUniqueCarOrderId();
 		CarOrder newOrder = new CarOrder(carOrderId, user, configuration, scheduler.getCurrentTime());
 		this.addOrder(newOrder);
@@ -146,9 +143,8 @@ public class OrderManager {
 	 * 
 	 * @param 	newOrder
 	 * 			The order which will be added.
-	 * @throws InternalFailureException 
 	 */
-	private void addOrder(Order newOrder) throws InternalFailureException {
+	private void addOrder(Order newOrder){
 		if(!this.getAllOrdersPerId().containsKey(newOrder.getUserId()))
 		{
 			this.getAllOrdersPerId().put(newOrder.getUserId(), new ArrayList<Order>());
@@ -280,8 +276,7 @@ public class OrderManager {
 
 	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, 
 			Configuration configuration,
-			GregorianCalendar deadline) 
-					throws InternalFailureException {
+			GregorianCalendar deadline) {
 		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration,deadline);
 		int carOrderId = this.getUniqueCarOrderId();
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration,deadline);

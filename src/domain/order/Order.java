@@ -85,7 +85,7 @@ public abstract class Order {
 				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
 			if(this.deliveredTime!=null)
 				throw new IllegalStateException("DeliveredTime already set");
-			this.deliveredTime = deliveredTime;
+			this.deliveredTime = (GregorianCalendar) deliveredTime.clone();
 	}
 	
 	/**

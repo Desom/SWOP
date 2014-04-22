@@ -37,7 +37,12 @@ public class AssemblyLineScheduler implements Scheduler{
 		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, time);
-		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(futureTime);
+		ArrayList<ScheduledOrder> scheduledOrders;
+		try {
+			scheduledOrders = getSchedule(futureTime);
+		} catch (NoOrdersToBeScheduledException e) {
+			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
+		}
 
 		int position = 0;
 		for(; position < scheduledOrders.size(); position++){
@@ -89,8 +94,9 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @param minutes
 	 *            The amount of minutes it took to complete the tasks in the Workstations. (in minutes)
 	 * @return The Order that is scheduled to be built now.
+	 * @throws NoOrdersToBeScheduledException 
 	 */
-	protected Order getNextOrder(int minutes){
+	protected Order getNextOrder(int minutes) throws NoOrdersToBeScheduledException{
 		this.addCurrentTime(minutes);
 		GregorianCalendar now = this.getCurrentTime();
 		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(now);
@@ -113,8 +119,9 @@ public class AssemblyLineScheduler implements Scheduler{
 	 *            The amount of minutes it took to complete the tasks in the
 	 *            Workstations. (in minutes)
 	 * @return The CarOrder that is scheduled to be built after the given amount of minutes.
+	 * @throws NoOrdersToBeScheduledException 
 	 */
-	protected Order seeNextOrder(int minutes){
+	protected Order seeNextOrder(int minutes) throws NoOrdersToBeScheduledException{
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, minutes);
 		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(futureTime);
@@ -127,22 +134,28 @@ public class AssemblyLineScheduler implements Scheduler{
 	/**
 	 * @param futureTime
 	 * @return
+	 * @throws NoOrdersToBeScheduledException 
 	 */
-	private ArrayList<ScheduledOrder> getSchedule(GregorianCalendar futureTime) {
+	private ArrayList<ScheduledOrder> getSchedule(GregorianCalendar futureTime) throws NoOrdersToBeScheduledException {
 		if(this.outDated 
 				|| this.schedule == null 
 				|| !futureTime.equals(this.schedule.get(0).getScheduledTime())){
 			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
 			this.outDated = false;
 		}
+		if(this.schedule.isEmpty()){
+			throw new NoOrdersToBeScheduledException();
+		}
 		return this.schedule;
 	}
 	
-	public void updateSchedule() throws InternalFailureException{
+	public void updateSchedule(){
 		this.outDated = true;
 		if(this.getAssemblyLine().isEmpty()){
 			try{
-				this.getAssemblyLine().advanceLine();
+				if(this.getAssemblyLine() != null){
+					this.getAssemblyLine().advanceLine();
+				}
 			}
 			catch(CannotAdvanceException e){
 				throw new InternalFailureException("The AssemblyLine couldn't advance even though it was empty.");
@@ -152,10 +165,13 @@ public class AssemblyLineScheduler implements Scheduler{
 
 	// TODO docs
 	public ArrayList<Order> getOrdersToBeScheduled() {
-		ArrayList<Order> orders = this.getOrderManager().getAllUnfinishedOrders();
-		LinkedList<Order> onAssembly = this.getAssemblyLine().getAllOrders();
-		orders.removeAll(onAssembly);
-		return orders;
+		if(this.getOrderManager() != null){
+			ArrayList<Order> orders = this.getOrderManager().getAllUnfinishedOrders();
+			LinkedList<Order> onAssembly = this.getAssemblyLine().getAllOrders();
+			orders.removeAll(onAssembly);
+			return orders;
+		}
+		return new ArrayList<Order>(); //TODO mss beter null?
 	}
 
 	//TODO docs
@@ -180,7 +196,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	}
 
 	public GregorianCalendar getCurrentTime() {
-		return (GregorianCalendar) currentTime.clone();
+		return (GregorianCalendar) this.currentTime.clone();
 	}
 
 	/**

@@ -1,7 +1,6 @@
 package domain.assembly;
 import java.util.ArrayList;
 
-import domain.InternalFailureException;
 import domain.configuration.OptionType;
 import domain.user.CarMechanic;
 
@@ -156,10 +155,8 @@ public class Workstation {
 	 * @throws IllegalArgumentException
 	 * 		If there is no active task to complete in this workstation.
 	 * 		If there is no car mechanic to complete the active task.
-	 * @throws InternalFailureException 
-	 * 		If a fatal error occurred the program could not recover from.
 	 */
-	public void completeTask(CarMechanic carMechanic, int timeSpend) throws IllegalStateException, InternalFailureException {
+	public void completeTask(CarMechanic carMechanic, int timeSpend) throws IllegalStateException {
 		if (this.getCarMechanic().getId() != carMechanic.getId())
 			throw new IllegalArgumentException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {

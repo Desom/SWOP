@@ -239,7 +239,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		//checks if the test dummy exceeds the end of the day
 		GregorianCalendar temporayTime = (GregorianCalendar) time.clone();
 		temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
-		while(assemblyLineSchedule.getRealEndOfDay().after(temporayTime)){
+		while(!assemblyLineSchedule.getRealEndOfDay().before(temporayTime)){
 			//make the dummy the real situation 
 			temp = (ArrayList<Order>) temp2.clone();
 			if(!orderList2.isEmpty()) orderList2.remove(0);
@@ -250,11 +250,17 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			//prepares a test dummy for an extra Order
 			if(!orderList2.isEmpty())temp2.add(temp2.size()+corectionfactor-2, orderList2.get(0));
 			else{
+				boolean empty = true;
 				if(!sTOrderList3.isEmpty()){
 					temp2.add(sTOrderList3.get(0));
 					temp2.add(null);
+					empty = false;
 				}
-				if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
+				if(!sTOrderList1.isEmpty()){
+					temp2.add(sTOrderList1.get(0));
+					empty = false;
+				}
+				if(empty) break;
 			}
 			temporayTime = (GregorianCalendar) time.clone();
 			temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineSchedule));
@@ -633,7 +639,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}
 		if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
 		//checks if the test dummy exceeds the end of the day
-		while((!sTOrderList1.isEmpty() || !sTOrderList1.isEmpty())&& calculatefulltimeAtstart(temp2,assemblyLineSchedule )< (AssemblyLineScheduler.END_OF_DAY-AssemblyLineScheduler.BEGIN_OF_DAY)*60){
+		while((!sTOrderList3.isEmpty() || !sTOrderList1.isEmpty())&& calculatefulltimeAtstart(temp2,assemblyLineSchedule )< (AssemblyLineScheduler.END_OF_DAY-AssemblyLineScheduler.BEGIN_OF_DAY)*60){
 			//make the dummy the real situation 
 			if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
 			if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);

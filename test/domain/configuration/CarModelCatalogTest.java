@@ -42,7 +42,7 @@ public class CarModelCatalogTest {
 	@SuppressWarnings("unused")
 	@Test
 	public void testcreate() throws IOException, CarModelCatalogException {
-		CarModelCatalog catalog =new CarModelCatalog("testData/test_option.txt","testData/init_model.txt");
+		CarModelCatalog catalog =new CarModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/init_model.txt");
 //		assertTrue(catalog.getOption("red").conflictsWith(catalog.getOption("blue")));
 //		assertFalse(catalog.getOption("manual").conflictsWith(catalog.getOption("blue")));
 	}
@@ -52,7 +52,7 @@ public class CarModelCatalogTest {
 		write.write("a;Body");
 		write.close();
 		try {
-			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
+			new CarModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("Option: wrong input format: a;Body",e.getMessage());
@@ -65,7 +65,7 @@ public class CarModelCatalogTest {
 		write.write("a;Gear;,");
 		write.close();
 		try {
-			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
+			new CarModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("Option already exists: a",e.getMessage());
@@ -78,7 +78,7 @@ public class CarModelCatalogTest {
 		write.write("a;Body;b,");
 		write.close();
 		try {
-			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
+			new CarModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("Option does not exists: b",e.getMessage());
@@ -91,7 +91,7 @@ public class CarModelCatalogTest {
 		write.write("a;fake;,");
 		write.close();
 		try {
-			new CarModelCatalog("testData/test_options.txt","testData/test_models.txt");
+			new CarModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("no valid type: fake",e.getMessage());
@@ -103,7 +103,7 @@ public class CarModelCatalogTest {
 		write.write("a;Body;,");
 		write.close();
 		try {
-			new CarModelCatalog("testData/test_option.txt","testData/test_model.txt");
+			new CarModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("Model: wrong input format: a;Body;,",e.getMessage());
@@ -116,7 +116,7 @@ public class CarModelCatalogTest {
 		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,no spoiler,");
 		write.close();
 		try {
-			new CarModelCatalog("testData/test_option.txt","testData/test_model.txt");
+			new CarModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("Model name already exists: a",e.getMessage());
@@ -128,7 +128,7 @@ public class CarModelCatalogTest {
 		write.write("a;manual,sedan,red,nospoiler,standard 2l 4 cilinders,6 speed manual,leather black,comfort,");
 		write.close();
 		try {
-			new CarModelCatalog("testData/test_option.txt","testData/test_model.txt");
+			new CarModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
 			fail();
 		} catch (CarModelCatalogException e) {
 			assertEquals("Option does not exists: nospoiler",e.getMessage());

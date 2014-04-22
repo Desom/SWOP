@@ -18,9 +18,9 @@ public class CarModelCatalog {
 	 * @throws IOException
 	 * @throws CarModelCatalogException
 	 */
-	public CarModelCatalog(String optionFile, String modelFile) throws IOException, CarModelCatalogException{
-		allOptions = (new OptionCreator()).createOptions();
-		allCarModels= (new ModelCreator(this.getAllOptions())).createModels();
+	public CarModelCatalog(String optionFile, String dependancyPath, String modelFile) throws IOException, CarModelCatalogException{
+		allOptions = (new OptionCreator(optionFile,dependancyPath)).createOptions();
+		allCarModels= (new ModelCreator(this.getAllOptions(),modelFile)).createModels();
 	}
 	
 	/**
@@ -30,7 +30,8 @@ public class CarModelCatalog {
 	 * @throws CarModelCatalogException
 	 */
 	public CarModelCatalog() throws IOException, CarModelCatalogException{
-		this("data/options.txt", "data/models.txt");
+		allOptions = (new OptionCreator()).createOptions();
+		allCarModels= (new ModelCreator(this.getAllOptions())).createModels();
 	}
 
 	/***

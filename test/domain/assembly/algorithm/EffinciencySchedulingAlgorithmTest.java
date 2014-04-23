@@ -22,6 +22,7 @@ import domain.order.SingleTaskOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
+import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
 public class EffinciencySchedulingAlgorithmTest {
@@ -31,13 +32,14 @@ public class EffinciencySchedulingAlgorithmTest {
 	CarModelCatalog cmc;
 	AssemblyLineScheduler als;
 	dummyAssemblyLine AssemblyLine;
-	
+	CustomShopManager customShopManager;
 	@Before
 	public void testCreate() throws IOException, CarModelCatalogException {
 		this.algorithm = new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
+		this.customShopManager = new CustomShopManager(0);
 		this.cmc = new CarModelCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		this.AssemblyLine = new dummyAssemblyLine(als, null);
@@ -396,7 +398,7 @@ public class EffinciencySchedulingAlgorithmTest {
 				config1.addOption(option);
 			}
 		}
-		orderList.add(new SingleTaskOrder(16, garageHolder, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(1998,0,1,12,0,0)));
+		orderList.add(new SingleTaskOrder(16, customShopManager, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(1998,0,1,12,0,0)));
 		return orderList;
 	}
 	private ArrayList<Order> makeOrderListWithSingleTaskOrderWithNoFailure()
@@ -414,10 +416,10 @@ public class EffinciencySchedulingAlgorithmTest {
 				config2.addOption(option);
 			}
 		}
-		orderList.add(new SingleTaskOrder(12, garageHolder, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
-		orderList.add(new SingleTaskOrder(13, garageHolder, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
-		orderList.add(new SingleTaskOrder(14, garageHolder, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
-		orderList.add(new SingleTaskOrder(15, garageHolder, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
+		orderList.add(new SingleTaskOrder(12, customShopManager, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
+		orderList.add(new SingleTaskOrder(13, customShopManager, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
+		orderList.add(new SingleTaskOrder(14, customShopManager, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
+		orderList.add(new SingleTaskOrder(15, customShopManager, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
 		return orderList;
 	}
 	/**

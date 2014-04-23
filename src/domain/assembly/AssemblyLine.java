@@ -1,6 +1,7 @@
 package domain.assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 import domain.InternalFailureException;
 import domain.Statistics;
@@ -64,10 +65,10 @@ public class AssemblyLine {
 	}
 	
 	/**
-	 * //TODO
-	 * @throws DoesNotExistException
+	 * Advances the assembly line.
+	 * 
 	 * @throws CannotAdvanceException 
-	 * 				If there are workstations that are blocking the assembly line.
+	 * 		If there are workstations that are blocking the assembly line.
 	 */
 	public void advanceLine() throws CannotAdvanceException {
 		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
@@ -96,7 +97,7 @@ public class AssemblyLine {
 				Workstation workstationPrev = selectWorkstationById(i-1);
 				workstationNext.setCarAssemblyProcess(workstationPrev.getCarAssemblyProcess());
 				if(workstationNext.getCarAssemblyProcess() != null){
-					for(AssemblyTask t : workstationNext.getCarAssemblyProcess().compatibleWith(workstationNext)){
+					for(AssemblyTask t : workstationNext.compatibleWith(workstationNext.getCarAssemblyProcess())){
 						workstationNext.addAssemblyTask(t);
 					}
 				}
@@ -111,24 +112,18 @@ public class AssemblyLine {
 				tryNextAdvance = false;
 			}
 			
-			CarAssemblyProcess newCar = null;
+			CarAssemblyProcess newAssemblyProcess = null;
 			if(newOrder != null){
-				newCar = newOrder.getAssemblyprocess();
+				newAssemblyProcess = newOrder.getAssemblyprocess();
 			}
 
 			Workstation workstation1 = selectWorkstationById(1);
 			workstation1.clear();
-			workstation1.setCarAssemblyProcess(newCar);
-			//TODO moet dit niet automatisch gebeuren wanneer je workstation een CarAssemblyProcess geeft?
-			if(newCar != null){
-				for(AssemblyTask t : newCar.compatibleWith(workstation1)){
-					workstation1.addAssemblyTask(t);
-				}
-			}
+			workstation1.setCarAssemblyProcess(newAssemblyProcess);
 
 			if(finished != null){
 				finished.getAssemblyprocess().setDeliveredTime(this.assemblyLineScheduler.getCurrentTime());
-				finished.getAssemblyprocess().registerDelay(getAllWorkstations());
+				finished.getAssemblyprocess().registerDelay(this);
 				this.statistics.update();
 			}
 			
@@ -145,50 +140,30 @@ public class AssemblyLine {
 			throw new InternalFailureException("Suddenly a Workstation disappeared while that should not be possible.");
 		}
 	}
-
-	/**
-	 * Add's the specified user to the workstation with the specified ID
-	 * 
-	 * @param user The user that is to be added to the workstation
-	 * @param workStation_id The ID of the workstation the user should be added to.
-	 * @throws DoesNotExistException 
-	 * @throws Exception If the Carmechanic could not be appointed to the workstation.
-	 */
-	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException{
-		if(user.canPerform("selectWorkstation")){
-			Workstation selected;
-			selected = selectWorkstationById(workStation_id, user);
-			selected.addCarMechanic(user);
-		}else{
-			throw new UserAccessException(user, "advanceLine");
-		}
-	}*/
-
+	
 	/**
 	 * Selects the workstation with the specified id from the list of all workstations
 	 * 
-	 * @param id The ID of the desired workstation
-	 * @return The workstation that matches the specified ID
-	 * @throws DoesNotExistException when no workstation with the specified ID exists.
+	 * @param id
+	 * 		The ID of the desired workstation.
+	 * @return The workstation that matches the specified ID.
+	 * @throws DoesNotExistException
+	 * 		If no workstation with the specified ID exists.
 	 */
 	public Workstation selectWorkstationById(int id) throws DoesNotExistException{
-		Workstation selected = null;
-		for(Workstation w : getAllWorkstations()){
-			if(w.getId() == id)
-				selected = w;
-		}
-		if(selected == null)
-			throw new DoesNotExistException("No workstation exists with ID: " + id);
-		return selected;
+		for(Workstation workstation : getAllWorkstations())
+			if(workstation.getId() == id)
+				return workstation;
+		throw new DoesNotExistException("No workstation exists with ID: " + id);
 	}
 
 	/**
 	 * This method creates 3 workstations, specifies their ID's and the respective assembly task types those workstations can perform.
 	 * 
-	 * @return	a linked hashmap with the workstations as keys and a car assembly process as value
+	 * @return A list of the created workstations.
 	 */
 	private ArrayList<Workstation> createWorkstations(){
-		ArrayList<Workstation> list = new ArrayList<Workstation>();
+		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);
 		taskTypes1.add(OptionType.Color);
@@ -206,89 +181,26 @@ public class AssemblyLine {
 		taskTypes3.add(OptionType.Spoiler);
 		Workstation workStation3 = new Workstation(this, 3, taskTypes3);
 		
-		list.add(workStation1);
-		list.add(workStation2);
-		list.add(workStation3);
-		return list;
+		workstations.add(workStation1);
+		workstations.add(workStation2);
+		workstations.add(workStation3);
+		return workstations;
 	}
 
 	/**
-	 * Creates a view of the current status of the assembly line
+	 * Creates a view of the current status of the assembly line.
 	 * 
-	 * @param user The user requesting the assemblyStatusview
-	 * @return An AssemblyStatusView representing the current status
+	 * @return An AssemblyStatusView representing the current status.
 	 */
 	public AssemblyStatusView currentStatus(){
 		AssemblyStatusView view = new AssemblyStatusView(workstations, "Current Status");
 		return view;
 	}
 
-/*
-	
-	 * Creates a view of the future status of the assembly line
-	 * 
-	 * @param user 
-	 * 			The user requesting the assemblyStatusview.
-	 * @param time 
-	 * 			The time that has past since the last advanceLine.
-	 * @return An AssemblyStatusView representing the future status
-	 
-	public AssemblyStatusView futureStatus(int time){
-		// check if the line can advance
-		boolean isReady = true;
-		for(Workstation w : getAllWorkstations()){
-			if(!w.hasAllTasksCompleted()){
-				isReady = false;
-			}
-		}
-		ArrayList<Workstation> fakeWorkstations = new ArrayList<Workstation>();
-
-		if(!isReady){ 
-			// if the line cannot advance, return the current status, because that is equal to the future status
-			return currentStatus();
-		}
-		try{
-			// if the line can advance make new workstations representing the future
-			ArrayList<Workstation> list = new ArrayList<Workstation>(createWorkstations());
-			for(Workstation fake: list){ // set the corresponding car mechanics.
-				Workstation real = selectWorkstationById(fake.getId());
-				try{
-					fake.addCarMechanic(real.getCarMechanic());
-				}catch(IllegalStateException e){}
-				if(fake.getId() != 1){
-					Workstation realPrev = selectWorkstationById(fake.getId()-1);
-					fake.setCarAssemblyProcess(realPrev.getCarAssemblyProcess());
-					try{
-						for(AssemblyTask t : fake.getCarAssemblyProcess().compatibleWith(fake)){
-							fake.addAssemblyTask(t);
-						}
-					}
-					catch(NullPointerException e){}
-				}else{
-					Order order = this.assemblyLineScheduler.seeNextOrder(time);
-					if(order != null){
-						CarAssemblyProcess futureCar = order.getAssemblyprocess();
-						fake.setCarAssemblyProcess(futureCar);
-						for(AssemblyTask t : futureCar.compatibleWith(fake)){
-							fake.addAssemblyTask(t);
-						}
-					}else{
-						fake.setCarAssemblyProcess(null);
-					}
-				}
-			}
-			AssemblyStatusView view = new AssemblyStatusView(fakeWorkstations, "Future Status");
-			return view;
-		}
-		catch(DoesNotExistException e){
-			throw new InternalFailureException("Suddenly a Workstation disappeared while that could not be possible.");
-		}
-
-	}
-*/
 	/**
-	 * Get an array of all workstation id's
-	 * @return all workstation id's
+	 * Returns all workstation id's on this assembly line.
+	 * 
+	 * @return All workstation id's.
 	 */
 	public LinkedList<Integer> getWorkstationIDs(){
 		LinkedList<Integer> ids= new LinkedList<Integer>();
@@ -299,6 +211,7 @@ public class AssemblyLine {
 	}
 
 	/**
+	 * Returns the number of workstation on this assembly line.
 	 * 
 	 * @return The number of workstations on the assembly line
 	 */
@@ -309,9 +222,9 @@ public class AssemblyLine {
 	/**
 	 * Returns a list of the Orders the Workstations are working on.
 	 * 
-	 * @return a list of all orders currently in the respective Workstation as
+	 * @return A list of all orders currently in the respective Workstation as
 	 *         indicated by the position in the list. (null if Workstation is
-	 *         empty.)
+	 *         empty).
 	 */
 	public LinkedList<Order> getAllOrders() {
 		LinkedList<Order> orders = new LinkedList<Order>();
@@ -325,17 +238,15 @@ public class AssemblyLine {
 		}
 		return orders;
 	}
-	
-	
-	
 
 	/**
 	 * Calculates the estimated time necessary to empty the assemblyLine, based on the given orders.
 	 * 
 	 * @param assembly
 	 * 		A list of Orders which represents the assemblyLine. ( null if there is no order on that respective Workstation.)
-	 * @return The calculated amount of minutes it will take to empty the given assemblyLine; 
+	 * @return The calculated amount of minutes it will take to empty the given assemblyLine.
 	 */
+	@SuppressWarnings("unchecked")
 	public int calculateTimeTillEmptyFor(LinkedList<Order> assembly) {
 		LinkedList<Order> simulAssembly = (LinkedList<Order>) assembly.clone();
 		int time = 0;
@@ -344,7 +255,6 @@ public class AssemblyLine {
 			simulAssembly.removeLast();
 			simulAssembly.addFirst(null);
 		}
-		
 		return time;
 	}
 
@@ -353,15 +263,15 @@ public class AssemblyLine {
 	 * tasks on all workstations if the given Orders are on the assemblyLine.
 	 * 
 	 * @param assembly
-	 *            The Orders that are on the assemblyLine.
-	 * @return The amount of minutes it will take to complete all tasks on all workstations.
+	 * 		The Orders that are on the assemblyLine.
+	 * @return The amount of minutes it will take to complete all tasks on all workstations with the given assembly line occupation.
 	 */
 	public int calculateTimeTillAdvanceFor(LinkedList<Order> assembly) {
 		LinkedList<Workstation> allWorkstations = this.getAllWorkstations();
 		int maxTime = 0;
 		for(int j = 0; j < 3; j++){
 			if(assembly.get(j) != null
-					&& (assembly.get(j).getAssemblyprocess().filterWorkstations(allWorkstations)).contains(allWorkstations.get(j))
+					&& (this.filterWorkstations(assembly.get(j).getAssemblyprocess())).contains(allWorkstations.get(j))
 					&& assembly.get(j).getConfiguration().getExpectedWorkingTime() > maxTime){
 				maxTime = assembly.get(j).getConfiguration().getExpectedWorkingTime();
 			}
@@ -369,13 +279,35 @@ public class AssemblyLine {
 		return maxTime;
 	}
 
+	/**
+	 * Returns whether the assembly line is empty or not.
+	 * 
+	 * @return True if the assembly line is empty, otherwise false.
+	 */
 	public boolean isEmpty() {
-		for(Workstation w : getAllWorkstations()){
-			if(w.getCarAssemblyProcess() != null){
+		for(Workstation workstation : getAllWorkstations()){
+			if(workstation.getCarAssemblyProcess() != null){
 				return false;
 			}
 		}
 		return true;
+	}
+	
+	/**
+	 * Returns all workstations which can complete tasks of the given car assembly process.
+	 * 
+	 * @param process
+	 * 		The car assembly process to be checked.
+	 * @return All workstations required to complete all the tasks of this car assembly process.
+	 */
+	public ArrayList<Workstation> filterWorkstations(CarAssemblyProcess process){
+		ArrayList<Workstation> filteredWorkstations = new ArrayList<Workstation>();
+		for(Workstation workstation : workstations){
+			if(workstation.compatibleWith(process).size() > 0){
+				filteredWorkstations.add(workstation);
+			}
+		}
+		return filteredWorkstations;
 	}
 
 }

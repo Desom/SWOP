@@ -36,10 +36,13 @@ public class AssemblyStatusView {
 	}
 	
 	/**
-	 * TODO + is -1 terug sturen goed?
+	 * Returns the car order at the workstation indicated with the id.
+	 * 
 	 * @param workstationId
-	 * @return
+	 * 		The id that indicates the workstation.
+	 * @return The car order at the indicated workstation. If no car order is present, it will return -1.
 	 * @throws DoesNotExistException
+	 * 		If the workstation with the associated id does not exist.
 	 */
 	public int getCarOrderIdAt(int workstationId) throws DoesNotExistException{
 		if(getWorkstation(workstationId) != null && getWorkstation(workstationId).getCarAssemblyProcess() != null){
@@ -76,7 +79,7 @@ public class AssemblyStatusView {
 	 * @return True if the task corresponding to the option type is completed in the indicated workstation, otherwise false.
 	 * @throws DoesNotExistException
 	 * 		If the workstation with the given id doesn't exist.
-	 * 		If the task type
+	 * 		If the option type has no corresponding task in the workstation. 
 	 */
 	public boolean taskIsDoneAt(OptionType optionType, int workstationId) throws DoesNotExistException{
 		Workstation workstation = getWorkstation(workstationId);
@@ -88,19 +91,33 @@ public class AssemblyStatusView {
 		throw new DoesNotExistException("The workstation with ID " + workstationId + " does not have a task with type " + optionType);
 	}
 
+	/**
+	 * Returns the header of this view.
+	 * 
+	 * @return The header of this view.
+	 */
 	public String getHeader() {
 		return header;
 	}
 
-	private Workstation getWorkstation(int ID) throws DoesNotExistException{
+	/**
+	 * Returns the workstation associated with the given id.
+	 * 
+	 * @param id
+	 * 		The id associated with the desired workstation.
+	 * @return The workstation associated with the given id.
+	 * @throws DoesNotExistException
+	 * 		If the desired workstation does not exist.
+	 */
+	private Workstation getWorkstation(int id) throws DoesNotExistException{
 		Workstation found = null;
-		for(Workstation w : workstations){
-			if(w.getId() == ID){
-				found = w;
+		for(Workstation workstation : workstations){
+			if(workstation.getId() == id){
+				found = workstation;
 			}
 		}
 		if(found == null){
-			throw new DoesNotExistException("There is no workstation with ID: " + ID);
+			throw new DoesNotExistException("There is no workstation with ID: " + id);
 		}
 		return found;
 	}

@@ -21,13 +21,26 @@ import domain.assembly.Workstation;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
+import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
+import domain.configuration.Configuration;
+import domain.configuration.Option;
 import domain.configuration.OptionType;
+import domain.order.CarOrder;
 import domain.order.Order;
 import domain.order.OrderManager;
+import domain.order.SingleTaskOrder;
+import domain.policies.CompletionPolicy;
+import domain.policies.ConflictPolicy;
+import domain.policies.DependencyPolicy;
 import domain.policies.InvalidConfigurationException;
+import domain.policies.ModelCompatibilityPolicy;
+import domain.policies.Policy;
+import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
 import domain.user.CarMechanic;
+import domain.user.CustomShopManager;
+import domain.user.GarageHolder;
 
 public class AssemblyLineTest {
 
@@ -88,27 +101,27 @@ public class AssemblyLineTest {
 		assertEquals(line.selectWorkstationById(3).getId(), 3);
 	}
 
-	
+
 	@Test
 	public void testAdvanceLineSucces() throws DoesNotExistException, CannotAdvanceException, InternalFailureException, NoOrdersToBeScheduledException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
 			processesBefore.add(w.getCarAssemblyProcess());
 		}
-		
+
 		Order order = null;
 		try{
 			order = scheduler.seeNextOrder(60);
 		}
 		catch(NoOrdersToBeScheduledException e){}
-		
+
 		CarAssemblyProcess next;
 		if(order != null){
 			next = order.getAssemblyprocess();
 		}else{
 			next = null;
 		}
-		
+
 		fullDefaultAdvance();
 
 		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
@@ -153,7 +166,7 @@ public class AssemblyLineTest {
 				}
 				assertTrue(list.containsAll(current.getAllTasksAt(i)));
 				assertTrue(current.getAllTasksAt(i).containsAll(list));
-				
+
 				if(current.getCarOrderIdAt(i) != -1){
 					assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i).getCarAssemblyProcess().getOrder().getCarOrderID());
 				}
@@ -170,9 +183,9 @@ public class AssemblyLineTest {
 		try {
 
 			AssemblyStatusView future = line.futureStatus(100);
-			
+
 			fullDefaultAdvance();
-			
+
 			AssemblyStatusView current = line.currentStatus();
 			for(int i : line.getWorkstationIDs()){
 				assertEquals(current.getAllTasksAt(i), future.getAllTasksAt(i));
@@ -189,7 +202,7 @@ public class AssemblyLineTest {
 		}
 	}*/
 
-	
+
 	/**
 	 * This method is only to be used for testing. It will complete all tasks the workstations are currently working on.
 	 * It will complete those tasks in a way where the time spent on each workstation is the expected time for that specific car order.
@@ -208,7 +221,7 @@ public class AssemblyLineTest {
 			}
 		}
 		wList.removeAll(remove);
-		
+
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){
@@ -225,6 +238,78 @@ public class AssemblyLineTest {
 			}
 		}
 	}
+
+	@Test
+	public void testFilterWorkstation() throws InvalidConfigurationException, CarModelCatalogException, IOException{
+		CarAssemblyProcess process = this.createCar().getAssemblyprocess();
+
+		ArrayList<Workstation> filtered = line.filterWorkstations(process);
+		
+		assertEquals(3,filtered.size());
+		assertTrue(filtered.contains(line.getAllWorkstations().get(0)));
+		assertTrue(filtered.contains(line.getAllWorkstations().get(1)));
+		assertTrue(filtered.contains(line.getAllWorkstations().get(2)));
+
+		process = createSingleTask().getAssemblyprocess();
+
+		ArrayList<Workstation> filtered2 = line.filterWorkstations(process);
+		assertEquals(1,filtered2.size());
+		assertTrue(filtered2.contains(line.getAllWorkstations().get(0)));
+		assertFalse(filtered2.contains(line.getAllWorkstations().get(1)));
+		assertFalse(filtered2.contains(line.getAllWorkstations().get(2)));
+	}
+
+	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
+
+		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		Policy pol2 = new ConflictPolicy(pol1);
+		Policy pol3 = new DependencyPolicy(pol2);
+		Policy pol4 = new ModelCompatibilityPolicy(pol3);
+		Policy carOrderPolicy= pol4;
+
+
+		CarModelCatalog catalog = new CarModelCatalog();
+		CarModel carModel = null;
+		for(CarModel m : catalog.getAllModels()){
+			if(m.getName().equals("Model A")){
+				carModel = m;
+				continue;
+			}
+		}
+
+		Configuration config = new Configuration(carModel, carOrderPolicy);
+
+		for(Option option : catalog.getAllOptions()){
+			if(option.getDescription().equals("sedan")
+					||option.getDescription().equals("blue")
+					||option.getDescription().equals("standard 2l v4")
+					||option.getDescription().equals("5 speed manual")
+					||option.getDescription().equals("leather white")
+					||option.getDescription().equals("comfort")
+					)
+				config.addOption(option);
+		}
+		config.complete();
+		GarageHolder garageHolder = new GarageHolder(1);
+
+		GregorianCalendar now = new GregorianCalendar();
+		CarOrder carOrder = new CarOrder(1, garageHolder, config, now);
+		return carOrder;
+	}
 	
+	private SingleTaskOrder createSingleTask() throws InvalidConfigurationException, CarModelCatalogException{
+		
+		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
+		Configuration config = new Configuration(null, singleTaskPolicy);
+		config.addOption(new Option("test", OptionType.Color));
+		config.complete();
+		CustomShopManager customShop = new CustomShopManager(1);
+		
+		GregorianCalendar now = new GregorianCalendar();
+		
+		return new SingleTaskOrder(0, customShop, config, now, now);
+	}
 	
+
+
 }

@@ -54,13 +54,13 @@ public class WorkstationTest {
 		
 		
 		CarOrder order = createCar();
-		validTask = order.getAssemblyprocess().compatibleWith(workstation).get(0);
-		validTask2 = order.getAssemblyprocess().compatibleWith(workstation).get(1);
+		validTask = workstation.compatibleWith(order.getAssemblyprocess()).get(0);
+		validTask2 = workstation.compatibleWith(order.getAssemblyprocess()).get(1);
 		
 		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
 		taskTypes2.add(OptionType.Gearbox);
 		Workstation workstation2 = new Workstation(null, 1, taskTypes2);
-		invalidTask = order.getAssemblyprocess().compatibleWith(workstation2).get(0);
+		invalidTask = workstation2.compatibleWith(order.getAssemblyprocess()).get(0);
 		
 	}
 	

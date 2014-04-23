@@ -70,25 +70,6 @@ public class CarAssemblyProcess {
 	}
 
 	/**
-	 * Get the tasks of this AssemblyProcess that are compatible with the given workstation.
-	 * 
-	 * @param workstation
-	 * 		The workstation to check against.
-	 * @return all assembly tasks on which can be worked on in the given workstation.
-	 */
-	protected ArrayList<AssemblyTask> compatibleWith(Workstation workstation){
-		ArrayList<OptionType> acceptedTypes = workstation.getTaskTypes();
-		ArrayList<AssemblyTask> compatibleTypes = new ArrayList<AssemblyTask>();
-		for(AssemblyTask t : this.tasks){
-			if(acceptedTypes.contains(t.getType())){
-				compatibleTypes.add(t);
-			}
-		}
-		return compatibleTypes;
-	}
-
-
-	/**
 	 * Test if this AssemblyProcess is completed.
 	 * 
 	 * @return true if all tasks are completed, otherwise false.
@@ -129,32 +110,27 @@ public class CarAssemblyProcess {
 	}
 	
 	/**
-	 * This method filters all workstations not useful for this assembly process from
-	 * 		 the given list and returns the remainder.
+	 * Calculates and sets the total delay this car order has accumulated at this point (in minutes).
 	 * 
-	 * @param stations list of all workstations
-	 * @return The list of all workstations required to complete all the tasks of this car assembly process.
+	 * @param assemblyLine
+	 * 		The assembly line which handled this assembly process.
 	 */
-	public ArrayList<Workstation> filterWorkstations(List<Workstation> stations){
-		ArrayList<Workstation> filtered = new ArrayList<Workstation>();
-		for(Workstation w : stations){
-			if(compatibleWith(w).size() > 0){
-				filtered.add(w);
-			}
-		}
-		return filtered;
-	}
-	
-	/**
-	 * calculate and set the total delay this car order has accumulated at this point (in minutes).
-	 * 
-	 */
-	void registerDelay(List<Workstation> workstations){
-		this.delay = this.getTotalTimeSpend() - this.order.getConfiguration().getExpectedWorkingTime()*this.filterWorkstations(workstations).size();
+	void registerDelay(AssemblyLine assemblyLine){
+		this.delay = this.getTotalTimeSpend() - this.order.getConfiguration().getExpectedWorkingTime()*assemblyLine.filterWorkstations(this).size();
 	}
 
 	public int getDelay() {
 		return this.delay;
+	}
+	
+	/**
+	 * Returns the assembly tasks of this car assembly process.
+	 * 
+	 * @return The assembly tasks of this car assembly process.
+	 */
+	@SuppressWarnings("unchecked")
+	public ArrayList<AssemblyTask> getAssemblyTasks() {
+		return (ArrayList<AssemblyTask>) this.tasks.clone();
 	}
 	
 	/**

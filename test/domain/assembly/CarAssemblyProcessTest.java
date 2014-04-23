@@ -74,37 +74,17 @@ public class CarAssemblyProcessTest {
 	
 	@Test
 	public void testMatching(){
-		for(int i = 0; i<process.compatibleWith(w1).size(); i++){
-			assertTrue(taskTypes1.contains(process.compatibleWith(w1).get(i).getType()));
+		for(int i = 0; i<w1.compatibleWith(process).size(); i++){
+			assertTrue(taskTypes1.contains(w1.compatibleWith(process).get(i).getType()));
 		}
 		
-		for(int i = 0; i<process.compatibleWith(w2).size(); i++){
-			assertTrue(taskTypes2.contains(process.compatibleWith(w2).get(i).getType()));
+		for(int i = 0; i<w2.compatibleWith(process).size(); i++){
+			assertTrue(taskTypes2.contains(w2.compatibleWith(process).get(i).getType()));
 		}
 		
-		for(int i = 0; i<process.compatibleWith(w3).size(); i++){
-			assertTrue(taskTypes3.contains(process.compatibleWith(w3).get(i).getType()));
+		for(int i = 0; i<w3.compatibleWith(process).size(); i++){
+			assertTrue(taskTypes3.contains(w3.compatibleWith(process).get(i).getType()));
 		}
-	}
-	
-	@Test
-	public void testFilterWorkstation() throws InvalidConfigurationException, CarModelCatalogException{
-		ArrayList<Workstation> stations = new ArrayList<Workstation>();
-		stations.add(w1);
-		stations.add(w2);
-		stations.add(w3);
-		
-		ArrayList<Workstation> filtered = process.filterWorkstations(stations);
-		assertEquals(3,filtered.size());
-		assertTrue(filtered.contains(w1));
-		assertTrue(filtered.contains(w2));
-		assertTrue(filtered.contains(w3));
-		
-		CarAssemblyProcess carProcess = createSingleTask().getAssemblyprocess();
-		
-		ArrayList<Workstation> filtered2 = carProcess.filterWorkstations(stations);
-		assertEquals(1,filtered2.size());
-		assertTrue(filtered2.contains(w1));
 	}
 	
 	@Test
@@ -116,19 +96,6 @@ public class CarAssemblyProcessTest {
 		assertEquals(1010, process.getTotalTimeSpend());
 		process.addTimeWorked(10);
 		assertEquals(1020, process.getTotalTimeSpend());
-	}
-	
-	private SingleTaskOrder createSingleTask() throws InvalidConfigurationException, CarModelCatalogException{
-		
-		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
-		Configuration config = new Configuration(null, singleTaskPolicy);
-		config.addOption(new Option("test", OptionType.Color));
-		config.complete();
-		CustomShopManager customShop = new CustomShopManager(1);
-		
-		GregorianCalendar now = new GregorianCalendar();
-		
-		return new SingleTaskOrder(0, customShop, config, now, now);
 	}
 	
 	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{

@@ -108,7 +108,7 @@ public class Workstation {
 	 */
 	public void removeCarMechanic() {
 		if(activeTask != null){
-			throw new IllegalStateException("A CarMechanic cannot leave when there is an active");
+			throw new IllegalStateException("A car mechanic cannot leave when there is an active task");
 		}
 		this.carMechanic = null;
 	}
@@ -287,11 +287,15 @@ public class Workstation {
 	
 	/**
 	 * Sets the car assembly process this workstation is currently working on.
+	 * Also sets all tasks in the car assembly process compatible with the workstation.
 	 * 
 	 * @param process
 	 * 		the specified car assembly process
 	 */
 	public void setCarAssemblyProcess(CarAssemblyProcess process){
+		if (process != null)
+			for (AssemblyTask task : this.compatibleWith(process))
+				this.addAssemblyTask(task);
 		this.assemblyProcess = process;
 	}
 	
@@ -302,5 +306,23 @@ public class Workstation {
 	 */
 	public CarAssemblyProcess getCarAssemblyProcess(){
 		return this.assemblyProcess;
+	}
+	
+	/**
+	 * Returns the tasks of the given assembly process that are compatible with this workstation.
+	 * 
+	 * @param assemblyProcess
+	 * 		The assembly process to check against.
+	 * @return All assembly tasks of the car assembly process on which can be worked on in this workstation.
+	 */
+	protected ArrayList<AssemblyTask> compatibleWith(CarAssemblyProcess assemblyProcess){
+		ArrayList<OptionType> acceptedTypes = this.getTaskTypes();
+		ArrayList<AssemblyTask> compatibleTasks = new ArrayList<AssemblyTask>();
+		for(AssemblyTask task : assemblyProcess.getAssemblyTasks()){
+			if(acceptedTypes.contains(task.getType())){
+				compatibleTasks.add(task);
+			}
+		}
+		return compatibleTasks;
 	}
 }

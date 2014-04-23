@@ -47,7 +47,7 @@ public interface UIInterface {
 	
 	void printException(Exception e);
 
-	void fillIn(SingleTaskOrderForm orderForm) throws InvalidConfigurationException;
+	void fillIn(SingleTaskOrderForm orderForm);
 
 
 }

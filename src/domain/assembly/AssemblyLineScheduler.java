@@ -8,6 +8,7 @@ import domain.InternalFailureException;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.order.Order;
 import domain.order.OrderManager;
+import domain.order.SingleTaskOrder;
 
 public class AssemblyLineScheduler implements Scheduler{
 
@@ -30,9 +31,10 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.currentAlgorithm = this.possibleAlgorithms.get(0);
 		this.outDated = true;
 	}
+
 	
 	//TODO docs
-	public GregorianCalendar completionEstimate(Order order){
+	private GregorianCalendar calculateEstimatedCompletionTimeOf(Order order, ArrayList<ScheduledOrder> scheduledOrders, GregorianCalendar futureTime){
 		//TODO refactoring?
 		if(order == null){
 			throw new IllegalArgumentException("It is impossible to calculate the completionEstimate with null.");
@@ -42,18 +44,20 @@ public class AssemblyLineScheduler implements Scheduler{
 			throw new InternalFailureException("An AssemblyLineScheduler doesn't have an AssemblyLine which is necessary for completionEstimate.");
 		}
 		
-		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
-		GregorianCalendar futureTime = this.getCurrentTime();
-		futureTime.add(GregorianCalendar.MINUTE, time);
+//		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
+//		GregorianCalendar futureTime = this.getCurrentTime();
+//		futureTime.add(GregorianCalendar.MINUTE, time);
 		
 		//als order al op de AssemblyLine staat
 		if(this.getAssemblyLine().getAllOrders().contains(order)){
-			ArrayList<ScheduledOrder> scheduledOrders;
-			try {
-				scheduledOrders = getSchedule(futureTime);
-			} catch (NoOrdersToBeScheduledException e) {
-				scheduledOrders = null;
-			}
+//			ArrayList<ScheduledOrder> scheduledOrders;
+//			try {
+//				scheduledOrders = getSchedule(futureTime);
+//			} catch (NoOrdersToBeScheduledException e) {
+//				scheduledOrders = null;
+//			}
+
+			
 			LinkedList<Order> assembly = this.getAssemblyLine().getAllOrders();
 			int i = 0;
 			while(assembly.contains(order)){
@@ -61,7 +65,7 @@ public class AssemblyLineScheduler implements Scheduler{
 					return futureTime;
 				}
 				assembly.removeLast();
-				if(scheduledOrders != null){
+				if(scheduledOrders != null && scheduledOrders.size() > i){
 					assembly.addFirst(scheduledOrders.get(i).getScheduledOrder());
 					i++;
 				}
@@ -76,23 +80,40 @@ public class AssemblyLineScheduler implements Scheduler{
 		
 		//als order nog moet worden gescheduled
 
-		ArrayList<ScheduledOrder> scheduledOrders;
-		try {
-			scheduledOrders = getSchedule(futureTime);
-		} catch (NoOrdersToBeScheduledException e) {
+//		ArrayList<ScheduledOrder> scheduledOrders;
+//		try {
+//			scheduledOrders = getSchedule(futureTime);
+//		} catch (NoOrdersToBeScheduledException e) {
+//			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
+//		}
+		
+		if(scheduledOrders == null){
 			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
 		}
-
+		
 		int position = 0;
 		for(; position < scheduledOrders.size(); position++){
 			if(order.equals(scheduledOrders.get(position).getScheduledOrder())){
 				break;
 			}
 		}
+		
 		if(position >= scheduledOrders.size()){
 			//TODO goede exception?
 			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
 		}
+		return timeTillOrderOffAssemblyLine(position, scheduledOrders);
+
+	}
+
+
+	/**
+	 * @param position
+	 * @param scheduledOrders
+	 * @return
+	 */
+	private GregorianCalendar timeTillOrderOffAssemblyLine(int position,
+			ArrayList<ScheduledOrder> scheduledOrders) {
 		GregorianCalendar simulTime = scheduledOrders.get(position).getScheduledTime();
 		LinkedList<Order> assembly;
 		if(position < 2){
@@ -123,8 +144,62 @@ public class AssemblyLineScheduler implements Scheduler{
 		}
 
 		return simulTime;
-
 	}
+
+	
+	public GregorianCalendar completionEstimate(Order order){
+		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
+		GregorianCalendar futureTime = this.getCurrentTime();
+		futureTime.add(GregorianCalendar.MINUTE, time);
+		
+		ArrayList<ScheduledOrder> scheduledOrders = null;
+		try {
+			scheduledOrders = this.getSchedule(futureTime);
+		} catch (NoOrdersToBeScheduledException e) {
+			if(!this.assemblyLine.getAllOrders().contains(order))
+				throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
+		}
+		return calculateEstimatedCompletionTimeOf(order, scheduledOrders, futureTime);
+	}
+	
+	public boolean canFinishOrderBeforeDeadline(SingleTaskOrder orderWithDeadline){
+
+		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
+		GregorianCalendar futureTime = this.getCurrentTime();
+		futureTime.add(GregorianCalendar.MINUTE, time);
+		
+		int amountOfDeadlineFailures = 0;
+		
+		ArrayList<ScheduledOrder> scheduledOrders = null;
+		try {
+			scheduledOrders = this.getSchedule((GregorianCalendar) futureTime.clone());
+			amountOfDeadlineFailures = this.calculateAmountOfDeadlineFailures(scheduledOrders);
+		} catch (NoOrdersToBeScheduledException e) {}
+		
+		ArrayList<Order> orders = this.getOrdersToBeScheduled();
+		orders.add(orderWithDeadline);
+		ArrayList<ScheduledOrder> scheduledOrdersWithExtra = this.currentAlgorithm.scheduleToScheduledOrderList(orders, (GregorianCalendar) futureTime.clone(), this);
+		int newAmountOfDeadlineFailures = this.calculateAmountOfDeadlineFailures(scheduledOrdersWithExtra);
+		
+		return amountOfDeadlineFailures >= newAmountOfDeadlineFailures;
+	}
+	
+
+	private int calculateAmountOfDeadlineFailures(
+			ArrayList<ScheduledOrder> scheduledOrders) {
+		int amount = 0;
+		for(int i = 0; i < scheduledOrders.size(); i++){
+			Order order = scheduledOrders.get(i).getScheduledOrder();
+			if (order instanceof SingleTaskOrder){
+				SingleTaskOrder singleTask = (SingleTaskOrder) order;
+				if(this.timeTillOrderOffAssemblyLine(i, scheduledOrders).after(singleTask.getDeadLine())){
+					amount++;
+				}
+			}
+		}
+		return amount;
+	}
+
 
 	/**
 	 * Returns the Order that will be put on the AssemblyLine immediately after updating
@@ -247,11 +322,13 @@ public class AssemblyLineScheduler implements Scheduler{
 			throw new IllegalArgumentException("This SchedulingAlgorithm is not one of the possible SchedulingAlgorithms");
 		//TODO goede exception?
 		this.currentAlgorithm = algorithm;
+		this.updateSchedule();
 	}
 	
 	//TODO docs
 	public void setSchedulingAlgorithmToDefault() {
 		this.currentAlgorithm = this.getPossibleAlgorithms().get(0);
+		this.updateSchedule();
 	}
 
 	public ArrayList<SchedulingAlgorithm> getPossibleAlgorithms() {

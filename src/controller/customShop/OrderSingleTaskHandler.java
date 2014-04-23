@@ -8,6 +8,7 @@ import controller.SingleTaskOrderForm;
 import controller.UIInterface;
 import domain.Company;
 import domain.configuration.OptionType;
+import domain.order.CannotMeetDeadlineException;
 import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
 import domain.policies.InvalidConfigurationException;
@@ -17,34 +18,34 @@ public class OrderSingleTaskHandler {
 
 	public void run(UIInterface ui, Company company, CustomShopManager customShopManager) {
 		try {
-		// 1. The user wants to order a single task.
-		// 2. The system shows a list of available tasks.
-		OrderManager orderManager = company.getOrderManager();
-		// 3. The user selects the task he wants to order.
-		// 4. The system asks the user for a deadline, as well as the required task options (e.g. Color).
-		SingleTaskOrderForm orderForm = new SingleTaskOrderForm(company.getCatalog(), orderManager.getSingleTaskOrderPolicies());
-		
-		// 5. The user enters the required details.
-		ui.fillIn(orderForm);
-		GregorianCalendar deadline = orderForm.getDeadline();
-		
-		boolean antwoord = ui.askYesNoQuestion("Do you want to confirm this order?");
-		if(antwoord){
-			// 6. The system stores the new order and updates the production schedule.
-			SingleTaskOrder order = orderManager.placeSingleTaskOrder(customShopManager,orderForm.getConfiguration(), deadline);
-			// 7. The system presents an estimated completion date for the new order.
-			GregorianCalendar calender = orderManager.completionEstimate(order);
-			String time = getTime(calender);
-			ui.display("Your order should be ready at "+ time+".");
-		}else{
-			/// 5. (a) The user indicates he wants to cancel placing an order.
-			
-			// 6. The use case returns to step 1.
-			this.run(ui, company, customShopManager);
-		}	
+			// 1. The user wants to order a single task.
+			// 2. The system shows a list of available tasks.
+			OrderManager orderManager = company.getOrderManager();
+			// 3. The user selects the task he wants to order.
+			// 4. The system asks the user for a deadline, as well as the required task options (e.g. Color).
+			SingleTaskOrderForm orderForm = new SingleTaskOrderForm(company.getCatalog(), orderManager.getSingleTaskOrderPolicies());
+
+			// 5. The user enters the required details.
+			ui.fillIn(orderForm);
+			GregorianCalendar deadline = orderForm.getDeadline();
+
+			boolean antwoord = ui.askYesNoQuestion("Do you want to confirm this order?");
+			if(antwoord){
+				// 6. The system stores the new order and updates the production schedule.
+				SingleTaskOrder order = orderManager.placeSingleTaskOrder(customShopManager,orderForm.getConfiguration(), deadline);
+				// 7. The system presents an estimated completion date for the new order.
+				GregorianCalendar calender = orderManager.completionEstimate(order);
+				String time = getTime(calender);
+				ui.display("Your order should be ready at "+ time+".");
+			}else{
+				/// 5. (a) The user indicates he wants to cancel placing an order.
+
+				// 6. The use case returns to step 1.
+				this.run(ui, company, customShopManager);
+			}	
 		}
-		catch (InvalidConfigurationException e) {
-			
+		catch (CannotMeetDeadlineException e) {
+			ui.display("We can not meet the deadline. The SingleTaskOrder is canceled.");
 		}
 	}
 		

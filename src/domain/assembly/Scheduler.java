@@ -4,6 +4,7 @@ import java.util.GregorianCalendar;
 
 import domain.order.Order;
 import domain.order.OrderManager;
+import domain.order.SingleTaskOrder;
 
 public interface Scheduler {
 	
@@ -35,4 +36,15 @@ public interface Scheduler {
 	 * Updates the schedule.
 	 */
 	public void updateSchedule();
+	
+	/**
+	 * Checks if the given SingleTaskOrder can be completed before its deadline passes without compromising other deadlines.
+	 * 
+	 * @param orderWithDeadline
+	 * 		The SingleTaskOrder whose deadline will checked.
+	 * @return True if the given SingleTaskOrder can be completed before the deadline,
+	 * 		false if it can't be completed before the deadline,
+	 * 		false if completing this SingleTaskOrder would compromise other deadlines.
+	 */
+	public boolean canFinishOrderBeforeDeadline(SingleTaskOrder orderWithDeadline);
 }

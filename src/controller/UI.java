@@ -226,7 +226,7 @@ public class UI implements UIInterface{
 		}
 	}
 	
-	public void fillIn(SingleTaskOrderForm orderForm) throws InvalidConfigurationException {
+	public void fillIn(SingleTaskOrderForm orderForm){
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
 		for (OptionType type : OptionType.values())
 			if (type.isSingleTaskPossible())
@@ -234,8 +234,8 @@ public class UI implements UIInterface{
 		int answer1 = this.askWithPossibilities("What do you want to order?", possibleTypes.toArray());
 		List<Option> possibleOptions = orderForm.getPossibleOptionsOfType(possibleTypes.get(answer1));
 		int answer2 = this.askWithPossibilities("Which option do you want to order?", possibleOptions.toArray());
-		orderForm.addOption(possibleOptions.get(answer2));
 		try {
+			orderForm.addOption(possibleOptions.get(answer2));
 			orderForm.completeConfiguration();
 		} catch (InvalidConfigurationException e) {
 			System.out.println(e.getMessage());

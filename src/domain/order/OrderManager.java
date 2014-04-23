@@ -280,8 +280,14 @@ public class OrderManager {
 	 * @param deadline
 	 * 		The deadline of the order.
 	 * @return The new single task order that has been placed.
+	 * @throws CannotMeetDeadlineException 
+	 * 		If the deadline for this SingleTaskOrder cannot be met.
+	 * @throws IllegalArgumentException
+	 * 		If the given deadline has already passed.
+	 * 		If the given Configuration doesn't have the right policy chain.
+	 * 		If the given Configuration isn't completed yet.
 	 */
-	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, Configuration configuration, GregorianCalendar deadline) {
+	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, Configuration configuration, GregorianCalendar deadline) throws CannotMeetDeadlineException {
 		if (this.scheduler.getCurrentTime().after(deadline)) {
 			throw new IllegalArgumentException("The deadline is in the past");
 		}
@@ -293,6 +299,9 @@ public class OrderManager {
 		}
 		int carOrderId = this.getUniqueCarOrderId();
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
+		if(!this.getScheduler().canFinishOrderBeforeDeadline(newOrder)){
+			throw new CannotMeetDeadlineException();
+		}
 		this.addOrder(newOrder);
 		return newOrder;
 	}

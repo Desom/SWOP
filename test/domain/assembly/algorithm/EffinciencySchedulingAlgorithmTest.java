@@ -9,7 +9,6 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
 import domain.configuration.CarModelCatalog;

@@ -1,6 +1,7 @@
 package domain.order;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -22,13 +23,7 @@ import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
-import domain.order.OrderManager;
-import domain.policies.CompletionPolicy;
-import domain.policies.ConflictPolicy;
-import domain.policies.DependencyPolicy;
 import domain.policies.InvalidConfigurationException;
-import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.user.GarageHolder;
 
@@ -60,6 +55,7 @@ public class OrderManagerTest {
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 		CarModelCatalog catalog = new CarModelCatalog();
 		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+		@SuppressWarnings("unused")
 		AssemblyLine als = new AssemblyLine((AssemblyLineScheduler) scheduler, null);
 		orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 	}
@@ -84,7 +80,6 @@ public class OrderManagerTest {
 	
 	@Test
 	public void testPlaceOrder() throws InvalidConfigurationException{
-		//TODO is er een betere manier dan telkens equals met een option description?
 		CarModel model = null;
 		for(CarModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A"))
@@ -97,9 +92,7 @@ public class OrderManagerTest {
 					||option.getDescription().equals("standard 2l v4")
 					||option.getDescription().equals("5 speed manual")
 					||option.getDescription().equals("leather white")
-					||option.getDescription().equals("no airco")
 					||option.getDescription().equals("comfort")
-					||option.getDescription().equals("no spoiler")
 					)
 				options.add(option);
 		}
@@ -126,7 +119,6 @@ public class OrderManagerTest {
 	@Test
 	public void testCompletionEstimate(){
 		ArrayList<Order> orders1 = orderManager.getOrders(user1);
-		GregorianCalendar cal = orderManager.completionEstimate(orders1.get(0));
 		assertEquals(2013,orderManager.completionEstimate(orders1.get(0)).get(GregorianCalendar.YEAR));
 		ArrayList<Order> orders2 = orderManager.getOrders(user2);
 

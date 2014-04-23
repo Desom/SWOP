@@ -1,13 +1,11 @@
 package domain.assembly.algorithm;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 import domain.Statistics;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.CannotAdvanceException;
-import domain.assembly.Workstation;
 import domain.order.Order;
 
 public class dummyAssemblyLine extends AssemblyLine {
@@ -25,6 +23,7 @@ public class dummyAssemblyLine extends AssemblyLine {
 		orders.addFirst(order);
 	}
 	
+	@SuppressWarnings("unchecked")
 	@Override
 	public LinkedList<Order> getAllOrders() {
 		return (LinkedList<Order>) orders.clone();

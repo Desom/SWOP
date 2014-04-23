@@ -14,7 +14,6 @@ import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.CannotAdvanceException;
 import domain.assembly.DoesNotExistException;
-import domain.assembly.Scheduler;
 import domain.assembly.Workstation;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;

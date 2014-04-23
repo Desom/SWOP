@@ -50,7 +50,7 @@ public class OrderSingleTaskHandler {
 	}
 		
 	private String getTime(GregorianCalendar calender) {
-		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+calender.get(Calendar.MONTH)+"-"+calender.get(Calendar.YEAR)+" at "+calender.get(Calendar.HOUR_OF_DAY)+"h"+calender.get(Calendar.MINUTE);
+		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+(calender.get(Calendar.MONTH) +1)+"-"+calender.get(Calendar.YEAR)+" at "+calender.get(Calendar.HOUR_OF_DAY)+"h"+calender.get(Calendar.MINUTE);
 		return date;
 	}
 	

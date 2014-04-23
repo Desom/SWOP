@@ -43,7 +43,7 @@ public class AdaptSchedulingAlgorithmHandler {
 		}
 
 		if(chosenAlgorithm instanceof SpecificationBatchSchedulingAlgorithm){
-			SpecificationBatchSchedulingAlgorithm specBatch = (SpecificationBatchSchedulingAlgorithm) possibilities[answer];
+			SpecificationBatchSchedulingAlgorithm specBatch = (SpecificationBatchSchedulingAlgorithm) chosenAlgorithm;
 //			3. (a) The user indicates he wants to use the Specication Batch algorithm.
 //			4. The system shows a list of the sets of car options for which more
 //			than 3 orders are pending in the production queue.

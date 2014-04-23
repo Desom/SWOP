@@ -86,6 +86,15 @@ public class CarAssemblyProcessTest {
 	
 	@Test
 	public void testFilterWorkstation(){
+		ArrayList<Workstation> stations = new ArrayList<Workstation>();
+		stations.add(w1);
+		stations.add(w2);
+		stations.add(w3);
+		
+		ArrayList<Workstation> filtered = process.filterWorkstations(stations);
+		assertTrue(filtered.contains(w1));
+		assertTrue(filtered.contains(w2));
+		assertTrue(filtered.contains(w3));
 		
 	}
 	

@@ -65,11 +65,12 @@ public class UI implements UIInterface{
 	
 	public GregorianCalendar askForDate(String question) {
 		this.display(question);
-		GregorianCalendar date = (GregorianCalendar) GregorianCalendar.getInstance();
-		date.set(GregorianCalendar.YEAR, this.askForInteger("Enter the year: ", 1));
-		date.set(GregorianCalendar.MONTH, this.askForInteger("Enter the month in numbers: ", 1, 12));
+		int year = this.askForInteger("Enter the year: ", 2000);
+		int month =  this.askForInteger("Enter the month in numbers: ", 1, 12) - 1;
+
+		GregorianCalendar date = new GregorianCalendar(year, month, 1);
 		int numberOfDays = date.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
-		date.set(GregorianCalendar.DAY_OF_MONTH, this.askForInteger("Enter the day: ", 0, numberOfDays));
+		date.set(GregorianCalendar.DAY_OF_MONTH, this.askForInteger("Enter the day: ", 1, numberOfDays));
 		return date;
 	}
 
@@ -223,7 +224,7 @@ public class UI implements UIInterface{
 		}
 	}
 	
-	public GregorianCalendar fillIn(SingleTaskOrderForm orderForm) throws InvalidConfigurationException {
+	public void fillIn(SingleTaskOrderForm orderForm) throws InvalidConfigurationException {
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
 		for (OptionType type : OptionType.values())
 			if (type.isSingleTaskPossible())
@@ -232,7 +233,14 @@ public class UI implements UIInterface{
 		List<Option> possibleOptions = orderForm.getPossibleOptionsOfType(possibleTypes.get(answer1));
 		int answer2 = this.askWithPossibilities("Which option do you want to order?", possibleOptions.toArray());
 		orderForm.addOption(possibleOptions.get(answer2));
-		return this.askForDate("Set a deadline.");
+		try {
+			orderForm.completeConfiguration();
+		} catch (InvalidConfigurationException e) {
+			System.out.println(e.getMessage());
+		}
+		
+		orderForm.setDeadline(this.askForDate("Set a deadline."));
+		
 	}
 	
 	@Override

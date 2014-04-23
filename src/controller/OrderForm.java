@@ -38,7 +38,7 @@ public abstract class OrderForm {
 	/**
 	 * Gets the configuration of this order form.
 	 * 
-	 * @return the configuration of this order form.
+	 * @return The configuration of this order form.
 	 */
 	public Configuration getConfiguration() {
 		return this.configuration;
@@ -59,7 +59,7 @@ public abstract class OrderForm {
 	 * 
 	 * @param type
 	 * 		The option type of which the user wants to have the associated options.
-	 * @return all possible options associated with the given options type
+	 * @return All possible options associated with the given options type
 	 */
 	abstract public List<Option> getPossibleOptionsOfType(OptionType type);
 }

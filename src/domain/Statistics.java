@@ -17,6 +17,7 @@ public class Statistics {
 
 	public Statistics(OrderManager om){
 		this.orderManager = om;
+		this.update();
 	}
 
 	/**

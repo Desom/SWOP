@@ -153,7 +153,7 @@ public class OrderManager {
 	private void addOrder(Order newOrder){
 		if(!this.getAllOrdersPerId().containsKey(newOrder.getUserId()))
 		{
-			ordersPerId.put(newOrder.getUserId(), new ArrayList<Order>());
+			this.getAllOrdersPerId().put(newOrder.getUserId(), new ArrayList<Order>());
 		}
 		this.getAllOrdersPerId().get(newOrder.getUserId()).add(newOrder);
 		this.getScheduler().updateSchedule();
@@ -176,9 +176,8 @@ public class OrderManager {
 
 
 	 //TODO docs
-	// moet toch gecloned worden niet?
 	private HashMap<Integer, ArrayList<Order>> getAllOrdersPerId() {
-		return (HashMap<Integer, ArrayList<Order>>) ordersPerId.clone();
+		return ordersPerId;
 	}
 
 	/**

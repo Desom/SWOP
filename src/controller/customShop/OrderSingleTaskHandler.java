@@ -25,7 +25,8 @@ public class OrderSingleTaskHandler {
 		SingleTaskOrderForm orderForm = new SingleTaskOrderForm(company.getCatalog(), orderManager.getSingleTaskOrderPolicies());
 		
 		// 5. The user enters the required details.
-		GregorianCalendar deadline = ui.fillIn(orderForm);
+		ui.fillIn(orderForm);
+		GregorianCalendar deadline = orderForm.getDeadline();
 		
 		boolean antwoord = ui.askYesNoQuestion("Do you want to confirm this order?");
 		if(antwoord){

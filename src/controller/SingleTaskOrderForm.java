@@ -1,6 +1,7 @@
 package controller;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import domain.configuration.CarModelCatalog;
@@ -11,6 +12,7 @@ import domain.policies.Policy;
 public class SingleTaskOrderForm extends OrderForm{
 	
 	private CarModelCatalog catalog;
+	private GregorianCalendar deadline;
 	
 	/**
 	 * Constructor of SingleTaskOrderForm.
@@ -35,6 +37,25 @@ public class SingleTaskOrderForm extends OrderForm{
 			if (option.getType() == type)
 				possibleOptions.add(option);
 		return possibleOptions;
+	}
+	
+	/**
+	 * Set the deadline for the SingleTaskOrderForm.
+	 * 
+	 * @param deadLine
+	 * 		The deadline for the SingleTaskOrderForm.
+	 */
+	public void setDeadline(GregorianCalendar deadline){
+		this.deadline = (GregorianCalendar) deadline.clone();
+	}
+	
+	/**
+	 * Returns the deadline of the SingleTaskOrderForm.
+	 * 
+	 * @return The deadline of the SingleTaskOrderForm.
+	 */
+	public GregorianCalendar getDeadline(){
+		return (GregorianCalendar) this.deadline.clone();
 	}
 
 }

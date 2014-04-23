@@ -202,7 +202,7 @@ public class UI implements UIInterface{
 			}
 		}
 		for(OptionType oType: nonMandatoryList){
-			if(askYesNoQuestion("Do you want to add a " + oType.toString() +" to your order?")){
+			if(!orderForm.getPossibleOptionsOfType(oType).isEmpty() && askYesNoQuestion("Do you want to add a " + oType.toString() +" to your order?")){
 				boolean inOrde = false;
 				while(!inOrde ){
 					try {

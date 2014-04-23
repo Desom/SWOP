@@ -1,10 +1,8 @@
 package domain.order;
 
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import domain.assembly.CarAssemblyProcess;
-import domain.assembly.Workstation;
 import domain.configuration.Configuration;
 import domain.user.User;
 
@@ -16,20 +14,18 @@ public abstract class Order {
 	private CarAssemblyProcess assemblyProcess;
 	private GregorianCalendar orderedTime;
 	
-	
-	
 	/**
 	 * Constructor of Order.
 	 * Constructs an order which is not completed.
 	 * 
-	 * @param	orderId
-	 * 			The id of this order.
-	 * @param	user
-	 * 			The user who ordered this order.
-	 * @param	configuration
-	 * 			The configuration of this order.
-	 * @param   orderedCalendar
-	 * 			The time when it was ordered
+	 * @param orderId
+	 * 		The id of this order.
+	 * @param user
+	 * 		The user who ordered this order.
+	 * @param configuration
+	 * 		The configuration of this order.
+	 * @param orderedCalendar
+	 * 		The time when it was ordered
 	 */
 	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime) {
 		this(orderId, user, configuration, orderedTime, null, false);
@@ -38,21 +34,26 @@ public abstract class Order {
 	/**
 	 * Constructor of Order.
 	 * 
-	 * @param	orderId
-	 * 			The id of this order.
-	 * @param	user
-	 * 			The user who ordered this order.
-	 * @param	configuration
-	 * 			The configuration of this order.
-	 * @param 	orderedCalendar
-	 * 			The time when it was ordered
-	 * @param	isDelivered
-	 * 			True if the order has been delivered already, otherwise false.
+	 * @param orderId
+	 * 		The id of this order.
+	 * @param user
+	 * 		The user who ordered this order.
+	 * @param configuration
+	 * 		The configuration of this order.
+	 * @param orderedCalendar
+	 * 		The time when it was ordered
+	 * @param isDelivered
+	 * 		True if the order has been delivered already, otherwise false.
+	 * @throws IllegalArgumentException
+	 * 		If the given configuration is not completed yet.
 	 */
-	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deliveredTime, boolean isDelivered) {
+	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deliveredTime, boolean isDelivered) 
+			throws IllegalArgumentException {
 		this.orderId = orderId;
 		this.user = user;
-		this.configuration = configuration;
+		if (!configuration.isCompleted())
+			throw new IllegalArgumentException("The given configuration is not completed yet.");
+		this.configuration = configuration; 
 		this.assemblyProcess = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered,deliveredTime);
 		this.setOrderedTime(orderedTime);
 	}
@@ -70,7 +71,7 @@ public abstract class Order {
 	/**
 	 * Returns the time the order was placed.
 	 * 
-	 * @return	the time the order was placed
+	 * @return The time the order was placed.
 	 */
 	public GregorianCalendar getOrderedTime() {
 		return (GregorianCalendar) this.orderedTime.clone();
@@ -79,9 +80,9 @@ public abstract class Order {
 	/**
 	 * Returns the time the car of this order was delivered.
 	 * 
-	 * @return	the time the car of this order was delivered
-	 * @throws	IllegalStateException
-	 * 			If this car of this order hasn't been delivered yet.
+	 * @return The time the car of this order was delivered.
+	 * @throws IllegalStateException
+	 * 		If this car of this order hasn't been delivered yet.
 	 */
 	public GregorianCalendar getDeliveredTime() throws IllegalStateException{
 		return this.getAssemblyprocess().getDeliveredTime();
@@ -90,7 +91,7 @@ public abstract class Order {
 	/**
 	 * Returns if this car is already completed or not.
 	 * 
-	 * @return true if the car is already completed, else false
+	 * @return True if the car is already completed, otherwise false.
 	 */
 	public Boolean isCompleted() {
 		return this.assemblyProcess.isCompleted();
@@ -99,25 +100,34 @@ public abstract class Order {
 	/**
 	 * Returns the id of this car order.
 	 * 
-	 * @return the id of this car order
+	 * @return The id of this car order.
 	 */
 	public int getCarOrderID() {
 		return this.orderId;
 	}
 	
 	/**
+	 * Returns the user who ordered this order.
+	 * 
+	 * @return The user who ordered this order.
+	 */
+	public User getUser() {
+		return this.user;
+	}
+	
+	/**
 	 * Returns the assembly process of this order.
 	 * 
-	 * @return	the assembly process of this order
+	 * @return The assembly process of this order.
 	 */
 	public CarAssemblyProcess getAssemblyprocess(){
 		return this.assemblyProcess;
 	}
 	
 	/**
-	 * Returns the Configuration of this order.
+	 * Returns the configuration of this order.
 	 * 
-	 * @return	the Configuration of this order
+	 * @return The configuration of this order.
 	 */
 	public Configuration getConfiguration() {
 		return configuration;
@@ -126,17 +136,16 @@ public abstract class Order {
 	/**
 	 * Returns the user id of the user that has placed the order.
 	 * 
-	 * @return	the user id of the user that has placed the order
+	 * @return The user id of the user that has placed the order.
 	 */
 	public int getUserId() {
 		return this.user.getId();
 	}
 	
-	
-	
 	/**
-	 * Get the previously set delay accumulated for this order.
-	 * @return the delay of this order.
+	 * Returns the previously set delay accumulated for this order.
+	 * 
+	 * @return The delay of this order.
 	 */
 	public int getDelay(){
 		return this.getAssemblyprocess().getDelay();
@@ -167,6 +176,5 @@ public abstract class Order {
 			
 		};
 		return "CarOrder: " + this.orderId + "  User: " + this.getUserId() + ordered + delivered;
-		
 	}
 }

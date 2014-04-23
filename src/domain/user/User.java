@@ -32,4 +32,22 @@ public class User {
 	public int getId() {
 		return this.id;
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (this.getClass() != obj.getClass())
+			return false;
+		User other = (User) obj;
+		if (this.id == other.id)
+			return true;
+		else
+			return false;
+	}
+	
+	@Override
+	public int hashCode() {
+		return this.id;
+	}
 }

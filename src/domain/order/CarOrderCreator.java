@@ -17,31 +17,33 @@ import domain.policies.Policy;
 import domain.user.GarageHolder;
 
 public class CarOrderCreator {
-	//TODO is dit conform met het Factory pattern ???
-	
 	
 	private String path;
 	private CarModelCatalog catalog;
-	private Policy policy;
+	private Policy policyChain;
+	
 	/**
 	 * Constructor for the CarOrderCreator class
-	 * @param carOrderPolicy 
-	 * @param	dataFile
-	 * 			The file from which the CarOrders will be read.
-	 * @param 	this.catalog
-	 * 			The CarModelthis.catalog used to convert Strings to Option and CarModel objects.
+	 * 
+	 * @param path
+	 * 		The path to the file with car orders.
+	 * @param  catalog
+	 * 		The car model catalog used to convert Strings to Option and CarModel objects.
+	 * @param policyChain
+	 * 		The chain of policies that checks the validness of the configuration.
 	 */
-	public CarOrderCreator(String path, CarModelCatalog catalog, Policy carOrderPolicy){
+	public CarOrderCreator(String path, CarModelCatalog catalog, Policy policyChain){
 		this.path = path;
 		this.catalog = catalog;
-		this.policy = carOrderPolicy;
+		this.policyChain = policyChain;
 	}
 	
 	/**
-	 * Creates all the placed CarOrders.
+	 * Creates all placed CarOrders.
 	 * 
-	 * @return	A list of all the placed CarOrders.
-	 * @throws InvalidConfigurationException 
+	 * @return a list of all placed CarOrders
+	 * @throws InvalidConfigurationException
+	 * 		If the configuration is invalid.
 	 */
 	public ArrayList<Order> createCarOrderList() throws InvalidConfigurationException{
 		ArrayList<Order> allCarOrders = new ArrayList<Order>();
@@ -58,7 +60,7 @@ public class CarOrderCreator {
 				otherLine = bReader.readLine();
 			}
 			bReader.close();
-		} catch (IOException e) {//TODO deze exception doorgooien om aan de gebruiker te kunnen laten weten?
+		} catch (IOException e) {
 			return null;
 		}
 		
@@ -86,7 +88,7 @@ public class CarOrderCreator {
 			CarModel model = findCarModel(orderPieces[5]);
 		// 6 : options -> ArrayList<Option> (ook this.catalog nodig)
 			ArrayList<Option> optionsList = findCarOptons(orderPieces[6]);
-			Configuration config = new Configuration(model, policy);
+			Configuration config = new Configuration(model, policyChain);
 			for(Option i: optionsList){
 				config.addOption(i);
 			}
@@ -97,7 +99,8 @@ public class CarOrderCreator {
 	}
 
 	/**
-	 * @param this.catalog
+	 * Finds car options associated with the given string.
+	 * 
 	 * @param orderPieces
 	 * @return
 	 */

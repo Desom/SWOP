@@ -64,7 +64,7 @@ public class AssemblyLine {
 	}
 	
 	/**
-	 * 
+	 * //TODO
 	 * @throws DoesNotExistException
 	 * @throws CannotAdvanceException 
 	 * 				If there are workstations that are blocking the assembly line.
@@ -75,6 +75,13 @@ public class AssemblyLine {
 			throw new CannotAdvanceException(this.getBlockingWorkstations());
 		
 		try{
+			//zoek de tijd die nodig was om alle tasks uit te voeren.
+			int timeSpendForTasks = 0;
+			for(Workstation workstation : this.getAllWorkstations()){
+				if(workstation.getTimeSpend() > timeSpendForTasks)
+					timeSpendForTasks = workstation.getTimeSpend();
+			}
+			
 			// move huidige cars 1 plek
 			//neem CarOrder van WorkStation 3
 			Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations());
@@ -93,13 +100,6 @@ public class AssemblyLine {
 						workstationNext.addAssemblyTask(t);
 					}
 				}
-			}
-
-			//zoek de tijd die nodig was om alle tasks uit te voeren.
-			int timeSpendForTasks = 0;
-			for(Workstation workstation : this.getAllWorkstations()){
-				if(workstation.getTimeSpend() > timeSpendForTasks)
-					timeSpendForTasks = workstation.getTimeSpend();
 			}
 
 			//voeg nieuwe car toe.
@@ -132,12 +132,12 @@ public class AssemblyLine {
 				this.statistics.update();
 			}
 			
-			if(tryNextAdvance){
+			if(tryNextAdvance && this.canAdvanceLine()){
 				try{
 					this.advanceLine();
 				}
 				catch(CannotAdvanceException e){
-					//TODO beter een canAdvance() methode en dan InternalFailure gooien als toch CannotAdvance.
+					throw new InternalFailureException("The AssemblyLine couldn't advance even though canAdvanceLine() returned true.");
 				}
 			}
 		}

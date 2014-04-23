@@ -1,6 +1,7 @@
 package domain.assembly;
 import java.util.ArrayList;
 
+import domain.InternalFailureException;
 import domain.configuration.OptionType;
 import domain.user.CarMechanic;
 
@@ -174,10 +175,13 @@ public class Workstation {
 			throw new IllegalStateException("There is no active task in this workstation");
 		}
 		this.addTimeSpend(timeSpend);
-		try {
-			this.assemblyLine.advanceLine();
-		}
-		catch (CannotAdvanceException e) {
+		if(this.assemblyLine.canAdvanceLine()){
+			try {
+				this.assemblyLine.advanceLine();
+			}
+			catch (CannotAdvanceException e) {
+				throw new InternalFailureException("The AssemblyLine couldn't advance even though canAdvanceLine() returned true.");
+			}
 		}
 	}
 

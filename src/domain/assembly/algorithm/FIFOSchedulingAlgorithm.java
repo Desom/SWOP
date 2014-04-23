@@ -37,12 +37,12 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
 			ArrayList<Order> orderList, 
 			GregorianCalendar allTasksCompletedTime,
-			AssemblyLineScheduler assemblyLineSchedulerr) {
+			AssemblyLineScheduler assemblyLineScheduler) {
 
-		AssemblyLine assemblyLine = assemblyLineSchedulerr.getAssemblyLine();
+		AssemblyLine assemblyLine = assemblyLineScheduler.getAssemblyLine();
 		//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
 		LinkedList<Order> assembly = new LinkedList<Order>(assemblyLine.getAllOrders());
-		ArrayList<Order> sList = this.scheduleToList(orderList, assemblyLineSchedulerr);
+		ArrayList<Order> sList = this.scheduleToList(orderList, assemblyLineScheduler);
 		GregorianCalendar movingTime = (GregorianCalendar) allTasksCompletedTime.clone();
 
 		ArrayList<ScheduledOrder> scheduledList = new ArrayList<ScheduledOrder>();
@@ -57,7 +57,7 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een CarOrder is.
 			int totalDuration = assemblyLine.calculateTimeTillEmptyFor(assembly);
 			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
-			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLineSchedulerr)){
+			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLineScheduler)){
 				// haal order er weer af, omdat het toch niet gaat.
 				assembly.removeFirst();
 				// zet een null in de plaats
@@ -135,11 +135,11 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	 * @return True if there are enough minutes left after the given calendar before the end of the workday, false otherwise.
 	 */
 	private boolean checkEnoughTimeLeftFor(
-			GregorianCalendar currentTime, int minutes, AssemblyLineScheduler assemblyLineSchedulerr) {
+			GregorianCalendar currentTime, int minutes, AssemblyLineScheduler assemblyLineScheduler) {
 		//TODO hier moet ergens overtime worden behandeld...
 		GregorianCalendar endOfDay;
-		if(this.sameDayAsScheduler(currentTime, assemblyLineSchedulerr)){
-			endOfDay = assemblyLineSchedulerr.getRealEndOfDay();
+		if(this.sameDayAsScheduler(currentTime, assemblyLineScheduler)){
+			endOfDay = assemblyLineScheduler.getRealEndOfDay();
 		}
 		else{
 			endOfDay = new GregorianCalendar(
@@ -158,8 +158,8 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 
 
 	private boolean sameDayAsScheduler(GregorianCalendar currentTime,
-			AssemblyLineScheduler assemblyLineSchedulerr) {
-		GregorianCalendar schedulerTime = assemblyLineSchedulerr.getCurrentTime();
+			AssemblyLineScheduler assemblyLineScheduler) {
+		GregorianCalendar schedulerTime = assemblyLineScheduler.getCurrentTime();
 		if(schedulerTime.get(GregorianCalendar.YEAR) == currentTime.get(GregorianCalendar.YEAR)
 				&& schedulerTime.get(GregorianCalendar.MONTH) == currentTime.get(GregorianCalendar.MONTH)
 				&& schedulerTime.get(GregorianCalendar.DAY_OF_MONTH) == currentTime.get(GregorianCalendar.DAY_OF_MONTH)){

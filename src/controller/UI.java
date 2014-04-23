@@ -256,7 +256,7 @@ public class UI implements UIInterface{
 			ArrayList<Calendar> tempCalendarList) {
 		display("Your pending orders:");
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
-			display(tempIdList.get(i) +" will be delivered around:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
+			display(tempIdList.get(i) +" will be delivered around:"+ convertCalendarToDate(tempCalendarList.get(i)));
 		}
 
 	}
@@ -265,7 +265,7 @@ public class UI implements UIInterface{
 			ArrayList<Calendar> tempCalendarList) {
 		display("Your completed orders:");
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
-			display(tempIdList.get(i) +" is delivered on:"+ tempCalendarList.get(i).get(Calendar.DAY_OF_WEEK)+" "+tempCalendarList.get(i).get(Calendar.HOUR_OF_DAY) +"h"+tempCalendarList.get(i).get(Calendar.MINUTE));
+			display(tempIdList.get(i) +" is delivered on:"+ convertCalendarToDate(tempCalendarList.get(i)));
 		}
 
 	}
@@ -281,7 +281,7 @@ public class UI implements UIInterface{
 			}else{
 				type = " type: Normal order";
 			}
-			display(index + ". " + pendingOrders.get(i).getCarOrderID() + " will be delivered around:" + completionEstimates.get(i).get(Calendar.DAY_OF_WEEK) + " " + completionEstimates.get(i).get(Calendar.HOUR_OF_DAY) + "h" + completionEstimates.get(i).get(Calendar.MINUTE) + type);
+			display(index + ". " + pendingOrders.get(i).getCarOrderID() + " will be delivered around:" + convertCalendarToDate(completionEstimates.get(i)) + type);
 			index++;
 		}
 		display("Your completed orders:");
@@ -292,7 +292,7 @@ public class UI implements UIInterface{
 			}else{
 				type = " type: Normal order";
 			}
-			display(index + ". " + carOrder.getCarOrderID() + " is delivered on:" + carOrder.getDeliveredTime().get(Calendar.DAY_OF_WEEK) + " "+carOrder.getDeliveredTime().get(Calendar.HOUR_OF_DAY) + "h"+carOrder.getDeliveredTime().get(Calendar.MINUTE) + type);
+			display(index + ". " + carOrder.getCarOrderID() + " is delivered on:" + convertCalendarToDate(carOrder.getDeliveredTime())+ type);
 			index++;
 		}
 		display("");
@@ -310,8 +310,8 @@ public class UI implements UIInterface{
 		display("- Car model: " + pendingOrder.getConfiguration().getModel());
 		display("- Options: ");
 		display(pendingOrder.getConfiguration().getAllOptions().toArray());
-		display("Order time: " + pendingOrder.getOrderedTime());
-		display("Estimated deliver time: " + completionEstimate);
+		display("Order time: " + convertGregorianCalendarToDate(pendingOrder.getOrderedTime()));
+		display("Estimated deliver time: " + convertCalendarToDate(completionEstimate));
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
 				return;
@@ -340,8 +340,8 @@ public class UI implements UIInterface{
 		display("Average delay of all cars that had a delay: " + view.getAverageDelay());
 		display("Median delay of all cars that had a delay: " + view.getMedianDelay());
 
-		display("Last delay : " + view.getLastDelay() + " occurred on " + view.getLastDelayDay());
-		display("Second to last delay : " + view.getSecondToLastDelay() + " occurred on " + view.getSecondToLastDelayDay());
+		display("Last delay : " + view.getLastDelay() + " occurred on " + convertGregorianCalendarToDate(view.getLastDelayDay()));
+		display("Second to last delay : " + view.getSecondToLastDelay() + " occurred on " + convertGregorianCalendarToDate(view.getSecondToLastDelayDay()));
 
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
@@ -352,7 +352,15 @@ public class UI implements UIInterface{
 		display("Internal Error: " + e.getMessage());
 	}
 
+	private String convertGregorianCalendarToDate(GregorianCalendar calendar){
+		if(calendar == null) return null;
+		return calendar.get(GregorianCalendar.DAY_OF_MONTH)+"-"+(calendar.get(GregorianCalendar.MONTH)+1)+"-"+calendar.get(Calendar.YEAR)+" "+calendar.get(GregorianCalendar.HOUR_OF_DAY)+"h"+calendar.get(GregorianCalendar.MINUTE);
 
+	}
+	private String convertCalendarToDate(Calendar calendar){
+		if(calendar == null) return null;
+		return calendar.get(Calendar.DAY_OF_MONTH)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.YEAR)+" "+calendar.get(Calendar.HOUR_OF_DAY)+"h"+calendar.get(Calendar.MINUTE);
 
+	}
 
 }

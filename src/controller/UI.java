@@ -241,7 +241,13 @@ public class UI implements UIInterface{
 			System.out.println(e.getMessage());
 		}
 		
-		orderForm.setDeadline(this.askForDate("Set a deadline."));
+		//TODO laat hier de current time ( orderForm.getCurrentTime() ) zien, zodat je makkelijk een latere datum kan kiezen.
+		GregorianCalendar date = this.askForDate("Set a deadline.");
+		while(date.before(orderForm.getCurrentTime())){
+			this.display("This date is already in the past. Try again.");
+			date = this.askForDate("Set a deadline.");
+		}
+		orderForm.setDeadline(date);
 		
 	}
 	
@@ -296,6 +302,7 @@ public class UI implements UIInterface{
 	}
 
 	// TODO chain pendingOrder.getCar().getConfiguration().getModel() ok?
+	// mogelijke oplossing: sla pendingOrder.getCar().getConfiguration() op en gebruik dan telkens de opgeslagen config om model en options te getten. ?
 	// dubbel checken als alles wel degelijk een clone is
 	@Override
 	public void displayPendingCarOrderInfo(Order pendingOrder, Calendar completionEstimate) {

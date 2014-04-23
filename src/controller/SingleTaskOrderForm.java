@@ -13,6 +13,7 @@ public class SingleTaskOrderForm extends OrderForm{
 	
 	private CarModelCatalog catalog;
 	private GregorianCalendar deadline;
+	private GregorianCalendar currentTime;
 	
 	/**
 	 * Constructor of SingleTaskOrderForm.
@@ -21,10 +22,13 @@ public class SingleTaskOrderForm extends OrderForm{
 	 * 		The car model catalog to find the possible options.
 	 * @param policies
 	 * 		The policy chain which has to be checked.
+	 * @param currentTime
+	 * 		The current time in the system.
 	 */
-	public SingleTaskOrderForm(CarModelCatalog catalog, Policy policies) {
+	public SingleTaskOrderForm(CarModelCatalog catalog, Policy policies, GregorianCalendar currentTime) {
 		super(null, policies);
 		this.catalog = catalog;
+		this.currentTime = (GregorianCalendar) currentTime.clone();
 	}
 
 	/**
@@ -56,6 +60,15 @@ public class SingleTaskOrderForm extends OrderForm{
 	 */
 	public GregorianCalendar getDeadline(){
 		return (GregorianCalendar) this.deadline.clone();
+	}
+
+	/**
+	 * Returns the current time of the system.
+	 * 
+	 * @return The current time of the system.
+	 */
+	public GregorianCalendar getCurrentTime() {
+		return currentTime;
 	}
 
 }

@@ -23,7 +23,7 @@ public class OrderSingleTaskHandler {
 			OrderManager orderManager = company.getOrderManager();
 			// 3. The user selects the task he wants to order.
 			// 4. The system asks the user for a deadline, as well as the required task options (e.g. Color).
-			SingleTaskOrderForm orderForm = new SingleTaskOrderForm(company.getCatalog(), orderManager.getSingleTaskOrderPolicies());
+			SingleTaskOrderForm orderForm = new SingleTaskOrderForm(company.getCatalog(), orderManager.getSingleTaskOrderPolicies(), orderManager.getScheduler().getCurrentTime());
 
 			// 5. The user enters the required details.
 			ui.fillIn(orderForm);

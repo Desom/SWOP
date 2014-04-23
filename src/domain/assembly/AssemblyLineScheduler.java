@@ -208,7 +208,7 @@ public class AssemblyLineScheduler implements Scheduler{
 			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
 			this.outDated = false;
 		}
-		if(this.getAssemblyLine() != null && this.getAssemblyLine().getAllOrders().contains(this.schedule.get(0).getScheduledOrder())){
+		if(this.getAssemblyLine() != null && !this.schedule.isEmpty() && this.getAssemblyLine().getAllOrders().contains(this.schedule.get(0).getScheduledOrder())){
 			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
 		}
 		

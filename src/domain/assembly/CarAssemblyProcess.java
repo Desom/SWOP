@@ -1,6 +1,7 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import domain.configuration.Option;
@@ -12,6 +13,8 @@ public class CarAssemblyProcess {
 	private final ArrayList<AssemblyTask> tasks;
 	private final Order order;
 	private int minutesWorked = 0;
+	private int delay = -1;
+	private GregorianCalendar deliveredTime;
 
 	/**
 	 * The constructor of CarAssemblyProcess.
@@ -46,7 +49,26 @@ public class CarAssemblyProcess {
 		this.tasks = tasks;
 		this.order = order;
 	}
-	
+	/**
+	 * The constructor for the CarAssemblyProcess class
+	 * 
+	 * @param order 
+	 * 			The order related to this assembly process.
+	 * @param options 
+	 * 			The options that are to be converted into assembly tasks.
+	 * @param isCompleted 
+	 * 			Indicates if the car assembly process is already completed.
+	 * @param deliveredTime
+	 * 			The time this CarAssemblyproces was completed
+	 */
+	public CarAssemblyProcess(Order order, ArrayList<Option> options,
+			boolean isCompleted, GregorianCalendar deliveredTime) {
+		this(order,options,isCompleted);
+		if(isCompleted){
+			this.deliveredTime =deliveredTime;
+		}
+	}
+
 	/**
 	 * Get the tasks of this AssemblyProcess that are compatible with the given workstation.
 	 * 
@@ -121,5 +143,46 @@ public class CarAssemblyProcess {
 			}
 		}
 		return filtered;
+	}
+	
+	/**
+	 * calculate and set the total delay this car order has accumulated at this point (in minutes).
+	 * 
+	 */
+	void registerDelay(List<Workstation> workstations){
+		this.delay = this.getTotalTimeSpend() - this.order.getConfiguration().getExpectedWorkingTime()*this.filterWorkstations(workstations).size();
+	}
+
+	public int getDelay() {
+		return this.delay;
+	}
+	
+	/**
+	 * Sets the time the car of this order was delivered.
+	 * 
+	 * @param	user
+	 * 			The user that has ordered the delivery.
+	 * @param 	deliveredTime
+	 * 			The time the car of this order was delivered.
+	 */
+	void setDeliveredTime(GregorianCalendar deliveredTime) {
+			if(!this.isCompleted())
+				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
+			if(this.deliveredTime!=null)
+				throw new IllegalStateException("DeliveredTime already set");
+			this.deliveredTime = (GregorianCalendar) deliveredTime.clone();
+	}
+	
+	/**
+	 * Returns the time the car of this order was delivered.
+	 * 
+	 * @return	the time the car of this order was delivered
+	 * @throws	IllegalStateException
+	 * 			If this car of this order hasn't been delivered yet.
+	 */
+	public GregorianCalendar getDeliveredTime() throws IllegalStateException{
+		if (deliveredTime == null)
+			throw new IllegalStateException("This car hasn't been delivered yet");
+		return (GregorianCalendar) deliveredTime.clone();
 	}
 }

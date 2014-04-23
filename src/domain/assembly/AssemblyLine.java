@@ -127,8 +127,8 @@ public class AssemblyLine {
 			}
 
 			if(finished != null){
-				finished.setDeliveredTime(this.assemblyLineScheduler.getCurrentTime());
-				finished.registerDelay(getAllWorkstations());
+				finished.getAssemblyprocess().setDeliveredTime(this.assemblyLineScheduler.getCurrentTime());
+				finished.getAssemblyprocess().registerDelay(getAllWorkstations());
 				this.statistics.update();
 			}
 			

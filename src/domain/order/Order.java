@@ -15,8 +15,7 @@ public abstract class Order {
 	private Configuration configuration;
 	private CarAssemblyProcess assemblyProcess;
 	private GregorianCalendar orderedTime;
-	private GregorianCalendar deliveredTime;
-	private int delay = -1;
+	
 	
 	
 	/**
@@ -54,11 +53,8 @@ public abstract class Order {
 		this.orderId = orderId;
 		this.user = user;
 		this.configuration = configuration;
-		this.assemblyProcess = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered);
+		this.assemblyProcess = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered,deliveredTime);
 		this.setOrderedTime(orderedTime);
-		if(isDelivered){
-			this.setDeliveredTime(deliveredTime);			
-		}
 	}
 	
 	/**
@@ -81,22 +77,6 @@ public abstract class Order {
 	}
 	
 	/**
-	 * Sets the time the car of this order was delivered.
-	 * 
-	 * @param	user
-	 * 			The user that has ordered the delivery.
-	 * @param 	deliveredTime
-	 * 			The time the car of this order was delivered.
-	 */
-	public void setDeliveredTime(GregorianCalendar deliveredTime) {
-			if(!this.isCompleted())
-				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
-			if(this.deliveredTime!=null)
-				throw new IllegalStateException("DeliveredTime already set");
-			this.deliveredTime = (GregorianCalendar) deliveredTime.clone();
-	}
-	
-	/**
 	 * Returns the time the car of this order was delivered.
 	 * 
 	 * @return	the time the car of this order was delivered
@@ -104,9 +84,7 @@ public abstract class Order {
 	 * 			If this car of this order hasn't been delivered yet.
 	 */
 	public GregorianCalendar getDeliveredTime() throws IllegalStateException{
-		if (deliveredTime == null)
-			throw new IllegalStateException("This car hasn't been delivered yet");
-		return (GregorianCalendar) deliveredTime.clone();
+		return this.getAssemblyprocess().getDeliveredTime();
 	}
 	
 	/**
@@ -154,20 +132,14 @@ public abstract class Order {
 		return this.user.getId();
 	}
 	
-	/**
-	 * calculate and set the total delay this car order has accumulated at this point (in minutes).
-	 * 
-	 */
-	public void registerDelay(List<Workstation> workstations){
-		this.delay = this.assemblyProcess.getTotalTimeSpend() - this.configuration.getExpectedWorkingTime()*this.assemblyProcess.filterWorkstations(workstations).size();
-	}
+	
 	
 	/**
 	 * Get the previously set delay accumulated for this order.
 	 * @return the delay of this order.
 	 */
 	public int getDelay(){
-		return this.delay;
+		return this.getAssemblyprocess().getDelay();
 	}
 	
 	/**
@@ -182,13 +154,13 @@ public abstract class Order {
 				+ ":" + this.orderedTime.get(GregorianCalendar.MINUTE)
 				+ ":" + this.orderedTime.get(GregorianCalendar.SECOND);
 		String delivered ="";
-		if(this.deliveredTime != null){
-			delivered = "  Delivered on: " + this.deliveredTime.get(GregorianCalendar.DAY_OF_MONTH) 
-					+ "-" + this.deliveredTime.get(GregorianCalendar.MONTH)
-					+ "-" + this.deliveredTime.get(GregorianCalendar.YEAR)
-					+ " " + this.deliveredTime.get(GregorianCalendar.HOUR_OF_DAY)
-					+ ":" + this.deliveredTime.get(GregorianCalendar.MINUTE)
-					+ ":" + this.deliveredTime.get(GregorianCalendar.SECOND);
+		if(this.getDeliveredTime() != null){
+			delivered = "  Delivered on: " + this.getDeliveredTime().get(GregorianCalendar.DAY_OF_MONTH) 
+					+ "-" + this.getDeliveredTime().get(GregorianCalendar.MONTH)
+					+ "-" + this.getDeliveredTime().get(GregorianCalendar.YEAR)
+					+ " " + this.getDeliveredTime().get(GregorianCalendar.HOUR_OF_DAY)
+					+ ":" + this.getDeliveredTime().get(GregorianCalendar.MINUTE)
+					+ ":" + this.getDeliveredTime().get(GregorianCalendar.SECOND);
 		}
 		return "CarOrder: " + this.orderId + "  User: " + this.getUserId() + ordered + delivered;
 		

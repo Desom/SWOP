@@ -219,7 +219,9 @@ public class SpecificationBatchSchedulingAlgorithm implements
 				}
 				for(int k = j + 1; k < orders.size(); k++){
 					if(orders.get(i).getConfiguration().equals(orders.get(k).getConfiguration())){
-						batchList.add(orders.get(i).getConfiguration());
+						if(!batchList.contains(orders.get(i).getConfiguration())){
+							batchList.add(orders.get(i).getConfiguration());
+						}
 					}
 				}
 			}

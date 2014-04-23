@@ -153,7 +153,7 @@ public class OrderManager {
 	private void addOrder(Order newOrder){
 		if(!this.getAllOrdersPerId().containsKey(newOrder.getUserId()))
 		{
-			this.getAllOrdersPerId().put(newOrder.getUserId(), new ArrayList<Order>());
+			ordersPerId.put(newOrder.getUserId(), new ArrayList<Order>());
 		}
 		this.getAllOrdersPerId().get(newOrder.getUserId()).add(newOrder);
 		this.getScheduler().updateSchedule();

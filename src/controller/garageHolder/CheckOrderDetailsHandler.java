@@ -41,7 +41,7 @@ public class CheckOrderDetailsHandler {
 			int answer = ui.askForCarOrder(pendingOrders, completedOrders, completionEstimates);
 			if (answer == 0)
 				return;
-
+			answer--;
 			// 3. The system shows the details of the order.
 			// 4. The user indicates he is finished viewing the details.
 			if (answer < pendingOrders.size())

@@ -34,7 +34,7 @@ public class StatisticsTest {
 		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
 		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
 		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
-		GregorianCalendar time = new GregorianCalendar(2015, 1, 1, 6, 0, 0);
+		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
 		CarModelCatalog catalog = new CarModelCatalog();
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);

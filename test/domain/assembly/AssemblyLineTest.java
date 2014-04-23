@@ -90,7 +90,7 @@ public class AssemblyLineTest {
 
 	
 	@Test
-	public void testAdvanceLineSucces() throws DoesNotExistException, CannotAdvanceException, InternalFailureException {
+	public void testAdvanceLineSucces() throws DoesNotExistException, CannotAdvanceException, InternalFailureException, NoOrdersToBeScheduledException {
 		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
 			processesBefore.add(w.getCarAssemblyProcess());

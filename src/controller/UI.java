@@ -241,7 +241,7 @@ public class UI implements UIInterface{
 			System.out.println(e.getMessage());
 		}
 		
-		//TODO laat hier de current time ( orderForm.getCurrentTime() ) zien, zodat je makkelijk een latere datum kan kiezen.
+		this.display("The current time is : " + this.convertCalendarToDate(orderForm.getCurrentTime()));
 		GregorianCalendar date = this.askForDate("Set a deadline.");
 		while(date.before(orderForm.getCurrentTime())){
 			this.display("This date is already in the past. Try again.");
@@ -310,7 +310,7 @@ public class UI implements UIInterface{
 		display("- Car model: " + pendingOrder.getConfiguration().getModel());
 		display("- Options: ");
 		display(pendingOrder.getConfiguration().getAllOptions().toArray());
-		display("Order time: " + convertGregorianCalendarToDate(pendingOrder.getOrderedTime()));
+		display("Order time: " + convertCalendarToDate(pendingOrder.getOrderedTime()));
 		display("Estimated deliver time: " + convertCalendarToDate(completionEstimate));
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
@@ -340,8 +340,8 @@ public class UI implements UIInterface{
 		display("Average delay of all cars that had a delay: " + view.getAverageDelay());
 		display("Median delay of all cars that had a delay: " + view.getMedianDelay());
 
-		display("Last delay : " + view.getLastDelay() + " occurred on " + convertGregorianCalendarToDate(view.getLastDelayDay()));
-		display("Second to last delay : " + view.getSecondToLastDelay() + " occurred on " + convertGregorianCalendarToDate(view.getSecondToLastDelayDay()));
+		display("Last delay : " + view.getLastDelay() + " occurred on " + convertCalendarToDate(view.getLastDelayDay()));
+		display("Second to last delay : " + view.getSecondToLastDelay() + " occurred on " + convertCalendarToDate(view.getSecondToLastDelayDay()));
 
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
@@ -352,11 +352,6 @@ public class UI implements UIInterface{
 		display("Internal Error: " + e.getMessage());
 	}
 
-	private String convertGregorianCalendarToDate(GregorianCalendar calendar){
-		if(calendar == null) return null;
-		return calendar.get(GregorianCalendar.DAY_OF_MONTH)+"-"+(calendar.get(GregorianCalendar.MONTH)+1)+"-"+calendar.get(Calendar.YEAR)+" "+calendar.get(GregorianCalendar.HOUR_OF_DAY)+"h"+calendar.get(GregorianCalendar.MINUTE);
-
-	}
 	private String convertCalendarToDate(Calendar calendar){
 		if(calendar == null) return null;
 		return calendar.get(Calendar.DAY_OF_MONTH)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.YEAR)+" "+calendar.get(Calendar.HOUR_OF_DAY)+"h"+calendar.get(Calendar.MINUTE);

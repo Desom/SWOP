@@ -19,8 +19,6 @@ import domain.policies.SingleTaskOrderTaskTypePolicy;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
-
-
 public class OrderManager {
 
 	private final Scheduler scheduler;
@@ -280,13 +278,23 @@ public class OrderManager {
 		return unfinished;
 	}
 
-	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, 
-			Configuration configuration,
-			GregorianCalendar deadline) {
-		//TODO volgende lijn is nutteloos?
-		//new SingleTaskOrder(highestCarOrderID, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
+	/**
+	 * Places a single task order associated with the given custom shop manager, configuration and deadline.
+	 * Also returns this single task order.
+	 * 
+	 * @param customShopManager
+	 * 		The custom shop manager who wants to place the order.
+	 * @param configuration
+	 * 		The configuration of the order.
+	 * @param deadline
+	 * 		The deadline of the order.
+	 * @return The new single task order that has been placed.
+	 */
+	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, Configuration configuration, GregorianCalendar deadline) {
+		if (this.scheduler.getCurrentTime().after(deadline)) {
+			throw new IllegalArgumentException("The deadline is in the past");
+		}
 		if(configuration.getPolicyChain() != this.getSingleTaskOrderPolicies()){
-			//TODO goede exception?
 			throw new IllegalArgumentException("The given Configuration doesn't have the right policy chain for a SingleTaskOrder.");
 		}
 		if(!configuration.isCompleted()){
@@ -296,7 +304,6 @@ public class OrderManager {
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
 		this.addOrder(newOrder);
 		return newOrder;
-
 	}
 	
 	/**

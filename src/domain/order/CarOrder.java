@@ -1,13 +1,9 @@
 package domain.order;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import domain.configuration.CarModel;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
 import domain.user.GarageHolder;
-import domain.user.User;
 
 public class CarOrder extends Order {
 	
@@ -42,8 +38,8 @@ public class CarOrder extends Order {
 	 * @param deliveredTime
 	 * 			The time when it was delivered; the car is already completed if deliveredCalendar is not null
 	 * @param isDelivered
+	 * 			True if the car has been delivered, otherwise false.
 	 */
-	//TODO docs
 	public CarOrder(int carOrderId, GarageHolder garageHolder, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deliveredTime, boolean isDelivered) {
 		super(carOrderId, garageHolder, configuration, orderedTime, deliveredTime, isDelivered);
 	}

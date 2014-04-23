@@ -94,7 +94,7 @@ public class OrderManager {
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Order> getOrders(GarageHolder garageHolder){
-		ArrayList<Order> ordersOfUser = this.getAllOrdersFromUser().get(garageHolder.getId());
+		ArrayList<Order> ordersOfUser = this.getAllOrdersFromUser().get(garageHolder);
 		if(ordersOfUser == null)
 			return new ArrayList<Order>();
 		else

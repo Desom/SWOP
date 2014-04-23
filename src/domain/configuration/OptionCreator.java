@@ -52,6 +52,7 @@ public class OptionCreator {
 		}
 		input.close();
 		input = new BufferedReader(new FileReader(dependancypath));
+		inputline = input.readLine();
 		while( inputline!=null){
 			processDependancyLine(inputline);
 			inputline = input.readLine();

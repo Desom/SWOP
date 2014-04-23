@@ -39,4 +39,8 @@ public class InvalidConfigurationException extends Exception{
 		}
 		return message;
 	}
+	
+	public ArrayList<String> getMessages(){
+		return messages;
+	}
 }

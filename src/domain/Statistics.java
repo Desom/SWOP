@@ -18,7 +18,7 @@ public class Statistics {
 	public Statistics(OrderManager om){
 		this.orderManager = om;
 	}
-	
+
 	/**
 	 * Get the median of the amount of cars that are produced per day.
 	 * 
@@ -33,7 +33,7 @@ public class Statistics {
 			return carsPerDay.get((int) Math.floor(carsPerDay.size()/2));
 		}
 	}
-	
+
 	/**
 	 * Get the average of the amount of cars that are produced per day.
 	 * 
@@ -51,7 +51,7 @@ public class Statistics {
 		average /= carsPerDay.size();
 		return average;
 	}
-	
+
 	/**
 	 * Get the median delay time of all cars ever made. (Only delays greater than zero are taken into account).
 	 * 
@@ -66,7 +66,7 @@ public class Statistics {
 			return delays.get((int) Math.floor(delays.size()/2));
 		}
 	}
-	
+
 	/**
 	 * Get the average delay time of all cars ever made. (Only delays greater than zero are taken into account).
 	 * 
@@ -84,7 +84,7 @@ public class Statistics {
 		average /= delays.size();
 		return average;
 	}
-	
+
 	/**
 	 * Get the amount of cars that were completed yesterday.
 	 * 
@@ -126,7 +126,7 @@ public class Statistics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Get the day of the last time there was a delay. Null if there was none
 	 * 
@@ -162,7 +162,7 @@ public class Statistics {
 		}
 		return -1;
 	}
-	
+
 	/**
 	 * Get the day of the second to last time there was a delay. null if there was none
 	 * 
@@ -182,7 +182,7 @@ public class Statistics {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Call this method to notify the statistics of changes. It will then gather information and update itself.
 	 */
@@ -190,30 +190,34 @@ public class Statistics {
 		ArrayList<Order> orderList = this.orderManager.getAllCompletedOrders();
 		dailyMapping = new LinkedHashMap<Integer,LinkedList<Order>>();
 		for(Order o : orderList){
-			// alleen orders toevoegen van de vorige dagen, niet vandaag
-			if(o.getDeliveredTime().get(GregorianCalendar.DAY_OF_YEAR) != this.orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR)){
-				LinkedList<Order> dayList = dailyMapping.get(o.getDeliveredTime().get(GregorianCalendar.DAY_OF_YEAR));
-				if(dayList == null){
-					dayList = new LinkedList<Order>();
-					dailyMapping.put(o.getDeliveredTime().get(GregorianCalendar.DAY_OF_YEAR), dayList);
-				}
-				dayList.add(o);
+			LinkedList<Order> dayList = dailyMapping.get(o.getDeliveredTime().get(GregorianCalendar.DAY_OF_YEAR));
+			if(dayList == null){
+				dayList = new LinkedList<Order>();
+				dailyMapping.put(o.getDeliveredTime().get(GregorianCalendar.DAY_OF_YEAR), dayList);
 			}
+			dayList.add(o);
 		}
 	}
-	
+
 	private LinkedList<Integer> getCarsPerDay(){
 		LinkedList<Integer> carsPerDay = new LinkedList<Integer>();
+		LinkedList<LinkedList<Order>> l = new LinkedList<LinkedList<Order>>();
 		for(LinkedList<Order> list : this.dailyMapping.values()){
+				l.add(list);
+		}
+		l.remove(this.dailyMapping.get(this.orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR)));
+		for(LinkedList<Order> list : l){
 			carsPerDay.add(list.size());
 		}
 		return carsPerDay;
 	}
-	
+
 	private LinkedList<Integer> getDelays(){
 		LinkedList<Integer> delays = new LinkedList<Integer>();
 		for(LinkedList<Order> list : this.dailyMapping.values()){
 			for(Order o : list){
+				if(o.getCarOrderID() == 83){
+				}
 				if(o.getDelay() > 0){
 					delays.add(o.getDelay());
 				}
@@ -221,7 +225,7 @@ public class Statistics {
 		}
 		return delays;
 	}
-	
+
 	private LinkedList<Order> sortOrdersOnTime(){
 		LinkedList<Order> sorted = new LinkedList<Order>();
 		for(LinkedList<Order> list : this.dailyMapping.values()){
@@ -234,13 +238,13 @@ public class Statistics {
 		Collections.sort(sorted, new OrderComparator());
 		return sorted;
 	}
-	
-	
+
+
 	class OrderComparator implements Comparator<Order> {
-	    @Override
-	    public int compare(Order a, Order b) {
-	       return a.getDeliveredTime().compareTo(b.getDeliveredTime());
-	    }
+		@Override
+		public int compare(Order a, Order b) {
+			return a.getDeliveredTime().compareTo(b.getDeliveredTime());
+		}
 	}
 
 }

@@ -60,7 +60,6 @@ public class StatisticsTest {
 			fullDefaultAdvance();
 		}
 		
-		
 		//advance laatste order met delay
 		
 		LinkedList<Workstation> wList = line.getAllWorkstations();
@@ -87,36 +86,43 @@ public class StatisticsTest {
 				w.completeTask(mechanic,500);
 			}
 		}
+		fullDefaultAdvance();
+		fullDefaultAdvance();
+		fullDefaultAdvance();
 	}
 	
 	@Test
 	public void testAverageCars(){
-		assertEquals(14, stat.getAverageCarsPerDay());
+		assertEquals(11, stat.getAverageCarsPerDay());
 	}
 	
 	@Test
 	public void testMedianCars(){
-		assertEquals(14, stat.getMedianCarsPerDay());
+		assertEquals(13, stat.getMedianCarsPerDay());
 	}
 	
 	@Test
 	public void amountOfCarsLastDays(){
-		assertEquals(14, stat.getAmountOfCars1DayAgo());
-		assertEquals(14, stat.getAmountOfCars2DaysAgo());
+		assertEquals(13, stat.getAmountOfCars1DayAgo());
+		assertEquals(13, stat.getAmountOfCars2DaysAgo());
 	}
 	
+	@Test
 	public void testAverageDelay(){
-		assertEquals(500, stat.getMedianDelay());
+		assertEquals(440, stat.getMedianDelay());
 	}
 	
+	@Test
 	public void testMedianDelay(){
-		assertEquals(500, stat.getAverageDelay());
+		assertEquals(440, stat.getAverageDelay());
 	}
 	
+	@Test
 	public void testLastDelay(){
-		assertEquals(500, stat.getLastDelay());
+		assertEquals(440, stat.getLastDelay());
 	}
 	
+	@Test
 	public void testSecondToLastDelay(){
 		assertEquals(-1, stat.getSecondToLastDelay());
 	}

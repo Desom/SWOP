@@ -109,10 +109,16 @@ public class OrderManager {
 	 * @return	The order that was made with the given OrderForm.
 	 */
 	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration){
+		if(configuration.getPolicyChain() != this.getCarOrderPolicies()){
+			//TODO goede exception?
+			throw new IllegalArgumentException("The given Configuration doesn't have the right policy chain for a CarOrder.");
+		}
+		if(!configuration.isCompleted()){
+			throw new IllegalArgumentException("The given Configuration is not yet completed.");
+		}
 		int carOrderId = this.getUniqueCarOrderId();
 		CarOrder newOrder = new CarOrder(carOrderId, user, configuration, this.getScheduler().getCurrentTime());
 		this.addOrder(newOrder);
-		//this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
 	}
 
@@ -170,8 +176,9 @@ public class OrderManager {
 
 
 	 //TODO docs
+	// moet toch gecloned worden niet?
 	private HashMap<Integer, ArrayList<Order>> getAllOrdersPerId() {
-		return ordersPerId;
+		return (HashMap<Integer, ArrayList<Order>>) ordersPerId.clone();
 	}
 
 	/**
@@ -225,7 +232,7 @@ public class OrderManager {
 	private void createCarOrderPolicy() {
 		ArrayList<OptionType> List = new ArrayList<OptionType>();
 		for(OptionType i: OptionType.values()){
-			if(i != OptionType.Airco || i != OptionType.Spoiler ){
+			if(i.isMandatory()){
 				List.add(i);
 			}
 		}
@@ -277,11 +284,18 @@ public class OrderManager {
 	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, 
 			Configuration configuration,
 			GregorianCalendar deadline) {
-		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
+		//TODO volgende lijn is nutteloos?
+		//new SingleTaskOrder(highestCarOrderID, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
+		if(configuration.getPolicyChain() != this.getSingleTaskOrderPolicies()){
+			//TODO goede exception?
+			throw new IllegalArgumentException("The given Configuration doesn't have the right policy chain for a SingleTaskOrder.");
+		}
+		if(!configuration.isCompleted()){
+			throw new IllegalArgumentException("The given Configuration is not yet completed.");
+		}
 		int carOrderId = this.getUniqueCarOrderId();
 		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
 		this.addOrder(newOrder);
-		//this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
 
 	}

@@ -58,7 +58,7 @@ public enum OptionType {
 	/**
 	 * Returns all option types that are available for single task orders.
 	 * 
-	 * @return all option types that are available for single task orders
+	 * @return all option types that are available for single task orders.
 	 */
 	public static ArrayList<OptionType> getAllSingleTaskPossibleTypes() {
 		ArrayList<OptionType> singleTaskPossibleTypes = new ArrayList<OptionType>();
@@ -66,5 +66,18 @@ public enum OptionType {
 			if (optionType.isSingleTaskPossible())
 				singleTaskPossibleTypes.add(optionType);
 		return singleTaskPossibleTypes;
+	}
+	
+	/**
+	 * Returns all option types that are mandatory for car orders.
+	 * 
+	 * @return all option types that are mandatory for car orders.
+	 */
+	public static ArrayList<OptionType> getAllMandatoryTypes(){
+		ArrayList<OptionType> mandatoryTypes = new ArrayList<OptionType>();
+		for (OptionType optionType : OptionType.values())
+			if (optionType.isMandatory())
+				mandatoryTypes.add(optionType);
+		return mandatoryTypes;
 	}
 }

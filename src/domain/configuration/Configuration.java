@@ -8,8 +8,8 @@ import domain.policies.Policy;
 public class Configuration {
 	
 	private final CarModel model;
-	private ArrayList<Option> options;
-	private Policy policyChain;
+	private final ArrayList<Option> options;
+	private final Policy policyChain;
 	private boolean isComplete;
 	
 	/**
@@ -23,6 +23,10 @@ public class Configuration {
 	public Configuration(CarModel model, Policy policyChain) {
 		this.model = model;
 		this.options = new ArrayList<Option>();
+		if(this.policyChain == null){
+			//exception docs
+			throw new IllegalArgumentException("A Configuration always needs a Policy so that it can check it's own correctness.");
+		}
 		this.policyChain = policyChain;
 		this.isComplete = false;
 	}
@@ -36,7 +40,7 @@ public class Configuration {
 	 */
 	public void complete() throws InvalidConfigurationException {
 		if(!this.isComplete){
-			this.policyChain.checkComplete(this);
+			this.checkCompletePolicies();
 			this.isComplete = true;
 		}
 	}
@@ -52,16 +56,17 @@ public class Configuration {
 	public void addOption(Option option) throws InvalidConfigurationException {
 		this.options.add(this.options.size(), option);
 		try {
-			this.policyChain.check(this);
+			this.checkPolicies();
 		} catch (InvalidConfigurationException e) {
 			this.options.remove(this.options.size()-1);
 			throw e;
 		}
 	}
+	
 	/**
 	 * Returns all options of this configuration.
 	 * 
-	 * @return the list of all options of this configuration
+	 * @return the list of all options of this configuration.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Option> getAllOptions(){
@@ -71,7 +76,7 @@ public class Configuration {
 	/**
 	 * Get the expected time that will be spent working per workstation taking into account the model of this configuration.
 	 * 
-	 * @return the expected time that will be spent working per workstation
+	 * @return the expected time that will be spent working per workstation.
 	 */
 	public int getExpectedWorkingTime(){
 		if(this.model == null){
@@ -85,7 +90,7 @@ public class Configuration {
 	 * 
 	 * @param optionType
 	 * 		The option type of which the corresponding options has to be returned.
-	 * @return the option that corresponds to the option type, but if there is none it returns null
+	 * @return The option that corresponds to the option type, but if there is none it returns null.
 	 */
 	public Option getOptionOfType(OptionType optionType){
 		for(Option option : this.options) {
@@ -98,7 +103,7 @@ public class Configuration {
 	/**
 	 * Returns the car model of this configuration. 
 	 * 
-	 * @return the car model of this configuration
+	 * @return The car model of this configuration.
 	 */
 	public CarModel getModel() {
 		return this.model;
@@ -143,7 +148,36 @@ public class Configuration {
 		return s;
 	}
 
+	/**
+	 * Checks if this configuration has already been successfully completed.
+	 */
 	public boolean isCompleted() {
 		return isComplete;
 	}
+	
+	/**
+	 * Returns the chain of policies used by this configuration.
+	 * 
+	 * @return the chain of policies used by this configuration.
+	 */
+	public Policy getPolicyChain(){
+		return this.policyChain;
+	}
+	
+	/**
+	 * TODO
+	 * @throws InvalidConfigurationException
+	 */
+	public void checkPolicies() throws InvalidConfigurationException {
+		this.policyChain.check(this);
+	}
+	
+	/**
+	 * TODO
+	 * @throws InvalidConfigurationException
+	 */
+	public void checkCompletePolicies() throws InvalidConfigurationException {
+		this.policyChain.checkComplete(this);
+	}
+	
 }

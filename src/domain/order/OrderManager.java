@@ -138,7 +138,6 @@ public class OrderManager {
 			return this.getScheduler().completionEstimate(order);
 		}
 	}
-
 	
 	/**
 	 * Adds a new order to the OrderManager. 
@@ -213,7 +212,7 @@ public class OrderManager {
 	 * 		The User whose orders are requested.
 	 * @param completed
 	 * 		The boolean indicating if the orders have to be completed.
-	 * @return The list of orders placed by the given user, completed or not completed.
+	 * @return The list of orders placed by the given user, completed or not completed (depending on the boolean).
 	 */
 	private ArrayList<Order> getOrdersWithStatus(GarageHolder user, boolean completed){
 		ArrayList<Order> orders = new ArrayList<Order>();
@@ -244,7 +243,7 @@ public class OrderManager {
 	}
 
 	/**
-	 * 
+	 * Creates the single task order policy chain.
 	 */
 	private void createSingleTaskPolicy() {
 		Policy pol1 = new SingleTaskOrderTaskTypePolicy(null);
@@ -252,35 +251,23 @@ public class OrderManager {
 		this.singleTaskPolicy = pol2;
 	}
 
-	 //TODO docs
+	 /**
+	  * Returns the car order policy chain.
+	  * 
+	  * @return the car order policy chain.
+	  */
 	public Policy getCarOrderPolicies(){
 		return this.carOrderPolicy;
-		 
 	 }
 	 
-	 //TODO docs
+	 /**
+	  * Returns the single task order policy chain.
+	  * 
+	  * @return the single task order policy chain.
+	  */
 	 public Policy getSingleTaskOrderPolicies(){
 			return this.singleTaskPolicy;
-			 
 		 }
-
-	 /**
-	  * Returns all the orders that are not completed yet.
-	  * 
-	  * @return ArrayList of incomplete orders.
-	  */
-	public ArrayList<Order> getAllUnfinishedOrders() {
-		ArrayList<Order> unfinished = new ArrayList<Order>();
-		
-		for(ArrayList<Order> carOrders : this.ordersPerUser.values()){
-			for(Order order : carOrders){
-				if(!order.isCompleted()){
-					unfinished.add(order);
-				}
-			}
-		}
-		return unfinished;
-	}
 
 	/**
 	 * Places a single task order associated with the given custom shop manager, configuration and deadline.
@@ -311,9 +298,27 @@ public class OrderManager {
 	}
 	
 	/**
+	  * Returns all the orders that are not completed yet.
+	  * 
+	  * @return The list of all incomplete orders.
+	  */
+	public ArrayList<Order> getAllUnfinishedOrders() {
+		ArrayList<Order> unfinished = new ArrayList<Order>();
+		
+		for(ArrayList<Order> carOrders : this.ordersPerUser.values()){
+			for(Order order : carOrders){
+				if(!order.isCompleted()){
+					unfinished.add(order);
+				}
+			}
+		}
+		return unfinished;
+	}
+	
+	/**
 	 * Returns a list of all completed orders for all users.
 	 * 
-	 * @return an ArrayList of all completed orders.
+	 * @return An ArrayList of all completed orders.
 	 */
 	public ArrayList<Order> getAllCompletedOrders(){
 		ArrayList<Order> completed = new ArrayList<Order>();

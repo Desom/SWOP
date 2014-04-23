@@ -42,13 +42,17 @@ public class AdaptSchedulingAlgorithmHandler {
 			chosenAlgorithm = ((EfficiencySchedulingAlgorithm) chosenAlgorithm).getInnerAlgorithm();
 		}
 
-		if(possibilities[answer] instanceof SpecificationBatchSchedulingAlgorithm){
+		if(chosenAlgorithm instanceof SpecificationBatchSchedulingAlgorithm){
 			SpecificationBatchSchedulingAlgorithm specBatch = (SpecificationBatchSchedulingAlgorithm) possibilities[answer];
 //			3. (a) The user indicates he wants to use the Specication Batch algorithm.
 //			4. The system shows a list of the sets of car options for which more
 //			than 3 orders are pending in the production queue.
 //			5. The user selects one of these sets for batch processing
 			ArrayList<Configuration> possibleBatch = specBatch.searchForBatchConfiguration(assemblyLineScheduler);
+			if(possibleBatch.isEmpty()){
+				ui.display("There are no configurations that can be batched.");
+				return;
+			}
 			int answer2 = ui.askWithPossibilities("Choose a configuration that needs to be produced in batch.", possibleBatch.toArray());
 			
 			specBatch.setConfiguration(possibleBatch.get(answer2));

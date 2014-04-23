@@ -129,7 +129,7 @@ public class CarAssemblyProcess {
 	}
 	
 	/**
-	 * This method filters all workstations not usefull for this assembly process from
+	 * This method filters all workstations not useful for this assembly process from
 	 * 		 the given list and returns the remainder.
 	 * 
 	 * @param stations list of all workstations
@@ -160,8 +160,6 @@ public class CarAssemblyProcess {
 	/**
 	 * Sets the time the car of this order was delivered.
 	 * 
-	 * @param	user
-	 * 			The user that has ordered the delivery.
 	 * @param 	deliveredTime
 	 * 			The time the car of this order was delivered.
 	 */

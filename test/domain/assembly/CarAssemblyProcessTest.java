@@ -84,6 +84,22 @@ public class CarAssemblyProcessTest {
 		}
 	}
 	
+	@Test
+	public void testFilterWorkstation(){
+		
+	}
+	
+	@Test
+	public void testTimeWorked(){
+		assertEquals(0, process.getTotalTimeSpend());
+		process.addTimeWorked(10);
+		assertEquals(10, process.getTotalTimeSpend());
+		process.addTimeWorked(1000);
+		assertEquals(1010, process.getTotalTimeSpend());
+		process.addTimeWorked(10);
+		assertEquals(1020, process.getTotalTimeSpend());
+	}
+	
 	
 	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
 		ArrayList<OptionType> List = new ArrayList<OptionType>();

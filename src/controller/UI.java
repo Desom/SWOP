@@ -71,6 +71,7 @@ public class UI implements UIInterface{
 		GregorianCalendar date = new GregorianCalendar(year, month, 1);
 		int numberOfDays = date.getActualMaximum(GregorianCalendar.DAY_OF_MONTH);
 		date.set(GregorianCalendar.DAY_OF_MONTH, this.askForInteger("Enter the day: ", 1, numberOfDays));
+		date.set(GregorianCalendar.HOUR_OF_DAY, this.askForInteger("Enter the hour of the day: ", 1, 23));
 		return date;
 	}
 

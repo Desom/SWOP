@@ -15,6 +15,9 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 
 	private Comparator<Order> comparator;
 
+	/**
+	 * Constructor of FIFOSchedulingAlgorithm.
+	 */
 	public FIFOSchedulingAlgorithm() {
 		comparator = new Comparator<Order>(){
 			@Override
@@ -23,16 +26,34 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 			}
 		};
 	}
-
-
+	
+	/**
+	 * Schedules the given list of orders and returns it.
+	 * 
+	 * @param orderList
+	 * 		List of orders to be scheduled.
+	 * @param assemblyLineScheduler
+	 * 		The scheduler of the assembly line.
+	 * @return A scheduled version of the given list of orders.
+	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList,
-			AssemblyLineScheduler assemblyLineScheduler) {
-		//TODO hier mss de gekregen list eerst kopieren?
-		Collections.sort(orderList, this.comparator);
-		return orderList;
+	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList, AssemblyLineScheduler assemblyLineScheduler) {
+		ArrayList<Order> orderedList = (ArrayList<Order>) orderList.clone();
+		Collections.sort(orderedList, this.comparator);
+		return orderedList;
 	}
 
+	/**
+	 * Schedules the given list of orders and returns a scheduled list of ScheduledOrder objects.
+	 * 
+	 * @param orderList
+	 * 		List of orders to be scheduled.
+	 * @param allTasksCompletedTime
+	 * 		The time by which all tasks have to be completed.
+	 * @param assemblyLineScheduler
+	 * @return A scheduled list of ScheduledOrder objects.
+	 */
 	@Override
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
 			ArrayList<Order> orderList, 
@@ -87,8 +108,6 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 		return scheduledList;
 	}
 
-
-
 	/**
 	 * Checks if the given list of Orders only contains null.
 	 * 
@@ -97,7 +116,6 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	 * @return True if assembly only contains null, false otherwise.
 	 */
 	private boolean isEmptyAssembly(LinkedList<Order> assembly) {
-		// TODO Auto-generated method stub
 		for(Order order : assembly){
 			if(order != null){
 				return false;
@@ -132,11 +150,12 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	 * 		The time it currently is.
 	 * @param minutes
 	 * 		The amount of minutes for which will be checked.
+	 * @param assemblyLineScheduler
+	 * 		The assembly line scheduler used to check the real end of day time (overtime taken into account).
 	 * @return True if there are enough minutes left after the given calendar before the end of the workday, false otherwise.
 	 */
 	private boolean checkEnoughTimeLeftFor(
 			GregorianCalendar currentTime, int minutes, AssemblyLineScheduler assemblyLineScheduler) {
-		//TODO hier moet ergens overtime worden behandeld...
 		GregorianCalendar endOfDay;
 		if(this.sameDayAsScheduler(currentTime, assemblyLineScheduler)){
 			endOfDay = assemblyLineScheduler.getRealEndOfDay();
@@ -156,9 +175,16 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 		return time.before(endOfDay);
 	}
 
-
-	private boolean sameDayAsScheduler(GregorianCalendar currentTime,
-			AssemblyLineScheduler assemblyLineScheduler) {
+	/**
+	 * Checks whether the given current time is on the same work day as the assembly line scheduler's current time.
+	 * 
+	 * @param currentTime
+	 * 		The current time to be checked.
+	 * @param assemblyLineScheduler
+	 * 		The assembly line scheduler to be checked.
+	 * @return True if the given current time is on the same work day as the assembly line scheduler's current time, otherwise false.
+	 */
+	private boolean sameDayAsScheduler(GregorianCalendar currentTime, AssemblyLineScheduler assemblyLineScheduler) {
 		GregorianCalendar schedulerTime = assemblyLineScheduler.getCurrentTime();
 		if(schedulerTime.get(GregorianCalendar.YEAR) == currentTime.get(GregorianCalendar.YEAR)
 				&& schedulerTime.get(GregorianCalendar.MONTH) == currentTime.get(GregorianCalendar.MONTH)

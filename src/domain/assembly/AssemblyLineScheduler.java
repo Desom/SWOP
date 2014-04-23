@@ -166,6 +166,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	private ArrayList<ScheduledOrder> getSchedule(GregorianCalendar futureTime) throws NoOrdersToBeScheduledException {
 		if(this.outDated 
 				|| this.schedule == null 
+				|| this.schedule.size() == 0
 				|| !futureTime.equals(this.schedule.get(0).getScheduledTime())){
 			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
 			this.outDated = false;

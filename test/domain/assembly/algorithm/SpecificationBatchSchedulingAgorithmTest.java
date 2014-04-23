@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.Statistics;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
@@ -19,6 +20,7 @@ import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.order.CarOrder;
 import domain.order.Order;
+import domain.order.OrderManager;
 import domain.policies.CompletionPolicy;
 import domain.policies.InvalidConfigurationException;
 import domain.user.GarageHolder;
@@ -29,6 +31,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	GarageHolder garageHolder;
 	CarModelCatalog cmc;
 	AssemblyLineScheduler als;
+	AssemblyLine line;
 	Configuration specified = null;
 	
 	@Before
@@ -38,11 +41,14 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		this.algorithm = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		this.algorithm.setConfiguration(specified);
 		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
+		list.add(new FIFOSchedulingAlgorithm());
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
+		this.als.setSchedulingAlgorithm(this.algorithm);
 		@SuppressWarnings("unused")
 		AssemblyLine assembly = new AssemblyLine(als, null);
+
 	}
 	
 	@Test
@@ -176,6 +182,23 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		orderList.add(new CarOrder(11, garageHolder, config3, time));
 		
 		return orderList;
+	}
+	
+	@Test
+	public void testSearchConfiguration() throws IOException, CarModelCatalogException, InvalidConfigurationException{
+		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
+		SpecificationBatchSchedulingAlgorithm algo = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
+		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
+		possibleAlgorithms.add(algo);
+		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
+		CarModelCatalog catalog = new CarModelCatalog();
+		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+		scheduler.setSchedulingAlgorithm(algo);
+		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
+		Statistics stat = new Statistics(orderManager);
+		AssemblyLine line = new AssemblyLine(scheduler, stat);
+		
+		assertEquals(algo.searchForBatchConfiguration(scheduler).size(), 1);
 	}
 	
 	public void makeConfiguration() throws InvalidConfigurationException{

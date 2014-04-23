@@ -96,11 +96,6 @@ public class AssemblyLine {
 				workstationNext.clear();;
 				Workstation workstationPrev = selectWorkstationById(i-1);
 				workstationNext.setCarAssemblyProcess(workstationPrev.getCarAssemblyProcess());
-				if(workstationNext.getCarAssemblyProcess() != null){
-					for(AssemblyTask t : workstationNext.compatibleWith(workstationNext.getCarAssemblyProcess())){
-						workstationNext.addAssemblyTask(t);
-					}
-				}
 			}
 
 			//voeg nieuwe car toe.

@@ -119,6 +119,26 @@ public class PolicyTest {
 	}
 	
 	@Test(expected = InvalidConfigurationException.class)
+	public void testFailCompatibility2() throws InvalidConfigurationException {
+		Configuration configuration = new Configuration(cmc.getAllModels().get(0), new CompletionPolicy(null, new ArrayList<OptionType>()));
+		Policy STpol = new ModelCompatibilityPolicy(null);
+		// Model C
+		for(Option option : cmc.getAllOptions()){
+			if(option.getDescription().equals("sport")
+					||option.getDescription().equals("blue")
+					||option.getDescription().equals("performance 2.5l v6")
+					||option.getDescription().equals("6 speed manual")
+					||option.getDescription().equals("leather white")
+					||option.getDescription().equals("sports")
+					||option.getDescription().equals("low")
+					){
+				configuration.addOption(option);
+			}
+		}
+		STpol.checkComplete(configuration);;
+	}
+	
+	@Test(expected = InvalidConfigurationException.class)
 	public void testConflict() throws InvalidConfigurationException {
 		Configuration configuration = new Configuration(cmc.getAllModels().get(0),policyChainCarOrders);
 		// Model C
@@ -136,6 +156,27 @@ public class PolicyTest {
 			}
 		}
 		configuration.complete();
+	}
+	
+	@Test(expected = InvalidConfigurationException.class)
+	public void testConflict2() throws InvalidConfigurationException {
+		// Model C
+		Configuration configuration = new Configuration(cmc.getAllModels().get(0), new CompletionPolicy(null, new ArrayList<OptionType>()));
+		Policy STpol = new ConflictPolicy(null);
+		for(Option option : cmc.getAllOptions()){
+			if(option.getDescription().equals("sport")
+					||option.getDescription().equals("black")
+					||option.getDescription().equals("white")
+					||option.getDescription().equals("performance 2.5l v6")
+					||option.getDescription().equals("6 speed manual")
+					||option.getDescription().equals("leather white")
+					||option.getDescription().equals("sports")
+					||option.getDescription().equals("low")
+					){
+				configuration.addOption(option);
+			}
+		}
+		STpol.checkComplete(configuration);
 	}
 
 	
@@ -227,6 +268,18 @@ public class PolicyTest {
 		}
 		configuration.complete();
 	}
+	
+	@Test(expected = InvalidConfigurationException.class)
+	public void testinvalidSTOrderTaskType2() throws InvalidConfigurationException {
+		Configuration configuration = new Configuration(null, new CompletionPolicy(null, new ArrayList<OptionType>()));
+		Policy STpol = new SingleTaskOrderTaskTypePolicy(null);
+		for(Option option : cmc.getAllOptions()){
+			if(option.getDescription().equals("sedan")){
+				configuration.addOption(option);
+			}
+		}
+		STpol.checkComplete(configuration);;
+	}
 
 
 	@Test(expected = InvalidConfigurationException.class)
@@ -238,6 +291,18 @@ public class PolicyTest {
 			}
 		}
 		configuration.complete();
+	}
+	
+	@Test(expected = InvalidConfigurationException.class)
+	public void testinvalidSTNumberOfTasks2() throws InvalidConfigurationException {
+		Configuration configuration = new Configuration(null, new CompletionPolicy(null, new ArrayList<OptionType>()));
+		Policy STpol = new SingleTaskOrderNumbersOfTasksPolicy(null);
+		for(Option option : cmc.getAllOptions()){
+			if(option.getDescription().equals("black") || option.getDescription().equals("vinyl grey")){
+				configuration.addOption(option);
+			}
+		}
+		STpol.checkComplete(configuration);;
 	}
 
 }

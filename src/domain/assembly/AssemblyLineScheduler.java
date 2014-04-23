@@ -33,7 +33,10 @@ public class AssemblyLineScheduler implements Scheduler{
 	
 	//TODO docs
 	public GregorianCalendar completionEstimate(Order order){
-		//TODO estimated time terug geven voor Orders die al op de assemblyLine staan?
+		if(this.getAssemblyLine() == null){
+			throw new InternalFailureException("An AssemblyLineScheduler doesn't have an AssemblyLine which is necessary for completionEstimate.");
+		}
+		
 		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, time);
@@ -100,14 +103,24 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.addCurrentTime(minutes);
 		GregorianCalendar now = this.getCurrentTime();
 		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(now);
-		if(scheduledOrders.get(0).getScheduledTime().equals(this.getCurrentTime())){
-			return scheduledOrders.get(0).getScheduledOrder();
+		int i = 0;
+		while(this.getAssemblyLine() != null 
+				&& this.getAssemblyLine().isEmpty() 
+				&& scheduledOrders.get(i).getScheduledOrder() == null){
+			i++;
+			if(i >= scheduledOrders.size()){
+				throw new NoOrdersToBeScheduledException();
+			}
 		}
-		if(this.getAssemblyLine().isEmpty() && scheduledOrders.get(0).getScheduledTime().get(GregorianCalendar.HOUR_OF_DAY) == AssemblyLineScheduler.BEGIN_OF_DAY){
+		if(scheduledOrders.get(i).getScheduledTime().equals(this.getCurrentTime())){
+			return scheduledOrders.get(i).getScheduledOrder();
+		}
+		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty() && scheduledOrders.get(i).getScheduledTime().get(GregorianCalendar.HOUR_OF_DAY) == AssemblyLineScheduler.BEGIN_OF_DAY){
 			this.startNewDay();
-			return scheduledOrders.get(0).getScheduledOrder();
+			return scheduledOrders.get(i).getScheduledOrder();
 		}
-		return null;
+		
+		throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
 		
 	}
 
@@ -125,10 +138,24 @@ public class AssemblyLineScheduler implements Scheduler{
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, minutes);
 		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(futureTime);
-		if(scheduledOrders.get(0).getScheduledTime().equals(futureTime)){
-			return scheduledOrders.get(0).getScheduledOrder();
+		int i = 0;
+		while(this.getAssemblyLine() != null 
+				&& this.getAssemblyLine().isEmpty() 
+				&& scheduledOrders.get(i).getScheduledOrder() == null){
+			i++;
+			if(i >= scheduledOrders.size()){
+				throw new NoOrdersToBeScheduledException();
+			}
 		}
-		return null;
+		if(scheduledOrders.get(i).getScheduledTime().equals(futureTime)){
+			return scheduledOrders.get(i).getScheduledOrder();
+		}
+		if(this.getAssemblyLine().isEmpty() && scheduledOrders.get(i).getScheduledTime().get(GregorianCalendar.HOUR_OF_DAY) == AssemblyLineScheduler.BEGIN_OF_DAY){
+			return scheduledOrders.get(i).getScheduledOrder();
+		}
+		
+		throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
+		
 	}
 
 	/**
@@ -151,11 +178,9 @@ public class AssemblyLineScheduler implements Scheduler{
 	
 	public void updateSchedule(){
 		this.outDated = true;
-		if(this.getAssemblyLine().isEmpty()){
+		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty()){
 			try{
-				if(this.getAssemblyLine() != null){
-					this.getAssemblyLine().advanceLine();
-				}
+				this.getAssemblyLine().advanceLine();
 			}
 			catch(CannotAdvanceException e){
 				throw new InternalFailureException("The AssemblyLine couldn't advance even though it was empty.");

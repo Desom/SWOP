@@ -105,7 +105,7 @@ public class AssemblyLine {
 			}
 
 			Workstation workstation1 = selectWorkstationById(1);
-			workstation1.clear();;
+			workstation1.clear();
 			workstation1.setCarAssemblyProcess(newCar);
 			//TODO moet dit niet automatisch gebeuren wanneer je workstation een CarAssemblyProcess geeft?
 			if(newCar != null){

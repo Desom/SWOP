@@ -20,8 +20,8 @@ public class CheckOrderDetailsHandler {
 			// with estimated completion times, and the second part shows a history
 			// of completed orders, sorted most recent first.
 			OrderManager orderManager = company.getOrderManager();
-			ArrayList<Order> pendingOrders = orderManager.getPendingOrders(garageHolder);
-			ArrayList<Order> completedOrders = orderManager.getCompletedOrders(garageHolder);
+			ArrayList<Order> pendingOrders = orderManager.getAllUnfinishedOrders();
+			ArrayList<Order> completedOrders = orderManager.getAllCompletedOrders();
 
 			Comparator<Order> comparator = new Comparator<Order>() {
 				@Override

@@ -8,28 +8,33 @@ import domain.configuration.OptionType;
 public class AssemblyStatusView {
 
 	private String header;
-	//private returnType status;
 	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 	
+	/**
+	 * Constructor of AssemblyStatusView.
+	 * @param workstations
+	 * 		The workstations to be added to the view.
+	 * @param header
+	 * 		The header of this view.
+	 */
 	public AssemblyStatusView(ArrayList<Workstation> workstations, String header){
 		this.header = header;
-		//this.status = status;
 		this.workstations = workstations;
 	}
 
 	/**
+	 * Returns all id's of the workstations.
 	 * 
-	 * @return an array of integers representing the ID's of the workstations
+	 * @return all id's of the workstations
 	 */
-	public int[] getAllWorkstationIds(){
-		int[] IDs = new int[workstations.size()];
-		int i = 0;
-		for(Workstation w : workstations){
-			IDs[i] = w.getId();
-			i++;
+	public ArrayList<Integer> getAllWorkstationIds(){
+		ArrayList<Integer> ids = new ArrayList<Integer>();
+		for(Workstation workstation : workstations){
+			ids.add(workstation.getId());
 		}
-		return IDs;
+		return ids;
 	}
+	
 	/**
 	 * TODO + is -1 terug sturen goed?
 	 * @param workstationId

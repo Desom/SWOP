@@ -24,7 +24,7 @@ public class Workstation {
 	 * @param id
 	 * 		The id of this workstation
 	 * @param taskTypes
-	 * 		The task types that can be handled at this workstation
+	 * 		The task types that can be handled at this workstation.
 	 */
 	public Workstation(AssemblyLine assemblyLine, int id, ArrayList<OptionType> taskTypes) {
 		this.assemblyLine = assemblyLine;
@@ -37,7 +37,8 @@ public class Workstation {
 
 
 	/**
-	 * Clears this workstation of tasks and the active task and resets the time spend for the current car. Used by the AssemblyLine object in advanceLine().
+	 * Clears this workstation of tasks and the active task and resets the time spend for the current car.
+	 * Used by the AssemblyLine object in advanceLine().
 	 */
 	protected void clear() {
 		this.allTasks = new ArrayList<AssemblyTask>();
@@ -106,7 +107,7 @@ public class Workstation {
 	 */
 	public void removeCarMechanic() {
 		if(activeTask != null){
-			throw new IllegalStateException("A CarMechanic cannot leave when there is an active ");
+			throw new IllegalStateException("A CarMechanic cannot leave when there is an active");
 		}
 		this.carMechanic = null;
 	}
@@ -128,6 +129,7 @@ public class Workstation {
 
 	/**
 	 * Selects the given task to be the active task of this workstation.
+	 * 
 	 * @param task
 	 * 		The task that the user wants to work on.
 	 * @throws IllegalStateException
@@ -191,8 +193,9 @@ public class Workstation {
 
 	/**
 	 * Adds time to the time already spent on the current assembly process.
+	 * 
 	 * @param timeSpend
-	 * 		time to be added to the time alreadyt spent on the current assembly process
+	 * 		The time to be added to the time already spent on the current assembly process.
 	 */
 	private void addTimeSpend(int timeSpend) {
 		this.timeSpend += timeSpend;

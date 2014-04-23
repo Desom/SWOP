@@ -1,15 +1,23 @@
 package domain.assembly;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 
 public class CannotAdvanceException extends Exception{
 
-
 	private static final long serialVersionUID = 1L;
-	private LinkedList<Workstation> blockingWorkstations = new LinkedList<Workstation>();
+	private ArrayList<Workstation> blockingWorkstations = new ArrayList<Workstation>();
 	
-	public void addBlockingWorkstation(Workstation w){
-		blockingWorkstations.add(w);
+	public CannotAdvanceException(ArrayList<Workstation> blockingWorkstations) {
+		this.blockingWorkstations = blockingWorkstations;
+	}
+	
+	/**
+	 * Adds a workstation to the list of blocking workstations.
+	 * 
+	 * @param workstation
+	 */
+	public void addBlockingWorkstation(Workstation workstation){
+		blockingWorkstations.add(workstation);
 	}
 	
 	@Override
@@ -20,5 +28,4 @@ public class CannotAdvanceException extends Exception{
 		}
 		return message;
 	}
-
 }

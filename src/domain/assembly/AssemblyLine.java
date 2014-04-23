@@ -42,7 +42,27 @@ public class AssemblyLine {
 	public AssemblyLineScheduler getAssemblyLineScheduler() {
 		return assemblyLineScheduler;
 	}
+	
+	/**
+	 * Returns whether this assembly line can advance or not.
+	 * 
+	 * @return true if this assembly line can advance, otherwise false.
+	 */
+	public boolean canAdvanceLine() {
+		for(Workstation workstation : getAllWorkstations())
+			if(!workstation.hasAllTasksCompleted())
+				return false;
+		return true;
+	}
 
+	private ArrayList<Workstation> getBlockingWorkstations() {
+		ArrayList<Workstation> blockingWorkstations = new ArrayList<Workstation>();
+		for (Workstation workstation : this.getAllWorkstations())
+			if (!workstation.hasAllTasksCompleted())
+				blockingWorkstations.add(workstation);
+		return blockingWorkstations;
+	}
+	
 	/**
 	 * 
 	 * @throws DoesNotExistException
@@ -51,17 +71,9 @@ public class AssemblyLine {
 	 */
 	public void advanceLine() throws CannotAdvanceException {
 		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
-		boolean isReady = true;
-		CannotAdvanceException cannotAdvance = new CannotAdvanceException();
-		for(Workstation w : getAllWorkstations()){
-			if(!w.hasAllTasksCompleted()){
-				isReady = false;
-				cannotAdvance.addBlockingWorkstation(w);
-			}
-		}
-		if(!isReady){
-			throw cannotAdvance;
-		}
+		if (!this.canAdvanceLine())
+			throw new CannotAdvanceException(this.getBlockingWorkstations());
+		
 		try{
 			// move huidige cars 1 plek
 			//neem CarOrder van WorkStation 3

@@ -14,12 +14,13 @@ public class CarAssemblyProcess {
 	private int minutesWorked = 0;
 
 	/**
-	 * The constructor for the CarAssemblyProcess class
+	 * The constructor of CarAssemblyProcess.
+	 * Is by default not completed.
 	 * 
 	 * @param order 
-	 * 				The order related to this assembly process
+	 * 			The order related to this assembly process.
 	 * @param options 
-	 * 				The Options that are to be converted into assemblyTasks
+	 * 			The options that are to be converted into assembly tasks.
 	 */
 	public CarAssemblyProcess(Order order, ArrayList<Option> options){
 		this(order, options, false);
@@ -29,11 +30,11 @@ public class CarAssemblyProcess {
 	 * The constructor for the CarAssemblyProcess class
 	 * 
 	 * @param order 
-	 * 				The order related to this assembly process
+	 * 			The order related to this assembly process.
 	 * @param options 
-	 * 				The Options that are to be converted into assemblyTasks
+	 * 			The options that are to be converted into assembly tasks.
 	 * @param isCompleted 
-	 * 				Indicate if the CarAssemblyProcess is already completed
+	 * 			Indicates if the car assembly process is already completed.
 	 */
 	public CarAssemblyProcess(Order order, ArrayList<Option> options, boolean isCompleted){
 		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
@@ -49,12 +50,12 @@ public class CarAssemblyProcess {
 	/**
 	 * Get the tasks of this AssemblyProcess that are compatible with the given workstation.
 	 * 
-	 * @param station
-	 * 			The workstation to check against.
-	 * @return An ArrayList of AssemblyTasks compatible with the given Workstation.
+	 * @param workstation
+	 * 		The workstation to check against.
+	 * @return all assembly tasks on which can be worked on in the given workstation.
 	 */
-	protected ArrayList<AssemblyTask> compatibleWith(Workstation station){
-		ArrayList<OptionType> acceptedTypes = station.getTaskTypes();
+	protected ArrayList<AssemblyTask> compatibleWith(Workstation workstation){
+		ArrayList<OptionType> acceptedTypes = workstation.getTaskTypes();
 		ArrayList<AssemblyTask> compatibleTypes = new ArrayList<AssemblyTask>();
 		for(AssemblyTask t : this.tasks){
 			if(acceptedTypes.contains(t.getType())){

@@ -4,6 +4,10 @@ import java.util.ArrayList;
 
 import domain.configuration.OptionType;
 
+/**
+ * In this class can't exist any methods with public visibility which can harm the integrity of its objects.
+ * Objects of this class may be given to the UI.
+ */
 public class AssemblyTask {
 	
 	private ArrayList<String> actions;

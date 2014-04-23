@@ -67,13 +67,13 @@ public class CarModelTest {
 			new CarModel(null,a);
 			fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals(e.getMessage(),"null in non null value of Model");
+			assertEquals("null in non null value of Model",e.getMessage());
 		}
 		try {
 			new CarModel(Name,null);
 			fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals(e.getMessage(),"null in non null value of Model");
+			assertEquals("null in non null value of Model",e.getMessage());
 		}
 	
 		ArrayList<Option> fake;
@@ -81,9 +81,9 @@ public class CarModelTest {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(A);
 			new CarModel(Name,fake);
-			fail();
+			
 		} catch (CarModelCatalogException e) {
-			assertEquals(e.getMessage(),"Missing type: Airco");
+			fail();
 		}
 		try {
 			fake = ((ArrayList<Option>) a.clone());
@@ -129,9 +129,8 @@ public class CarModelTest {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(Sp);
 			new CarModel(Name,fake);
-			fail();
 		} catch (CarModelCatalogException e) {
-			assertEquals(e.getMessage(),"Missing type: Spoiler");
+			fail();
 		}
 		
 	}

@@ -125,31 +125,5 @@ public class CarOrderTest {
 		}
 	}
 
-	@Test
-	public void testSetDeliveredTime() {
-		GregorianCalendar now4 = (GregorianCalendar) now.clone();
-		now3.add(GregorianCalendar.HOUR_OF_DAY, 24);
-		
-		
-		try {
-			carOrder1.setDeliveredTime(now4);
-			fail();
-		} catch (IllegalStateException e) {
-			assertEquals("Can't set deliveredTime because this CarOrder is not completed yet.",e.getMessage());
-		}
-		try {
-			carOrder2.setDeliveredTime(now4);
-		} catch (IllegalStateException e) {
-			assertEquals("Can't set deliveredTime because this CarOrder is not completed yet.",e.getMessage());
-		}
-		
-		try {
-			carOrder.setDeliveredTime(now4);
-		} catch (IllegalStateException e) {
-			assertEquals("DeliveredTime already set",e.getMessage());
-		}
-		
-	}
-
 }
 

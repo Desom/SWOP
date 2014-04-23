@@ -22,7 +22,7 @@ public class CarModel {
 	 */
 	public CarModel(String name, ArrayList<Option> possibleOptions, int expectedTaskTime) throws CarModelCatalogException{
 		if(name == null || possibleOptions == null)
-			throw new CarModelCatalogException("Null in non null value of Model");
+			throw new CarModelCatalogException("null in non null value of Model");
 
 		for(OptionType type:OptionType.values()){
 			if(type.isMandatory() && !existstype(type, possibleOptions))

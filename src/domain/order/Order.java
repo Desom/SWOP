@@ -154,6 +154,7 @@ public abstract class Order {
 				+ ":" + this.orderedTime.get(GregorianCalendar.MINUTE)
 				+ ":" + this.orderedTime.get(GregorianCalendar.SECOND);
 		String delivered ="";
+		try{
 		if(this.getDeliveredTime() != null){
 			delivered = "  Delivered on: " + this.getDeliveredTime().get(GregorianCalendar.DAY_OF_MONTH) 
 					+ "-" + this.getDeliveredTime().get(GregorianCalendar.MONTH)
@@ -162,6 +163,9 @@ public abstract class Order {
 					+ ":" + this.getDeliveredTime().get(GregorianCalendar.MINUTE)
 					+ ":" + this.getDeliveredTime().get(GregorianCalendar.SECOND);
 		}
+		}catch(IllegalStateException e){
+			
+		};
 		return "CarOrder: " + this.orderId + "  User: " + this.getUserId() + ordered + delivered;
 		
 	}

@@ -11,6 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.Scheduler;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
@@ -59,6 +60,7 @@ public class OrderManagerTest {
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 		CarModelCatalog catalog = new CarModelCatalog();
 		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+		AssemblyLine als = new AssemblyLine((AssemblyLineScheduler) scheduler, null);
 		orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 	}
 
@@ -107,16 +109,14 @@ public class OrderManagerTest {
 				List.add(i);
 			}
 		}
-		Policy pol1 = new CompletionPolicy(null,List);
-		Policy pol2 = new ConflictPolicy(pol1);
-		Policy pol3 = new DependencyPolicy(pol2);
-		Policy pol4 = new ModelCompatibilityPolicy(pol3);
-		Policy carOrderPolicy= pol4;
+		
+		Policy pol4= this.orderManager.getCarOrderPolicies();
 		
 		Configuration config = new Configuration(model, pol4);
 		for(Option option: options){			
 			config.addOption(option);
 		}
+		config.complete();
 		orderManager.placeCarOrder(user3, config);
 		ArrayList<Order> orders = orderManager.getOrders(user3);
 		assertEquals(84,orders.get(0).getCarOrderID());

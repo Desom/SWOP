@@ -13,6 +13,7 @@ import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.order.CarOrder;
 import domain.order.Order;
+import domain.order.SingleTaskOrder;
 import domain.policies.InvalidConfigurationException;
 
 public class UI implements UIInterface{
@@ -268,12 +269,24 @@ public class UI implements UIInterface{
 		int index = 1;
 		display("Your pending orders:");
 		for(int i =0; i< Math.max(pendingOrders.size(), completionEstimates.size());i++){
-			display(index + ". " + pendingOrders.get(i).getCarOrderID() + " will be delivered around:" + completionEstimates.get(i).get(Calendar.DAY_OF_WEEK) + " " + completionEstimates.get(i).get(Calendar.HOUR_OF_DAY) + "h" + completionEstimates.get(i).get(Calendar.MINUTE));
+			String type;
+			if(pendingOrders.get(i) instanceof SingleTaskOrder){
+				type = " type: Single task order";
+			}else{
+				type = " type: Normal order";
+			}
+			display(index + ". " + pendingOrders.get(i).getCarOrderID() + " will be delivered around:" + completionEstimates.get(i).get(Calendar.DAY_OF_WEEK) + " " + completionEstimates.get(i).get(Calendar.HOUR_OF_DAY) + "h" + completionEstimates.get(i).get(Calendar.MINUTE) + type);
 			index++;
 		}
 		display("Your completed orders:");
 		for(Order carOrder : completedOrders){
-			display(index + ". " + carOrder.getCarOrderID() + " is delivered on:" + carOrder.getDeliveredTime().get(Calendar.DAY_OF_WEEK) + " "+carOrder.getDeliveredTime().get(Calendar.HOUR_OF_DAY) + "h"+carOrder.getDeliveredTime().get(Calendar.MINUTE));
+			String type;
+			if(carOrder instanceof SingleTaskOrder){
+				type = " type: Single task order";
+			}else{
+				type = " type: Normal order";
+			}
+			display(index + ". " + carOrder.getCarOrderID() + " is delivered on:" + carOrder.getDeliveredTime().get(Calendar.DAY_OF_WEEK) + " "+carOrder.getDeliveredTime().get(Calendar.HOUR_OF_DAY) + "h"+carOrder.getDeliveredTime().get(Calendar.MINUTE) + type);
 			index++;
 		}
 		display("");

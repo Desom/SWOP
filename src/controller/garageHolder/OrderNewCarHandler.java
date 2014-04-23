@@ -72,8 +72,10 @@ public class OrderNewCarHandler implements CommunicationTool{
 			CarOrderForm orderForm = new CarOrderForm(model, ordermanager.getCarOrderPolicies());
 			ui.fillIn(orderForm);
 			
-			//TODO hier moet gecontroleert worden ofdat de Configuration wel goed is en indien niet: abort! abort! abort!
-			if(orderForm.getConfiguration())
+			while(!orderForm.getConfiguration().isCompleted()){
+				orderForm = new CarOrderForm(model, ordermanager.getCarOrderPolicies());
+				ui.fillIn(orderForm);
+			}
 			
 			boolean antwoord2 = ui.askYesNoQuestion("Do you want to confirm this order?");
 			if(antwoord2){

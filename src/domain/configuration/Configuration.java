@@ -142,4 +142,8 @@ public class Configuration {
 		}
 		return s;
 	}
+
+	public boolean isCompleted() {
+		return isComplete;
+	}
 }

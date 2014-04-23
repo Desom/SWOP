@@ -397,7 +397,7 @@ public class EffinciencySchedulingAlgorithmTest {
 				config1.addOption(option);
 			}
 		}
-		orderList.add(new SingleTaskOrder(16, garageHolder, config1, new GregorianCalendar(1998,0,1,12,0,0)));
+		orderList.add(new SingleTaskOrder(16, garageHolder, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(1998,0,1,12,0,0)));
 		return orderList;
 	}
 	private ArrayList<Order> makeOrderListWithSingleTaskOrderWithNoFailure()
@@ -415,10 +415,10 @@ public class EffinciencySchedulingAlgorithmTest {
 				config2.addOption(option);
 			}
 		}
-		orderList.add(new SingleTaskOrder(12, garageHolder, config1, new GregorianCalendar(2002,0,1,12,0,0)));
-		orderList.add(new SingleTaskOrder(13, garageHolder, config1, new GregorianCalendar(2002,0,1,12,0,1)));
-		orderList.add(new SingleTaskOrder(14, garageHolder, config2, new GregorianCalendar(2002,0,1,12,0,0)));
-		orderList.add(new SingleTaskOrder(15, garageHolder, config2, new GregorianCalendar(2002,0,1,12,0,1)));
+		orderList.add(new SingleTaskOrder(12, garageHolder, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
+		orderList.add(new SingleTaskOrder(13, garageHolder, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
+		orderList.add(new SingleTaskOrder(14, garageHolder, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
+		orderList.add(new SingleTaskOrder(15, garageHolder, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
 		return orderList;
 	}
 	/**

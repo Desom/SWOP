@@ -59,8 +59,8 @@ public class OptionTest {
 	public void testconflictsWith_True() throws CarModelCatalogException {
 		Option opt = new Option("green", OptionType.Color);
 		Option opt2 = new Option("red",  OptionType.Seats);
-		opt.setIncompatible(opt2);
-		opt2.setIncompatible(opt);
+		opt.addIncompatible(opt2);
+		opt2.addIncompatible(opt);
 		assertTrue(opt.conflictsWith(opt2));
 		assertTrue(opt2.conflictsWith(opt));
 	}

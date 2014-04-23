@@ -66,7 +66,7 @@ public class OptionCreator {
 		if(!allOptions.containsKey(input[0])) throw new CarModelCatalogException("Option does not exist: " + input[0]);
 		ArrayList<String> optionNames = new ArrayList<String>();
 		for(String j:input[1].split(","))optionNames.add(j);
-		allOptions.get(input[0]).setDependancy(collectOption(optionNames));
+		allOptions.get(input[0]).addDependancy(collectOption(optionNames));
 	}
 	/**
 	 * Processes a line which stores the information of a single option.
@@ -148,8 +148,8 @@ public class OptionCreator {
 		try{
 			Option result = new Option(description,  OptionType.valueOf(typeName));
 			for(Option option : collectOption(incompatibles)){
-				result.setIncompatible(option);
-				option.setIncompatible(result);
+				result.addIncompatible(option);
+				option.addIncompatible(result);
 			}
 			return result;
 		}catch(IllegalArgumentException e){

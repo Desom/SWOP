@@ -19,9 +19,21 @@ public class CarModelCatalog {
 		allCarModels= (new ModelCreator(this.getAllOptions())).createModels();
 	}
 
-	public CarModelCatalog(String optionFile, String dependancyPath, String modelFile) throws IOException, CarModelCatalogException{
-		allOptions = (new OptionCreator(optionFile,dependancyPath)).createOptions();
-		allCarModels= (new ModelCreator(this.getAllOptions(),modelFile)).createModels();
+	/**
+	 * Constructor of CarModelCatalog.
+	 * 
+	 * @param optionPath
+	 * 		The path to the file containing the options.
+	 * @param dependancyPath
+	 * 		The path to the file containing the dependencies.
+	 * @param modelPath
+	 * 		The path to the file containing the models.
+	 * @throws IOException
+	 * @throws CarModelCatalogException
+	 */
+	public CarModelCatalog(String optionPath, String dependancyPath, String modelPath) throws IOException, CarModelCatalogException{
+		allOptions = (new OptionCreator(optionPath,dependancyPath)).createOptions();
+		allCarModels= (new ModelCreator(this.getAllOptions(),modelPath)).createModels();
 	}
 
 	/**

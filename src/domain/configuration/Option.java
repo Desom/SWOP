@@ -45,7 +45,7 @@ public class Option {
 	 * @param option
 	 * 		The incompatible option.
 	 */
-	void setIncompatible(Option option){
+	void addIncompatible(Option option){
 		if(!this.incompatibles.contains(option))
 			this.incompatibles.add(option);
 	}
@@ -56,7 +56,7 @@ public class Option {
 	 * @param dependency
 	 * 		The new dependency to be added.
 	 */
-	void setDependancy(ArrayList<Option> dependency){
+	void addDependancy(ArrayList<Option> dependency){
 		this.dependencies.add(dependency);
 	}
 	

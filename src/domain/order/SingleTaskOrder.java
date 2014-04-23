@@ -10,13 +10,21 @@ public class SingleTaskOrder extends Order {
 	
 	private GregorianCalendar deadline;
 
-	public SingleTaskOrder(int carOrderId, User user, Configuration configuration, GregorianCalendar deadline) {
-		super(carOrderId, user, configuration);
-		this.deadline = deadline;
+	/**
+	 * 
+	 * @param carOrderId
+	 * @param user
+	 * @param configuration
+	 * @param orderedTime
+	 * @param deadline
+	 */
+	public SingleTaskOrder(int carOrderId, User user, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deadline) {
+		super(carOrderId, user, configuration, orderedTime);
+		this.deadline = (GregorianCalendar) deadline.clone();
 	}
 
 	public GregorianCalendar getDeadLine() {
-		return this.deadline;
+		return (GregorianCalendar) this.deadline.clone();
 	}
 
 	

@@ -112,7 +112,7 @@ public class Configuration {
 		if(obj == null){
 			return false;
 		}
-		if (!(this.getClass() != obj.getClass())) {
+		if ((this.getClass() != obj.getClass())) {
 			return false;
 		}
 		final Configuration other = (Configuration) obj;

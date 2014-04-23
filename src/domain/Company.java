@@ -42,7 +42,7 @@ public class Company {
 			ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
 			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
-			GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
+			GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 6, 0, 0);
 			this.catalog = new CarModelCatalog();
 			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 			this.orderManager = new OrderManager(scheduler, time);

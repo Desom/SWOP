@@ -53,14 +53,14 @@ public class AssemblyStatusView {
 		return tasks;
 	}
 
-	public boolean taskIsDoneAt(String task,int workstationId) throws DoesNotExistException{
+	public boolean taskIsDoneAt(OptionType taskType,int workstationId) throws DoesNotExistException{
 		Workstation w = getWorkstation(workstationId);
 		for(AssemblyTask t : w.getAllTasks()){
-			if(t.getType().toString().compareToIgnoreCase(task) == 0){
+			if(t.getType() == taskType){
 				return t.isCompleted();
 			}
 		}
-		throw new DoesNotExistException("The workstation with ID " + workstationId + " does not have a task with type " + task);
+		throw new DoesNotExistException("The workstation with ID " + workstationId + " does not have a task with type " + taskType);
 	}
 
 	public String getHeader() {

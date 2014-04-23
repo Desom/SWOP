@@ -29,9 +29,11 @@ public abstract class Order {
 	 * 			The user who ordered this order.
 	 * @param	configuration
 	 * 			The configuration of this order.
+	 * @param   orderedCalendar
+	 * 			The time when it was ordered
 	 */
-	public Order(int orderId, User user, Configuration configuration) {
-		this(orderId, user, configuration, false);
+	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime) {
+		this(orderId, user, configuration, orderedTime, null, false);
 	}
 	
 	/**
@@ -43,14 +45,20 @@ public abstract class Order {
 	 * 			The user who ordered this order.
 	 * @param	configuration
 	 * 			The configuration of this order.
+	 * @param 	orderedCalendar
+	 * 			The time when it was ordered
 	 * @param	isDelivered
 	 * 			True if the order has been delivered already, otherwise false.
 	 */
-	public Order(int orderId, User user, Configuration configuration, boolean isDelivered) {
+	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deliveredTime, boolean isDelivered) {
 		this.orderId = orderId;
 		this.user = user;
 		this.configuration = configuration;
 		this.assemblyProcess = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered);
+		this.setOrderedTime(orderedTime);
+		if(isDelivered){
+			this.setDeliveredTime(deliveredTime);			
+		}
 	}
 	
 	/**

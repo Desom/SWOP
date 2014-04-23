@@ -697,4 +697,13 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}
 		return result;
 	}
+	
+	public SchedulingAlgorithm getInnerAlgorithm() {
+		return innerAlgorithm;
+	}
+
+	@Override
+	public String toString(){
+		return "Efficiency algorithm using " + this.getInnerAlgorithm().toString();
+	}
 }

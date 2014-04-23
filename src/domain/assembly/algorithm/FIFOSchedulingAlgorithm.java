@@ -177,4 +177,8 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 		
 		return false;
 	}
+	
+	public String toString(){
+		return "FIFO algorithm";
+	}
 }

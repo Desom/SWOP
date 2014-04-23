@@ -35,7 +35,7 @@ public class SingleTaskOrderTaskTypePolicy extends Policy {
 	private ArrayList<Option> checkTypes(Configuration configuration) {
 		ArrayList<Option> invalidOptions = new ArrayList<Option>();
 		for(Option option : configuration.getAllOptions()){
-			if(!this.validOptionTypes.contains(option))
+			if(!this.validOptionTypes.contains(option.getType()))
 				invalidOptions.add(option);
 		}
 		return invalidOptions;

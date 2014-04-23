@@ -159,15 +159,15 @@ public class UI implements UIInterface{
 				catch(NullPointerException exc){
 					System.out.println("Not working at a CarOrder");
 				}
-				for(String task : statusView.getAllTasksAt(wsID)){
+				for(OptionType taskType : statusView.getAllTasksAt(wsID)){
 					String taskStatus;
-					if(statusView.taskIsDoneAt(task, wsID)){
+					if(statusView.taskIsDoneAt(taskType, wsID)){
 						taskStatus = "finished";
 					}
 					else{
 						taskStatus = "pending";
 					}
-					System.out.println("Task: " + task + " = " + taskStatus);
+					System.out.println("Task: " + taskType + " = " + taskStatus);
 				}
 			}
 			System.out.println();
@@ -178,14 +178,37 @@ public class UI implements UIInterface{
 	}
 
 	public void fillIn(CarOrderForm orderForm) {
-		for(OptionType i:OptionType.values()){
+		ArrayList<OptionType> mandatoryList = new ArrayList<OptionType>();
+		ArrayList<OptionType> nonMandatoryList = new ArrayList<OptionType>();
+		for(OptionType oType:OptionType.values()){
+			if(oType.isMandatory()){
+				mandatoryList.add(oType);
+			}
+			else{
+				nonMandatoryList.add(oType);
+			}
+		}
+		for(OptionType oType: mandatoryList){
 			boolean inOrde = false;
 			while(!inOrde ){
-				if(!i.isMandatory() && askYesNoQuestion("Do you want to add a " + i.toString() +" to your order?")){
+				try {
+					List<Option> options = orderForm.getPossibleOptionsOfType(oType);
+					int number = this.askWithPossibilities("Enter your type of "+oType+":", options.toArray());
+					orderForm.addOption(options.get(number));
+					inOrde = true;
+				} catch (InvalidConfigurationException e) {
+					this.display(e.getMessage());
+				}
+			}
+		}
+		for(OptionType oType: nonMandatoryList){
+			if(askYesNoQuestion("Do you want to add a " + oType.toString() +" to your order?")){
+				boolean inOrde = false;
+				while(!inOrde ){
 					try {
-						Option[] opties = (Option[]) orderForm.getPossibleOptionsOfType(i).toArray();
-						int nummer = this.askWithPossibilities("Enter your type of "+i+":", opties);
-						orderForm.addOption(opties[nummer]);
+						List<Option> options = orderForm.getPossibleOptionsOfType(oType);
+						int number = this.askWithPossibilities("Enter your type of "+oType+":", options.toArray());
+						orderForm.addOption(options.get(number));
 						inOrde = true;
 					} catch (InvalidConfigurationException e) {
 						this.display(e.getMessage());

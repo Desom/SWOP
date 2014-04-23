@@ -60,22 +60,26 @@ public class OrderNewCarHandler implements CommunicationTool{
 			CarModelCatalog catalog = company.getCatalog();
 			CarModel model = null;
 			while(model == null ){
-				ArrayList<String> modelList = new ArrayList<String>();
-				for(CarModel j: catalog.getAllModels()){
-					modelList.add(j.getName());
+				ArrayList<CarModel> modelList = new ArrayList<CarModel>();
+				for(CarModel carM: catalog.getAllModels()){
+					modelList.add(carM);
 				}
-				String modelname = ui.askWithPossibilities("Please input your car model", modelList);
-				model =getCarModel(modelname, company);			
+				int modelInt = ui.askWithPossibilities("Please input your car model", modelList.toArray());
+				model = modelList.get(modelInt);			
 			}
 			//5. The system displays the ordering form.
 			//6. The user completes the ordering form.
-			CarOrderForm order = new CarOrderForm(model, ordermanager.getCarOrderPolicies());
-			ui.fillIn(order);
+			CarOrderForm orderForm = new CarOrderForm(model, ordermanager.getCarOrderPolicies());
+			ui.fillIn(orderForm);
+			
+			//TODO hier moet gecontroleert worden ofdat de Configuration wel goed is en indien niet: abort! abort! abort!
+			if(orderForm.getConfiguration())
+			
 			boolean antwoord2 = ui.askYesNoQuestion("Do you want to confirm this order?");
 			if(antwoord2){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
-				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeCarOrder(garageHolder, order.getConfiguration()));
+				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeCarOrder(garageHolder, orderForm.getConfiguration()));
 				String time = getTime(calender);
 				ui.display("Your order should be ready at "+ time+".");
 			}else{

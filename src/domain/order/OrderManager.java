@@ -110,7 +110,7 @@ public class OrderManager {
 	 */
 	public CarOrder placeCarOrder(GarageHolder user, Configuration configuration){
 		int carOrderId = this.getUniqueCarOrderId();
-		CarOrder newOrder = new CarOrder(carOrderId, user, configuration, scheduler.getCurrentTime());
+		CarOrder newOrder = new CarOrder(carOrderId, user, configuration, this.getScheduler().getCurrentTime());
 		this.addOrder(newOrder);
 		//this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;
@@ -277,9 +277,9 @@ public class OrderManager {
 	public SingleTaskOrder placeSingleTaskOrder(CustomShopManager customShopManager, 
 			Configuration configuration,
 			GregorianCalendar deadline) {
-		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration,deadline);
+		new SingleTaskOrder(highestCarOrderID, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
 		int carOrderId = this.getUniqueCarOrderId();
-		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration,deadline);
+		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
 		this.addOrder(newOrder);
 		//this.getProductionSchedule().addOrder(newOrder);
 		return newOrder;

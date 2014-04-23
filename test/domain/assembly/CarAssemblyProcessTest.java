@@ -23,6 +23,7 @@ import domain.policies.DependencyPolicy;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
+import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
 import domain.user.GarageHolder;
 import domain.assembly.CarAssemblyProcess;
 import domain.assembly.Workstation;
@@ -109,6 +110,16 @@ public class CarAssemblyProcessTest {
 		assertEquals(1020, process.getTotalTimeSpend());
 	}
 	
+	private SingleTaskOrder createSingleTask(){
+		
+		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
+		Configuration config = new Configuration(null, singleTaskPolicy);
+		config.addOption(new Option("test", OptionType.Color));
+		config.complete();
+		GarageHolder garageHolder = new GarageHolder(1);
+		
+		GregorianCalendar now = new GregorianCalendar();
+	}
 	
 	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
 		ArrayList<OptionType> List = new ArrayList<OptionType>();

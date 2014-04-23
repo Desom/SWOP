@@ -398,6 +398,7 @@ public class EffinciencySchedulingAlgorithmTest {
 				config1.addOption(option);
 			}
 		}
+		config1.complete();
 		orderList.add(new SingleTaskOrder(16, customShopManager, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(1998,0,1,12,0,0)));
 		return orderList;
 	}
@@ -410,12 +411,14 @@ public class EffinciencySchedulingAlgorithmTest {
 				config1.addOption(option);
 			}
 		}
+		config1.complete();
 		Configuration config2 = new Configuration(null,new SingleTaskOrderNumbersOfTasksPolicy(null));
 		for(Option option : cmc.getAllOptions()){
 			if(option.getDescription().equals("red")){
 				config2.addOption(option);
 			}
 		}
+		config2.complete();
 		orderList.add(new SingleTaskOrder(12, customShopManager, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
 		orderList.add(new SingleTaskOrder(13, customShopManager, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
 		orderList.add(new SingleTaskOrder(14, customShopManager, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
@@ -445,6 +448,9 @@ public class EffinciencySchedulingAlgorithmTest {
 				config3.addOption(option); // Model A = 50
 			}
 		}
+		config1.complete();
+		config2.complete();
+		config3.complete();
 		
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
 		

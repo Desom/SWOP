@@ -146,7 +146,9 @@ public class SpecificationBatchSchedulingAgorithmTest {
 				config3.addOption(option); // Model A = 50
 			}
 		}
-		
+		config1.complete();
+		config2.complete();
+		config3.complete();
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
 		
 		orderList.add(new CarOrder(0, garageHolder, config1, time));

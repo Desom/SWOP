@@ -95,8 +95,13 @@ public class AssemblyLineTest {
 		for(Workstation w : line.getAllWorkstations()){
 			processesBefore.add(w.getCarAssemblyProcess());
 		}
-
-		Order order = scheduler.seeNextOrder(60);
+		
+		Order order = null;
+		try{
+			order = scheduler.seeNextOrder(60);
+		}
+		catch(NoOrdersToBeScheduledException e){}
+		
 		CarAssemblyProcess next;
 		if(order != null){
 			next = order.getAssemblyprocess();

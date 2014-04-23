@@ -30,7 +30,7 @@ public class AssemblyTaskTest {
 	private static AssemblyTask task;
 
 	@BeforeClass
-	public static void testCreate() throws IOException, CarModelCatalogException {
+	public static void testCreate() throws IOException, CarModelCatalogException, InvalidConfigurationException {
 		CarOrder o = buildCar();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
 		taskTypes.add(OptionType.Body);
@@ -46,15 +46,10 @@ public class AssemblyTaskTest {
 		assertEquals("dummy action", task.getActions().get(0));
 	}
 	
-	public static CarOrder buildCar() throws IOException, CarModelCatalogException{
+	public static CarOrder buildCar() throws IOException, CarModelCatalogException, InvalidConfigurationException{
 		// MAAK EEN AUTO MET OPTIONS EN MODEL AAN
-		ArrayList<OptionType> List = new ArrayList<OptionType>();
-		for(OptionType i: OptionType.values()){
-			if(i != OptionType.Airco || i != OptionType.Spoiler ){
-				List.add(i);
-			}
-		}
-		Policy pol1 = new CompletionPolicy(null,List);
+
+		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
@@ -78,9 +73,7 @@ public class AssemblyTaskTest {
 					||option.getDescription().equals("standard 2l v4")
 					||option.getDescription().equals("5 speed manual")
 					||option.getDescription().equals("leather white")
-					||option.getDescription().equals("no airco")
 					||option.getDescription().equals("comfort")
-					||option.getDescription().equals("no spoiler")
 					)
 				try {
 					config.addOption(option);
@@ -88,6 +81,7 @@ public class AssemblyTaskTest {
 					fail();
 				}
 		}
+		config.complete();
 		
 		GarageHolder garageHolder = new GarageHolder(1);
 		

@@ -31,13 +31,8 @@ public class CarTest {
 	
 	@Test
 	public void testCreate() throws IOException, CarModelCatalogException {
-		ArrayList<OptionType> List = new ArrayList<OptionType>();
-		for(OptionType i: OptionType.values()){
-			if(i != OptionType.Airco || i != OptionType.Spoiler ){
-				List.add(i);
-			}
-		}
-		Policy pol1 = new CompletionPolicy(null,List);
+		
+		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
@@ -54,16 +49,18 @@ public class CarTest {
 		}
 		
 		config = new Configuration(carModel, pol4);
-				
+		
 				
 		allOptions = carModel.getPossibleOptions();
 		try {
 			config.addOption(allOptions.get(0));
 			config.addOption(allOptions.get(2));
 			config.addOption(allOptions.get(6));
+			config.complete();
 		} catch (InvalidConfigurationException e) {
 			fail();
 		}
+		
 		CarOrder car = new CarOrder(1, holder, config, new GregorianCalendar());
 		assertEquals(false, car.isCompleted());
 	}

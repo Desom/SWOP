@@ -143,6 +143,9 @@ public class FIFOSchedulingAlgorithmTest {
 				config3.addOption(option); // Model A = 50
 			}
 		}
+		config1.complete();
+		config2.complete();
+		config3.complete();
 		
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
 		

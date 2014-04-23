@@ -17,6 +17,7 @@ import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.order.CarOrder;
+import domain.order.SingleTaskOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
@@ -24,6 +25,7 @@ import domain.policies.InvalidConfigurationException;
 import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
+import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 import domain.assembly.CarAssemblyProcess;
 import domain.assembly.Workstation;
@@ -86,17 +88,23 @@ public class CarAssemblyProcessTest {
 	}
 	
 	@Test
-	public void testFilterWorkstation(){
+	public void testFilterWorkstation() throws InvalidConfigurationException, CarModelCatalogException{
 		ArrayList<Workstation> stations = new ArrayList<Workstation>();
 		stations.add(w1);
 		stations.add(w2);
 		stations.add(w3);
 		
 		ArrayList<Workstation> filtered = process.filterWorkstations(stations);
+		assertEquals(3,filtered.size());
 		assertTrue(filtered.contains(w1));
 		assertTrue(filtered.contains(w2));
 		assertTrue(filtered.contains(w3));
 		
+		CarAssemblyProcess carProcess = createSingleTask().getAssemblyprocess();
+		
+		ArrayList<Workstation> filtered2 = carProcess.filterWorkstations(stations);
+		assertEquals(1,filtered2.size());
+		assertTrue(filtered2.contains(w1));
 	}
 	
 	@Test
@@ -110,25 +118,22 @@ public class CarAssemblyProcessTest {
 		assertEquals(1020, process.getTotalTimeSpend());
 	}
 	
-	private SingleTaskOrder createSingleTask(){
+	private SingleTaskOrder createSingleTask() throws InvalidConfigurationException, CarModelCatalogException{
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);
 		config.addOption(new Option("test", OptionType.Color));
 		config.complete();
-		GarageHolder garageHolder = new GarageHolder(1);
+		CustomShopManager customShop = new CustomShopManager(1);
 		
 		GregorianCalendar now = new GregorianCalendar();
+		
+		return new SingleTaskOrder(0, customShop, config, now, now);
 	}
 	
 	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
-		ArrayList<OptionType> List = new ArrayList<OptionType>();
-		for(OptionType i: OptionType.values()){
-			if(i != OptionType.Airco || i != OptionType.Spoiler ){
-				List.add(i);
-			}
-		}
-		Policy pol1 = new CompletionPolicy(null,List);
+		
+		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
@@ -152,13 +157,11 @@ public class CarAssemblyProcessTest {
 					||option.getDescription().equals("standard 2l v4")
 					||option.getDescription().equals("5 speed manual")
 					||option.getDescription().equals("leather white")
-					||option.getDescription().equals("no airco")
 					||option.getDescription().equals("comfort")
-					||option.getDescription().equals("no spoiler")
 					)
 				config.addOption(option);
 		}
-		
+		config.complete();
 		GarageHolder garageHolder = new GarageHolder(1);
 		
 		GregorianCalendar now = new GregorianCalendar();

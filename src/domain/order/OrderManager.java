@@ -146,11 +146,11 @@ public class OrderManager {
 	 * 		The order which will be added.
 	 */
 	private void addOrder(Order newOrder){
-		if(!this.getAllOrdersFromUser().containsKey(newOrder.getUserId()))
+		if(!this.getAllOrdersFromUser().containsKey(newOrder.getUser()))
 		{
 			this.getAllOrdersFromUser().put(newOrder.getUser(), new ArrayList<Order>());
 		}
-		this.getAllOrdersFromUser().get(newOrder.getUserId()).add(newOrder);
+		this.getAllOrdersFromUser().get(newOrder.getUser()).add(newOrder);
 		this.getScheduler().updateSchedule();
 	}
 	

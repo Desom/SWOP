@@ -40,13 +40,8 @@ public class CarOrderTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
-		ArrayList<OptionType> List = new ArrayList<OptionType>();
-		for(OptionType i: OptionType.values()){
-			if(i != OptionType.Airco || i != OptionType.Spoiler ){
-				List.add(i);
-			}
-		}
-		Policy pol1 = new CompletionPolicy(null,List);
+
+		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
@@ -70,12 +65,11 @@ public class CarOrderTest {
 					||option.getDescription().equals("standard 2l v4")
 					||option.getDescription().equals("5 speed manual")
 					||option.getDescription().equals("leather white")
-					||option.getDescription().equals("no airco")
 					||option.getDescription().equals("comfort")
-					||option.getDescription().equals("no spoiler")
 					)
 				config.addOption(option);
 		}
+		config.complete();
 		
 		garageHolder = new GarageHolder(1);
 	}

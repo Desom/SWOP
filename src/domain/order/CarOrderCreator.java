@@ -92,6 +92,7 @@ public class CarOrderCreator {
 			for(Option i: optionsList){
 				config.addOption(i);
 			}
+			config.complete();
 			allCarOrders.add(new CarOrder(carOrderId, garageHolder, config, orderedCalendar, deliveredCalendar, isDelivered));
 		}
 		

@@ -23,7 +23,7 @@ public class Configuration {
 	public Configuration(CarModel model, Policy policyChain) {
 		this.model = model;
 		this.options = new ArrayList<Option>();
-		if(this.policyChain == null){
+		if(policyChain == null){
 			//exception docs
 			throw new IllegalArgumentException("A Configuration always needs a Policy so that it can check it's own correctness.");
 		}

@@ -1,4 +1,5 @@
 package domain;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
@@ -20,7 +21,6 @@ import domain.user.GarageHolder;
 import domain.user.Manager;
 import domain.user.User;
 
-
 public class Company {
 
 	private AssemblyLine assemblyLine = null;
@@ -29,13 +29,17 @@ public class Company {
 	private final Statistics statistics;
 
 	/**
-	 * Constructor for the company class.
-	 * This constructor is also responsible for the creation of 1 or more assemblyLines.
-	 * This constructor is also responsible for the creation of the car model catalog.
-	 * This constructor is also responsible for the creation of the statistics object
-	 * @throws InternalFailureException 
-	 * @throws CarModelCatalogException 
-	 * @throws IOException 
+	 * Constructor of Company.
+	 * 
+	 * This constructor is also responsible for the creation of:
+	 * 			the possible scheduling algorithms,
+	 * 			the order manager,
+	 * 			one or more assembly lines,
+	 * 			the car model catalog,
+	 *  		the statistics object.
+	 * 
+	 * @throws InternalFailureException
+	 * 		If an exception occurred and the system couldn't recover from it.
 	 */
 	public Company() {
 		try {
@@ -56,46 +60,27 @@ public class Company {
 	}
 
 	/**
-	 * Gives a LinkedList of all the workstations.
+	 * Returns a LinkedList of all the workstations.
 	 * 
-	 * @param user The user requesting this information
-	 * @return Returns the list of all workstations if the specified user is allowed to access this information. Otherwise it returns null
-	 * @throws UserAccessException 
+	 * @return The list of all workstations.
 	 */
 	public LinkedList<Workstation> getAllWorkstations(){
-		return assemblyLine.getAllWorkstations(); //moet dit een kopie zijn ivm beveiliging?
+		return assemblyLine.getAllWorkstations();
 	}
 
 	/**
-	 * Add's the specified user to the workstation matching the given workStation id if the specified user is allowed to perform this action.
-	 * 
-	 * @param user The user that wants to be added to the given workstation.
-	 * @param workStation_id The id of the workstation the user wants to be added to.
-	 * @throws UserAccessException 
-	 */
-	/*public void selectWorkstation(User user, int workStation_id) throws UserAccessException{
-		if(user.canPerform("selectWorkStation")){
-			assemblyLine.selectWorkstation(user, workStation_id);
-		}else{
-			throw new UserAccessException(user, "selectWorkStation");
-		}
-	}*/
-
-	/**
 	 * Returns the company's car model catalog.
-	 * @return If the user is allowed to request the catalog, return the catalog, else return null;
-	 * @throws UserAccessException 
+	 * 
+	 * @return The company's car model catalog.
 	 */
 	public CarModelCatalog getCatalog()  {
 		return catalog;
 	}
 
-
 	/**
 	 * Returns the company's order manager.
-	 * @param user The user requesting the order manager
-	 * @return If the user is allowed to request the order manager, return the order manager, else throw UserAccessException;
-	 * @throws UserAccessException 
+	 * 
+	 * @return The company's order manager. 
 	 */
 	public OrderManager getOrderManager(){
 		return orderManager;
@@ -103,60 +88,63 @@ public class Company {
 
 	/**
 	 * Returns the company's assembly line.
-	 * @param user The user requesting the aasembly Line
-	 * @return If the user is allowed to request the assembly line, return the assembly line, else throw UserAccessException;
-	 * @throws UserAccessException
+	 * 
+	 * @return The company's assembly line.
 	 */
 	public AssemblyLine getAssemblyLine(){
 		return this.assemblyLine;
 	}
 
-
 	/**
 	 * Get the current statistics. This view has all kinds of getters to get a better overview of the data.
 	 * 
-	 * @return the current statistics.
+	 * @return The current statistics.
 	 */
 	public Statistics viewStatistics(){
 		return this.statistics;
 	}
 
-
 	/**
-	 * Creates a manager when requested
-	 * @param ID The Id that is to be associated with this user
-	 * @return The user object that was created
+	 * Creates and returns a manager with the given id.
+	 * 
+	 * @param id
+	 * 		The id that is to be associated with this manager.
+	 * @return The Manager object that was created.
 	 */
-	public User createManager(int ID){
-		return new Manager(ID);
+	public User createManager(int id){
+		return new Manager(id);
 	}
 	
 	/**
-	 * Creates a car mechanic when requested
-	 * @param ID The Id that is to be associated with this user
-	 * @return The user object that was created
+	 * Creates and returns a car mechanic with the given id.
+	 * 
+	 * @param id
+	 * 		The id that is to be associated with this car mechanic.
+	 * @return The CarMechanic object that was created.
 	 */
-	public User createCarmechanic(int ID){
-		return new CarMechanic(ID);
+	public User createCarmechanic(int id){
+		return new CarMechanic(id);
 	}
 	
 	/**
-	 * Creates a garage holder when requested
-	 * @param ID The Id that is to be associated with this user
-	 * @return The user object that was created
+	 * Creates and returns a garage holder with the given id.
+	 * 
+	 * @param id
+	 * 		The id that is to be associated with this garage holder.
+	 * @return The GarageHolder object that was created.
 	 */
-	public User createGarageHolder(int ID){
-		return new GarageHolder(ID);
+	public User createGarageHolder(int id){
+		return new GarageHolder(id);
 	}
 	
 	/**
-	 * Creates a custom shop owner when requested
-	 * @param ID The Id that is to be associated with this user
-	 * @return The user object that was created
+	 * Creates and returns a custom shop owner with the given id.
+	 * 
+	 * @param id
+	 * 		The id that is to be associated with this custom shop owner.	
+	 * @return The CustomShopOwner object that was created.
 	 */
-	public User createCustomShopOwner(int ID){
-		return new CustomShopManager(ID);
+	public User createCustomShopOwner(int id){
+		return new CustomShopManager(id);
 	}
-
-
 }

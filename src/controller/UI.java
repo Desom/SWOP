@@ -155,12 +155,12 @@ public class UI implements UIInterface{
 			System.out.println("---");
 			for(int wsID : statusView.getAllWorkstationIds()){
 				System.out.println("Workstation " + wsID);
-				try{
-					int carOrderID = statusView.getCarOrderIdAt(wsID);
-					System.out.println("working at CarOrder " + carOrderID);
+				int carOrderID = statusView.getCarOrderIdAt(wsID);
+				if (carOrderID < 0){
+					System.out.println("Empty");
 				}
-				catch(NullPointerException exc){
-					System.out.println("Not working at a CarOrder");
+				else{
+				System.out.println("working at Order " + carOrderID);
 				}
 				for(OptionType taskType : statusView.getAllTasksAt(wsID)){
 					String taskStatus;

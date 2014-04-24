@@ -1,17 +1,14 @@
 package controller.customShop;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 import controller.SingleTaskOrderForm;
 import controller.UIInterface;
 import domain.Company;
-import domain.configuration.OptionType;
 import domain.order.CannotMeetDeadlineException;
 import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
-import domain.policies.InvalidConfigurationException;
 import domain.user.CustomShopManager;
 
 public class OrderSingleTaskHandler {
@@ -54,11 +51,4 @@ public class OrderSingleTaskHandler {
 		return date;
 	}
 	
-	private ArrayList<OptionType> getAvailableSingleTaskOptionTypes() {
-		ArrayList<OptionType> singleTaskOptionTypes = new ArrayList<OptionType>();
-		for (OptionType optionType : OptionType.values())
-			if (optionType.isSingleTaskPossible())
-				singleTaskOptionTypes.add(optionType);
-		return singleTaskOptionTypes;
-	}
 }

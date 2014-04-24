@@ -275,7 +275,7 @@ public class UI implements UIInterface{
 		for(int i =0; i< Math.max(pendingOrders.size(), completionEstimates.size());i++){
 			String type;
 			if(pendingOrders.get(i) instanceof SingleTaskOrder){
-				type = ":Single task order ";
+				type = "Single task order ";
 			}else{
 				type = "Car order ";
 			}
@@ -283,14 +283,14 @@ public class UI implements UIInterface{
 			index++;
 		}
 		display("Your completed orders:");
-		for(Order carOrder : completedOrders){
+		for(Order order : completedOrders){
 			String type;
-			if(carOrder instanceof SingleTaskOrder){
-				type = " type: Single task order";
+			if(order instanceof SingleTaskOrder){
+				type = "Single task order ";
 			}else{
-				type = " type: Normal order";
+				type = "Car order ";
 			}
-			display(index + ". " + carOrder.getCarOrderID() + " is delivered on:" + convertCalendarToDate(carOrder.getDeliveredTime())+ type);
+			display(index + ". " + type + order.getCarOrderID() + " is delivered on:" + convertCalendarToDate(order.getDeliveredTime()));
 			index++;
 		}
 		display("");

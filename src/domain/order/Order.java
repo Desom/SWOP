@@ -24,7 +24,7 @@ public abstract class Order {
 	 * 		The user who ordered this order.
 	 * @param configuration
 	 * 		The configuration of this order.
-	 * @param orderedCalendar
+	 * @param orderedTime
 	 * 		The time when it was ordered
 	 */
 	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime) {
@@ -40,7 +40,7 @@ public abstract class Order {
 	 * 		The user who ordered this order.
 	 * @param configuration
 	 * 		The configuration of this order.
-	 * @param orderedCalendar
+	 * @param orderedTime
 	 * 		The time when it was ordered
 	 * @param isDelivered
 	 * 		True if the order has been delivered already, otherwise false.

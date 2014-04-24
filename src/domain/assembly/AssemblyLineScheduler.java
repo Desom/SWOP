@@ -49,7 +49,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * 		A list of ScheduledOrder objects representing the scheduled orders.
 	 * @param nextAdvanceTime
 	 * 		The time indicating when the next advance of the assembly line will happen.
-	 * @return
+	 * @return The estimated completion time of the given order.
 	 */
 	private GregorianCalendar calculateEstimatedCompletionTimeOf(Order order, ArrayList<ScheduledOrder> scheduledOrders, GregorianCalendar nextAdvanceTime){
 		if(order == null){

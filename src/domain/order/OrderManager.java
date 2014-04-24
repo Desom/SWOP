@@ -1,5 +1,6 @@
 package domain.order;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -43,8 +44,10 @@ public class OrderManager {
 	 * 		The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 * @throws InvalidConfigurationException 
 	 * 		If the configurations made in car order creator are invalid.
+	 * @throws IOException
+	 * 		If a car model can't be read in.
 	 */
-	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException {
+	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException, IOException {
 		this.scheduler = scheduler;
 		this.createPolicies();
 		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy);

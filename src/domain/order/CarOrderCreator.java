@@ -41,11 +41,13 @@ public class CarOrderCreator {
 	/**
 	 * Creates all placed CarOrders.
 	 * 
-	 * @return a list of all placed CarOrders
+	 * @return a list of all placed CarOrders.
 	 * @throws InvalidConfigurationException
 	 * 		If the configuration is invalid.
+	 * @throws IOException
+	 * 		If a car model can't be found.
 	 */
-	public ArrayList<Order> createCarOrderList() throws InvalidConfigurationException{
+	public ArrayList<Order> createCarOrderList() throws InvalidConfigurationException, IOException{
 		ArrayList<Order> allCarOrders = new ArrayList<Order>();
 		ArrayList<String> allCarOrderInfo = new ArrayList<String>();
 		try {
@@ -102,12 +104,13 @@ public class CarOrderCreator {
 	/**
 	 * Finds car options associated with the given string.
 	 * 
-	 * @param orderPieces
-	 * @return
+	 * @param optionsString
+	 * 		The string indicating the the options.
+	 * @return The options associated with the given options string.
 	 */
-	private ArrayList<Option> findCarOptons(String orderPiece) {
+	private ArrayList<Option> findCarOptons(String optionsString) {
 		ArrayList<Option> optionsList = new ArrayList<Option>();
-		String[] optionStr = orderPiece.split(";-;");
+		String[] optionStr = optionsString.split(";-;");
 		for(String optionDescr: optionStr){
 			for(Option option : this.catalog.getAllOptions()){
 				if(option.getDescription().equals(optionDescr)){
@@ -119,31 +122,35 @@ public class CarOrderCreator {
 		for(Option option : optionsList){
 			for(Option other: optionsList){
 				if(option != other && option.conflictsWith(other))
-					throw new IllegalArgumentException("There are conflicting options"); // TODO welke exception is beter?
+					throw new IllegalArgumentException("There are conflicting options");
 			}
 		}
 		return optionsList;
 	}
 
 	/**
-	 * @param this.catalog
-	 * @param orderPieces
-	 * @return
+	 * Finds the car model, using the given name.
+	 * 
+	 * @param carModelName
+	 * 		The name of the desired car model.
+	 * @return The model associated with the given name.
+	 * @throws IOException
+	 * 		If no car model can be found.
 	 */
-	private CarModel findCarModel(String orderPiece) {
+	private CarModel findCarModel(String carModelName) throws IOException {
 		for(CarModel model : this.catalog.getAllModels()){
-			if(model.getName().equals(orderPiece))
+			if(model.getName().equals(carModelName))
 				return model;
 		}
-		return null; // TODO error gooien, want slechte file? welke? IOException?
+		throw new IOException("The desired car model doesn't exist");
 	}
 
 	/**
 	 * Create a GregorianCalendar based on the given time and date.
 	 * 
-	 * @param	info
-	 * 			The String that has to be converted to a GregorianCalendar object; format=DD-MM-YYYY*HH:MM:SS
-	 * @return	A GregorianCalendar
+	 * @param info
+	 * 		The String that has to be converted to a GregorianCalendar object; format=DD-MM-YYYY*HH:MM:SS
+	 * @return A GregorianCalendar based on the given time and date.
 	 */
 	private GregorianCalendar createCalendarFor(String info) {
 		String[] dateTime = info.split("==");

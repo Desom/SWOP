@@ -331,7 +331,7 @@ public class AssemblyLineScheduler implements Scheduler{
 			orders.removeAll(onAssembly);
 			return orders;
 		}
-		return null;
+		return new ArrayList<Order>();
 	}
 
 	/**

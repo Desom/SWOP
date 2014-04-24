@@ -97,13 +97,13 @@ public class StatisticsTest {
 	
 	@Test
 	public void testMedianCars(){
-		assertEquals(13, stat.getMedianCarsPerDay());
+		assertEquals(14, stat.getMedianCarsPerDay());
 	}
 	
 	@Test
 	public void amountOfCarsLastDays(){
 		assertEquals(13, stat.getAmountOfCars1DayAgo());
-		assertEquals(13, stat.getAmountOfCars2DaysAgo());
+		assertEquals(14, stat.getAmountOfCars2DaysAgo());
 	}
 	
 	@Test

@@ -141,7 +141,6 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	 * @return The GregorianCalendar representing the beginning of the first workday after the day in currentTime. 
 	 */
 	private GregorianCalendar nextDay(GregorianCalendar currentTime) {
-		//TODO zijn er nog uitzonderlijke gevallen?
 		GregorianCalendar nextDay = (GregorianCalendar) currentTime.clone();
 		if (currentTime.get(GregorianCalendar.HOUR_OF_DAY) > 6)
 			nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);

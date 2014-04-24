@@ -239,8 +239,10 @@ public class Statistics {
 		Collections.sort(sorted, new OrderComparator());
 		return sorted;
 	}
-
-
+	
+	/**
+	 * A customized comparator class to compare car orders on delivered time.
+	 */
 	class OrderComparator implements Comparator<Order> {
 		@Override
 		public int compare(Order a, Order b) {

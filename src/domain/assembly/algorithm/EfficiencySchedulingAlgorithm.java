@@ -16,10 +16,25 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 
 	private SchedulingAlgorithm innerAlgorithm;
 
+	/**
+	 * Constructor of EfficiencySchedulingAlgorithm.
+	 * 
+	 * @param innerAlgorithm
+	 * 		The inner algorithm of this efficiency scheduling algorithm.
+	 */
 	public EfficiencySchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
 		this.innerAlgorithm = innerAlgorithm;
 	}
 
+	/**
+	 * Schedules the given list of orders and returns it.
+	 * 
+	 * @param orderList
+	 * 		List of orders to be scheduled.
+	 * @param assemblyLineScheduler
+	 * 		The scheduler of the assembly line.
+	 * @return A scheduled version of the given list of orders.
+	 */
 	@Override
 	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList,
 			AssemblyLineScheduler assemblyLineScheduler) {
@@ -27,16 +42,18 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		return convert(this.scheduleToScheduledOrderList(orderList, allTasksCompletedTime , assemblyLineScheduler));
 
 	}
+	
 	/**
-	 * Sorts the arraylist in a scheduling order given a certain algorithm but
-	 *  with 2 SingleTaskOrders at the beginning of the day and 2 at the end of the day
+	 * Schedules the given orders and returns it,
+	 * but with 2 SingleTaskOrders at the beginning of the day and 2 at the end of the day.
+	 * 
 	 *  @param orderList
-	 *  		The orders to be sorted 
+	 *  	The orders to be sorted.
 	 *  @param allTasksCompletedTime
-	 *  		The time when all task on assemblyLine will be done
+	 *  	The time when all task on assemblyLine will be done.
 	 *  @param assemblyLineScheduler
-	 *  		The assymblylineScheduler to which the orders belong
-	 *  @return The sorted Orders 
+	 *  	The assymblylineScheduler to which the orders belong.
+	 *  @return The sorted Orders.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
@@ -73,30 +90,33 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	}
 
 	/**
-	 * 	Appends a List of SingleTaskOrders and a list of Orders into a new list of orders
-	 * @param endangeredOrders
-	 * 			The list of SingleTaskOrders to be appended
-	 * @param orderList2
-	 * 			The list of SingleTaskOrders to be appended
+	 * Appends a List of SingleTaskOrders and a list of Orders into a new list of Orders.
+	 * 
+	 * @param singleTaskOrders
+	 * 		The list of SingleTaskOrders to be appended
+	 * @param carOrders
+	 * 		The list of SingleTaskOrders to be appended
 	 * @return a list which contains and singleTasdkOrders and orders of both list with the SingleTaskOrders first. 
 	 * The order of elements in both lists are still respected
 	 */
 	private ArrayList<Order> append(
-			ArrayList<SingleTaskOrder> endangeredOrders,
-			ArrayList<Order> orderList2) {
+			ArrayList<SingleTaskOrder> singleTaskOrders,
+			ArrayList<Order> carOrders) {
 		ArrayList<Order> result = new ArrayList<Order>();
-		for(SingleTaskOrder i :endangeredOrders) result.add(i);
-		for(Order i :orderList2) result.add(i);
+		for(SingleTaskOrder i :singleTaskOrders) result.add(i);
+		for(Order i :carOrders) result.add(i);
 		return result;
 	}
+	
 	/**
-	 * Find in a list the first SingleTaskOrder whose deadline is scheduled to be completed after it's deadline that is not already known
+	 * Finds in a list the first SingleTaskOrder whose deadline is to be broken, that is not already known.
+	 * 
 	 * @param timeOfBelt
-	 * 			A list which the Orders and their time to be completed
+	 * 		A list which the Orders and their time to be completed
 	 * @param endangeredOrders
-	 * 			A List which are already known to be completed late 		
-	 * @return the first SingleTaskOrder whose deadline is scheduled to be completed after it's deadline that is not already known
-	 * 			null if none are found
+	 * 		A List which are already known to be completed late 		
+	 * @return the first SingleTaskOrder whose deadline is scheduled to be completed after it's deadline that is not already known.
+	 * 		null if none are found
 	 */
 	private SingleTaskOrder retrieveFirstDeadlineFailure(
 			ArrayList<ScheduledOrder> timeOfBelt,
@@ -108,33 +128,35 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}
 		return null;
 	}
+	
 	/**
-	 * converts a list of ScheduledOrders into a list of Orders
-	 * @param arrayList
-	 * 			the list to be converted
+	 * Converts a list of ScheduledOrders into a list of Orders.
+	 * 
+	 * @param scheduledOrders
+	 * 		The list of ScheduledOrder objects to be converted
 	 * @return A list of Orders which are all in arrayList and in the same order
 	 */
-	private ArrayList<Order> convert(ArrayList<ScheduledOrder> arrayList) {
-		ArrayList<Order> result = new ArrayList<Order>();
-		for(ScheduledOrder i : arrayList)result.add(i.getScheduledOrder());
-		return result;
+	private ArrayList<Order> convert(ArrayList<ScheduledOrder> scheduledOrders) {
+		ArrayList<Order> orders = new ArrayList<Order>();
+		for(ScheduledOrder i : scheduledOrders)orders.add(i.getScheduledOrder());
+		return orders;
 	}
 
-
 	/**
-	 * combines the three lists into one array of ScheduledOrders with if possible 
-	 * 2 SingleTaskOrders at the beginning of the day and 2 at the end of the day
+	 * Combines the three lists into one array of ScheduledOrders, with (if possible) 
+	 * 2 SingleTaskOrders at the beginning of the day and 2 at the end of the day.
+	 * 
 	 * @param sTOrderList1
-	 * 		A List of SingleTaskOrders that if possible needs to be placed at the end of the day 
+	 * 		A List of SingleTaskOrders that if possible needs to be placed at the end of the day.
 	 * @param sTOrderList3
-	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day
+	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day.
 	 * @param orderList
-	 * 		A List of Orders
+	 * 		A List of Orders.
 	 * @param allTasksCompletedTime
-	 * 		The time when all task on assemblyLine will be done
+	 * 		The time when all tasks on assemblyLine will be done.
 	 * @param assemblyLineScheduler 
-	 * 		The assymblylineScheduler to which the orders belong
-	 * @param deadlines 
+	 * 		The assymblylineScheduler to which the orders belong.
+	 * @param scheduledOrdersWithDeadline 
 	 * 		The list which will contain the scheduled Orders and their estimated completion time
 	 * @return An array of ScheduledOrders with if possible 
 	 * 		2 SingleTaskOrders at the beginning of the day and 2 at the end of the day
@@ -143,44 +165,46 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	private ArrayList<ScheduledOrder> completeSchedule(
 			ArrayList<SingleTaskOrder> sTOrderList1,
 			ArrayList<SingleTaskOrder> sTOrderList3, ArrayList<Order> orderList,
-			GregorianCalendar allTasksCompletedTime, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> deadlines) {
+			GregorianCalendar allTasksCompletedTime, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> scheduledOrdersWithDeadline) {
 		// clone the information that will be changed
 		GregorianCalendar time = (GregorianCalendar) allTasksCompletedTime.clone();
 		ArrayList<Order> orderList2 = (ArrayList<Order>) orderList.clone();
 		ArrayList<SingleTaskOrder> sTOrderList1clone = (ArrayList<SingleTaskOrder>) sTOrderList1.clone();
 		ArrayList<SingleTaskOrder> sTOrderList3clone = (ArrayList<SingleTaskOrder>) sTOrderList3.clone();
 		// Complete the current day
-		ArrayList<ScheduledOrder> result = completeDay(sTOrderList1clone, sTOrderList3clone, orderList2,time, assemblyLineScheduler,deadlines);
+		ArrayList<ScheduledOrder> result = completeDay(sTOrderList1clone, sTOrderList3clone, orderList2,time, assemblyLineScheduler,scheduledOrdersWithDeadline);
 		time = nextDay(time);
 		//complete the rest of the days
 		while(!sTOrderList1clone.isEmpty() || !sTOrderList3clone.isEmpty() || !orderList2.isEmpty() ){
-			addDay(result,sTOrderList1clone,sTOrderList3clone,orderList2,time,assemblyLineScheduler,deadlines);
+			addDay(result,sTOrderList1clone,sTOrderList3clone,orderList2,time,assemblyLineScheduler,scheduledOrdersWithDeadline);
 			time = nextDay(time);
 		}
 		return result;
 	}
+	
 	/**
-	 * creates an array of ScheduledOrders that supplements the status of the AssemblyLineScheduler so that the day finishes proceeds correctly
+	 * Creates an array of ScheduledOrders that supplements the status of the AssemblyLineScheduler so that the end of day proceeds correctly.
+	 * 
 	 * @param sTOrderList1
-	 * 		A List of SingleTaskOrders that if possible needs to be placed at the end of the day 
+	 * 		A List of SingleTaskOrders that if possible needs to be placed at the end of the day.
 	 * @param sTOrderList3
-	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day
+	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day.
 	 * @param orderList2
-	 * 		A List of Orders
+	 * 		A List of Orders.
 	 * @param time
-	 * 		The time when all task on assemblyLine will be done
+	 * 		The time when all tasks on assemblyLine will be done.
 	 * @param assemblyLineScheduler
-	 * 		The assymblylineScheduler to which the orders belong
-	 * @param deadlines 
+	 * 		The assymblylineScheduler to which the orders belong.
+	 * @param scheduledOrdersWithCompletionTime 
 	 * 		The list which will contain the scheduled Orders and their estimated completion time
-	 * @return An array of ScheduledOrders so that the day finishes proceeds correctly
+	 * @return An array of ScheduledOrders so that the end of day proceeds correctly.
 	 */
 	@SuppressWarnings("unchecked")
 	private ArrayList<ScheduledOrder> completeDay(
 			ArrayList<SingleTaskOrder> sTOrderList1,
 			ArrayList<SingleTaskOrder> sTOrderList3,
 			ArrayList<Order> orderList2, GregorianCalendar time,
-			AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> deadlines) {
+			AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> scheduledOrdersWithCompletionTime) {
 		ArrayList<Order> temp = new ArrayList<Order>();
 		int corectionfactor = 2;
 		// looks if a SingleTaskOrder can be placed at the end of the day
@@ -189,7 +213,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			temp.add(null);
 			temp.add(null);
 			temp.add(null);
-			timeOfBeltWithAssembly(temp, time, assemblyLineScheduler, deadlines);
+			timeOfBeltWithAssembly(temp, time, assemblyLineScheduler, scheduledOrdersWithCompletionTime);
 			return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineScheduler);
 		}
 		// places a SingleTaskOrder  at the end of the day
@@ -203,7 +227,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			temp.add(null);
 			temp.add(null);
 			temp.add(null);
-			timeOfBeltWithAssembly(temp, time, assemblyLineScheduler, deadlines);
+			timeOfBeltWithAssembly(temp, time, assemblyLineScheduler, scheduledOrdersWithCompletionTime);
 			return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineScheduler);
 		}
 		// places an extra SingleTaskOrder at the end of the day
@@ -235,13 +259,13 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 				}
 				//checks if the test dummy exceeds the end of the day
 				GregorianCalendar temporayTime = (GregorianCalendar) time.clone();
-				temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineScheduler));
+				temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLineScheduler));
 				if(assemblyLineScheduler.getRealEndOfDay().before(temporayTime)) {
 					//finishes the day with three empty orders
 					temp.add(null);
 					temp.add(null);
 					temp.add(null);
-					timeOfBeltWithAssembly(temp, time, assemblyLineScheduler,deadlines);
+					timeOfBeltWithAssembly(temp, time, assemblyLineScheduler,scheduledOrdersWithCompletionTime);
 					return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineScheduler);
 				}
 				//make the dummy the real situation 
@@ -260,7 +284,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}
 		//checks if the test dummy exceeds the end of the day
 		GregorianCalendar temporayTime = (GregorianCalendar) time.clone();
-		temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineScheduler));
+		temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLineScheduler));
 		while(!assemblyLineScheduler.getRealEndOfDay().before(temporayTime)){
 			//make the dummy the real situation 
 			temp = (ArrayList<Order>) temp2.clone();
@@ -285,26 +309,29 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 				if(empty) break;
 			}
 			temporayTime = (GregorianCalendar) time.clone();
-			temporayTime.add(GregorianCalendar.MINUTE, timetofinishwithfilled(temp2,assemblyLineScheduler));
+			temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLineScheduler));
 		}
 		//finishes the day with three empty orders
 		temp.add(null);
 		temp.add(null);
 		temp.add(null);
-		timeOfBeltWithAssembly(temp, time, assemblyLineScheduler,deadlines);
+		timeOfBeltWithAssembly(temp, time, assemblyLineScheduler,scheduledOrdersWithCompletionTime);
 		return this.transformToScheduledOrderWithAssembly(temp, time, assemblyLineScheduler);
 	}
+	
 	/**
-	 * Calculates for every order the time an order will leave the AssemblyLine starting from an empty line
-	 * @param temp
-	 * 		The schedule to finish
+	 * Calculates for every order the time an order will leave the AssemblyLine starting from an empty line.
+	 * 
+	 * @param ordersToComplete
+	 * 		All orders to complete.
 	 * @param time
-	 * 		The start of the AssemblyLine
+	 * 		The start time of the AssemblyLine.
 	 * @param assemblyLineScheduler
-	 * 		The AssemblyLineScheduler that contains the AssemblyLine 
-	 * @param result the list where the new Orders and their completion estimate will be added
+	 * 		The AssemblyLineScheduler that contains the AssemblyLine .
+	 * @param result
+	 * 		The list where the new Orders and their completion estimate will be added.
 	 */
-	private void timeOfBelt(ArrayList<Order> temp,
+	private void timeOfBelt(ArrayList<Order> ordersToComplete,
 			GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> result) {
 		LinkedList<Order> simulator = new LinkedList<Order>();
 		simulator.add(null);
@@ -313,7 +340,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		int timespent = 0;
 		int j= 0;
 		// places  the orders one by one and remove the last one which will be added to result
-		for(Order i : temp){
+		for(Order i : ordersToComplete){
 			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 			Order last = simulator.removeLast();
 			simulator.addFirst(i);
@@ -335,23 +362,26 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			result.add(new ScheduledOrder(clone, last));
 		}
 	}
+	
 	/**
-	 * Calculates for every order the time an order will leave the AssemblyLine starting from the current AssemblyLine
-	 * @param temp
-	 * 		The schedule to finish
+	 * Calculates for every order the time an order will leave the AssemblyLine starting from the current AssemblyLine.
+	 * 
+	 * @param ordersToComplete
+	 * 		All orders to complete.
 	 * @param time
-	 * 		The start of the AssemblyLine
+	 * 		The start time of the AssemblyLine.
 	 * @param assemblyLineScheduler
-	 * 		The AssemblyLineScheduler that contains the AssemblyLine 
-	 * @param result the list where the new Orders and their completion estimate will be added
+	 * 		The AssemblyLineScheduler that contains the AssemblyLine.
+	 * @param result
+	 * 		The list where the new Orders and their completion estimate will be added.
 	 */
-	private void timeOfBeltWithAssembly(ArrayList<Order> temp,
+	private void timeOfBeltWithAssembly(ArrayList<Order> ordersToComplete,
 			GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> result) {
 		LinkedList<Order> simulator = assemblyLineScheduler.getAssemblyLine().getAllOrders();
 		int timespent = 0;
 		int j= 0;
 		// places  the orders one by one and remove the last one which will be added to result
-		for(Order i : temp){
+		for(Order i : ordersToComplete){
 			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 			Order last = simulator.removeLast();
 			simulator.addFirst(i);
@@ -375,18 +405,19 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	}
 
 	/**
-	 * Calculates the time necessary to finish the schedule given the current state of the assemblyLine
-	 * @param temp
-	 * 		The schedule to finish
-	 * @param assemblyLineScheduler 
-	 * 			The AssemblyLineScheduler  where the assemblyLine will be retreived from
-	 * @return the time necessary to finish the schedule given the current state of the assemblyLine in minutes
+	 * Calculates the time necessary to finish the schedule given the current state of the assemblyLine.
+	 * 
+	 * @param ordersToComplete
+	 * 		All orders to complete.
+	 * @param assemblyLineScheduler
+	 * 		The AssemblyLineScheduler that contains the AssemblyLine.
+	 * @return The time necessary to finish the schedule given the current state of the assemblyLine in minutes.
 	 */
-	private int timetofinishwithfilled(ArrayList<Order> temp,
+	private int timeToFinishWithFilled(ArrayList<Order> ordersToComplete,
 			AssemblyLineScheduler assemblyLineScheduler) {
 		LinkedList<Order> simulator = assemblyLineScheduler.getAssemblyLine().getAllOrders();
 		int time = 0;
-		for(Order i : temp){
+		for(Order i : ordersToComplete){
 			simulator.addFirst(i);
 			simulator.removeLast();
 			time += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
@@ -397,30 +428,29 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		return time;
 	}
 
-
-
 	/**
-	 * Adds a day worth of ScheduledOrders to the given schedule
-	 * @param result
-	 * 		The given schedule
+	 * Adds a day worth of ScheduledOrders to the given schedule.
+	 * 
+	 * @param scheduledOrders
+	 * 		The given schedule.
 	 * @param sTOrderList1
-	 * 		A List of SingleTaskOrders that if possible needs to be placed at the end of the day 
+	 * 		A List of SingleTaskOrders that if possible needs to be placed at the end of the day.
 	 * @param sTOrderList3
-	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day
+	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day.
 	 * @param orderList2
-	 * 		A List of Orders
+	 * 		A List of Orders.
 	 * @param time
-	 * 		The time when all task on assemblyLine will be done
+	 * 		The time when all tasks on assemblyLine will be done.
 	 * @param assemblyLineScheduler
-	 * 		The assymblylineScheduler to which the orders belong
-	 * @param deadlines 
+	 * 		The assymblylineScheduler to which the orders belong.
+	 * @param scheduledOrdersWithCompletionTime 
 	 * 		The list which will contain the scheduled Orders and their estimated completion time
 	 */
 	@SuppressWarnings("unchecked")
-	private void addDay(ArrayList<ScheduledOrder> result,
+	private void addDay(ArrayList<ScheduledOrder> scheduledOrders,
 			ArrayList<SingleTaskOrder> sTOrderList1,
 			ArrayList<SingleTaskOrder> sTOrderList3,
-			ArrayList<Order> orderList2, GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> deadlines) {
+			ArrayList<Order> orderList2, GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> scheduledOrdersWithCompletionTime) {
 		ArrayList<Order> temp = new ArrayList<Order>();
 		int corectionfactor = 2;
 		// adds one or two SingleTaskOrders at the beginning of the day
@@ -464,125 +494,130 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		temp.add(null);
 		temp.add(null);
 		temp.add(null);
-		timeOfBelt(temp,time,assemblyLineScheduler,deadlines);
-		result.addAll(transformToScheduledOrder(temp,time,assemblyLineScheduler));
+		timeOfBelt(temp,time,assemblyLineScheduler,scheduledOrdersWithCompletionTime);
+		scheduledOrders.addAll(transformToScheduledOrder(temp,time,assemblyLineScheduler));
 	}
 	/**
-	 * completes the day with singleCarOrders
-	 * @param temp2
-	 * 		The given schedule
+	 * Completes the day with SingleCarOrders.
+	 * 
+	 * @param orders
+	 * 		The given schedule.
 	 * @param sTOrderList1
-	 * 	A List of SingleTaskOrders that are processed on the first workstation
+	 * 		A List of SingleTaskOrders that are processed on the first workstation.
 	 * @param sTOrderList3
-	 * 		A List of SingleTaskOrders that are processed on the third workstation
+	 * 		A List of SingleTaskOrders that are processed on the third workstation.
 	 * @param time
-	 * 		The time when all task on assemblyLine will be done
+	 * 		The time when all task on assemblyLine will be done.
 	 * @param assemblyLineScheduler
-	 * 		The assymblylineScheduler to which the orders belong
+	 * 		The assymblylineScheduler to which the orders belong.
 	 */
 	@SuppressWarnings("unchecked")
-	private void completeAddDaywith1and3(ArrayList<Order> temp2,
+	private void completeAddDaywith1and3(ArrayList<Order> orders,
 			ArrayList<SingleTaskOrder> sTOrderList1,
 			ArrayList<SingleTaskOrder> sTOrderList3, GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler) {
-		ArrayList<Order> temp = (ArrayList<Order>) temp2.clone();
+		ArrayList<Order> temp = (ArrayList<Order>) orders.clone();
 		//prepares a test dummy for 2 extra SingleTaskOrders
 		if(!sTOrderList3.isEmpty()){
-			temp2.add(sTOrderList3.get(0));
-			temp2.add(null);
+			orders.add(sTOrderList3.get(0));
+			orders.add(null);
 		}
-		if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
+		if(!sTOrderList1.isEmpty())orders.add(sTOrderList1.get(0));
 		//checks if the test dummy exceeds the end of the day
-		while((!sTOrderList3.isEmpty() || !sTOrderList1.isEmpty())&& calculatefulltimeAtstart(temp2,assemblyLineScheduler )< (AssemblyLineScheduler.END_OF_DAY-AssemblyLineScheduler.BEGIN_OF_DAY)*60){
+		while((!sTOrderList3.isEmpty() || !sTOrderList1.isEmpty())&& calculatefulltimeAtstart(orders,assemblyLineScheduler )< (AssemblyLineScheduler.END_OF_DAY-AssemblyLineScheduler.BEGIN_OF_DAY)*60){
 			//make the dummy the real situation 
 			if(!sTOrderList3.isEmpty())sTOrderList3.remove(0);
 			if(!sTOrderList1.isEmpty())sTOrderList1.remove(0);
-			temp= (ArrayList<Order>) temp2.clone();
+			temp= (ArrayList<Order>) orders.clone();
 			//prepares a test dummy for 2 extra SingleTaskOrders
 			if(!sTOrderList3.isEmpty()){
-				temp2.add(sTOrderList3.get(0));
-				temp2.add(null);
+				orders.add(sTOrderList3.get(0));
+				orders.add(null);
 			}
-			if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
+			if(!sTOrderList1.isEmpty())orders.add(sTOrderList1.get(0));
 
 		}
-		temp2 =temp;
+		orders =temp;
 	}
+	
 	/**
-	 * Transforms a list of Orders into a list of scheduledOrders starting from an empty assemblyline
-	 * @param temp
+	 * Transforms a list of Orders into a list of ScheduledOrders starting from an empty AssemblyLine.
+	 * 
+	 * @param orders
 	 * 		The list of Orders that will be transformed
 	 * @param time
 	 * 		The time used as reference for the calenders in the scheduledOrders
 	 * @param assemblyLineScheduler
 	 * 		The AssemblyLineScheduler that contains the orders
-	 * @return a list of scheduledOrders
+	 * @return A list of ScheduledOrder objects conform to the given order objects.
 	 */
 	private ArrayList<ScheduledOrder> transformToScheduledOrder(
-			ArrayList<Order> temp, GregorianCalendar time,
+			ArrayList<Order> orders, GregorianCalendar time,
 			AssemblyLineScheduler assemblyLineScheduler) {
 		LinkedList<Order> simulator = new LinkedList<Order>();
-		ArrayList<ScheduledOrder> result = new ArrayList<ScheduledOrder>();
+		ArrayList<ScheduledOrder> scheduledOrders = new ArrayList<ScheduledOrder>();
 		simulator.add(null);
 		simulator.add(null);
 		simulator.add(null);
 		int timespent = 0;
 		// places  the orders one by one and remove the last one which will be added to result
-		for(Order i : temp){
+		for(Order i : orders){
 			GregorianCalendar clone = (GregorianCalendar) time.clone();
 			clone.add(GregorianCalendar.MINUTE, timespent);
-			result.add(new ScheduledOrder(clone, i));
+			scheduledOrders.add(new ScheduledOrder(clone, i));
 			simulator.removeLast();
 			simulator.addFirst(i);
 			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 		}
-		return result;
+		return scheduledOrders;
 
 	}
+	
 	/**
-	 * Transforms a list of Orders into a list of scheduledOrders starting from the current AssemblyLine
-	 * @param temp
-	 * 		The list of Orders that will be transformed
+	 * Transforms a list of Orders into a list of ScheduledOrders starting from the current AssemblyLine.
+	 * 
+	 * @param orders
+	 * 		The list of Orders that will be transformed.
 	 * @param time
-	 * 		The time used as reference for the calenders in the scheduledOrders
+	 * 		The time used as reference for the calenders in the ScheduledOrders.
 	 * @param assemblyLineScheduler
-	 * 		The AssemblyLineScheduler that contains the orders and the current AssemblyLine
-	 * @return a list of scheduledOrders
+	 * 		The AssemblyLineScheduler that contains the orders and the current AssemblyLine.
+	 * @return A list of scheduledOrders.
 	 */
 	private ArrayList<ScheduledOrder> transformToScheduledOrderWithAssembly(
-			ArrayList<Order> temp, GregorianCalendar time,
+			ArrayList<Order> orders, GregorianCalendar time,
 			AssemblyLineScheduler assemblyLineScheduler) {
 		LinkedList<Order> simulator = assemblyLineScheduler.getAssemblyLine().getAllOrders();
-		ArrayList<ScheduledOrder> result = new ArrayList<ScheduledOrder>();
+		ArrayList<ScheduledOrder> scheduledOrders = new ArrayList<ScheduledOrder>();
 		int timespent = 0;
 		// places  the orders one by one and remove the last one which will be added to result
-		for(Order i : temp){
+		for(Order i : orders){
 			GregorianCalendar clone = (GregorianCalendar) time.clone();
 			clone.add(GregorianCalendar.MINUTE, timespent);
-			result.add(new ScheduledOrder(clone, i));
+			scheduledOrders.add(new ScheduledOrder(clone, i));
 			simulator.removeLast();
 			simulator.addFirst(i);
 			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 		}
-
-		return result;
-
+		return scheduledOrders;
 	}
+	
 	/**
-	 * Calculates the time necessary to finish the schedule given the current state of the assemblyLine
-	 * @param temp
+	 * Calculates the time necessary to finish the schedule given the current state of the AssemblyLine.
+	 * 
+	 * @param orders
 	 * 		The schedule to finish
 	 * @param assemblyLineScheduler 
-	 * 			The AssemblyLineScheduler where the orders whould be placed
-	 * @return the time necessary to finish the schedule given the current state of the assemblyLine in minutes
+	 * 		The AssemblyLineScheduler where the orders would be placed.
+	 * @return The time necessary to finish the schedule given the current state of the assemblyLine in minutes.
 	 */
-	private int calculatefulltimeAtstart(ArrayList<Order> temp, AssemblyLineScheduler assemblyLineScheduler) {
+	private int calculatefulltimeAtstart(ArrayList<Order> orders, AssemblyLineScheduler assemblyLineScheduler) {
 		LinkedList<Order> simulator = new LinkedList<Order>();
 		simulator.add(null);
 		simulator.add(null);
 		simulator.add(null);
 		int time = 0;
 		// places  the orders one by one 
-		for(Order i : temp){
+		for(Order i : orders){
 			simulator.addFirst(i);
 			simulator.removeLast();
 			time += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
@@ -593,39 +628,29 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		time += assemblyLineScheduler.getAssemblyLine().calculateTimeTillEmptyFor(simulator);
 		return time;
 	}
-	/*
-	private void finish(ArrayList<ScheduledOrder> result,
-			ArrayList<SingleTaskOrder> sTOrderList1,
-			ArrayList<SingleTaskOrder> sTOrderList3, GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler) {
-		ArrayList<Order> temp = new ArrayList<Order>();
-		for(int i = 0; i< Math.min(AssemblyLineScheduler.END_OF_DAY - AssemblyLineScheduler.BEGIN_OF_DAY, Math.max(sTOrderList1.size(), sTOrderList3.size()));i++){
-			if(sTOrderList3.isEmpty() && sTOrderList1.isEmpty()) break;
-			if(!sTOrderList3.isEmpty())temp.add(sTOrderList3.remove(0));
-			temp.add(null);
-			if(!sTOrderList1.isEmpty())temp.add(sTOrderList1.remove(0));
-		}
-		result.addAll(transformToScheduledOrder(temp, time, assemblyLineScheduler));
-	}
-	 */
+
 	/**
 	 * Makes a GregorianCalendar which represents the beginning of the first workday after the given calendar.
+	 * 
 	 * @param currentTime
 	 * 		The current time and date.
 	 * @return The GregorianCalendar representing the beginning of the first workday after the day in currentTime. 
 	 */
 	private GregorianCalendar nextDay(GregorianCalendar currentTime) {
 		GregorianCalendar nextDay = (GregorianCalendar) currentTime.clone();
-		if(nextDay.get(GregorianCalendar.HOUR_OF_DAY) <= 6)nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
+		if(nextDay.get(GregorianCalendar.HOUR_OF_DAY) <= 6)
+			nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
 		nextDay.set(GregorianCalendar.HOUR_OF_DAY, AssemblyLineScheduler.BEGIN_OF_DAY);
 		nextDay.set(GregorianCalendar.MINUTE, 0);
 		nextDay.set(GregorianCalendar.SECOND, 0);
 		return nextDay;
 	}
+	
 	/**
-	 * Checks if only on advance has happened in the assemblyLine
+	 * Checks if only one "advance line" has happened in the assemblyLine.
 	 * @param assemblyLineScheduler
-	 * 		The AssemblyLineScheduler where the AssemblyLine will be retrieved from
-	 * @return true if only on advance has happened in the assemblyLine else false
+	 * 		The AssemblyLineScheduler where the AssemblyLine will be retrieved from.
+	 * @return True if only on advance has happened in the assemblyLine else false.
 	 */
 	private boolean secondAdvance(AssemblyLineScheduler assemblyLineScheduler) {
 		SingleTaskOrder order;
@@ -641,11 +666,13 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}
 		return true;
 	}
+	
 	/**
-	 * Checks if it's the start of the day
+	 * Checks if it's the start of the day.
+	 * 
 	 * @param assemblyLineScheduler
 	 * 		The AssemblyLineScheduler where will be checked if it's the start of the day
-	 * @return true if it's the start of the day else false
+	 * @return True if it's the start of the day else false.
 	 */
 	private boolean startOfDay(AssemblyLineScheduler assemblyLineScheduler) {
 		if(assemblyLineScheduler.getCurrentTime().get(GregorianCalendar.HOUR_OF_DAY) != AssemblyLineScheduler.BEGIN_OF_DAY 
@@ -655,13 +682,15 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}	
 		return true;
 	}
+	
 	/**
-	 * Checks how many SingleTaskOrders can be done till the end of the day given the time and AssemblyLineScheduler
+	 * Checks how many SingleTaskOrders can be done till the end of the day given the time and AssemblyLineScheduler.
+	 * 
 	 * @param assemblyLineScheduler
-	 * 			The AssemblyLineScheduler where the assembly line will be retrieved from
+	 * 			The AssemblyLineScheduler where the assembly line will be retrieved from.
 	 * @param allTaskCompleted
-	 * 		The time on which the order in the aseembly are done
-	 * @return the amount of SingleTaskOrders can be done till the end of the day
+	 * 		The time on which the order in the assembly are done.
+	 * @return The amount of SingleTaskOrders can be done till the end of the day.
 	 */
 	private int canDoSingleTaskOrders(AssemblyLineScheduler assemblyLineScheduler, GregorianCalendar allTaskCompleted) {
 		int result = 0;
@@ -680,28 +709,32 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		}
 		return result;
 	}
+	
 	/**
-	 * Gets an estimate time to finish a single workstation of an order
+	 * Gets an estimated time to finish a single workstation of an order.
+	 * 
 	 * @param order
-	 * 		The order where the time will be retrieved from
-	 * @param workstation
-	 * 		The number of the workstation
-	 * @return an estimate time to finish a single workstation of the order
+	 * 		The order where the time will be retrieved from.
+	 * @param numberOfWorkstations
+	 * 		The number of the workstation.
+	 * @return An estimate time to finish a single workstation of the order.
 	 */
-	private int getEstimateTime(Order order, int workstation) {
-		if(order == null) return 0;
+	private int getEstimateTime(Order order, int numberOfWorkstations) {
+		if(order == null)
+			return 0;
 		if(order instanceof SingleTaskOrder){
-			if(getType((SingleTaskOrder) order) == OptionType.Color && workstation==1) return 60;
-			if(getType((SingleTaskOrder) order) == OptionType.Seats && workstation==3) return 60;
+			if(getType((SingleTaskOrder) order) == OptionType.Color && numberOfWorkstations==1) return 60;
+			if(getType((SingleTaskOrder) order) == OptionType.Seats && numberOfWorkstations==3) return 60;
 			return 0;
 		}
 		return order.getConfiguration().getModel().getExpectedTaskTime();
 	}
 
 	/**
-	 * Sorts SingleTaskOrders on their deadlines
+	 * Sorts SingleTaskOrders on their deadlines.
+	 * 
 	 * @param sTOrderList
-	 * 		A list of SingleTaskOrders that will be sorted
+	 * 		A list of SingleTaskOrders that will be sorted.
 	 */
 	private void deadlineSort(ArrayList<SingleTaskOrder> sTOrderList) {
 		Comparator<SingleTaskOrder> comparator = new Comparator<SingleTaskOrder>(){
@@ -716,18 +749,19 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	}
 
 	/**
-	 * Extracts all SingleTaskOrders out a list
-	 * @param orderList
-	 *		The list where SingleTaskOrders will be extracted from
-	 * @return A list with all the SingleTaskOrders out of orderList
-	 * 		OrderList does not contain any SingleTaskOrders anymore
+	 * Filters all single task orders out of the given list of orders and returns these single tasks orders.
+	 * 
+	 * @param orders
+	 *		The list where SingleTaskOrders will be extracted from.
+	 * @return A list with all the SingleTaskOrders out of orderList.
+	 * 		OrderList does not contain any SingleTaskOrders anymore.
 	 */
 	private ArrayList<SingleTaskOrder> combSingleTaskOrders(
-			ArrayList<Order> orderList) {
+			ArrayList<Order> orders) {
 		ArrayList<SingleTaskOrder> result = new ArrayList<SingleTaskOrder>();
-		for(int i = 0; i< orderList.size(); i++){
-			if(orderList.get(i) instanceof SingleTaskOrder){
-				result.add((SingleTaskOrder) orderList.remove(i));
+		for(int i = 0; i< orders.size(); i++){
+			if(orders.get(i) instanceof SingleTaskOrder){
+				result.add((SingleTaskOrder) orders.remove(i));
 				i--;
 			}
 		}
@@ -735,29 +769,29 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	}
 
 	/**
-	 * Return the OptionType of the option in the configuration of the order
+	 * Returns the OptionType of the option in the configuration of the order.
+	 * 
 	 * @param order
-	 * 		The order where the optionType will be retrieved from
-	 * @return the OptionType of the option in the configuration of the order
+	 * 		The order where the optionType will be retrieved from.
+	 * @return the OptionType of the option in the configuration of the order.
 	 * 		
 	 */
 	private OptionType getType(SingleTaskOrder order) {
 		return order.getConfiguration().getAllOptions().get(0).getType();
 	}
 
-
 	/**
-	 * retrieves all SingleTaskOrders with a specific type out a list
-	 * @param list
-	 *		The list where SingleTaskOrders with a specific type will be retrieved from
+	 * Returns all SingleTaskOrders with a specific type in the given list.
+	 * @param singleTaskOrders
+	 *		The list where SingleTaskOrders with a specific type will be retrieved from.
 	 * @param type
-	 * 		The type of the SingleTaskOrders that will be extracted
-	 * @return A list with all the SingleTaskOrders out of orderList
+	 * 		The type of the SingleTaskOrders that will be extracted.
+	 * @return A list with all the SingleTaskOrders out of orderList.
 	 */
 	private ArrayList<SingleTaskOrder> combSingleTaskOrdersByType(
-			ArrayList<SingleTaskOrder> list, OptionType type) {
+			ArrayList<SingleTaskOrder> singleTaskOrders, OptionType type) {
 		ArrayList<SingleTaskOrder> result = new ArrayList<SingleTaskOrder>();
-		for(SingleTaskOrder i:list){
+		for(SingleTaskOrder i:singleTaskOrders){
 			if(getType(i) == type){
 				result.add(i);
 			}
@@ -765,6 +799,11 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		return result;
 	}
 
+	/**
+	 * Returns the inner algorithm of this efficiency scheduling algorithm.
+	 * 
+	 * @return The inner algorithm of this efficiency scheduling algorithm.
+	 */
 	public SchedulingAlgorithm getInnerAlgorithm() {
 		return innerAlgorithm;
 	}

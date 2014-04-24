@@ -28,6 +28,7 @@ public interface SchedulingAlgorithm {
 	 * @param allTasksCompletedTime
 	 * 		The time by which all tasks have to be completed.
 	 * @param assemblyLineScheduler
+	 * 		The scheduler of the assembly line.
 	 * @return A scheduled list of ScheduledOrder objects.
 	 */
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(ArrayList<Order> orderList, GregorianCalendar allTasksCompletedTime, AssemblyLineScheduler assemblyLineScheduler);

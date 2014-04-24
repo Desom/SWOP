@@ -40,8 +40,18 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.outDated = true;
 	}
 	
-	//TODO docs
-	private GregorianCalendar calculateEstimatedCompletionTimeOf(Order order, ArrayList<ScheduledOrder> scheduledOrders, GregorianCalendar futureTime){
+	/**
+	 * Returns the estimated time of completion for the given order, depending on the given list of orders and the given time for de next advance of the assembly line.
+	 * 
+	 * @param order
+	 * 		The order of which the estimated completion time is needed.
+	 * @param scheduledOrders
+	 * 		A list of ScheduledOrder objects representing the scheduled orders.
+	 * @param nextAdvanceTime
+	 * 		The time indicating when the next advance of the assembly line will happen.
+	 * @return
+	 */
+	private GregorianCalendar calculateEstimatedCompletionTimeOf(Order order, ArrayList<ScheduledOrder> scheduledOrders, GregorianCalendar nextAdvanceTime){
 		if(order == null){
 			throw new IllegalArgumentException("It is impossible to calculate the completionEstimate with null.");
 		}
@@ -57,7 +67,7 @@ public class AssemblyLineScheduler implements Scheduler{
 			int i = 0;
 			while(assembly.contains(order)){
 				if(order.equals(assembly.getLast())){
-					return futureTime;
+					return nextAdvanceTime;
 				}
 				assembly.removeLast();
 				if(scheduledOrders != null && scheduledOrders.size() > i){
@@ -68,7 +78,7 @@ public class AssemblyLineScheduler implements Scheduler{
 					assembly.addFirst(null);
 				}
 				int timeTillAdvance = this.getAssemblyLine().calculateTimeTillAdvanceFor(assembly);
-				futureTime.add(GregorianCalendar.MINUTE, timeTillAdvance);
+				nextAdvanceTime.add(GregorianCalendar.MINUTE, timeTillAdvance);
 			}
 		}
 		
@@ -92,10 +102,14 @@ public class AssemblyLineScheduler implements Scheduler{
 
 
 	/**
-	 * TODO
+	 * Returns the estimated time the order on the given position in the given list of ScheduledOrder objects will get off of the assembly line.
+	 * 
 	 * @param position
+	 * 		The position of the order in de given list of ScheduledOrder objects of which the time will be returned.
 	 * @param scheduledOrders
+	 * 		A list of scheduled orders.
 	 * @return
+	 * 		The time on which the indicated order in de scheduled list of orders, will get off of the assembly line.
 	 */
 	private GregorianCalendar timeTillOrderOffAssemblyLine(int position, ArrayList<ScheduledOrder> scheduledOrders) {
 		GregorianCalendar simulTime = scheduledOrders.get(position).getScheduledTime();
@@ -254,14 +268,6 @@ public class AssemblyLineScheduler implements Scheduler{
 		futureTime.add(GregorianCalendar.MINUTE, minutes);
 		ArrayList<ScheduledOrder> scheduledOrders = this.getSchedule(futureTime);
 		int i = 0;
-//		while(this.getAssemblyLine() != null 
-//				&& this.getAssemblyLine().isEmpty() 
-//				&& scheduledOrders.get(i).getScheduledOrder() == null){
-//			i++;
-//			if(i >= scheduledOrders.size()){
-//				throw new NoOrdersToBeScheduledException();
-//			}
-//		} TODO fout in while, deze while hoefde eigenlijk niet denk ik.
 		if(scheduledOrders.get(i).getScheduledTime().equals(futureTime)){
 			return scheduledOrders.get(i).getScheduledOrder();
 		}
@@ -276,23 +282,22 @@ public class AssemblyLineScheduler implements Scheduler{
 	/**
 	 * Returns the schedule (a list of ScheduledOrder objects) of this assembly line scheduler.
 	 * 
-	 * @param futureTime
-	 * 		
+	 * @param nextAdvanceTime
+	 * 		The time on which the assembly line the will advance.
 	 * @return The schedule of this assembly line scheduler.
 	 * @throws NoOrdersToBeScheduledException
 	 * 		If the schedule of this assembly line scheduler is empty.
 	 */
-	//TODO controleer ifs
-	private ArrayList<ScheduledOrder> getSchedule(GregorianCalendar futureTime) throws NoOrdersToBeScheduledException {
+	private ArrayList<ScheduledOrder> getSchedule(GregorianCalendar nextAdvanceTime) throws NoOrdersToBeScheduledException {
 		if(this.outDated 
 				|| this.schedule == null 
 				|| this.schedule.size() == 0
-				|| !futureTime.equals(this.schedule.get(0).getScheduledTime())){
-			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
+				|| !nextAdvanceTime.equals(this.schedule.get(0).getScheduledTime())){
+			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), nextAdvanceTime, this);
 			this.outDated = false;
 		}
 		if(this.getAssemblyLine() != null && !this.schedule.isEmpty() && this.getAssemblyLine().getAllOrders().contains(this.schedule.get(0).getScheduledOrder())){
-			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), futureTime, this);
+			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), nextAdvanceTime, this);
 		}
 		
 		if(this.schedule.isEmpty()){

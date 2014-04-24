@@ -63,7 +63,7 @@ public class MainController {
 										break;
 			case "Manager":				managerController.run(ui, company, manager);
 										break;
-			case "exit":				break loop;
+			case "Exit":				return;
 			}
 		}
 		

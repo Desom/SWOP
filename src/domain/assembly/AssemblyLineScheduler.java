@@ -42,7 +42,6 @@ public class AssemblyLineScheduler implements Scheduler{
 	
 	//TODO docs
 	private GregorianCalendar calculateEstimatedCompletionTimeOf(Order order, ArrayList<ScheduledOrder> scheduledOrders, GregorianCalendar futureTime){
-		//TODO refactoring?
 		if(order == null){
 			throw new IllegalArgumentException("It is impossible to calculate the completionEstimate with null.");
 		}
@@ -253,7 +252,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	protected Order seeNextOrder(int minutes) throws NoOrdersToBeScheduledException{
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, minutes);
-		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(futureTime);
+		ArrayList<ScheduledOrder> scheduledOrders = this.getSchedule(futureTime);
 		int i = 0;
 //		while(this.getAssemblyLine() != null 
 //				&& this.getAssemblyLine().isEmpty() 
@@ -424,7 +423,6 @@ public class AssemblyLineScheduler implements Scheduler{
 			return;
 		}
 		
-		//TODO kleine verbetering, ok?
 		int newOverTime = 0;
 		while(!time.equals(endOfDay)){
 			time.add(GregorianCalendar.MINUTE, -1);

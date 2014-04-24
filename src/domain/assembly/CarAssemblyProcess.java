@@ -77,7 +77,7 @@ public class CarAssemblyProcess {
 		for(AssemblyTask i: tasks){
 			status = status && i.isCompleted();
 		}
-		return status;
+		return status && deliveredTime != null;
 	}
 
 	/**

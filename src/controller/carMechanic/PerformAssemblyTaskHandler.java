@@ -20,14 +20,14 @@ public class PerformAssemblyTaskHandler {
 		// 2. The user selects the corresponding work post.
 		workstation.addCarMechanic(carMechanic);
 		while(true) {
-			if (workstation.getAllPendingTasks().isEmpty()) {
+			ArrayList<AssemblyTask> tasks = workstation.getAllPendingTasks();
+			if (tasks.isEmpty()) {
 				ui.display("This workstation has no pending assembly tasks. Please try again later or go to another workstation.");
 				break;
 			}
 			// 3. The system presents an overview of the pending assembly tasks for the
 			// car at the current work post.
 			// 4. The user selects one of the assembly tasks.
-			ArrayList<AssemblyTask> tasks = workstation.getAllPendingTasks();
 			int taskIndex = ui.askWithPossibilities("Which pending task do you want to work on?", tasks.toArray().clone());
 			AssemblyTask task = tasks.get(taskIndex);
 			workstation.selectTask(task);

@@ -153,18 +153,18 @@ public class Workstation {
 	 * 
 	 * @param carMechanic
 	 * 		The user that wants to call this method.
-	 * @param timeSpend
+	 * @param timeSpent
 	 * 		The amount of minutes it took to complete the current activeTask.
 	 * @throws IllegalArgumentException
 	 * 		If there is no active task to complete in this workstation.
 	 * 		If there is no car mechanic to complete the active task.
 	 */
-	public void completeTask(CarMechanic carMechanic, int timeSpend) throws IllegalStateException {
+	public void completeTask(CarMechanic carMechanic, int timeSpent) throws IllegalStateException {
 		if (this.getCarMechanic().getId() != carMechanic.getId())
 			throw new IllegalArgumentException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {
 			if (this.carMechanic != null) {
-				this.activeTask.completeTask(timeSpend);
+				this.activeTask.completeTask(timeSpent);
 				this.activeTask = null;
 			}
 			else {
@@ -174,7 +174,7 @@ public class Workstation {
 		else {
 			throw new IllegalStateException("There is no active task in this workstation");
 		}
-		this.addTimeSpend(timeSpend);
+		this.addTimeSpend(timeSpent);
 		if(this.assemblyLine.canAdvanceLine()){
 			try {
 				this.assemblyLine.advanceLine();

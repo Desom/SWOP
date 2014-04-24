@@ -255,7 +255,7 @@ public class UI implements UIInterface{
 			ArrayList<Calendar> tempCalendarList) {
 		display("Your pending orders:");
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
-			display(tempIdList.get(i) +" will be delivered around:"+ convertCalendarToDate(tempCalendarList.get(i)));
+			display("Car order "+ tempIdList.get(i) +" will be delivered around:"+ convertCalendarToDate(tempCalendarList.get(i)));
 		}
 
 	}

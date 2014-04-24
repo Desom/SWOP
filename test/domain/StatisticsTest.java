@@ -102,7 +102,7 @@ public class StatisticsTest {
 	
 	@Test
 	public void amountOfCarsLastDays(){
-		assertEquals(13, stat.getAmountOfCars1DayAgo());
+		assertEquals(12, stat.getAmountOfCars1DayAgo());
 		assertEquals(14, stat.getAmountOfCars2DaysAgo());
 	}
 	

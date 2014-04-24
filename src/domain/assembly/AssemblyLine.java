@@ -89,13 +89,7 @@ public class AssemblyLine {
 				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
 				finished = workstationLast.getCarAssemblyProcess().getOrder();
 			}
-			for(int i = getAllWorkstations().size(); i>1; i--){
-				Workstation workstationNext = selectWorkstationById(i);
-				workstationNext.clear();;
-				Workstation workstationPrev = selectWorkstationById(i-1);
-				workstationNext.setCarAssemblyProcess(workstationPrev.getCarAssemblyProcess());
-			}
-
+			
 			//voeg nieuwe car toe.
 			boolean tryNextAdvance = true;
 			Order newOrder = null;
@@ -104,6 +98,16 @@ public class AssemblyLine {
 			} catch (NoOrdersToBeScheduledException e) {
 				tryNextAdvance = false;
 			}
+			
+			
+			for(int i = getAllWorkstations().size(); i>1; i--){
+				Workstation workstationNext = selectWorkstationById(i);
+				workstationNext.clear();;
+				Workstation workstationPrev = selectWorkstationById(i-1);
+				workstationNext.setCarAssemblyProcess(workstationPrev.getCarAssemblyProcess());
+			}
+
+			
 			
 			CarAssemblyProcess newAssemblyProcess = null;
 			if(newOrder != null){

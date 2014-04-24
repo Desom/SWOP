@@ -33,7 +33,7 @@ public class OrderNewCarHandler implements CommunicationTool{
 		ArrayList<Integer> tempIdList= new ArrayList<Integer>();
 		ArrayList<Calendar> tempCalendarList= new ArrayList<Calendar>();
 		for(Order order:ordermanager.getPendingOrders(garageHolder)){
-			tempIdList.add(order.getUserId());
+			tempIdList.add(order.getCarOrderID());
 			tempCalendarList.add(ordermanager.completionEstimate(order));
 		}
 		ui.displayPendingCarOrders(tempIdList, tempCalendarList);

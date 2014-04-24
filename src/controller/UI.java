@@ -12,7 +12,6 @@ import domain.assembly.DoesNotExistException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
 import domain.order.Order;
 import domain.order.SingleTaskOrder;
 import domain.policies.InvalidConfigurationException;
@@ -67,7 +66,7 @@ public class UI implements UIInterface{
 	
 	public GregorianCalendar askForDate(String question) {
 		this.display(question);
-		int year = this.askForInteger("Enter the year: ", 2000);
+		int year = this.askForInteger("Enter the year: ", 2014);
 		int month =  this.askForInteger("Enter the month in numbers: ", 1, 12) - 1;
 
 		GregorianCalendar date = new GregorianCalendar(year, month, 1);

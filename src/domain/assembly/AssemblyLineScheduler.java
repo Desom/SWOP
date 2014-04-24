@@ -14,7 +14,7 @@ public class AssemblyLineScheduler implements Scheduler{
 
 	public static final int END_OF_DAY = 22;
 	public static final int BEGIN_OF_DAY = 6;
-	private int overTimeInMinutes; //TODO updaten
+	private int overTimeInMinutes;
 	private AssemblyLine assemblyLine;
 	private ArrayList<SchedulingAlgorithm> possibleAlgorithms;
 	private SchedulingAlgorithm currentAlgorithm;
@@ -23,15 +23,22 @@ public class AssemblyLineScheduler implements Scheduler{
 	private ArrayList<ScheduledOrder> schedule;
 	private boolean outDated;
 
-	//TODO docs
-	//eerste algorithm van de possibleAlgorithms is het default algorithm.
+	/**
+	 * Constructor of AssemblyLineScheduler.
+	 * 
+	 * @param time
+	 * 		The current time.
+	 * @param possibleAlgorithms
+	 * 		Possible algorithms to schedule orders.
+	 * 		The first algorithm of this list is the default algorithm.
+	 */
+	@SuppressWarnings("unchecked")
 	public AssemblyLineScheduler(GregorianCalendar time, ArrayList<SchedulingAlgorithm> possibleAlgorithms) {
 		this.currentTime = (GregorianCalendar) time.clone();
 		this.possibleAlgorithms = (ArrayList<SchedulingAlgorithm>) possibleAlgorithms.clone();
 		this.currentAlgorithm = this.possibleAlgorithms.get(0);
 		this.outDated = true;
 	}
-
 	
 	//TODO docs
 	private GregorianCalendar calculateEstimatedCompletionTimeOf(Order order, ArrayList<ScheduledOrder> scheduledOrders, GregorianCalendar futureTime){
@@ -44,19 +51,8 @@ public class AssemblyLineScheduler implements Scheduler{
 			throw new InternalFailureException("An AssemblyLineScheduler doesn't have an AssemblyLine which is necessary for completionEstimate.");
 		}
 		
-//		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
-//		GregorianCalendar futureTime = this.getCurrentTime();
-//		futureTime.add(GregorianCalendar.MINUTE, time);
-		
 		//als order al op de AssemblyLine staat
 		if(this.getAssemblyLine().getAllOrders().contains(order)){
-//			ArrayList<ScheduledOrder> scheduledOrders;
-//			try {
-//				scheduledOrders = getSchedule(futureTime);
-//			} catch (NoOrdersToBeScheduledException e) {
-//				scheduledOrders = null;
-//			}
-
 			
 			LinkedList<Order> assembly = this.getAssemblyLine().getAllOrders();
 			int i = 0;
@@ -77,16 +73,6 @@ public class AssemblyLineScheduler implements Scheduler{
 			}
 		}
 		
-		
-		//als order nog moet worden gescheduled
-
-//		ArrayList<ScheduledOrder> scheduledOrders;
-//		try {
-//			scheduledOrders = getSchedule(futureTime);
-//		} catch (NoOrdersToBeScheduledException e) {
-//			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
-//		}
-		
 		if(scheduledOrders == null){
 			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
 		}
@@ -99,7 +85,6 @@ public class AssemblyLineScheduler implements Scheduler{
 		}
 		
 		if(position >= scheduledOrders.size()){
-			//TODO goede exception?
 			throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
 		}
 		return timeTillOrderOffAssemblyLine(position, scheduledOrders);
@@ -108,12 +93,12 @@ public class AssemblyLineScheduler implements Scheduler{
 
 
 	/**
+	 * TODO
 	 * @param position
 	 * @param scheduledOrders
 	 * @return
 	 */
-	private GregorianCalendar timeTillOrderOffAssemblyLine(int position,
-			ArrayList<ScheduledOrder> scheduledOrders) {
+	private GregorianCalendar timeTillOrderOffAssemblyLine(int position, ArrayList<ScheduledOrder> scheduledOrders) {
 		GregorianCalendar simulTime = scheduledOrders.get(position).getScheduledTime();
 		LinkedList<Order> assembly;
 		if(position < 2){
@@ -145,8 +130,14 @@ public class AssemblyLineScheduler implements Scheduler{
 
 		return simulTime;
 	}
-
 	
+	/**
+	 * Returns the estimated time of completion of this given order.
+	 * 
+	 * @param order
+	 * 		The order of which the completion estimate is desired.
+	 * @return The estimated date of completion of the given order.
+	 */
 	public GregorianCalendar completionEstimate(Order order){
 		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
 		GregorianCalendar futureTime = this.getCurrentTime();
@@ -162,6 +153,13 @@ public class AssemblyLineScheduler implements Scheduler{
 		return calculateEstimatedCompletionTimeOf(order, scheduledOrders, futureTime);
 	}
 	
+	/**
+	 * Checks wither the given order can be finished before its deadline.
+	 * 
+	 * @param orderWithDeadline
+	 * 		The order which has to be checked.
+	 * @return True if the order can be finished before the deadline, otherwise false.
+	 */
 	public boolean canFinishOrderBeforeDeadline(SingleTaskOrder orderWithDeadline){
 
 		int time = this.getAssemblyLine().calculateTimeTillAdvanceFor(this.getAssemblyLine().getAllOrders());
@@ -184,9 +182,14 @@ public class AssemblyLineScheduler implements Scheduler{
 		return amountOfDeadlineFailures >= newAmountOfDeadlineFailures;
 	}
 	
-
-	private int calculateAmountOfDeadlineFailures(
-			ArrayList<ScheduledOrder> scheduledOrders) {
+	/**
+	 * Returns the number of orders which won't be completed before their deadline.
+	 * 
+	 * @param scheduledOrders
+	 * 		The list of scheduled orders to check.
+	 * @return The number of orders which won't be completed before their deadline.
+	 */
+	private int calculateAmountOfDeadlineFailures(ArrayList<ScheduledOrder> scheduledOrders) {
 		int amount = 0;
 		for(int i = 0; i < scheduledOrders.size(); i++){
 			Order order = scheduledOrders.get(i).getScheduledOrder();
@@ -200,15 +203,15 @@ public class AssemblyLineScheduler implements Scheduler{
 		return amount;
 	}
 
-
 	/**
 	 * Returns the Order that will be put on the AssemblyLine immediately after updating
 	 * the currentTime with the given amount of minutes.
 	 * 
 	 * @param minutes
-	 *            The amount of minutes it took to complete the tasks in the Workstations. (in minutes)
+	 * 		The amount of minutes it took to complete the tasks in the Workstations. (in minutes)
 	 * @return The Order that is scheduled to be built now.
-	 * @throws NoOrdersToBeScheduledException 
+	 * @throws NoOrdersToBeScheduledException
+	 * 		If there are no orders to be scheduled.
 	 */
 	protected Order getNextOrder(int minutes) throws NoOrdersToBeScheduledException{
 		this.addCurrentTime(minutes);
@@ -240,10 +243,11 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * of minutes, but without updating currentTime.
 	 * 
 	 * @param minutes
-	 *            The amount of minutes it took to complete the tasks in the
-	 *            Workstations. (in minutes)
+	 * 		The amount of minutes it took to complete the tasks in the
+	 *      Workstations. (in minutes)
 	 * @return The CarOrder that is scheduled to be built after the given amount of minutes.
-	 * @throws NoOrdersToBeScheduledException 
+	 * @throws NoOrdersToBeScheduledException
+	 * 		If there are no orders to be scheduled.
 	 */
 	protected Order seeNextOrder(int minutes) throws NoOrdersToBeScheduledException{
 		GregorianCalendar futureTime = this.getCurrentTime();
@@ -270,9 +274,13 @@ public class AssemblyLineScheduler implements Scheduler{
 	}
 
 	/**
+	 * Returns the schedule (a list of ScheduledOrder objects) of this assembly line scheduler.
+	 * 
 	 * @param futureTime
-	 * @return
-	 * @throws NoOrdersToBeScheduledException 
+	 * 		
+	 * @return The schedule of this assembly line scheduler.
+	 * @throws NoOrdersToBeScheduledException
+	 * 		If the schedule of this assembly line scheduler is empty.
 	 */
 	//TODO controleer ifs
 	private ArrayList<ScheduledOrder> getSchedule(GregorianCalendar futureTime) throws NoOrdersToBeScheduledException {
@@ -293,6 +301,10 @@ public class AssemblyLineScheduler implements Scheduler{
 		return this.schedule;
 	}
 	
+	/**
+	 * This method is called to indicate that the schedule of this assembly line scheduler is outdated. 
+	 */
+	@Override
 	public void updateSchedule(){
 		this.outDated = true;
 		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty()){
@@ -305,7 +317,12 @@ public class AssemblyLineScheduler implements Scheduler{
 		}
 	}
 
-	// TODO docs
+	/**
+	 * Returns the orders to be scheduled.
+	 * Returns null if this assembly line scheduler has no order manager.
+	 * 
+	 * @return The orders to be scheduled, or null if this assembly line scheduler has no order manager.
+	 */
 	public ArrayList<Order> getOrdersToBeScheduled() {
 		if(this.getOrderManager() != null){
 			ArrayList<Order> orders = this.getOrderManager().getAllUnfinishedOrders();
@@ -313,53 +330,73 @@ public class AssemblyLineScheduler implements Scheduler{
 			orders.removeAll(onAssembly);
 			return orders;
 		}
-		return new ArrayList<Order>(); //TODO mss beter null?
+		return null;
 	}
 
-	//TODO docs
-	public void setSchedulingAlgorithm(SchedulingAlgorithm algorithm){
+	/**
+	 * Sets the scheduling algorithm.
+	 * 
+	 * @param algorithm
+	 * 		The new active scheduling algorithm.
+	 * @throws IllegalArgumentException
+	 * 		If the given algorithm isn't one of the possible algorithms.
+	 */
+	public void setSchedulingAlgorithm(SchedulingAlgorithm algorithm) throws IllegalArgumentException {
 		if(!this.possibleAlgorithms.contains(algorithm))
 			throw new IllegalArgumentException("This SchedulingAlgorithm is not one of the possible SchedulingAlgorithms");
-		//TODO goede exception?
 		this.currentAlgorithm = algorithm;
 		this.updateSchedule();
 	}
 	
-	//TODO docs
+	/**
+	 * Sets the current algorithm to the default algorithm.
+	 * Updates the schedule afterwards.
+	 */
 	public void setSchedulingAlgorithmToDefault() {
 		this.currentAlgorithm = this.getPossibleAlgorithms().get(0);
 		this.updateSchedule();
 	}
 
+	/**
+	 * Returns all possible algorithms of this assembly line scheduler.
+	 * 
+	 * @return All possible algorithms of this assembly line scheduler.
+	 */
 	public ArrayList<SchedulingAlgorithm> getPossibleAlgorithms() {
 		return possibleAlgorithms;
 	}
 	
+	/**
+	 * Returns the current algorithm of this assembly line scheduler.
+	 * 
+	 * @return The current algorithm of this assembly line scheduler.
+	 */
 	public SchedulingAlgorithm getCurrentAlgorithm(){
 		return this.currentAlgorithm;
 	}
 
+	/**
+	 * Returns the current time of this assembly line scheduler.
+	 * 
+	 * @return The current time of this assembly line scheduler.
+	 */
 	public GregorianCalendar getCurrentTime() {
 		return (GregorianCalendar) this.currentTime.clone();
 	}
-
+	
 	/**
 	 * Adds minutes to the current time of this assembly line scheduler.
 	 * 
-	 * @param time
-	 * 		Advance of time in minutes.
+	 * @param minutes
+	 * 		The minutes to be added to the current time.
 	 */
-	//*If a new work day is started (if the resulting current time equals BEGIN_OF_DAY) overtime will be recalculated.
-	 
-	private void addCurrentTime(int time){
-		this.currentTime.add(GregorianCalendar.MINUTE, time);
-//		GregorianCalendar futureTime = (GregorianCalendar) this.currentTime.clone();
-//		futureTime.add(GregorianCalendar.MINUTE, time);
-//		if (futureTime.get(GregorianCalendar.HOUR_OF_DAY) == this.BEGIN_OF_DAY) {
-//			// nieuwe overtime berekenen
-//		}
+	private void addCurrentTime(int minutes){
+		this.currentTime.add(GregorianCalendar.MINUTE, minutes);
 	}
 
+	/**
+	 * Starts a new day by updating the overtime and setting the current time to the start of the next work day.
+	 */
 	private void startNewDay() {
 		this.updateOverTime();
 		GregorianCalendar newDay = new GregorianCalendar(
@@ -374,19 +411,22 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.currentTime = newDay;
 	}
 	
-	//TODO docs
+	/**
+	 * Updates the overtime, based on the current time and the real end of day time.
+	 * Will only be called when it's the end of the work day.
+	 */
 	private void updateOverTime() {
-		GregorianCalendar time = this.getCurrentTime();
+		GregorianCalendar time = (GregorianCalendar) this.getCurrentTime().clone();
 		GregorianCalendar endOfDay = this.getRealEndOfDay();
 		if(time.before(endOfDay)){
 			this.overTimeInMinutes = 0;
 			return;
 		}
 		
-		//TODO is dit ok?
+		//TODO kleine verbetering, ok?
 		int newOverTime = 0;
 		while(!time.equals(endOfDay)){
-			time.add(GregorianCalendar.MINUTE, 1);
+			time.add(GregorianCalendar.MINUTE, -1);
 			newOverTime++;
 		}
 		
@@ -394,7 +434,9 @@ public class AssemblyLineScheduler implements Scheduler{
 	}
 
 	/**
-	 * Gets the end of the day with overtime taken into account.
+	 * Returns the end of the day with overtime taken into account.
+	 * 
+	 * @return The end of the day with overtime taken into account.
 	 */
 	public GregorianCalendar getRealEndOfDay() {
 		GregorianCalendar current = this.getCurrentTime();
@@ -412,11 +454,19 @@ public class AssemblyLineScheduler implements Scheduler{
 		return endOfDay;
 	}
 
-
-	public void setAssemblyLine(AssemblyLine assemblyLine){
+	/**
+	 * Sets the assembly line.
+	 * 
+	 * @param assemblyLine
+	 * 		The assembly line to be set.
+	 * @throws IllegalStateException
+	 * 		If this assembly line scheduler is already coupled with another another assembly line.
+	 * @throws IllegalArgumentException
+	 * 		If the given assembly line is already coupled with another assembly line scheduler.
+	 */
+	public void setAssemblyLine(AssemblyLine assemblyLine) throws IllegalStateException, IllegalArgumentException {
 		if(this.assemblyLine != null){
 			if(this.assemblyLine.getAssemblyLineScheduler() == this){
-				//TODO goede exception?
 				throw new IllegalStateException("The AssemblyLineScheduler: " + this.toString() + " is already coupled with an AssemblyLine");
 			}
 		}
@@ -426,15 +476,28 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.assemblyLine = assemblyLine;
 	}
 	
+	/**
+	 * Returns the assembly line.
+	 * 
+	 * @return The assembly line.
+	 */
 	public AssemblyLine getAssemblyLine() {
 		return assemblyLine;
 	}
 
-	//TODO stom dat deze public is...
-	public void setOrderManager(OrderManager orderManager){
+	/**
+	 * Set the order manager.
+	 * 
+	 * @param orderManager
+	 * 		The order manager to be set.
+	 * @throws IllegalStateException
+	 * 		If this assembly line scheduler is already coupled with an order manager.
+	 * @throws IllegalArgumentException
+	 * 		If the given order manager is already coupled to another assembly line scheduler.
+	 */
+	public void setOrderManager(OrderManager orderManager) throws IllegalStateException, IllegalArgumentException {
 		if(this.orderManager != null){
 			if(this.orderManager.getScheduler() == this){
-				//TODO goede exception?
 				throw new IllegalStateException("The AssemblyLineScheduler: " + this.toString() + " is already coupled with an OrderManager");
 			}
 		}
@@ -444,11 +507,12 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.orderManager = orderManager;
 	}
 	
+	/**
+	 * Returns the order manager of this assembly line scheduler.
+	 * 
+	 * @return The order manager of this assembly line scheduler.
+	 */
 	private OrderManager getOrderManager() {
 		return orderManager;
 	}
-	
-
-
-
 }

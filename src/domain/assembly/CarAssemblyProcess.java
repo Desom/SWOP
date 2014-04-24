@@ -70,14 +70,22 @@ public class CarAssemblyProcess {
 	/**
 	 * Test if this AssemblyProcess is completed.
 	 * 
-	 * @return true if all tasks are completed, otherwise false.
+	 * @return true if all tasks are completed and the delivered time is set, otherwise false.
 	 */
 	public Boolean isCompleted() {
+		boolean status = allPartsDone();
+		return status && this.deliveredTime != null;
+	}
+	/**
+	 * Test if this AssemblyProcess's tasks are completed.
+	 * @return true if all tasks are completed, otherwise false.
+	 */
+	private boolean allPartsDone() {
 		boolean status = true;
 		for(AssemblyTask i: tasks){
 			status = status && i.isCompleted();
 		}
-		return status && deliveredTime != null;
+		return status;
 	}
 
 	/**
@@ -138,7 +146,7 @@ public class CarAssemblyProcess {
 	 * 			The time the car of this order was delivered.
 	 */
 	void setDeliveredTime(GregorianCalendar deliveredTime) {
-			if(!this.isCompleted())
+			if(!this.allPartsDone())
 				throw new IllegalStateException("Can't set deliveredTime because this CarOrder is not completed yet.");
 			if(this.deliveredTime!=null)
 				throw new IllegalStateException("DeliveredTime already set");

@@ -31,7 +31,6 @@ public class CheckOrderDetailsHandler {
 			};
 			Collections.sort(pendingOrders, comparator);
 			Collections.sort(completedOrders, comparator);
-			// TODO ik ging ervan uit dat met "recent first" de ordered time bedoeld werd. Is dat goed?
 
 			ArrayList<Calendar> completionEstimates = new ArrayList<Calendar>();
 			for (Order carOrder : pendingOrders)

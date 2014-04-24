@@ -1,14 +1,12 @@
 package domain.assembly;
+
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.List;
 
 import domain.InternalFailureException;
 import domain.Statistics;
 import domain.configuration.OptionType;
 import domain.order.Order;
-import domain.user.CarMechanic;
-
 
 public class AssemblyLine {
 

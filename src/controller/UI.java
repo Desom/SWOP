@@ -9,6 +9,7 @@ import java.util.Scanner;
 import domain.Statistics;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
+import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.order.CarOrder;
@@ -37,7 +38,7 @@ public class UI implements UIInterface{
 			System.out.println("At least: " + lowerBound + ".");
 			int input = Integer.parseInt(scan.nextLine());
 			while(lowerBound > input){
-				System.out.println("This Number is to low.");
+				System.out.println("This number is too low.");
 				input = Integer.parseInt(scan.nextLine());
 			}
 			return input;
@@ -107,7 +108,6 @@ public class UI implements UIInterface{
 		return possibilities.get(input-1);
 	}
 
-	//TODO mss private methode maken die door beide askWith's wordt opgeroepen...
 	public int askWithPossibilities(String question, Object[] possibilities){
 		System.out.println(question);
 		String possOutput = "";
@@ -267,7 +267,6 @@ public class UI implements UIInterface{
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
 			display(tempIdList.get(i) +" is delivered on:"+ convertCalendarToDate(tempCalendarList.get(i)));
 		}
-
 	}
 
 	@Override
@@ -277,11 +276,11 @@ public class UI implements UIInterface{
 		for(int i =0; i< Math.max(pendingOrders.size(), completionEstimates.size());i++){
 			String type;
 			if(pendingOrders.get(i) instanceof SingleTaskOrder){
-				type = " type: Single task order";
+				type = ":Single task order ";
 			}else{
-				type = " type: Normal order";
+				type = "Car order ";
 			}
-			display(index + ". " + pendingOrders.get(i).getCarOrderID() + " will be delivered around:" + convertCalendarToDate(completionEstimates.get(i)) + type);
+			display(index + ". " + type + pendingOrders.get(i).getCarOrderID() + " will be delivered around: " + convertCalendarToDate(completionEstimates.get(i)));
 			index++;
 		}
 		display("Your completed orders:");
@@ -301,15 +300,9 @@ public class UI implements UIInterface{
 		return answer;// Returns 0 when the user wants to leave the overwiew
 	}
 
-	// TODO chain pendingOrder.getCar().getConfiguration().getModel() ok?
-	// mogelijke oplossing: sla pendingOrder.getCar().getConfiguration() op en gebruik dan telkens de opgeslagen config om model en options te getten. ?
-	// dubbel checken als alles wel degelijk een clone is
 	@Override
 	public void displayPendingCarOrderInfo(Order pendingOrder, Calendar completionEstimate) {
-		display("Specification:");
-		display("- Car model: " + pendingOrder.getConfiguration().getModel());
-		display("- Options: ");
-		display(pendingOrder.getConfiguration().getAllOptions().toArray());
+		display(pendingOrder.getConfiguration());
 		display("Order time: " + convertCalendarToDate(pendingOrder.getOrderedTime()));
 		display("Estimated deliver time: " + convertCalendarToDate(completionEstimate));
 		while (true)
@@ -318,16 +311,22 @@ public class UI implements UIInterface{
 	}
 	@Override
 	public void displayCompletedCarOrderInfo(Order completedOrder) {
-		display("Specification:");
-		display("- Car model: " + completedOrder.getConfiguration().getModel());
-		display("- Options: ");
-		display(completedOrder.getConfiguration().getAllOptions().toArray());
+		this.display(completedOrder.getConfiguration());
 		display("Order time: " + completedOrder.getOrderedTime());
 		display("Delivered time: " + completedOrder.getDeliveredTime());
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
 				return;
 	}
+	
+	private void display(Configuration configuration) {
+		display("Specification:");
+		display("- Car model: " + configuration.getModel());
+		display("- Options: ");
+		for (Option option : configuration.getAllOptions())
+			display("	- " + option);
+	}
+	
 	@Override
 	public void showStatistics(Statistics view) {
 		display("Current statistics:");

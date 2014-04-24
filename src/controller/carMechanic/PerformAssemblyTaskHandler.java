@@ -11,7 +11,6 @@ import domain.user.CarMechanic;
 
 public class PerformAssemblyTaskHandler {
 
-	//TODO clone array -> beter clonen (bij workstations en tasks)
 	public void run(UIInterface ui, Company company, CarMechanic carMechanic) {
 		// 1. The system asks the user what work post he is currently residing at
 		LinkedList<Workstation> workstations = company.getAllWorkstations();

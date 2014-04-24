@@ -1,4 +1,5 @@
 package domain.assembly;
+
 import java.util.ArrayList;
 
 import domain.InternalFailureException;

@@ -2,14 +2,11 @@ package controller;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.GregorianCalendar;
 import java.util.List;
 
 import domain.Statistics;
 import domain.assembly.AssemblyStatusView;
-import domain.order.CarOrder;
 import domain.order.Order;
-import domain.policies.InvalidConfigurationException;
 
 public interface UIInterface {
 

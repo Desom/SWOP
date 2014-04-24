@@ -2,10 +2,8 @@ package domain.assembly;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import domain.configuration.Option;
-import domain.configuration.OptionType;
 import domain.order.Order;
 
 public class CarAssemblyProcess {

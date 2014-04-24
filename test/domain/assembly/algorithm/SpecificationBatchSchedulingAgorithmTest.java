@@ -196,6 +196,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		scheduler.setSchedulingAlgorithm(algo);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		Statistics stat = new Statistics(orderManager);
+		@SuppressWarnings("unused")
 		AssemblyLine line = new AssemblyLine(scheduler, stat);
 		
 		assertEquals(algo.searchForBatchConfiguration(scheduler).size(), 1);

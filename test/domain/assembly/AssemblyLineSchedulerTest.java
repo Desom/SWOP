@@ -15,26 +15,19 @@ import domain.Statistics;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.CarModel;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
 import domain.order.Order;
 import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
-import domain.policies.CompletionPolicy;
-import domain.policies.ConflictPolicy;
-import domain.policies.DependencyPolicy;
 import domain.policies.InvalidConfigurationException;
-import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
 import domain.user.CarMechanic;
 import domain.user.CustomShopManager;
-import domain.user.GarageHolder;
 
 public class AssemblyLineSchedulerTest {
 
@@ -262,43 +255,6 @@ public class AssemblyLineSchedulerTest {
 		}
 	}
 	
-	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
-
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
-		Policy pol2 = new ConflictPolicy(pol1);
-		Policy pol3 = new DependencyPolicy(pol2);
-		Policy pol4 = new ModelCompatibilityPolicy(pol3);
-		Policy carOrderPolicy= pol4;
-
-
-		CarModelCatalog catalog = new CarModelCatalog();
-		CarModel carModel = null;
-		for(CarModel m : catalog.getAllModels()){
-			if(m.getName().equals("Model A")){
-				carModel = m;
-				continue;
-			}
-		}
-
-		Configuration config = new Configuration(carModel, carOrderPolicy);
-
-		for(Option option : catalog.getAllOptions()){
-			if(option.getDescription().equals("sedan")
-					||option.getDescription().equals("blue")
-					||option.getDescription().equals("standard 2l v4")
-					||option.getDescription().equals("5 speed manual")
-					||option.getDescription().equals("leather white")
-					||option.getDescription().equals("comfort")
-					)
-				config.addOption(option);
-		}
-		config.complete();
-		GarageHolder garageHolder = new GarageHolder(1);
-
-		GregorianCalendar now = new GregorianCalendar();
-		CarOrder carOrder = new CarOrder(1, garageHolder, config, now);
-		return carOrder;
-	}
 
 	private SingleTaskOrder createSingleTask(GregorianCalendar now) throws InvalidConfigurationException, CarModelCatalogException{
 		

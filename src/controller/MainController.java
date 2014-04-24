@@ -46,7 +46,7 @@ public class MainController {
 		GarageHolder garageHolder = new GarageHolder(3);
 		Manager manager = new Manager(4);
 		
-		loop: while (true) {
+		while (true) {
 			ArrayList<String> possibilities = new ArrayList<String>();
 			possibilities.add("Car mechanic");
 			possibilities.add("Custom shop manager");

@@ -91,20 +91,6 @@ public class OrderNewCarHandler implements CommunicationTool{
 		//2. The use case ends here.
 	}
 
-	/**
-	 * Get a car model based on the name
-	 * @param name the name
-	 * @return a car model based with the name name
-	 * 	       null if the name does not match a model 
-	 */
-	private CarModel getCarModel(String name, Company company){
-		CarModelCatalog catalog = company.getCatalog();
-		for(CarModel possible: catalog.getAllModels()){
-			if(possible.getName().equals(name)) return possible;
-		}
-		return null;
-	}
-
 
 	private String getTime(GregorianCalendar calender) {
 		String date= calender.get(Calendar.DAY_OF_MONTH)+"-"+(calender.get(Calendar.MONTH)+1)+"-"+calender.get(Calendar.YEAR)+" at "+calender.get(Calendar.HOUR_OF_DAY)+"h"+calender.get(Calendar.MINUTE);

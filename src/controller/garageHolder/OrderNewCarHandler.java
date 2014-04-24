@@ -3,6 +3,7 @@ package controller.garageHolder;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 import java.util.List;
 
 import controller.CommunicationTool;
@@ -60,10 +61,7 @@ public class OrderNewCarHandler implements CommunicationTool{
 			CarModelCatalog catalog = company.getCatalog();
 			CarModel model = null;
 			while(model == null ){
-				ArrayList<CarModel> modelList = new ArrayList<CarModel>();
-				for(CarModel carM: catalog.getAllModels()){
-					modelList.add(carM);
-				}
+				List<CarModel> modelList = catalog.getAllModels();
 				int modelInt = ui.askWithPossibilities("Please input your car model", modelList.toArray());
 				model = modelList.get(modelInt);			
 			}
@@ -115,20 +113,21 @@ public class OrderNewCarHandler implements CommunicationTool{
 	}
 
 	private ArrayList<Order> getSortedCompletedOrder(GarageHolder user, OrderManager ordermanager)  {
-		ArrayList<Order> Orders = ordermanager.getCompletedOrders(user);
+		ArrayList<Order> orders = ordermanager.getCompletedOrders(user);
 		ArrayList<Order> result = new ArrayList<Order>();
-		while(!Orders.isEmpty()){
-			Order min = Orders.get(0);
-			for(int i=1; i < Orders.size(); i++){
-				if(ordermanager.completionEstimate(Orders.get(i)).before(ordermanager.completionEstimate(min))){
-					min = Orders.get(i);
+		while(!orders.isEmpty()){
+			Order min = orders.get(0);
+			for(int i=1; i < orders.size(); i++){
+				if(orders.get(i).getDeliveredTime().before(min.getDeliveredTime())){
+					min = orders.get(i);
 				}
 			}
-			Orders.remove(min);
+			orders.remove(min);
 			result.add(min);
 		}
 		return result;
 	}
+	
 	public List<String> getOptionTypes() {
 		ArrayList<String> result = new ArrayList<String>();
 		for(OptionType i:OptionType.values()) result.add(i.toString());

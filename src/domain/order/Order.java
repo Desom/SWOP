@@ -175,6 +175,6 @@ public abstract class Order {
 		}catch(IllegalStateException e){
 			
 		};
-		return "CarOrder: " + this.orderId + "  User: " + this.getUserId() + ordered + delivered;
+		return "Order: " + this.orderId + " is ordered by User: " + this.getUserId() + ordered + delivered;
 	}
 }

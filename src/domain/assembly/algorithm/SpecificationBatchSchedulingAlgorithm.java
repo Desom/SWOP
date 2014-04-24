@@ -102,6 +102,14 @@ public class SpecificationBatchSchedulingAlgorithm implements
 			//verschuif tijd totdat alle workstations klaar zijn.
 			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
 		}
+		
+		//maak leeg wanneer er niets meer moet worden gescheduled.
+		while(!this.isEmptyAssembly(assembly)){
+			assembly.removeLast();
+			assembly.addFirst(null);
+			scheduledList.add(new ScheduledOrder(movingTime,null));
+			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
+		}
 
 		return scheduledList;
 	}
@@ -172,7 +180,7 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		GregorianCalendar time = (GregorianCalendar) currentTime.clone();
 		time.add(GregorianCalendar.MINUTE, minutes);
 
-		return time.before(endOfDay);
+		return !endOfDay.before(time);
 	}
 
 

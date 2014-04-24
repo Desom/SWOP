@@ -103,12 +103,13 @@ public class AssemblyLineScheduler implements Scheduler{
 		LinkedList<Order> assembly;
 		if(position < 2){
 			assembly = this.getAssemblyLine().getAllOrders();
-			if(position < 1){
-				assembly.removeLast();
-				assembly.add(scheduledOrders.get(0).getScheduledOrder());
-			}
 			assembly.removeLast();
-			assembly.add(scheduledOrders.get(1).getScheduledOrder());
+			assembly.addFirst(scheduledOrders.get(0).getScheduledOrder());
+
+			if(position == 1){
+				assembly.removeLast();
+				assembly.addFirst(scheduledOrders.get(1).getScheduledOrder());
+			}
 
 		}
 		else{
@@ -117,9 +118,9 @@ public class AssemblyLineScheduler implements Scheduler{
 			assembly.addFirst(scheduledOrders.get(position-1).getScheduledOrder());
 			assembly.addFirst(scheduledOrders.get(position).getScheduledOrder());
 		}
-		for(int i = position; i < position + 3; i ++){
+		for(int i = position+1; i < position + 4; i ++){
 			simulTime.add(GregorianCalendar.MINUTE, this.getAssemblyLine().calculateTimeTillAdvanceFor(assembly));
-			assembly.remove();
+			assembly.removeLast();
 			if(scheduledOrders.size() > i){
 				assembly.addFirst(scheduledOrders.get(i).getScheduledOrder());
 			}
@@ -254,14 +255,14 @@ public class AssemblyLineScheduler implements Scheduler{
 		futureTime.add(GregorianCalendar.MINUTE, minutes);
 		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(futureTime);
 		int i = 0;
-		while(this.getAssemblyLine() != null 
-				&& this.getAssemblyLine().isEmpty() 
-				&& scheduledOrders.get(i).getScheduledOrder() == null){
-			i++;
-			if(i >= scheduledOrders.size()){
-				throw new NoOrdersToBeScheduledException();
-			}
-		}
+//		while(this.getAssemblyLine() != null 
+//				&& this.getAssemblyLine().isEmpty() 
+//				&& scheduledOrders.get(i).getScheduledOrder() == null){
+//			i++;
+//			if(i >= scheduledOrders.size()){
+//				throw new NoOrdersToBeScheduledException();
+//			}
+//		} TODO fout in while, deze while hoefde eigenlijk niet denk ik.
 		if(scheduledOrders.get(i).getScheduledTime().equals(futureTime)){
 			return scheduledOrders.get(i).getScheduledOrder();
 		}

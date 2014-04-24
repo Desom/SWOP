@@ -118,6 +118,17 @@ public class FIFOSchedulingAlgorithmTest {
 		time.add(GregorianCalendar.MINUTE, 70);//10h40
 		assertEquals(0,scheduleList.get(14).getScheduledOrder().getCarOrderID());//60
 		assertEquals(time,scheduleList.get(14).getScheduledTime());
+		time.add(GregorianCalendar.MINUTE, 70);//11h50
+		
+		assertEquals(null,scheduleList.get(15).getScheduledOrder());//0
+		assertEquals(time,scheduleList.get(15).getScheduledTime());
+		time.add(GregorianCalendar.MINUTE, 70);//13h10
+		assertEquals(null,scheduleList.get(16).getScheduledOrder());//0
+		assertEquals(time,scheduleList.get(16).getScheduledTime());
+		time.add(GregorianCalendar.MINUTE, 60);//14h10
+		assertEquals(null,scheduleList.get(17).getScheduledOrder());//0
+		assertEquals(time,scheduleList.get(17).getScheduledTime());
+		time.add(GregorianCalendar.MINUTE, 0);
 	}
 	
 	/**

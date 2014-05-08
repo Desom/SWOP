@@ -42,16 +42,20 @@ public class SingleTaskOrderNumbersOfTasksPolicy extends Policy{
 	 */
 	@Override
 	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
-		if(configuration.getAllOptions().size() == 1){ 
+		if(configuration.getAllOptions().size() == 1)
 			proceedComplete(configuration);
-		}else{ 
-			try{
-				proceedComplete(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage("Deze configuratie heeft in plaats van 1 optie " +configuration.getAllOptions().size()+ " opties.");
-				throw e;
-			}
-			throw new InvalidConfigurationException("Deze configuratie heeft in plaats van 1 optie " +configuration.getAllOptions().size()+ " opties.");
-		}
+		else
+			this.addToException(configuration, this.buildMessage(configuration));
+	}
+	
+	/**
+	 * Builds an exception message indicating how many options the single task order has.
+	 * 
+	 * @param configuration
+	 * 		The configuration of the single task order.
+	 * @return An exception message indicating how many options the single task order has.
+	 */
+	private String buildMessage(Configuration configuration) {
+		return "Deze configuratie heeft in plaats van 1 optie " +configuration.getAllOptions().size()+ " opties.";
 	}
 }

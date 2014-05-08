@@ -78,17 +78,12 @@ public class ConflictPolicy extends Policy {
 	@Override
 	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
 		HashSet<Option[]> conflictingOptions = conflictsCheck(configuration);
-		if(conflictingOptions.isEmpty()){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
+		if(conflictingOptions.isEmpty())
+			// als verdere policies iets gooien wordt er gewoon verder gegooid.
 			proceedComplete(configuration);
-		}else{ // in dit geval moet gecatched worden en aangepast
-			try{
-				proceedComplete(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(conflictingOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(conflictingOptions));
-		}
+		else
+			// in dit geval moet gecatched worden en aangepast
+			this.addToException(configuration, this.buildMessage(conflictingOptions));
 	}
 	
 	/**

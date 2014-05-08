@@ -62,17 +62,10 @@ public class DependencyPolicy extends Policy {
 	@Override
 	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
 		ArrayList<Option> conflictingOptions = dependencyCheck(configuration);
-		if(conflictingOptions.isEmpty()){
+		if(conflictingOptions.isEmpty())
 			proceedComplete(configuration);
-		}else{
-			try{
-				proceedComplete(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(conflictingOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(conflictingOptions));
-		}
+		else
+			this.addToException(configuration, this.buildMessage(conflictingOptions));
 	}
 	
 	/**

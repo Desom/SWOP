@@ -78,17 +78,10 @@ public class SingleTaskOrderTaskTypePolicy extends Policy {
 	@Override
 	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
 		ArrayList<Option> invalidOptions = checkTypes(configuration);
-		if(invalidOptions.isEmpty()){
+		if(invalidOptions.isEmpty())
 			proceedComplete(configuration);
-		}else{
-			try{
-				proceedComplete(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(invalidOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(checkTypes(configuration)));
-		}
+		else
+			this.addToException(configuration, this.buildMessage(invalidOptions));
 	}
 
 	/**

@@ -54,17 +54,10 @@ public class ModelCompatibilityPolicy extends Policy {
 	@Override
 	public void check(Configuration configuration) throws InvalidConfigurationException{
 		ArrayList<Option> conflictingOptions = compatibilityCheck(configuration);
-		if(conflictingOptions.isEmpty()){
+		if(conflictingOptions.isEmpty())
 			proceed(configuration);
-		}else{
-			try{
-				proceed(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(configuration, conflictingOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(configuration, conflictingOptions));
-		}
+		else
+			this.addToException(configuration, this.buildMessage(configuration, conflictingOptions));
 	}
 
 	/**
@@ -95,6 +88,8 @@ public class ModelCompatibilityPolicy extends Policy {
 	/**
 	 * Builds an exception message indicating which options in the configuration are conflicting with the car model.
 	 * 
+	 * @param Configuration
+	 * 		The configuration with conflicting options.
 	 * @param conflictingOptions
 	 * 		A list of options conflicting with the car model.
 	 * @return An exception message indicating which options in the configuration are conflicting with the car model.

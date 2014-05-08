@@ -119,7 +119,7 @@ public class OrderManagerTest {
 	@Test
 	public void testCompletionEstimate(){
 		ArrayList<Order> orders1 = orderManager.getOrders(user1);
-		assertEquals(2013,orderManager.completionEstimate(orders1.get(0)).get(GregorianCalendar.YEAR));
+		assertEquals(2014,orderManager.completionEstimate(orders1.get(0)).get(GregorianCalendar.YEAR));
 		ArrayList<Order> orders2 = orderManager.getOrders(user2);
 
 		Order order2_0 = orders2.get(0);

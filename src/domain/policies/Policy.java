@@ -49,6 +49,26 @@ public abstract class Policy {
 	}
 	
 	/**
+	 * Adds a message to the exception of this policy chain.
+	 * 
+	 * @param configuration
+	 * 		The configuration which is being checked.
+	 * @param message
+	 * 		The message to be added to the exception.
+	 * @throws InvalidConfigurationException
+	 * 		If the configuration is invalid.
+	 */
+	protected void addToException(Configuration configuration, String message) throws InvalidConfigurationException {
+		try{
+			proceedComplete(configuration);
+		}catch(InvalidConfigurationException e){
+			e.addMessage(message);
+			throw e;
+		}
+		throw new InvalidConfigurationException(message);
+	}
+	
+	/**
 	 * Checks whether the configuration is valid. If it isn't, it throws an exception.
 	 * This method is only used for incomplete configurations.
 	 * 

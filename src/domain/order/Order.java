@@ -53,8 +53,10 @@ public abstract class Order {
 		this.user = user;
 		if (!configuration.isCompleted())
 			throw new IllegalArgumentException("The given configuration is not completed yet.");
-		this.configuration = configuration; 
-		this.assemblyProcess = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered,deliveredTime);
+		this.configuration = configuration;
+		if (deliveredTime != null && deliveredTime.before(orderedTime))
+			throw new IllegalArgumentException("The delivered time is older then the ordered time.");
+		this.assemblyProcess = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered, deliveredTime);
 		this.setOrderedTime(orderedTime);
 	}
 	

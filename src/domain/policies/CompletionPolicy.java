@@ -69,17 +69,12 @@ public class CompletionPolicy extends Policy{
 	@Override
 	public void checkComplete(Configuration configuration) throws InvalidConfigurationException{
 		ArrayList<OptionType> remainingTypes = completionCheck(configuration);
-		if(remainingTypes.isEmpty()){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
+		if(remainingTypes.isEmpty())
+			// als verdere policies iets gooien wordt er gewoon verder gegooid.
 			proceedComplete(configuration);
-		}else{ // in dit geval moet gecatched worden en aangepast
-			try{
-				proceedComplete(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(remainingTypes));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(remainingTypes));
-		}
+		else
+			// in dit geval moet gecatched worden en aangepast
+			this.addToException(configuration, this.buildMessage(remainingTypes));
 	}
 	
 	/**

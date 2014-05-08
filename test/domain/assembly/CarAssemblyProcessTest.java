@@ -51,18 +51,18 @@ public class CarAssemblyProcessTest {
 		taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);
 		taskTypes1.add(OptionType.Color);
-		Workstation workStation1 = new Workstation(null, 1, taskTypes1);
+		Workstation workStation1 = new Workstation(null, "W1", taskTypes1);
 		
 		taskTypes2 = new ArrayList<OptionType>();
 		taskTypes2.add(OptionType.Engine);
 		taskTypes2.add(OptionType.Gearbox);
-		Workstation workStation2 = new Workstation(null, 2, taskTypes2);
+		Workstation workStation2 = new Workstation(null, "W2", taskTypes2);
 		
 		taskTypes3 = new ArrayList<OptionType>();
 		taskTypes3.add(OptionType.Seats);
 		taskTypes3.add(OptionType.Airco);
 		taskTypes3.add(OptionType.Wheels);
-		Workstation workStation3 = new Workstation(null, 3, taskTypes3);
+		Workstation workStation3 = new Workstation(null, "W3", taskTypes3);
 		
 		w1 = workStation1;
 		w2 = workStation2;

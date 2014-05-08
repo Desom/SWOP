@@ -35,7 +35,7 @@ public class AssemblyTaskTest {
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
 		taskTypes.add(OptionType.Body);
 		taskTypes.add(OptionType.Color);
-		Workstation w = new Workstation(null, 1, taskTypes);
+		Workstation w = new Workstation(null, "name", taskTypes);
 		task = w.compatibleWith(o.getAssemblyprocess()).get(0);;
 	}
 	

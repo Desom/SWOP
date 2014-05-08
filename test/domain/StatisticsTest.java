@@ -75,7 +75,7 @@ public class StatisticsTest {
 		for(Workstation w : wList){
 			CarMechanic mechanic = w.getCarMechanic();
 			if(mechanic == null)
-				mechanic = new CarMechanic(100*w.getId()); // randomize ID een beetje
+				mechanic = new CarMechanic(w.getName().hashCode()); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);
@@ -151,7 +151,7 @@ public class StatisticsTest {
 		for(Workstation w : wList){
 			CarMechanic mechanic = w.getCarMechanic();
 			if(mechanic == null)
-				mechanic = new CarMechanic(100*w.getId()); // randomize ID een beetje
+				mechanic = new CarMechanic(w.getName().hashCode()); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);

@@ -47,7 +47,7 @@ public class WorkstationTest {
 		taskTypes.add(OptionType.Wheels);
 		taskTypes.add(OptionType.Spoiler);
 		workstation = comp.getAllWorkstations().get(2);
-		assertEquals(3, workstation.getId());
+		assertEquals("3", workstation.getName());
 		assertEquals(taskTypes, workstation.getTaskTypes());
 		assertTrue(workstation.getAllCompletedTasks().isEmpty());
 		assertTrue(workstation.getAllPendingTasks().isEmpty());
@@ -59,7 +59,7 @@ public class WorkstationTest {
 		
 		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
 		taskTypes2.add(OptionType.Gearbox);
-		Workstation workstation2 = new Workstation(null, 1, taskTypes2);
+		Workstation workstation2 = new Workstation(null, "W1", taskTypes2);
 		invalidTask = workstation2.compatibleWith(order.getAssemblyprocess()).get(0);
 		
 	}

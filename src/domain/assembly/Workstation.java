@@ -8,7 +8,7 @@ import domain.user.CarMechanic;
 
 public class Workstation {
 
-	private int id;
+	private String name;
 	private final ArrayList<OptionType> taskTypes; 
 	private CarMechanic carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
@@ -23,14 +23,14 @@ public class Workstation {
 	 * 
 	 * @param assemblyLine
 	 * 		The assembly line of which this workstation is a part of.
-	 * @param id
-	 * 		The id of this workstation
+	 * @param name
+	 * 		The name of this workstation
 	 * @param taskTypes
 	 * 		The task types that can be handled at this workstation.
 	 */
-	public Workstation(AssemblyLine assemblyLine, int id, ArrayList<OptionType> taskTypes) {
+	public Workstation(AssemblyLine assemblyLine, String name, ArrayList<OptionType> taskTypes) {
 		this.assemblyLine = assemblyLine;
-		this.setId(id);
+		this.name = name;
 		this.taskTypes = taskTypes;
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
@@ -50,22 +50,12 @@ public class Workstation {
 	}
 
 	/**
-	 * Getter for the id of this workstation.
+	 * Getter for the name of this workstation.
 	 * 
-	 * @return The id of this Workstation.
+	 * @return The name of this Workstation.
 	 */
-	public int getId() {
-		return id;
-	}
-
-	/**
-	 * Sets the id of this workstation. Only used in constructor.
-	 * 
-	 * @param id
-	 * 		The id that is given to this Workstation.
-	 */
-	private void setId(int id) {
-		this.id = id;
+	public String getName() {
+		return this.name;
 	}
 
 	/**
@@ -283,7 +273,7 @@ public class Workstation {
 	 */
 	@Override
 	public String toString() {
-		return "Workstation " + this.id;
+		return "Workstation: " + this.name;
 	}
 	
 	/**

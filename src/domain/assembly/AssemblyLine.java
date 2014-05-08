@@ -41,7 +41,7 @@ public class AssemblyLine {
 	public AssemblyLineScheduler getAssemblyLineScheduler() {
 		return assemblyLineScheduler;
 	}
-	
+
 	/**
 	 * Returns whether this assembly line can advance or not.
 	 * 
@@ -61,7 +61,7 @@ public class AssemblyLine {
 				blockingWorkstations.add(workstation);
 		return blockingWorkstations;
 	}
-	
+
 	/**
 	 * Advances the assembly line.
 	 * 
@@ -72,7 +72,7 @@ public class AssemblyLine {
 		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 		if (!this.canAdvanceLine())
 			throw new CannotAdvanceException(this.getBlockingWorkstations());
-		
+
 		try{
 			//zoek de tijd die nodig was om alle tasks uit te voeren.
 			int timeSpendForTasks = 0;
@@ -80,7 +80,7 @@ public class AssemblyLine {
 				if(workstation.getTimeSpend() > timeSpendForTasks)
 					timeSpendForTasks = workstation.getTimeSpend();
 			}
-			
+
 			// move huidige cars 1 plek
 			//neem CarOrder van WorkStation 3
 			Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations());
@@ -89,7 +89,7 @@ public class AssemblyLine {
 				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
 				finished = workstationLast.getCarAssemblyProcess().getOrder();
 			}
-			
+
 			//voeg nieuwe car toe.
 			boolean tryNextAdvance = true;
 			Order newOrder = null;
@@ -98,8 +98,8 @@ public class AssemblyLine {
 			} catch (NoOrdersToBeScheduledException e) {
 				tryNextAdvance = false;
 			}
-			
-			
+
+
 			for(int i = getAllWorkstations().size(); i>1; i--){
 				Workstation workstationNext = selectWorkstationById(i);
 				workstationNext.clear();;
@@ -107,8 +107,8 @@ public class AssemblyLine {
 				workstationNext.setCarAssemblyProcess(workstationPrev.getCarAssemblyProcess());
 			}
 
-			
-			
+
+
 			CarAssemblyProcess newAssemblyProcess = null;
 			if(newOrder != null){
 				newAssemblyProcess = newOrder.getAssemblyprocess();
@@ -123,7 +123,7 @@ public class AssemblyLine {
 				finished.getAssemblyprocess().registerDelay(this);
 				this.statistics.update();
 			}
-			
+
 			if(tryNextAdvance && this.canAdvanceLine()){
 				try{
 					this.advanceLine();
@@ -137,7 +137,7 @@ public class AssemblyLine {
 			throw new InternalFailureException("Suddenly a Workstation disappeared while that should not be possible.");
 		}
 	}
-	
+
 	/**
 	 * Selects the workstation with the specified id from the list of all workstations
 	 * 
@@ -148,9 +148,8 @@ public class AssemblyLine {
 	 * 		If no workstation with the specified ID exists.
 	 */
 	public Workstation selectWorkstationById(int id) throws DoesNotExistException{
-		for(Workstation workstation : getAllWorkstations())
-			if(workstation.getId() == id)
-				return workstation;
+		if(workstations.size() > (id - 1))
+			return workstations.get(id - 1);
 		throw new DoesNotExistException("No workstation exists with ID: " + id);
 	}
 
@@ -164,20 +163,20 @@ public class AssemblyLine {
 		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
 		taskTypes1.add(OptionType.Body);
 		taskTypes1.add(OptionType.Color);
-		Workstation workStation1 = new Workstation(this, 1, taskTypes1);
+		Workstation workStation1 = new Workstation(this, "W1", taskTypes1);
 
 		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
 		taskTypes2.add(OptionType.Engine);
 		taskTypes2.add(OptionType.Gearbox);
-		Workstation workStation2 = new Workstation(this, 2, taskTypes2);
+		Workstation workStation2 = new Workstation(this, "W2", taskTypes2);
 
 		ArrayList<OptionType> taskTypes3 = new ArrayList<OptionType>();
 		taskTypes3.add(OptionType.Seats);
 		taskTypes3.add(OptionType.Airco);
 		taskTypes3.add(OptionType.Wheels);
 		taskTypes3.add(OptionType.Spoiler);
-		Workstation workStation3 = new Workstation(this, 3, taskTypes3);
-		
+		Workstation workStation3 = new Workstation(this, "W3", taskTypes3);
+
 		workstations.add(workStation1);
 		workstations.add(workStation2);
 		workstations.add(workStation3);
@@ -199,13 +198,14 @@ public class AssemblyLine {
 	 * 
 	 * @return All workstation id's.
 	 */
-	public LinkedList<Integer> getWorkstationIDs(){
-		LinkedList<Integer> ids= new LinkedList<Integer>();
-		for(Workstation w: workstations){
-			ids.add(w.getId());
-		}
-		return ids;
-	}
+	// TODO
+//	public LinkedList<Integer> getWorkstationIDs(){
+//		LinkedList<Integer> ids= new LinkedList<Integer>();
+//		for(Workstation w: workstations){
+//			ids.add(w.getId());
+//		}
+//		return ids;
+//	}
 
 	/**
 	 * Returns the number of workstation on this assembly line.
@@ -289,7 +289,7 @@ public class AssemblyLine {
 		}
 		return true;
 	}
-	
+
 	/**
 	 * Returns all workstations which can complete tasks of the given car assembly process.
 	 * 

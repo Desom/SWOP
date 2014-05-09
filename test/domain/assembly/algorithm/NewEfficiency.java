@@ -55,6 +55,7 @@ public class NewEfficiency implements SchedulingAlgorithm{
 		for(ScheduledOrder i : scheduledOrders)orders.add(i.getScheduledOrder());
 		return orders;
 	}
+	
 	/**
 	 * Schedules the given list of orders and returns a scheduled list of ScheduledOrder objects.
 	 * 
@@ -106,7 +107,13 @@ public class NewEfficiency implements SchedulingAlgorithm{
 			sList = (LinkedList<Order>) copy_of_sList.clone();
 			//plaats de STO's die ingevaar zijn vooraan in de queue van orders
 			sList.addAll(0, endangeredSTO);
-
+			
+			//lijst met alle singleTaskOrders verdeeld over de verschillende workstations
+			//aanmaak zal later afhankelijk van workstation gebeuren.
+			ArrayList<LinkedList<SingleTaskOrder>> singleTasks = new ArrayList<LinkedList<SingleTaskOrder>>();
+			singleTasks.add(STOrderListWorkStation1);
+			singleTasks.add(new LinkedList<SingleTaskOrder>());
+			singleTasks.add(STOrderListWorkStation3);
 
 			//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
 			LinkedList<Order> assembly = new LinkedList<Order>(assemblyLine.getAllOrders());
@@ -117,9 +124,17 @@ public class NewEfficiency implements SchedulingAlgorithm{
 			try{
 				//Blijf dit doen zolang er orders zijn en zolang de assemblyLine niet leeg is
 				while(!(sList.isEmpty() && STOrderListWorkStation3.isEmpty() && STOrderListWorkStation1.isEmpty() && this.isEmptyAssembly(assembly))){
-					this.beginOfDay(assembly, movingTime, scheduledList, sList, STOrderListWorkStation3, STOrderListWorkStation1, assemblyLine, assemblyLineScheduler);
-					this.middleOfDay(assembly, movingTime, scheduledList, sList, STOrderListWorkStation3, STOrderListWorkStation1, assemblyLine, assemblyLineScheduler);
-					this.endOfDay(assembly, movingTime, scheduledList, sList, STOrderListWorkStation3, STOrderListWorkStation1, assemblyLine, assemblyLineScheduler);
+					
+					if(!sList.isEmpty()){
+						ArrayList<Order> orderForToday = new ArrayList<Order>();
+						this.beginOfDay(assembly, movingTime, scheduledList, sList, singleTasks, assemblyLine, assemblyLineScheduler);
+						this.prepareEndOfDay(assembly, orderForToday, singleTasks);
+						this.middleOfDay(assembly, movingTime, orderForToday, scheduledList, sList, assemblyLine, assemblyLineScheduler);
+						this.endOfDay(assembly, movingTime, orderForToday, scheduledList, singleTasks, assemblyLine, assemblyLineScheduler);
+					}
+					if(sList.isEmpty()){
+						this.onlySingleTasks(assembly, movingTime, scheduledList, singleTasks, assemblyLine, assemblyLineScheduler);
+					}
 					movingTime = this.nextDay(movingTime);
 				}
 			}
@@ -139,187 +154,249 @@ public class NewEfficiency implements SchedulingAlgorithm{
 		return scheduledList;
 	}
 
+
 	/**
 	 * If it's the begin of the day, this method will add SingleTaskOrders with
-	 * Option Seat to the assemblyLine until work has to be done on an order or
-	 * there are no more.
+	 * to the assemblyLine until there is only one spot left for an Order.
 	 * 
 	 * @param assembly
+	 * 
 	 * @param movingTime
+	 * 
 	 * @param scheduledList
+	 * 
 	 * @param sList
+	 * 
 	 * @param sTOrderListWorkStation3
+	 * 
 	 * @param sTOrderListWorkStation1
+	 * 
 	 * @param assemblyLine
+	 * 
 	 * @param assemblyLineScheduler
+	 * 
 	 * @throws DeadlineErrorException
+	 * 
 	 */
 	private void beginOfDay(LinkedList<Order> assembly,
 			GregorianCalendar movingTime, 
 			ArrayList<ScheduledOrder> scheduledList,
 			LinkedList<Order> sList,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation3,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation1,
+			ArrayList<LinkedList<SingleTaskOrder>> singleTasks,
 			AssemblyLine assemblyLine,
 			AssemblyLineScheduler assemblyLineScheduler) throws DeadlineErrorException {
 		
-		while(this.singleTask3Possible(assembly, movingTime, sTOrderListWorkStation3, assemblyLineScheduler, assemblyLine)){
-			Order order = sTOrderListWorkStation3.removeFirst();
+		if(!isBeginOfDay(movingTime)){
+			return;
+		}
+		
+		//zoek hoeveel singles er al zijn
+		int count = 0;
+		for(; count < assembly.size(); count++){
+			if(assembly.get(count) == null){
+				break;
+			}
+		}
+		
+		//voeg de singleTaskOrders toe tot er nog 1 plaats over is.
+		count = assembly.size() -1 - count;
+		int number = findNotEmptyList(singleTasks, count, 1);
+		while(count > 0 && number > 0 && this.singleTask3Possible(assembly, movingTime, singleTasks.get(number), assemblyLineScheduler, assemblyLine)){
+			Order order = null;
+			if(number >= 0){
+				order = singleTasks.get(number).removeFirst();
+			}
 			this.advanceAssembly(assembly, order, movingTime, scheduledList, assemblyLine, true);
+			count--;
+			number = findNotEmptyList(singleTasks, count, 1);
 		}
 		
 	}
 
 	/**
+	 * Find the index of the first list in listOfLists that isn't empty.
+	 * Start searching at index 'number' and change the index using the 'changeAmount'.
+	 * 
+	 * @param listOfLists
+	 * 
+	 * @param number
+	 * 
+	 * @param movingAmount
+	 * 
+	 * @return
+	 */
+	private int findNotEmptyList(
+			ArrayList<LinkedList<SingleTaskOrder>> listOfLists, int number,
+			int movingAmount) {
+		while(number >=0 && number < listOfLists.size()){
+			if(!listOfLists.get(number).isEmpty()){
+				return number;
+			}
+			number += movingAmount;
+		}
+		return -1;
+	}
+
+	/**
+	 * Checks if the given time is the begin of a day.
+	 * 
+	 * @param time
+	 * 
+	 * @return True if movingTime is at 6h00.
+	 */
+	private boolean isBeginOfDay(GregorianCalendar time) {
+
+		if(time.get(GregorianCalendar.HOUR_OF_DAY) != 6){
+			return false;
+		}
+		if(time.get(GregorianCalendar.MINUTE) != 0){
+			return false;
+		}
+		return true;
+	}
+
+	/**
 	 * Checks if it is still possible to add a SingleTaskOrder of
-	 * sTOrderListWorkStation3 to assembly wthout having to update
+	 * sTOrderListWorkStation to assembly wthout having to update
 	 * movingTime.
 	 * 
 	 * @param assembly
+	 * 
 	 * @param movingTime
-	 * @param sTOrderListWorkStation3
+	 * 
+	 * @param sTOrderListWorkstation
+	 * 
 	 * @param assemblyLineScheduler
+	 * 
 	 * @param assemblyLine
+	 * 
 	 * @return
 	 */
 	private boolean singleTask3Possible(LinkedList<Order> assembly,
 			GregorianCalendar movingTime,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation3,
+			LinkedList<SingleTaskOrder> sTOrderListWorkstation,
 			AssemblyLineScheduler assemblyLineScheduler,
 			AssemblyLine assemblyLine) {
-		if(sTOrderListWorkStation3.isEmpty()){
+		if(sTOrderListWorkstation.isEmpty()){
 			return false;
 		}
 		if(assemblyLine.calculateTimeTillAdvanceFor(assembly) > 0){
 			return false;
 		}
 		
-		LinkedList<Order> tempAssembly = (LinkedList<Order>) assembly.clone();
-		tempAssembly.removeLast();
-		tempAssembly.addFirst(sTOrderListWorkStation3.getFirst());
-		int duration = assemblyLine.calculateTimeTillEmptyFor(tempAssembly);
-		return this.checkEnoughTimeLeftFor(movingTime, duration, assemblyLineScheduler);
+		return this.orderPossible(assembly, movingTime, sTOrderListWorkstation.getFirst(), assemblyLineScheduler, assemblyLine);
+	}
+	
+	/**
+	 * Fill orderForToday with the SingleTaskOrders that will be put on the assemblyLine at the end of the day.
+	 * 
+	 * @param assembly
+	 * 
+	 * @param orderForToday
+	 * 
+	 * @param singleTasks
+	 * 
+	 */
+	private void prepareEndOfDay(LinkedList<Order> assembly,
+			ArrayList<Order> orderForToday,
+			ArrayList<LinkedList<SingleTaskOrder>> singleTasks) {
+		
+		for(int number = assembly.size() - 2; number >= 0 ; number--){
+			int position = this.findNotEmptyList(singleTasks, number, -1);
+			if(position < 0){
+				break;
+			}
+			SingleTaskOrder order = null;
+			for(int i = position; order == null && i >= 0;i--){
+				for(SingleTaskOrder sto : singleTasks.get(i)){
+					if(!orderForToday.contains(sto)){
+						order = sto;
+						break;
+					}
+				}
+			}
+			orderForToday.add(order);
+		}
 	}
 
 	/**
-	 * This method adds orders from sList to assembly as long as there is time
-	 * enough during the day. When sList is empty, it starts adding orders form
-	 * sTOrderListWorkStation3 and sTOrderListWorkStation1. If possible this
-	 * happens in pairs as they are more efficient.
+	 * This method adds orders from sList to assembly as long as there is time left for the orders in orderForToday.
 	 * 
 	 * @param assembly
+	 * 
 	 * @param movingTime
+	 * 
+	 * @param orderForToday
+	 * 
 	 * @param scheduledList
+	 * 
 	 * @param sList
-	 * @param sTOrderListWorkStation3
-	 * @param sTOrderListWorkStation1
+	 * 
 	 * @param assemblyLine
+	 * 
 	 * @param assemblyLineScheduler
+	 * 
 	 * @throws DeadlineErrorException
+	 * 
 	 */
 	private void middleOfDay(LinkedList<Order> assembly,
 			GregorianCalendar movingTime, 
+			ArrayList<Order> orderForToday, 
 			ArrayList<ScheduledOrder> scheduledList,
 			LinkedList<Order> sList,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation3,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation1,
 			AssemblyLine assemblyLine,
 			AssemblyLineScheduler assemblyLineScheduler) throws DeadlineErrorException {
-		
-		while(this.orderPossible(assembly, movingTime, sList, assemblyLineScheduler, assemblyLine)){
-			Order order = sList.removeFirst();
-			this.advanceAssembly(assembly, order, movingTime, scheduledList, assemblyLine, false);
-		}
-		
-		if(!sList.isEmpty()){
+		if(sList.isEmpty()){
 			return;
 		}
 		
-		while(this.towSTOPossible(assembly, movingTime, sTOrderListWorkStation3, sTOrderListWorkStation1, assemblyLineScheduler, assemblyLine)){
-			if(!sTOrderListWorkStation3.isEmpty()){
-				this.advanceAssembly(assembly, sTOrderListWorkStation3.removeFirst(), movingTime, scheduledList, assemblyLine, true);
-				if(!sTOrderListWorkStation1.isEmpty()){
-					this.advanceAssembly(assembly, null, movingTime, scheduledList, assemblyLine, true);
-				}
+		orderForToday.add(0,sList.getFirst());
+		while(this.ordersPossible(assembly, movingTime, orderForToday, assemblyLineScheduler, assemblyLine)){
+			Order order = sList.removeFirst();
+			orderForToday.remove(0);
+			this.advanceAssembly(assembly, order, movingTime, scheduledList, assemblyLine, false);
+			if(sList.isEmpty()){
+				return;
 			}
-			if(!sTOrderListWorkStation1.isEmpty()){
-				this.advanceAssembly(assembly, sTOrderListWorkStation1.removeFirst(), movingTime, scheduledList, assemblyLine, true);
-			}
+			orderForToday.add(0,sList.getFirst());
 		}
-		
-	}
-
-
-	/**
-	 * Checks if it is still possible to add more SingleTaskOrders from
-	 * sTOrderListWorkStation3 and sTOrderListWorkStation1 to assembly.
-	 * 
-	 * @param assembly
-	 * @param movingTime
-	 * @param sTOrderListWorkStation3
-	 * @param sTOrderListWorkStation1
-	 * @param assemblyLineScheduler
-	 * @param assemblyLine
-	 * @return
-	 */
-	private boolean towSTOPossible(LinkedList<Order> assembly,
-			GregorianCalendar movingTime,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation3,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation1,
-			AssemblyLineScheduler assemblyLineScheduler,
-			AssemblyLine assemblyLine) {
-		if(sTOrderListWorkStation3.isEmpty() && sTOrderListWorkStation1.isEmpty()){
-			return false;
-		}
-		
-		LinkedList<Order> tempAssembly = (LinkedList<Order>) assembly.clone();
-		int duration = 0;
-		if(!sTOrderListWorkStation3.isEmpty()){
-			tempAssembly.removeLast();
-			tempAssembly.addFirst(sTOrderListWorkStation3.getFirst());
-			duration += assemblyLine.calculateTimeTillAdvanceFor(tempAssembly);
-		}
-
-		if(!sTOrderListWorkStation3.isEmpty() && !sTOrderListWorkStation1.isEmpty()){
-		tempAssembly.removeLast();
-		tempAssembly.addFirst(null);
-		duration += assemblyLine.calculateTimeTillAdvanceFor(tempAssembly);
-		}
-		
-
-		if(!sTOrderListWorkStation1.isEmpty()){
-			tempAssembly.removeLast();
-			tempAssembly.addFirst(sTOrderListWorkStation1.getFirst());
-			duration += assemblyLine.calculateTimeTillEmptyFor(tempAssembly);
-		}
-		return this.checkEnoughTimeLeftFor(movingTime, duration, assemblyLineScheduler);
+		orderForToday.remove(0);
 	}
 
 	/**
-	 * Checks if it is still possible to add an order from sList to assembly.
+	 * Checks if it is still possible to add all the orders in orderForToday to assembly.
 	 * 
 	 * @param assembly
+	 * 
 	 * @param movingTime
-	 * @param sList
+	 * 
+	 * @param orderForToday
+	 * 
 	 * @param assemblyLineScheduler
+	 * 
 	 * @param assemblyLine
+	 * 
 	 * @return
 	 */
-	private boolean orderPossible(LinkedList<Order> assembly,
+	private boolean ordersPossible(LinkedList<Order> assembly,
 			GregorianCalendar movingTime, 
-			LinkedList<Order> sList,
+			ArrayList<Order> orderForToday,
 			AssemblyLineScheduler assemblyLineScheduler,
 			AssemblyLine assemblyLine) {
-
-		if(sList.isEmpty()){
-			return false;
-		}
 		
+		ArrayList<Order> ordersToBeScheduled = (ArrayList<Order>) orderForToday.clone();
 		LinkedList<Order> tempAssembly = (LinkedList<Order>) assembly.clone();
-		tempAssembly.removeLast();
-		tempAssembly.addFirst(sList.getFirst());
-		int duration = assemblyLine.calculateTimeTillEmptyFor(tempAssembly);
-		return this.checkEnoughTimeLeftFor(movingTime, duration, assemblyLineScheduler);
+		GregorianCalendar tempTime = (GregorianCalendar) movingTime.clone();
+		
+		while(!ordersToBeScheduled.isEmpty()){
+			tempAssembly.removeLast();
+			tempAssembly.addFirst(ordersToBeScheduled.remove(0));
+			int duration = assemblyLine.calculateTimeTillEmptyFor(tempAssembly);
+			if(!this.checkEnoughTimeLeftFor(tempTime, duration, assemblyLineScheduler))
+				return false;
+			tempTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(tempAssembly));
+		}
+		return true;
 	}
 	
 	/**
@@ -327,13 +404,19 @@ public class NewEfficiency implements SchedulingAlgorithm{
 	 * Throws an exception if there is a problem with a deadline.
 	 * 
 	 * @param assembly
+	 * 
 	 * @param order
+	 * 
 	 * @param movingTime
+	 * 
 	 * @param scheduledList
+	 * 
 	 * @param assemblyLine
+	 * 
 	 * @param throwException
 	 * 		This variable indicates if the exception should be thrown if there is a problem with a deadline.
 	 * @throws DeadlineErrorException
+	 * 
 	 */
 	private void advanceAssembly(LinkedList<Order> assembly, Order order,
 			GregorianCalendar movingTime,
@@ -360,33 +443,48 @@ public class NewEfficiency implements SchedulingAlgorithm{
 	}
 
 	/**
-	 * Keeps adding SingleTaskOrders with Option Color untill there isn't enough time left to finish them.
+	 * Add all the orders in orderForToday to assembly if they can be done today. 
 	 * Afterwards it empties assembly.
 	 * 
 	 * @param assembly
+	 * 
 	 * @param movingTime
+	 * 
+	 * @param orderForToday
+	 * 
 	 * @param scheduledList
-	 * @param sList
-	 * @param sTOrderListWorkStation3
-	 * @param sTOrderListWorkStation1
+	 * 
+	 * @param singleTasks
+	 * 
 	 * @param assemblyLine
+	 * 
 	 * @param assemblyLineScheduler
+	 * 
 	 * @throws DeadlineErrorException
+	 * 
 	 */
 	private void endOfDay(LinkedList<Order> assembly,
 			GregorianCalendar movingTime, 
+			ArrayList<Order> orderForToday,
 			ArrayList<ScheduledOrder> scheduledList,
-			LinkedList<Order> sList,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation3,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation1,
+			ArrayList<LinkedList<SingleTaskOrder>> singleTasks,
 			AssemblyLine assemblyLine,
 			AssemblyLineScheduler assemblyLineScheduler) throws DeadlineErrorException {
 
-		while(!this.isEmptyAssembly(assembly)){
-			Order order = null;
-			if(this.singleTask1Possible(assembly, movingTime, sTOrderListWorkStation1, assemblyLineScheduler, assemblyLine)){
-				order = sTOrderListWorkStation1.removeFirst();
+		while(!orderForToday.isEmpty()){
+			Order order = orderForToday.remove(0);
+			
+			if(!this.orderPossible(assembly, movingTime, order, assemblyLineScheduler, assemblyLine)){
+				continue;
 			}
+			else{
+				for(LinkedList<SingleTaskOrder> list : singleTasks){
+					if(list.remove(order)){
+						break;
+					}
+				}
+			}
+			
 			this.advanceAssembly(assembly, order, movingTime, scheduledList, assemblyLine, true);
 		}
 		
@@ -397,32 +495,81 @@ public class NewEfficiency implements SchedulingAlgorithm{
 	}
 
 	/**
-	 * Checks if it is still possible to add a SingleTaskOrder from
-	 * sTOrderListWorkStation1 to assembly without creating overtime.
+	 * Checks if it is still possible to add the given Order to assembly without creating overtime.
 	 * 
 	 * @param assembly
+	 * 
 	 * @param movingTime
+	 * 
 	 * @param sTOrderListWorkStation1
+	 * 
 	 * @param assemblyLineScheduler
+	 * 
 	 * @param assemblyLine
+	 * 
 	 * @return
 	 */
-	private boolean singleTask1Possible(LinkedList<Order> assembly,
+	private boolean orderPossible(LinkedList<Order> assembly,
 			GregorianCalendar movingTime,
-			LinkedList<SingleTaskOrder> sTOrderListWorkStation1,
+			Order order,
 			AssemblyLineScheduler assemblyLineScheduler,
 			AssemblyLine assemblyLine) {
 		
-		if(sTOrderListWorkStation1.isEmpty()){
-			return false;
-		}		
-		LinkedList<Order> tempAssembly = (LinkedList<Order>) assembly.clone();
-		tempAssembly.removeLast();
-		tempAssembly.addFirst(sTOrderListWorkStation1.getFirst());
-		int duration = assemblyLine.calculateTimeTillEmptyFor(tempAssembly);
-		return this.checkEnoughTimeLeftFor(movingTime, duration, assemblyLineScheduler);
+		
+		ArrayList<Order> oneOrderList = new ArrayList<Order>();
+		oneOrderList.add(order);
+		return this.ordersPossible(assembly, movingTime, oneOrderList, assemblyLineScheduler, assemblyLine);
 	}
 
+	/**
+	 * Adds SingleTaskOrders from singleTasks to assembly as long as they can be done today.
+	 * Always takes the first order from each list in singleTasks while traversing the lists of lists in reverse order.
+	 * 
+	 * @param assembly
+	 * 
+	 * @param movingTime
+	 * 
+	 * @param scheduledList
+	 * 
+	 * @param singleTasks
+	 * 
+	 * @param assemblyLine
+	 * 
+	 * @param assemblyLineScheduler
+	 * 
+	 * @throws DeadlineErrorException
+	 * 
+	 */
+	private void onlySingleTasks(LinkedList<Order> assembly,
+			GregorianCalendar movingTime,
+			ArrayList<ScheduledOrder> scheduledList,
+			ArrayList<LinkedList<SingleTaskOrder>> singleTasks,
+			AssemblyLine assemblyLine,
+			AssemblyLineScheduler assemblyLineScheduler) throws DeadlineErrorException {
+		
+		int noAddition = 0;
+		int workstation = assembly.size()-1;
+		while(noAddition < assembly.size()){
+			LinkedList<SingleTaskOrder> list = singleTasks.get(workstation);
+			if(!list.isEmpty() && this.orderPossible(assembly, movingTime, list.getFirst(), assemblyLineScheduler, assemblyLine)){
+				Order order = list.removeFirst();
+				this.advanceAssembly(assembly, order, movingTime, scheduledList, assemblyLine, true);
+			}
+			else{
+				noAddition++;
+			}
+			workstation--;
+			if(workstation < 0){
+				workstation = assembly.size() - 1;
+			}
+		}
+		
+		while(!this.isEmptyAssembly(assembly)){
+			this.advanceAssembly(assembly, null, movingTime, scheduledList, assemblyLine, true);
+		}
+		
+	}
+	
 	/**
 	 * Checks if the given list of Orders only contains null.
 	 * 
@@ -569,10 +716,20 @@ public class NewEfficiency implements SchedulingAlgorithm{
 		return order.getConfiguration().getAllOptions().get(0).getType();
 	}
 
-	public String toString(){
-		return "test";
+	/**
+	 * Returns the inner algorithm of this efficiency scheduling algorithm.
+	 * 
+	 * @return The inner algorithm of this efficiency scheduling algorithm.
+	 */
+	public SchedulingAlgorithm getInnerAlgorithm() {
+		return innerAlgorithm;
 	}
 	
+	@Override
+	public String toString(){
+		return "Efficiency algorithm using " + this.getInnerAlgorithm().toString();
+	}
+
 	private class DeadlineErrorException extends Exception{
 		private static final long serialVersionUID = 1L;
 		private SingleTaskOrder singleTaskOrder;

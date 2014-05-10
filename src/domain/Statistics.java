@@ -26,6 +26,7 @@ public class Statistics {
 	 * @return The median amount of cars produced per day
 	 */
 	public int getMedianCarsPerDay(){
+		update();
 		LinkedList<Integer> carsPerDay = getCarsPerDay();
 		Collections.sort(carsPerDay);
 		if(carsPerDay.size() == 0){
@@ -41,6 +42,7 @@ public class Statistics {
 	 * @return The average amount of cars produced per day
 	 */
 	public int getAverageCarsPerDay(){
+		update();
 		LinkedList<Integer> carsPerDay = getCarsPerDay();
 		if(carsPerDay.size() == 0){
 			return 0;
@@ -59,6 +61,7 @@ public class Statistics {
 	 * @return The median delay time of all cars ever made.
 	 */
 	public int getMedianDelay(){
+		update();
 		LinkedList<Integer> delays = getDelays();
 		Collections.sort(delays);
 		if(delays.size() == 0){
@@ -74,6 +77,7 @@ public class Statistics {
 	 * @return The average delay time of all cars ever made.
 	 */
 	public int getAverageDelay(){
+		update();
 		LinkedList<Integer> delays = getDelays();
 		if(delays.size() == 0){
 			return 0;
@@ -92,6 +96,7 @@ public class Statistics {
 	 * @return The amount of cars completed yesterday.
 	 */
 	public int getAmountOfCars1DayAgo(){
+		update();
 		int yesterday = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -1;
 		if(dailyMapping.get(yesterday) == null){
 			return 0;
@@ -105,6 +110,7 @@ public class Statistics {
 	 * @return The amount of cars completed 2 days ago.
 	 */
 	public int getAmountOfCars2DaysAgo(){
+		update();
 		int day = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -2;
 		if(dailyMapping.get(day) == null){
 			return 0;
@@ -118,6 +124,7 @@ public class Statistics {
 	 * @return the delay time of the last car that had a delay.
 	 */
 	public int getLastDelay(){
+		update();
 		LinkedList<Order> list = sortOrdersOnTime();
 		Collections.reverse(list);
 		for(Order o : list){
@@ -134,6 +141,7 @@ public class Statistics {
 	 * @return the the day of the last time there was a delay.
 	 */
 	public GregorianCalendar getLastDelayDay(){
+		update();
 		LinkedList<Order> list = sortOrdersOnTime();
 		Collections.reverse(list);
 		for(Order o : list){
@@ -150,6 +158,7 @@ public class Statistics {
 	 * @return the delay time of the second to last car that had a delay.
 	 */
 	public int getSecondToLastDelay(){
+		update();
 		LinkedList<Order> list = sortOrdersOnTime();
 		Collections.reverse(list);
 		boolean found = false;
@@ -170,6 +179,7 @@ public class Statistics {
 	 * @return the the day of the second to last time there was a delay.
 	 */
 	public GregorianCalendar getSecondToLastDelayDay(){
+		update();
 		LinkedList<Order> list = sortOrdersOnTime();
 		Collections.reverse(list);
 		boolean found = false;
@@ -187,7 +197,7 @@ public class Statistics {
 	/**
 	 * Call this method to notify the statistics of changes. It will then gather information and update itself.
 	 */
-	public void update(){
+	private void update(){
 		ArrayList<Order> orderList = this.orderManager.getAllCompletedOrders();
 		dailyMapping = new LinkedHashMap<Integer,LinkedList<Order>>();
 		for(Order o : orderList){

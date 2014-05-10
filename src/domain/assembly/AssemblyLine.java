@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 import domain.InternalFailureException;
-import domain.Statistics;
 import domain.configuration.OptionType;
 import domain.order.Order;
 
@@ -12,14 +11,12 @@ public class AssemblyLine {
 
 	private ArrayList<Workstation> workstations = null;
 	private final AssemblyLineScheduler assemblyLineScheduler;
-	private final Statistics statistics;
 
 	/**
 	 * Constructor for the assembly line class.
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
-	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, Statistics statistics){
-		this.statistics = statistics;
+	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler){
 		this.workstations = createWorkstations();
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
@@ -121,7 +118,6 @@ public class AssemblyLine {
 			if(finished != null){
 				finished.getAssemblyprocess().setDeliveredTime(this.assemblyLineScheduler.getCurrentTime());
 				finished.getAssemblyprocess().registerDelay(this);
-				this.statistics.update();
 			}
 
 			if(tryNextAdvance && this.canAdvanceLine()){

@@ -22,18 +22,20 @@ public class AssemblyStatusView {
 		this.workstations = workstations;
 	}
 
-	/**
+	
+	// WORKSTATIONS HEBBEN GEEN IDS MEER
+	/*
 	 * Returns all id's of the workstations.
 	 * 
 	 * @return All id's of the workstations.
-	 */
+	 
 	public ArrayList<Integer> getAllWorkstationIds(){
 		ArrayList<Integer> ids = new ArrayList<Integer>();
 		for(Workstation workstation : workstations){
 			ids.add(workstation.getId());
 		}
 		return ids;
-	}
+	}*/
 	
 	/**
 	 * Returns the car order at the workstation indicated with the id.
@@ -101,24 +103,19 @@ public class AssemblyStatusView {
 	}
 
 	/**
-	 * Returns the workstation associated with the given id.
+	 * Returns the workstation at the specified position (starting at 0) in the assemblyLine
 	 * TODO
-	 * @param id
-	 * 		The id associated with the desired workstation.
+	 * @param position
+	 * 		The index of the workstation in the assemblyline.
 	 * @return The workstation associated with the given id.
 	 * @throws DoesNotExistException
 	 * 		If the desired workstation does not exist.
 	 */
-	private Workstation getWorkstation(int id) throws DoesNotExistException{
-		Workstation found = null;
-		for(Workstation workstation : workstations){
-			if(workstation.getId() == id){
-				found = workstation;
-			}
+	private Workstation getWorkstation(int position) throws DoesNotExistException{
+		if(this.workstations.size() <= position){
+			throw new DoesNotExistException("There is no workstation at position: " + position);
 		}
-		if(found == null){
-			throw new DoesNotExistException("There is no workstation with ID: " + id);
-		}
+		Workstation found = this.workstations.get(position);
 		return found;
 	}
 }

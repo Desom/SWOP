@@ -51,7 +51,7 @@ public class Company {
 			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 			this.orderManager = new OrderManager(scheduler, time);
 			this.statistics = new Statistics(this.orderManager);
-			this.assemblyLine = new AssemblyLine(scheduler, this.statistics);
+			this.assemblyLine = new AssemblyLine(scheduler);
 		} catch (IOException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
 		} catch (CarModelCatalogException e) {

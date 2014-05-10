@@ -47,7 +47,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		this.als.setSchedulingAlgorithm(this.algorithm);
 		@SuppressWarnings("unused")
-		AssemblyLine assembly = new AssemblyLine(als, null);
+		AssemblyLine assembly = new AssemblyLine(als);
 
 	}
 	
@@ -197,7 +197,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		Statistics stat = new Statistics(orderManager);
 		@SuppressWarnings("unused")
-		AssemblyLine line = new AssemblyLine(scheduler, stat);
+		AssemblyLine line = new AssemblyLine(scheduler);
 		
 		assertEquals(algo.searchForBatchConfiguration(scheduler).size(), 1);
 	}

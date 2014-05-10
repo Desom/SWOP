@@ -395,7 +395,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @param minutes
 	 * 		The minutes to be added to the current time.
 	 */
-	private void addCurrentTime(int minutes){
+	 void addCurrentTime(int minutes){
 		this.currentTime.add(GregorianCalendar.MINUTE, minutes);
 	}
 

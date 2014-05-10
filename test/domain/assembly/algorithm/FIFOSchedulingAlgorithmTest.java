@@ -39,7 +39,7 @@ public class FIFOSchedulingAlgorithmTest {
 		this.cmc = new CarModelCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		@SuppressWarnings("unused")
-		AssemblyLine assembly = new AssemblyLine(als, null);
+		AssemblyLine assembly = new AssemblyLine(als);
 	}
 	
 	@Test

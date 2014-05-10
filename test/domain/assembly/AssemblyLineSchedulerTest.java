@@ -53,7 +53,7 @@ public class AssemblyLineSchedulerTest {
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		Statistics statistics = new Statistics(orderManager);
-		line = new AssemblyLine(scheduler, statistics);
+		line = new AssemblyLine(scheduler);
 
 		ArrayList<Order> unfinished = orderManager.getAllUnfinishedOrders();
 		FIFOSchedulingAlgorithm fifo = new FIFOSchedulingAlgorithm();

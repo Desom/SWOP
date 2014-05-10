@@ -1,6 +1,7 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.InternalFailureException;
@@ -11,6 +12,7 @@ public class AssemblyLine {
 
 	private ArrayList<Workstation> workstations = null;
 	private final AssemblyLineScheduler assemblyLineScheduler;
+	private AssemblyLineStatus assemblyLineStatus;
 
 	/**
 	 * Constructor for the assembly line class.
@@ -20,6 +22,7 @@ public class AssemblyLine {
 		this.workstations = createWorkstations();
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
+		this.assemblyLineStatus = new OperationalStatus();
 		try {
 			this.advanceLine();
 		} catch (CannotAdvanceException e) {
@@ -45,13 +48,10 @@ public class AssemblyLine {
 	 * @return true if this assembly line can advance, otherwise false.
 	 */
 	public boolean canAdvanceLine() {
-		for(Workstation workstation : getAllWorkstations())
-			if(!workstation.hasAllTasksCompleted())
-				return false;
-		return true;
+		return this.assemblyLineStatus.canAdvanceLine(this);
 	}
 
-	private ArrayList<Workstation> getBlockingWorkstations() {
+	ArrayList<Workstation> getBlockingWorkstations() {
 		ArrayList<Workstation> blockingWorkstations = new ArrayList<Workstation>();
 		for (Workstation workstation : this.getAllWorkstations())
 			if (!workstation.hasAllTasksCompleted())
@@ -66,72 +66,7 @@ public class AssemblyLine {
 	 * 		If there are workstations that are blocking the assembly line.
 	 */
 	public void advanceLine() throws CannotAdvanceException {
-		// check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
-		if (!this.canAdvanceLine())
-			throw new CannotAdvanceException(this.getBlockingWorkstations());
-
-		try{
-			//zoek de tijd die nodig was om alle tasks uit te voeren.
-			int timeSpendForTasks = 0;
-			for(Workstation workstation : this.getAllWorkstations()){
-				if(workstation.getTimeSpend() > timeSpendForTasks)
-					timeSpendForTasks = workstation.getTimeSpend();
-			}
-
-			// move huidige cars 1 plek
-			//neem CarOrder van WorkStation 3
-			Workstation workstationLast = selectWorkstationById(getNumberOfWorkstations());
-			Order finished = null;
-			if(workstationLast.getCarAssemblyProcess() != null){
-				// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
-				finished = workstationLast.getCarAssemblyProcess().getOrder();
-			}
-
-			//voeg nieuwe car toe.
-			boolean tryNextAdvance = true;
-			Order newOrder = null;
-			try {
-				newOrder = this.assemblyLineScheduler.getNextOrder(timeSpendForTasks);
-			} catch (NoOrdersToBeScheduledException e) {
-				tryNextAdvance = false;
-			}
-
-
-			for(int i = getAllWorkstations().size(); i>1; i--){
-				Workstation workstationNext = selectWorkstationById(i);
-				workstationNext.clear();;
-				Workstation workstationPrev = selectWorkstationById(i-1);
-				workstationNext.setCarAssemblyProcess(workstationPrev.getCarAssemblyProcess());
-			}
-
-
-
-			CarAssemblyProcess newAssemblyProcess = null;
-			if(newOrder != null){
-				newAssemblyProcess = newOrder.getAssemblyprocess();
-			}
-
-			Workstation workstation1 = selectWorkstationById(1);
-			workstation1.clear();
-			workstation1.setCarAssemblyProcess(newAssemblyProcess);
-
-			if(finished != null){
-				finished.getAssemblyprocess().setDeliveredTime(this.assemblyLineScheduler.getCurrentTime());
-				finished.getAssemblyprocess().registerDelay(this);
-			}
-
-			if(tryNextAdvance && this.canAdvanceLine()){
-				try{
-					this.advanceLine();
-				}
-				catch(CannotAdvanceException e){
-					throw new InternalFailureException("The AssemblyLine couldn't advance even though canAdvanceLine() returned true.");
-				}
-			}
-		}
-		catch(DoesNotExistException e){
-			throw new InternalFailureException("Suddenly a Workstation disappeared while that should not be possible.");
-		}
+		this.assemblyLineStatus.advanceLine(this);
 	}
 
 	/**
@@ -195,13 +130,13 @@ public class AssemblyLine {
 	 * @return All workstation id's.
 	 */
 	// TODO
-//	public LinkedList<Integer> getWorkstationIDs(){
-//		LinkedList<Integer> ids= new LinkedList<Integer>();
-//		for(Workstation w: workstations){
-//			ids.add(w.getId());
-//		}
-//		return ids;
-//	}
+	//	public LinkedList<Integer> getWorkstationIDs(){
+	//		LinkedList<Integer> ids= new LinkedList<Integer>();
+	//		for(Workstation w: workstations){
+	//			ids.add(w.getId());
+	//		}
+	//		return ids;
+	//	}
 
 	/**
 	 * Returns the number of workstation on this assembly line.
@@ -303,4 +238,18 @@ public class AssemblyLine {
 		return filteredWorkstations;
 	}
 
+	void setStatus(AssemblyLineStatus status) {
+		this.assemblyLineStatus = status;		
+	}
+	public Boolean canAcceptNewOrders() {
+		return this.assemblyLineStatus.canAcceptNewOrders();
+	}
+	public LinkedList<Order> StateWhenAcceptingOrders() {
+		return this.assemblyLineStatus.StateWhenAcceptingOrders(this);
+	}
+
+
+	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
+		return this.assemblyLineStatus.TimeWhenAcceptingOrders(this);
+	}
 }

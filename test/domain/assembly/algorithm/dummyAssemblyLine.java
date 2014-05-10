@@ -12,7 +12,7 @@ public class dummyAssemblyLine extends AssemblyLine {
 	LinkedList<Order> orders;
 	public dummyAssemblyLine(AssemblyLineScheduler assemblyLineScheduler,
 			Statistics statistics) {
-		super(assemblyLineScheduler, statistics);
+		super(assemblyLineScheduler);
 		orders= new LinkedList<Order>();
 		orders.add(null);
 		orders.add(null);

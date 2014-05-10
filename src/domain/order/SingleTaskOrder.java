@@ -3,6 +3,7 @@ package domain.order;
 import java.util.GregorianCalendar;
 
 import domain.configuration.Configuration;
+import domain.configuration.OptionType;
 import domain.user.CustomShopManager;
 
 public class SingleTaskOrder extends Order {
@@ -35,5 +36,9 @@ public class SingleTaskOrder extends Order {
 	 */
 	public GregorianCalendar getDeadLine() {
 		return (GregorianCalendar) this.deadline.clone();
+	}
+
+	public OptionType getType() {
+		return this.getConfiguration().getAllOptions().get(0).getType();
 	}
 }

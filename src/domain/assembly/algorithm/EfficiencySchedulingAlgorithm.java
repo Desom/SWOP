@@ -777,7 +777,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	 * 		
 	 */
 	private OptionType getType(SingleTaskOrder order) {
-		return order.getConfiguration().getAllOptions().get(0).getType();
+		return order.getType();
 	}
 
 	/**

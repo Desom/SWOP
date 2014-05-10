@@ -3,7 +3,6 @@ package domain.assembly;
 import java.util.GregorianCalendar;
 
 import domain.order.Order;
-import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
 
 public interface Scheduler {
@@ -27,10 +26,10 @@ public interface Scheduler {
 	/**
 	 * Sets the order manager.
 	 * 
-	 * @param orderManager
+	 * @param orderHandler
 	 * 		The order manager of this scheduler.
 	 */
-	public void setOrderManager(OrderManager orderManager);
+	public void setOrderHandler(OrderHandler orderHandler);
 	
 	/**
 	 * Updates the schedule.
@@ -47,4 +46,13 @@ public interface Scheduler {
 	 * 		false if completing this SingleTaskOrder would compromise other deadlines.
 	 */
 	public boolean canFinishOrderBeforeDeadline(SingleTaskOrder orderWithDeadline);
+	
+	/**
+	 * Checks if this Scheduler has the means to complete the given order.
+	 * 
+	 * @param order
+	 * 		The order for which will be checked.
+	 * @return True if the order can be completed, false otherwise.
+	 */
+	public boolean canScheduleOrder(Order order);
 }

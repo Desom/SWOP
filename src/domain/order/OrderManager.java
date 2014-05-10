@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 
+import domain.assembly.OrderHandler;
 import domain.assembly.Scheduler;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
@@ -21,7 +22,7 @@ import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 import domain.user.User;
 
-public class OrderManager {
+public class OrderManager implements OrderHandler{
 
 	private final Scheduler scheduler;
 	private final HashMap<User,ArrayList<Order>> ordersPerUser;
@@ -67,7 +68,7 @@ public class OrderManager {
 				allUnfinishedCarOrders.add(order);
 			}
 		}
-		scheduler.setOrderManager(this);
+		scheduler.setOrderHandler(this);
 	}
 	
 	/**
@@ -85,7 +86,7 @@ public class OrderManager {
 		this.ordersPerUser = new HashMap<User,ArrayList<Order>>();
 		this.highestCarOrderID = 0;
 		this.createPolicies();
-		scheduler.setOrderManager(this);
+		scheduler.setOrderHandler(this);
 	}
 	
 	/**
@@ -341,5 +342,37 @@ public class OrderManager {
 			}
 		}
 		return completed;
+	}
+
+
+	/**
+	 * Returns the orders it wants the given scheduler to schedule.
+	 * 
+	 * @param scheduler
+	 * 		The Scheduler that will schedule the returned Orders.
+	 * @return The Orders which have to be scheduled by the given scheduler.
+	 */
+	//TODO wat als scheduler niet hoort bij deze orderhandler? null,exception,lege lijst??? Zie OrderManager,FactoryScheduler
+	@Override
+	public ArrayList<Order> getOrdersFor(Scheduler scheduler) {
+		if(!scheduler.equals(this.getScheduler())){
+			//TODO wat moet er gebeuren?
+		}
+		
+		ArrayList<Order> orderList = new ArrayList<Order>();
+		
+		//TODO is deze controle goed? of moet gewoon alles aan de scheduler worden gegeven?
+		for(Order order: this.getAllUnfinishedOrders()){
+			if(this.getScheduler().canScheduleOrder(order)){
+				orderList.add(order);
+			}
+		}
+		
+		return orderList;
+	}
+
+	@Override
+	public boolean hasScheduler(Scheduler scheduler) {
+		return scheduler != null && scheduler.equals(this.scheduler);
 	}
 }

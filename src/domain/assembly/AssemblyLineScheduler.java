@@ -19,7 +19,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	private ArrayList<SchedulingAlgorithm> possibleAlgorithms;
 	private SchedulingAlgorithm currentAlgorithm;
 	private GregorianCalendar currentTime;
-	private OrderManager orderManager;
+	private OrderHandler orderHandler;
 	private ArrayList<ScheduledOrder> schedule;
 	private boolean outDated;
 
@@ -329,8 +329,8 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @return The orders to be scheduled, or null if this assembly line scheduler has no order manager.
 	 */
 	public ArrayList<Order> getOrdersToBeScheduled() {
-		if(this.getOrderManager() != null){
-			ArrayList<Order> orders = this.getOrderManager().getAllUnfinishedOrders();
+		if(this.getOrderHandler() != null){
+			ArrayList<Order> orders = this.getOrderHandler().getOrdersFor(this);
 			LinkedList<Order> onAssembly = this.getAssemblyLine().getAllOrders();
 			orders.removeAll(onAssembly);
 			return orders;
@@ -490,33 +490,39 @@ public class AssemblyLineScheduler implements Scheduler{
 	}
 
 	/**
-	 * Set the order manager.
+	 * Set the order handler.
 	 * 
-	 * @param orderManager
-	 * 		The order manager to be set.
+	 * @param orderHandler
+	 * 		The orderHandler to be set.
 	 * @throws IllegalStateException
 	 * 		If this assembly line scheduler is already coupled with an order manager.
 	 * @throws IllegalArgumentException
 	 * 		If the given order manager is already coupled to another assembly line scheduler.
 	 */
-	public void setOrderManager(OrderManager orderManager) throws IllegalStateException, IllegalArgumentException {
-		if(this.orderManager != null){
-			if(this.orderManager.getScheduler() == this){
-				throw new IllegalStateException("The AssemblyLineScheduler: " + this.toString() + " is already coupled with an OrderManager");
+	public void setOrderHandler(OrderHandler orderHandler) throws IllegalStateException, IllegalArgumentException {
+		if(this.orderHandler != null){
+			if(this.orderHandler.hasScheduler(this)){
+				throw new IllegalStateException("The AssemblyLineScheduler: " + this.toString() + " is already coupled with an OrderHandler");
 			}
 		}
-		if(orderManager.getScheduler() != this){
-			throw new IllegalArgumentException("The given OrderManager is already coupled with a different Scheduler.");
+		if(!orderHandler.hasScheduler(this)){
+			throw new IllegalArgumentException("The given OrderHandler isn't coupled with this AssemblyLineScheduler.");
 		}
-		this.orderManager = orderManager;
+		this.orderHandler = orderHandler;
 	}
 	
 	/**
-	 * Returns the order manager of this assembly line scheduler.
+	 * Returns the order handler of this assembly line scheduler.
 	 * 
-	 * @return The order manager of this assembly line scheduler.
+	 * @return The order handler of this assembly line scheduler.
 	 */
-	private OrderManager getOrderManager() {
-		return orderManager;
+	private OrderHandler getOrderHandler() {
+		return orderHandler;
+	}
+
+	@Override
+	public boolean canScheduleOrder(Order order) {
+		// TODO dit vragen aan AssemblyLine of toch hier de berekeningen doen?
+		return true;
 	}
 }

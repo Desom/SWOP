@@ -10,7 +10,7 @@ import domain.configuration.Option;
  * This policy class checks if the configuration has no conflicting options.
  *
  */
-public class ConflictPolicy extends Policy {
+public class ConflictPolicy extends AlwaysPolicy {
 	
 	/**
 	 * Constructor of ConflictPolicy.
@@ -42,60 +42,28 @@ public class ConflictPolicy extends Policy {
 	}
 	
 	/**
-	 * Proceeds to the next policy in the chain if there are no conflicting options in the configuration.
-	 * Otherwise it will throw an exception indicating the conflicts or modify an already thrown exception by another policy.
+	 * Checks whether the given configuration has no conflicting options.
 	 * 
 	 * @param configuration
-	 * 		The incomplete configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the incomplete configuration is invalid.
+	 * 		The configuration to be checked.
+	 * @return True if the given configuration has no conflicting options, otherwise false.
 	 */
 	@Override
-	public void check(Configuration configuration) throws InvalidConfigurationException{
-		HashSet<Option[]> conflictingOptions = conflictsCheck(configuration);
-		if(conflictingOptions.isEmpty()){ // als verdere policies iets gooien wordt er gewoon verder gegooid.
-			proceed(configuration);
-		}else{ // in dit geval moet gecatched worden en aangepast
-			try{
-				proceed(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(conflictingOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(conflictingOptions));
-		}
-	}
-
-	/**
-	 * Proceeds to the next policy in the chain if there are no conflicting options in the configuration.
-	 * Otherwise it will throw an exception indicating the conflicts or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The completed configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the completed configuration is invalid.
-	 */
-	@Override
-	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
-		HashSet<Option[]> conflictingOptions = conflictsCheck(configuration);
-		if(conflictingOptions.isEmpty())
-			// als verdere policies iets gooien wordt er gewoon verder gegooid.
-			proceedComplete(configuration);
-		else
-			// in dit geval moet gecatched worden en aangepast
-			this.addToException(configuration, this.buildMessage(conflictingOptions));
+	protected boolean checkTest(Configuration configuration) {
+		return this.conflictsCheck(configuration).isEmpty();
 	}
 	
 	/**
 	 * Builds an exception message indicating which options in the configuration are conflicting.
 	 * 
-	 * @param conflictingOptions
-	 * 		A list of pairs of conflicting options.
+	 * @param configuration
+	 * 		The configuration on which the message is based.
 	 * @return An exception message indicating which options in the configuration are conflicting.
 	 */
-	private String buildMessage(HashSet<Option[]> conflictingOptions){
+	@Override
+	protected String buildMessage(Configuration configuration) {
 		String message = "Your configuration has the following conflicting Options: \n";
-		for(Option[] o : conflictingOptions){
+		for(Option[] o : this.conflictsCheck(configuration)){
 			message += "* " + o[0].toString() + " conflicts with " + o[1].toString() + "\n";
 		}
 		return message;

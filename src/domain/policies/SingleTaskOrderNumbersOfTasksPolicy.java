@@ -6,7 +6,7 @@ import domain.configuration.Configuration;
  * This policy checks if the configuration of a single task order has the right amount of options.
  *
  */
-public class SingleTaskOrderNumbersOfTasksPolicy extends Policy{
+public class SingleTaskOrderNumbersOfTasksPolicy extends CompletedPolicy {
 
 	/**
 	 * Constructor of SingleTaskOrderNumbersOfTasksPolicy.
@@ -19,43 +19,22 @@ public class SingleTaskOrderNumbersOfTasksPolicy extends Policy{
 	}
 
 	/**
-	 * Just proceeds to the next policy in the chain, because this policy can't check incomplete configurations.
-	 * 
-	 * @param configuration
-	 * 		The incomplete configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the incomplete configuration is invalid.
+	 * TODO
 	 */
 	@Override
-	public void check(Configuration configuration) throws InvalidConfigurationException {
-		this.proceed(configuration);
-	}
-
-	/**
-	 * Proceeds to the next policy in the chain if the configuration has the proper number of options (1).
-	 * Otherwise it will throw an exception indicating there are too many options or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The completed configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the completed configuration is invalid.
-	 */
-	@Override
-	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
-		if(configuration.getAllOptions().size() == 1)
-			proceedComplete(configuration);
-		else
-			this.addToException(configuration, this.buildMessage(configuration));
+	protected boolean checkTest(Configuration configuration) {
+		return configuration.getAllOptions().size() == 1;
 	}
 	
 	/**
 	 * Builds an exception message indicating how many options the single task order has.
 	 * 
 	 * @param configuration
-	 * 		The configuration of the single task order.
+	 * 		The configuration on which the message is based.
 	 * @return An exception message indicating how many options the single task order has.
 	 */
-	private String buildMessage(Configuration configuration) {
+	@Override
+	protected String buildMessage(Configuration configuration) {
 		return "Deze configuratie heeft in plaats van 1 optie " +configuration.getAllOptions().size()+ " opties.";
 	}
 }

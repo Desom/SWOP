@@ -10,7 +10,7 @@ import domain.configuration.OptionType;
  * This policy class checks if a configuration is complete (if it has all required option types).
  *
  */
-public class CompletionPolicy extends Policy{
+public class CompletionPolicy extends CompletedPolicy {
 
 	private ArrayList<OptionType> requiredTypes;
 
@@ -45,48 +45,24 @@ public class CompletionPolicy extends Policy{
 	}
 
 	/**
-	 * Just proceeds to the next policy in the chain, because this policy can't check incomplete configurations for completeness.
-	 * 
-	 * @param configuration
-	 * 		The incomplete configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the incomplete configuration is invalid.
+	 * TODO
 	 */
 	@Override
-	public void check(Configuration configuration) throws InvalidConfigurationException{
-		proceed(configuration);
-	}
-
-	/**
-	 * Proceeds to the next policy in the chain if there are no remaining option types to be fulfilled.
-	 * Otherwise it will throw an exception indicating the remaining option types or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The completed configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the completed configuration is invalid.
-	 */
-	@Override
-	public void checkComplete(Configuration configuration) throws InvalidConfigurationException{
-		ArrayList<OptionType> remainingTypes = completionCheck(configuration);
-		if(remainingTypes.isEmpty())
-			// als verdere policies iets gooien wordt er gewoon verder gegooid.
-			proceedComplete(configuration);
-		else
-			// in dit geval moet gecatched worden en aangepast
-			this.addToException(configuration, this.buildMessage(remainingTypes));
+	protected boolean checkTest(Configuration configuration) {
+		return this.completionCheck(configuration).isEmpty();
 	}
 	
 	/**
 	 * Builds an exception message indicating which option types in the configuration aren't fulfilled yet.
 	 * 
-	 * @param remainingTypes
-	 * 		A list of remaining option types.
+	 * @param configuration
+	 * 		The configuration on which the message is based.
 	 * @return An exception message indicating which option types in the configuration aren't fulfilled yet.
 	 */
-	private String buildMessage(ArrayList<OptionType> remainingTypes){
+	@Override
+	protected String buildMessage(Configuration configuration){
 		String message = "Your configuration is missing the following types: \n";
-		for(OptionType t : remainingTypes){
+		for(OptionType t : this.completionCheck(configuration)){
 			message += "* " + t.toString() + "\n";
 		}
 		return message;

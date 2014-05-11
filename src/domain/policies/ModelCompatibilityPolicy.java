@@ -10,7 +10,7 @@ import domain.configuration.Option;
  * This policy class checks if the options of a configuration are compatible with its model.
  *
  */
-public class ModelCompatibilityPolicy extends Policy {
+public class ModelCompatibilityPolicy extends AlwaysPolicy {
 
 	/**
 	 * Constructor of ModelCompatibilityPolicy.
@@ -43,61 +43,25 @@ public class ModelCompatibilityPolicy extends Policy {
 	}
 	
 	/**
-	 * Proceeds to the next policy in the chain if there are no options conflicting with the car model in the configuration.
-	 * Otherwise it will throw an exception indicating the conflicting options or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The incomplete configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the incomplete configuration is invalid.
+	 * TODO
 	 */
 	@Override
-	public void check(Configuration configuration) throws InvalidConfigurationException{
-		ArrayList<Option> conflictingOptions = compatibilityCheck(configuration);
-		if(conflictingOptions.isEmpty())
-			proceed(configuration);
-		else
-			this.addToException(configuration, this.buildMessage(configuration, conflictingOptions));
-	}
-
-	/**
-	 * Proceeds to the next policy in the chain if there are no options conflicting with the car model in the configuration.
-	 * Otherwise it will throw an exception indicating the conflicting options or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The completed configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the completed configuration is invalid.
-	 */
-	@Override
-	public void checkComplete(Configuration configuration) throws InvalidConfigurationException{
-		ArrayList<Option> conflictingOptions = compatibilityCheck(configuration);
-		if(conflictingOptions.isEmpty()){
-			proceedComplete(configuration);
-		}else{
-			try{
-				proceedComplete(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(configuration, conflictingOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(configuration, conflictingOptions));
-		}
+	protected boolean checkTest(Configuration configuration) {
+		return this.compatibilityCheck(configuration).isEmpty();
 	}
 	
 	/**
 	 * Builds an exception message indicating which options in the configuration are conflicting with the car model.
 	 * 
-	 * @param Configuration
-	 * 		The configuration with conflicting options.
-	 * @param conflictingOptions
-	 * 		A list of options conflicting with the car model.
+	 * @param configuration
+	 * 		The configuration on which the message is based.
 	 * @return An exception message indicating which options in the configuration are conflicting with the car model.
 	 */
-	private String buildMessage(Configuration configuration, ArrayList<Option> conflictingOptions){
+	@Override
+	protected String buildMessage(Configuration configuration){
 		String message = "Your configuration has the following Options that are incompatible with the model: \n";
 		message += "Your model is " + configuration.getModel().toString() + "\n";
-		for(Option o : conflictingOptions){
+		for(Option o : this.compatibilityCheck(configuration)){
 			message += "* " + o.toString() + "\n";
 		}
 		return message;

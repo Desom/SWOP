@@ -10,7 +10,7 @@ import domain.configuration.OptionType;
  * This policy checks if the configuration of a single task order has valid options.
  *
  */
-public class SingleTaskOrderTaskTypePolicy extends Policy {
+public class SingleTaskOrderTaskTypePolicy extends AlwaysPolicy {
 
 	private ArrayList<OptionType> validOptionTypes;
 	
@@ -42,58 +42,24 @@ public class SingleTaskOrderTaskTypePolicy extends Policy {
 	}
 
 	/**
-	 * Proceeds to the next policy in the chain if there are no invalid in the configuration.
-	 * Otherwise it will throw an exception indicating the invalid options or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The incomplete configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the incomplete configuration is invalid.
+	 * TODO
 	 */
 	@Override
-	public void check(Configuration configuration) throws InvalidConfigurationException {
-		ArrayList<Option> invalidOptions = checkTypes(configuration);
-		if(invalidOptions.isEmpty()){
-			proceed(configuration);
-		}else{
-			try{
-				proceed(configuration);
-			}catch(InvalidConfigurationException e){
-				e.addMessage(buildMessage(invalidOptions));
-				throw e;
-			}
-			throw new InvalidConfigurationException(buildMessage(checkTypes(configuration)));
-		}
-	}
-
-	/**
-	 * Proceeds to the next policy in the chain if there are no invalid in the configuration.
-	 * Otherwise it will throw an exception indicating the invalid options or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The completed configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the completed configuration is invalid.
-	 */
-	@Override
-	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
-		ArrayList<Option> invalidOptions = checkTypes(configuration);
-		if(invalidOptions.isEmpty())
-			proceedComplete(configuration);
-		else
-			this.addToException(configuration, this.buildMessage(invalidOptions));
+	protected boolean checkTest(Configuration configuration) {
+		return this.checkTypes(configuration).isEmpty();
 	}
 
 	/**
 	 * Builds an exception message indicating which options in the configuration are invalid.
 	 * 
-	 * @param invalidOptions
-	 * 		A list of invalid options.
+	 * @param configuration
+	 * 		The configuration on which the message is based.
 	 * @return An exception message indicating which options in the configuration are invalid.
 	 */
-	private String buildMessage(ArrayList<Option> invalidOptions) {
+	@Override
+	protected String buildMessage(Configuration configuration) {
 		String message = "Your configuration has options who's type are not ok: \n";
-		for(Option o : invalidOptions){
+		for(Option o : this.checkTypes(configuration)){
 			message += "* " + o.toString() + "\n";
 		}
 		return message;

@@ -9,7 +9,7 @@ import domain.configuration.Option;
  * This policy class checks if certain options in a configuration need other options and if the configuration has these options.
  *
  */
-public class DependencyPolicy extends Policy {
+public class DependencyPolicy extends CompletedPolicy {
 	
 	/**
 	 * Constructor of DependencyPolicy
@@ -38,46 +38,24 @@ public class DependencyPolicy extends Policy {
 	}
 
 	/**
-	 * Just proceeds to the next policy in the chain, because this policy can't check incomplete configurations for missing dependencies.
-	 * 
-	 * @param configuration
-	 * 		The incomplete configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the incomplete configuration is invalid.
+	 * TODO
 	 */
 	@Override
-	public void check(Configuration configuration) throws InvalidConfigurationException {
-		proceed(configuration);
-	}
-
-	/**
-	 * Proceeds to the next policy in the chain if all dependencies are satisfied.
-	 * Otherwise it will throw an exception indicating the remaining unfulfilled dependencies or modify an already thrown exception by another policy.
-	 * 
-	 * @param configuration
-	 * 		The incomplete configuration to be checked.
-	 * @throws InvalidConfigurationException
-	 * 		If the incomplete configuration is invalid.
-	 */
-	@Override
-	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
-		ArrayList<Option> conflictingOptions = dependencyCheck(configuration);
-		if(conflictingOptions.isEmpty())
-			proceedComplete(configuration);
-		else
-			this.addToException(configuration, this.buildMessage(conflictingOptions));
+	protected boolean checkTest(Configuration configuration) {
+		return this.dependencyCheck(configuration).isEmpty();
 	}
 	
 	/**
 	 * Builds an exception message indicating which options in the configuration are depending on missing options.
 	 * 
-	 * @param dependentOptions
-	 * 		A list of options which depend on missing options
+	 * @param configuration
+	 * 		The configuration on which the message is based.
 	 * @return An exception message indicating which options in the configuration are depending on missing options.
 	 */
-	private String buildMessage(ArrayList<Option> dependentOptions){
+	@Override
+	protected String buildMessage(Configuration configuration){
 		String message = "Your configuration has options who's dependecies are not ok: \n";
-		for(Option o : dependentOptions){
+		for(Option o : this.dependencyCheck(configuration)){
 			message += "* " + o.toString() + "\n";
 		}
 		return message;

@@ -32,4 +32,10 @@ public class dummyAssemblyLine extends AssemblyLine {
 	public void advanceLine() throws CannotAdvanceException {
 		
 	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public LinkedList<Order> StateWhenAcceptingOrders() {
+		LinkedList<Order> temp = (LinkedList<Order>) this.orders.clone();
+		return temp;
+	}
 }

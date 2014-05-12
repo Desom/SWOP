@@ -94,17 +94,16 @@ public class OperationalStatus implements AssemblyLineStatus {
 	}
 
 	@Override
-	public LinkedList<Order> StateWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public LinkedList<Order> stateWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		LinkedList<Order> result = assemblyLine.getAllOrders();
-		result.addFirst(null);
-		result.removeLast();
 		return result;
 	}
 
 	@Override
-	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		GregorianCalendar result =(GregorianCalendar) assemblyLine.getAssemblyLineScheduler().getCurrentTime().clone();
-		result.add(GregorianCalendar.MINUTE, 240+assemblyLine.calculateTimeTillAdvanceFor(assemblyLine.getAllOrders()));
+		if(!this.canAdvanceLine(assemblyLine))
+		result.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assemblyLine.getAllOrders()));
 		return result;
 	}
 

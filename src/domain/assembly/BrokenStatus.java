@@ -23,12 +23,12 @@ public class BrokenStatus implements AssemblyLineStatus {
 
 	}
 	@Override
-	public LinkedList<Order> StateWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public LinkedList<Order> stateWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		return null;
 	}
 
 	@Override
-	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		return null;
 	}
 

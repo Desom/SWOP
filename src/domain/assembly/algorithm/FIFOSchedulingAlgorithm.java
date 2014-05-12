@@ -57,12 +57,12 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	@Override
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
 			ArrayList<Order> orderList, 
-			GregorianCalendar allTasksCompletedTime,
+			GregorianCalendar allTasksCompletedTime,LinkedList<Order> stateOfAssemblyLine,
 			AssemblyLineScheduler assemblyLineScheduler) {
 
 		AssemblyLine assemblyLine = assemblyLineScheduler.getAssemblyLine();
 		//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
-		LinkedList<Order> assembly = new LinkedList<Order>(assemblyLine.getAllOrders());
+		LinkedList<Order> assembly = (LinkedList<Order>) stateOfAssemblyLine.clone();
 		ArrayList<Order> sList = this.scheduleToList(orderList, assemblyLineScheduler);
 		GregorianCalendar movingTime = (GregorianCalendar) allTasksCompletedTime.clone();
 

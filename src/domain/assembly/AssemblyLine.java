@@ -245,11 +245,11 @@ public class AssemblyLine {
 		return this.assemblyLineStatus.canAcceptNewOrders();
 	}
 	public LinkedList<Order> StateWhenAcceptingOrders() {
-		return this.assemblyLineStatus.StateWhenAcceptingOrders(this);
+		return this.assemblyLineStatus.stateWhenAcceptingOrders(this);
 	}
 
 
 	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
-		return this.assemblyLineStatus.TimeWhenAcceptingOrders(this);
+		return this.assemblyLineStatus.timeWhenAcceptingOrders(this);
 	}
 }

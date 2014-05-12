@@ -84,7 +84,7 @@ public class MaintenanceStatus implements AssemblyLineStatus{
 	}
 
 	@Override
-	public LinkedList<Order> StateWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public LinkedList<Order> stateWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		LinkedList<Order> result = new LinkedList<Order>();
 		for(int i =0; i<assemblyLine.getNumberOfWorkstations();i++){
 			result.add(null);
@@ -93,8 +93,9 @@ public class MaintenanceStatus implements AssemblyLineStatus{
 	}
 
 	@Override
-	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		GregorianCalendar result =(GregorianCalendar) assemblyLine.getAssemblyLineScheduler().getCurrentTime().clone();
+		if(!assemblyLine.isEmpty())
 		result.add(GregorianCalendar.MINUTE, 240+assemblyLine.calculateTimeTillEmptyFor(assemblyLine.getAllOrders()));
 		return result;
 	}

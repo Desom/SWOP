@@ -4,9 +4,16 @@ import domain.configuration.Configuration;
 
 /**
  * All policies which have to be checked at all times inherit from this class.
+ * 
  */
 public abstract class AlwaysPolicy extends Policy {
 
+	/**
+	 * Constructor of AlwaysPolicy.
+	 * 
+	 * @param successor
+	 * 		The next policy in the policy chain.
+	 */
 	public AlwaysPolicy(Policy successor) {
 		super(successor);
 	}
@@ -22,10 +29,20 @@ public abstract class AlwaysPolicy extends Policy {
 	 */
 	@Override
 	public void check(Configuration configuration) throws InvalidConfigurationException {
-		if (this.checkTest(configuration))
+		if (this.checkTest(configuration)) {
 			this.proceed(configuration);
-		else
-			this.addToException(configuration);
+		}
+		else {
+			String message = this.buildMessage(configuration);
+			try {
+				proceed(configuration);
+			}
+			catch(InvalidConfigurationException e) {
+				e.addMessage(message);
+				throw e;
+			}
+			throw new InvalidConfigurationException(message);
+		}
 	}
 
 	@Override

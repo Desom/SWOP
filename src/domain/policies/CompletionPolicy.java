@@ -45,7 +45,11 @@ public class CompletionPolicy extends CompletedPolicy {
 	}
 
 	/**
-	 * TODO
+	 * Checks whether the given configuration is complete.
+	 * 
+	 * @param configuration
+	 * 		The configuration to be checked.
+	 * @return True if the given configuration is complete, otherwise false.
 	 */
 	@Override
 	protected boolean checkTest(Configuration configuration) {

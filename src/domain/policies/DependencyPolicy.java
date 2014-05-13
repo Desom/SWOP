@@ -38,7 +38,11 @@ public class DependencyPolicy extends CompletedPolicy {
 	}
 
 	/**
-	 * TODO
+	 * Checks whether the given configuration has no unfulfilled dependencies.
+	 * 
+	 * @param configuration
+	 * 		The configuration to be checked.
+	 * @return True if the configuration has no unfulfilled dependencies, otherwise false.
 	 */
 	@Override
 	protected boolean checkTest(Configuration configuration) {

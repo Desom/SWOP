@@ -4,6 +4,7 @@ import domain.configuration.Configuration;
 
 /**
  * All policy classes inherit from this class.
+ * 
  */
 public abstract class Policy {
 
@@ -48,40 +49,6 @@ public abstract class Policy {
 	}
 
 	/**
-	 * Adds a message to the exception of this policy chain.
-	 * 
-	 * @param configuration
-	 * 		The configuration which is being checked.
-	 * @param message
-	 * 		The message to be added to the exception.
-	 * @throws InvalidConfigurationException
-	 * 		If the configuration is invalid.
-	 */
-	// TODO probleem
-	protected void addToException(Configuration configuration) throws InvalidConfigurationException {
-		String message = this.buildMessage(configuration);
-		try{
-			proceed(configuration);
-		}catch(InvalidConfigurationException e){
-			e.addMessage(message);
-			throw e;
-		}
-		throw new InvalidConfigurationException(message);
-	}
-	
-	// TODO
-	protected void addToExceptionComplete(Configuration configuration) throws InvalidConfigurationException {
-		String message = this.buildMessage(configuration);
-		try{
-			proceedComplete(configuration);
-		}catch(InvalidConfigurationException e){
-			e.addMessage(message);
-			throw e;
-		}
-		throw new InvalidConfigurationException(message);
-	}
-
-	/**
 	 * Checks whether the configuration is valid. If it isn't, it throws an exception.
 	 * This method is only used for incomplete configurations.
 	 * 
@@ -102,10 +69,20 @@ public abstract class Policy {
 	 * 		If the completed configuration is invalid.
 	 */
 	public void checkComplete(Configuration configuration) throws InvalidConfigurationException {
-		if (this.checkTest(configuration))
+		if (this.checkTest(configuration)) {
 			this.proceedComplete(configuration);
-		else
-			this.addToExceptionComplete(configuration);
+		}
+		else {
+			String message = this.buildMessage(configuration);
+			try {
+				proceedComplete(configuration);
+			}
+			catch(InvalidConfigurationException e) {
+				e.addMessage(message);
+				throw e;
+			}
+			throw new InvalidConfigurationException(message);
+		}
 	}
 
 	/**
@@ -113,7 +90,7 @@ public abstract class Policy {
 	 * 
 	 * @param configuration
 	 * 		The configuration to be checked.
-	 * @return True if the configuration is valid, otherwise false.
+	 * @return True if the configuration is valid for the specific policy in the chain, otherwise false.
 	 */
 	abstract protected boolean checkTest(Configuration configuration);
 	
@@ -122,7 +99,7 @@ public abstract class Policy {
 	 * 
 	 * @param configuration
 	 * 		The configuration on which the message is based.
-	 * @return A message indicating why the configuration is invalid.
+	 * @return A message indicating why the configuration is invalid for the specific policy in the chain.
 	 */
 	abstract protected String buildMessage(Configuration configuration);
 

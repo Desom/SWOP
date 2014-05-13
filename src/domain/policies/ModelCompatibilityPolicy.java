@@ -43,7 +43,11 @@ public class ModelCompatibilityPolicy extends AlwaysPolicy {
 	}
 	
 	/**
-	 * TODO
+	 * Checks whether the configuration has no options conflicting with the car model.
+	 * 
+	 * @param configuration
+	 * 		The configuration to be checked.
+	 * @return True if the configuration has no options conflicting with the car model, otherwise false.
 	 */
 	@Override
 	protected boolean checkTest(Configuration configuration) {

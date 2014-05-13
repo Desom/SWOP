@@ -42,7 +42,11 @@ public class SingleTaskOrderTaskTypePolicy extends AlwaysPolicy {
 	}
 
 	/**
-	 * TODO
+	 * Checks whether the configuration has no invalid options.
+	 * 
+	 * @param configuration
+	 * 		The configuration to be checked.
+	 * @return True if the configuration has no invalid options, otherwise false.
 	 */
 	@Override
 	protected boolean checkTest(Configuration configuration) {

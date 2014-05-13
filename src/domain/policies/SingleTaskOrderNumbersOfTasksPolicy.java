@@ -19,7 +19,11 @@ public class SingleTaskOrderNumbersOfTasksPolicy extends CompletedPolicy {
 	}
 
 	/**
-	 * TODO
+	 * Checks whether the configuration has the right amount of options.
+	 * 
+	 * @param configuration
+	 * 		The configuration to be checked.
+	 * @return True if the configuration has the right amount of options, otherwise false.
 	 */
 	@Override
 	protected boolean checkTest(Configuration configuration) {

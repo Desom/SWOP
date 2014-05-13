@@ -1,15 +1,19 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
+import domain.configuration.CarModelCatalog;
 import domain.configuration.OptionType;
 
 public class AssemblyLineCreator {
 	
 	private Scheduler scheduler;
+	private LinkedList<WorkstationType> workstationTypes;
 	
 	public AssemblyLineCreator(Scheduler scheduler) {
 		this.scheduler = scheduler;
+		createWorkstationTypes();
 	}
 	
 	public ArrayList<AssemblyLine> create() {
@@ -76,5 +80,41 @@ public class AssemblyLineCreator {
 		workstations.add(new Workstation("Accessories Post", taskTypes4));
 		
 		return workstations;
+	}
+	
+	
+	
+	private void createWorkstationTypes(){
+		workstationTypes = new LinkedList<WorkstationType>();
+		LinkedList<OptionType> bodyPost = new LinkedList<OptionType>();
+		bodyPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Body"));
+		bodyPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Color"));
+		workstationTypes.add(new WorkstationType("Body Post", bodyPost));
+		
+		LinkedList<OptionType> driveTrainPost = new LinkedList<OptionType>();
+		driveTrainPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Engine"));
+		driveTrainPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Gearbox"));
+		workstationTypes.add(new WorkstationType("DriveTrain Post", driveTrainPost));
+		
+		LinkedList<OptionType> accessoriesPost = new LinkedList<OptionType>();
+		accessoriesPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Seats"));
+		accessoriesPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Airco"));
+		accessoriesPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Wheels"));
+		accessoriesPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Spoiler"));
+		workstationTypes.add(new WorkstationType("Accessories Post", accessoriesPost));
+		
+		LinkedList<OptionType> cargoPost = new LinkedList<OptionType>(); // TODO Deze 2 optionTypes bestaan nog niet
+		cargoPost.add(CarModelCatalog.optionTypeCreator.getOptionType("ToolStorage"));
+		cargoPost.add(CarModelCatalog.optionTypeCreator.getOptionType("CargoProtection"));
+		workstationTypes.add(new WorkstationType("Cargo Post", cargoPost));
+	}
+	
+	/**
+	 * Return all WorkstationTypes.
+	 * 
+	 * @return a LinkedList of containing all WorkstationTypes.
+	 */
+	public LinkedList<WorkstationType> getAllWorkstationTypes(){
+		return workstationTypes;
 	}
 }

@@ -22,20 +22,18 @@ public class AssemblyStatusView {
 		this.workstations = workstations;
 	}
 
-	
-	// WORKSTATIONS HEBBEN GEEN IDS MEER
 	/*
-	 * Returns all id's of the workstations.
+	 * Returns all names of the workstations.
 	 * 
-	 * @return All id's of the workstations.
-	 
-	public ArrayList<Integer> getAllWorkstationIds(){
-		ArrayList<Integer> ids = new ArrayList<Integer>();
+	 * @return All names of the workstations.
+	 */
+	public ArrayList<Integer> getAllWorkstationTypeNames(){
+		ArrayList<Integer> names = new ArrayList<Integer>();
 		for(Workstation workstation : workstations){
 			ids.add(workstation.getId());
 		}
 		return ids;
-	}*/
+	}
 	
 	/**
 	 * Returns the car order at the workstation indicated with the id.

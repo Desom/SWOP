@@ -24,7 +24,7 @@ public class CarModel {
 		if(name == null || possibleOptions == null)
 			throw new CarModelCatalogException("null in non null value of Model");
 
-		for(OptionType type:OptionType.values()){
+		for(OptionType type:CarModelCatalog.optionTypeCreator.getAllTypes()){
 			if(type.isMandatory() && !existstype(type, possibleOptions))
 				throw new CarModelCatalogException("Missing type: "+ type);
 		}

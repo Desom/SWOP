@@ -8,6 +8,7 @@ public class CarModelCatalog {
 	
 	private ArrayList<Option> allOptions;
 	private ArrayList<CarModel> allCarModels;
+	public static OptionTypeCreator optionTypeCreator = new OptionTypeCreator();
 
 	/**
 	 * Constructor of CarModelCatalog.

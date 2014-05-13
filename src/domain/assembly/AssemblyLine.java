@@ -19,7 +19,6 @@ public class AssemblyLine {
 	 * This constructor is also responsible for the creation of 3 workstations.
 	 */
 	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler){
-		this.workstations = createWorkstations();
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
 		this.assemblyLineStatus = new OperationalStatus();
@@ -84,11 +83,12 @@ public class AssemblyLine {
 		throw new DoesNotExistException("No workstation exists with ID: " + id);
 	}
 
-	/**
+	
+	// OUTDATED
+	/*
 	 * This method creates 3 workstations, specifies their ID's and the respective assembly task types those workstations can perform.
 	 * 
 	 * @return A list of the created workstations.
-	 */
 	private ArrayList<Workstation> createWorkstations(){
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
@@ -112,7 +112,7 @@ public class AssemblyLine {
 		workstations.add(workStation2);
 		workstations.add(workStation3);
 		return workstations;
-	}
+	}*/
 
 	/**
 	 * Creates a view of the current status of the assembly line.

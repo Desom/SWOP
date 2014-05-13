@@ -238,7 +238,7 @@ public class OrderManager implements OrderHandler{
 	 * Creates the car order policy chain.
 	 */
 	private void createCarOrderPolicy() {
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null,CarModelCatalog.optionTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);

@@ -3,14 +3,13 @@ package domain.assembly;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+import java.util.List;
 
-import domain.InternalFailureException;
-import domain.configuration.OptionType;
 import domain.order.Order;
 
 public class AssemblyLine {
 
-	private ArrayList<Workstation> workstations = null;
+	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 	private final AssemblyLineScheduler assemblyLineScheduler;
 	private AssemblyLineStatus assemblyLineStatus;
 
@@ -251,5 +250,30 @@ public class AssemblyLine {
 
 	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		return this.assemblyLineStatus.timeWhenAcceptingOrders(this);
+	}
+	
+	/**
+	 * adds the given workstation to the end of the assemblyLine.
+	 * If the workstation does not yet have an assemblyLine.
+	 * 
+	 * @param w the specified workstation
+	 */
+	protected void addWorkstation(Workstation w){
+		if(w.getAssemblyLine() == null){
+			workstations.add(w);
+			w.setAssemblyLine(this);
+		}
+	}
+	
+	/**
+	 * add all the given workstations to the end of the assemblyLine.
+	 * If the workstations do not yet have an assemblyLine.
+	 * 
+	 * @param list a list of the specified workstations
+	 */
+	protected void addAllWorkstation(List<Workstation> list){
+		for(Workstation w:list){
+			addWorkstation(w);
+		}
 	}
 }

@@ -9,6 +9,8 @@ import java.util.Scanner;
 import domain.Statistics;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
+import domain.assembly.WorkstationType;
+import domain.configuration.CarModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
@@ -152,18 +154,18 @@ public class UI implements UIInterface{
 		try{
 			System.out.println(statusView.getHeader());
 			System.out.println("---");
-			for(int wsID : statusView.getAllWorkstationIds()){
-				System.out.println("Workstation " + wsID);
-				int carOrderID = statusView.getCarOrderIdAt(wsID);
+			for(WorkstationType wsType : statusView.getAllWorkstationTypes()){
+				System.out.println("Workstation: " + wsType.toString());
+				int carOrderID = statusView.getCarOrderIdOf(wsType);
 				if (carOrderID < 0){
 					System.out.println("Empty");
 				}
 				else{
 				System.out.println("working at Order " + carOrderID);
 				}
-				for(OptionType taskType : statusView.getAllTasksAt(wsID)){
+				for(OptionType taskType : statusView.getAllTasksAt(wsType)){
 					String taskStatus;
-					if(statusView.taskIsDoneAt(taskType, wsID)){
+					if(statusView.taskIsDoneAt(taskType, wsType)){
 						taskStatus = "finished";
 					}
 					else{
@@ -182,7 +184,7 @@ public class UI implements UIInterface{
 	public void fillIn(CarOrderForm orderForm) {
 		ArrayList<OptionType> mandatoryList = new ArrayList<OptionType>();
 		ArrayList<OptionType> nonMandatoryList = new ArrayList<OptionType>();
-		for(OptionType oType:OptionType.values()){
+		for(OptionType oType:CarModelCatalog.optionTypeCreator.getAllTypes()){
 			if(oType.isMandatory()){
 				mandatoryList.add(oType);
 			}
@@ -227,7 +229,7 @@ public class UI implements UIInterface{
 	
 	public void fillIn(SingleTaskOrderForm orderForm){
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
-		for (OptionType type : OptionType.values())
+		for (OptionType type : CarModelCatalog.optionTypeCreator.getAllTypes())
 			if (type.isSingleTaskPossible())
 				possibleTypes.add(type);
 		int answer1 = this.askWithPossibilities("What do you want to order?", possibleTypes.toArray());

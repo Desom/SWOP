@@ -9,7 +9,7 @@ import domain.user.CarMechanic;
 public class Workstation {
 
 	private String name;
-	private final ArrayList<OptionType> taskTypes; 
+	private final WorkstationType workstationType;
 	private CarMechanic carMechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
@@ -28,10 +28,9 @@ public class Workstation {
 	 * @param taskTypes
 	 * 		The task types that can be handled at this workstation.
 	 */
-	public Workstation(AssemblyLine assemblyLine, String name, ArrayList<OptionType> taskTypes) {
-		this.assemblyLine = assemblyLine;
+	public Workstation(String name, WorkstationType workstationType) {
 		this.name = name;
-		this.taskTypes = taskTypes;
+		this.workstationType = workstationType;
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
 		this.resetTimeSpend();
@@ -65,7 +64,16 @@ public class Workstation {
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<OptionType> getTaskTypes() {
-		return (ArrayList<OptionType>) taskTypes.clone();
+		return (ArrayList<OptionType>) workstationType.getacceptedOptionTypes().clone();
+	}
+	
+	/**
+	 * Gives the type of this workstation.
+	 * 
+	 * @return The WorkstationType of this workstation.
+	 */
+	public WorkstationType getWorkstationType() {
+		return workstationType;
 	}
 
 	/**
@@ -113,7 +121,7 @@ public class Workstation {
 	 * 		If task does not match with the task types list.
 	 */
 	public void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
-		if (this.taskTypes.contains(task.getType()))
+		if (this.workstationType.getacceptedOptionTypes().contains(task.getType()))
 			this.allTasks.add(task);
 		else
 			throw new IllegalArgumentException("This assembly task can't be assigned to this workstation");
@@ -315,5 +323,26 @@ public class Workstation {
 			}
 		}
 		return compatibleTasks;
+	}
+	
+	/**
+	 * Returns the assemblyLine of this workstation.
+	 * 
+	 * @return the assemblyLine of this workstation.
+	 */
+	protected AssemblyLine getAssemblyLine(){
+		return this.assemblyLine;
+	}
+	
+	/**
+	 * Sets the assemblyline for this workstation. Can only be set once.
+	 * 
+	 * @param line
+	 * 		the specified AssemblyLine.
+	 */
+	protected void setAssemblyLine(AssemblyLine line){
+		if(this.assemblyLine == null){
+			this.assemblyLine = line;
+		}
 	}
 }

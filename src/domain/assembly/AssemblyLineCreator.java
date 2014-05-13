@@ -8,10 +8,10 @@ import domain.configuration.OptionType;
 
 public class AssemblyLineCreator {
 	
-	private Scheduler scheduler;
+	private AssemblyLineScheduler scheduler;
 	private LinkedList<WorkstationType> workstationTypes;
 	
-	public AssemblyLineCreator(Scheduler scheduler) {
+	public AssemblyLineCreator(AssemblyLineScheduler scheduler) {
 		this.scheduler = scheduler;
 		createWorkstationTypes();
 	}
@@ -19,65 +19,40 @@ public class AssemblyLineCreator {
 	public ArrayList<AssemblyLine> create() {
 		ArrayList<AssemblyLine> assemblyLines = new ArrayList<AssemblyLine>();
 		
-		AssemblyLine assemblyLine1 = new AssemblyLine(this.scheduler, this.createCarWorkstations());
+		AssemblyLine assemblyLine1 = new AssemblyLine(this.scheduler);
+		assemblyLine1.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine1);
 		
-		AssemblyLine assemblyLine2 = new AssemblyLine(this.scheduler, this.createCarWorkstations());
+		AssemblyLine assemblyLine2 = new AssemblyLine(this.scheduler);
+		assemblyLine2.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine2);
 		
-		AssemblyLine assemblyLine3 = new AssemblyLine(this.scheduler, this.createTruckWorkstations());
+		AssemblyLine assemblyLine3 = new AssemblyLine(this.scheduler);
+		assemblyLine3.addAllWorkstation(this.createTruckWorkstations());
 		assemblyLines.add(assemblyLine3);
 		
 		return assemblyLines;
 	}
 	
+	
 	private ArrayList<Workstation> createCarWorkstations() {
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		
-		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
-		taskTypes1.add(OptionType.Body);
-		taskTypes1.add(OptionType.Color);
-		workstations.add(new Workstation("Body Post", taskTypes1));
-
-		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
-		taskTypes2.add(OptionType.Engine);
-		taskTypes2.add(OptionType.Gearbox);
-		workstations.add(new Workstation("DriveTrain Post", taskTypes2));
-
-		ArrayList<OptionType> taskTypes3 = new ArrayList<OptionType>();
-		taskTypes3.add(OptionType.Seats);
-		taskTypes3.add(OptionType.Airco);
-		taskTypes3.add(OptionType.Wheels);
-		taskTypes3.add(OptionType.Spoiler);
-		workstations.add(new Workstation("Accessories Post", taskTypes3));
+		workstations.add(new Workstation("Body Post", getWorkstationType("Body Post")));
+		workstations.add(new Workstation("DriveTrain Post", getWorkstationType("DriveTrain Post")));
+		workstations.add(new Workstation("Accessories Post", getWorkstationType("Accessories Post")));
 		
 		return workstations;
 	}
 	
+	
 	private ArrayList<Workstation> createTruckWorkstations() {
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		
-		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
-		taskTypes1.add(OptionType.Body);
-		taskTypes1.add(OptionType.Color);
-		workstations.add(Workstation("Body Post", taskTypes1));
-		
-		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
-		taskTypes2.add(OptionType.ToolStorage);
-		taskTypes2.add(OptionType.CargoProtection);
-		workstations.add(new Workstation("Cargo Post", taskTypes2));
-
-		ArrayList<OptionType> taskTypes3 = new ArrayList<OptionType>();
-		taskTypes3.add(OptionType.Engine);
-		taskTypes3.add(OptionType.Gearbox);
-		workstations.add(new Workstation("DriveTrain Post", taskTypes3));
-		
-		ArrayList<OptionType> taskTypes4 = new ArrayList<OptionType>();
-		taskTypes4.add(OptionType.Seats);
-		taskTypes4.add(OptionType.Airco);
-		taskTypes4.add(OptionType.Wheels);
-		taskTypes4.add(OptionType.Spoiler);
-		workstations.add(new Workstation("Accessories Post", taskTypes4));
+		workstations.add(new Workstation("Body Post", getWorkstationType("Body Post")));
+		workstations.add(new Workstation("Cargo Post", getWorkstationType("Cargo Post")));
+		workstations.add(new Workstation("DriveTrain Post", getWorkstationType("DriveTrain Post")));
+		workstations.add(new Workstation("Accessories Post", getWorkstationType("Accessories Post")));
 		
 		return workstations;
 	}
@@ -103,7 +78,8 @@ public class AssemblyLineCreator {
 		accessoriesPost.add(CarModelCatalog.optionTypeCreator.getOptionType("Spoiler"));
 		workstationTypes.add(new WorkstationType("Accessories Post", accessoriesPost));
 		
-		LinkedList<OptionType> cargoPost = new LinkedList<OptionType>(); // TODO Deze 2 optionTypes bestaan nog niet
+		LinkedList<OptionType> cargoPost = new LinkedList<OptionType>(); 
+		// TODO Deze 2 optionTypes bestaan nog niet
 		cargoPost.add(CarModelCatalog.optionTypeCreator.getOptionType("ToolStorage"));
 		cargoPost.add(CarModelCatalog.optionTypeCreator.getOptionType("CargoProtection"));
 		workstationTypes.add(new WorkstationType("Cargo Post", cargoPost));
@@ -116,5 +92,20 @@ public class AssemblyLineCreator {
 	 */
 	public LinkedList<WorkstationType> getAllWorkstationTypes(){
 		return workstationTypes;
+	}
+	
+	/**
+	 * Returns the workstationtype that has the specified name
+	 * 
+	 * @param name the name of the desired workstationType
+	 * @return the requested workstationtype, or null if it does not exist
+	 */
+	public WorkstationType getWorkstationType(String name){
+		for (WorkstationType workstationType : workstationTypes){
+			if(workstationType.getName() == name){
+				return workstationType;
+			}
+		}
+		return null;
 	}
 }

@@ -102,7 +102,7 @@ public class AssemblyLineCreator {
 	 */
 	public WorkstationType getWorkstationType(String name){
 		for (WorkstationType workstationType : workstationTypes){
-			if(workstationType.getName() == name){
+			if(workstationType.getName().equals(name)){
 				return workstationType;
 			}
 		}

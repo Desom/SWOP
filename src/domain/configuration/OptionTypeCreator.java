@@ -61,7 +61,7 @@ public class OptionTypeCreator {
 	 */
 	public OptionType getOptionType(String name){
 		for (OptionType optionType : optionTypes){
-			if(optionType.getName() == name){
+			if(optionType.getName().equals(name)){
 				return optionType;
 			}
 		}

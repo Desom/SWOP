@@ -5,12 +5,16 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.assembly.AssemblyLineCreator;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
+import domain.assembly.Workstation;
+import domain.assembly.WorkstationType;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
 import domain.configuration.Configuration;
@@ -32,7 +36,10 @@ public class EffinciencySchedulingAlgorithmTest {
 	CarModelCatalog cmc;
 	AssemblyLineScheduler als;
 	dummyAssemblyLine AssemblyLine;
+	AssemblyLineScheduler alsT;
+	dummyAssemblyLine AssemblyLineT;
 	CustomShopManager customShopManager;
+	
 	@Before
 	public void testCreate() throws IOException, CarModelCatalogException {
 		this.algorithm = new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm());
@@ -42,8 +49,25 @@ public class EffinciencySchedulingAlgorithmTest {
 		this.customShopManager = new CustomShopManager(0);
 		this.cmc = new CarModelCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
-		this.AssemblyLine = new dummyAssemblyLine(als, null);
+		this.AssemblyLine = new dummyAssemblyLine(als, 3);
+		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
+		AssemblyLineCreator alsc = new AssemblyLineCreator(new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list));
+		workstations.add(new Workstation("Body Post", alsc.getWorkstationType("Body Post")));
+		workstations.add(new Workstation("DriveTrain Post", alsc.getWorkstationType("DriveTrain Post")));
+		workstations.add(new Workstation("Accessories Post", alsc.getWorkstationType("Accessories Post")));
+		this.AssemblyLine.addWorkstations(workstations);
+		this.alsT = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
+		this.AssemblyLineT = new dummyAssemblyLine(alsT, 4);
+		ArrayList<Workstation> workstationsT = new ArrayList<Workstation>();
+		AssemblyLineCreator alscT = new AssemblyLineCreator(new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list));
+		workstationsT.add(new Workstation("Body Post", alscT.getWorkstationType("Body Post")));
+		workstationsT.add(new Workstation("Cargo Post",  alscT.getWorkstationType("Cargo Post")));
+		workstationsT.add(new Workstation("DriveTrain Post", alscT.getWorkstationType("DriveTrain Post")));
+		workstationsT.add(new Workstation("Accessories Post", alscT.getWorkstationType("Accessories Post")));
+		this.AssemblyLineT.addWorkstations(workstationsT);
 	}
+	
+	
 	@Test
 	public void testScheduleToList50only() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = new ArrayList<Order>();
@@ -60,11 +84,11 @@ public class EffinciencySchedulingAlgorithmTest {
 			}
 		}
 		config.complete();
-		
+
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
 		for(int i =1; i<= 17;i++){
-		orderList.add(new CarOrder(i, garageHolder, config, time));
-		time.add(GregorianCalendar.MILLISECOND, 1);
+			orderList.add(new CarOrder(i, garageHolder, config, time));
+			time.add(GregorianCalendar.MILLISECOND, 1);
 		}
 		Configuration config2 = new Configuration(null,new SingleTaskOrderNumbersOfTasksPolicy(null));
 		for(Option option : cmc.getAllOptions()){
@@ -118,12 +142,12 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(null,scheduleList.get(19));
 		//21u20
 		assertEquals(null,scheduleList.get(20));
-		
+
 	}
 	@Test
 	public void testScheduleToList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
-		
+
 		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, als);
 
 		assertEquals(10,scheduleList.get(0).getCarOrderID());
@@ -143,11 +167,34 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(null,scheduleList.get(14));
 		assertEquals(15,scheduleList.size());
 	}
+	@Test
+	public void testScheduleToListForTruckLine() throws InvalidConfigurationException{
+		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
+		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, alsT);
+
+		assertEquals(10,scheduleList.get(0).getCarOrderID());
+		assertEquals(11,scheduleList.get(1).getCarOrderID());
+		assertEquals(9,scheduleList.get(2).getCarOrderID());
+		assertEquals(8,scheduleList.get(3).getCarOrderID());
+		assertEquals(7,scheduleList.get(4).getCarOrderID());
+		assertEquals(6,scheduleList.get(5).getCarOrderID());
+		assertEquals(5,scheduleList.get(6).getCarOrderID());
+		assertEquals(4,scheduleList.get(7).getCarOrderID());
+		assertEquals(3,scheduleList.get(8).getCarOrderID());
+		assertEquals(2,scheduleList.get(9).getCarOrderID());
+		assertEquals(1,scheduleList.get(10).getCarOrderID());
+		assertEquals(0,scheduleList.get(11).getCarOrderID());
+		assertEquals(null,scheduleList.get(12));
+		assertEquals(null,scheduleList.get(13));
+		assertEquals(null,scheduleList.get(14));
+		assertEquals(null,scheduleList.get(15));
+		assertEquals(16,scheduleList.size());
+	}
 	@Test
 	public void testScheduleToScheduledOrderListNoSingleTaskOrder() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
-		
+
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(10,scheduleList.get(0).getScheduledOrder().getCarOrderID());//70
@@ -199,7 +246,7 @@ public class EffinciencySchedulingAlgorithmTest {
 	@Test
 	public void testScheduleToScheduledOrderListSingleTaskOrderNoDeadLineFailure() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithNoFailure();
-		
+
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(),als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(12,scheduleList.get(0).getScheduledOrder().getCarOrderID());
@@ -261,7 +308,7 @@ public class EffinciencySchedulingAlgorithmTest {
 	@Test
 	public void testScheduleToScheduledOrderListSingleTaskOrderDeadLineFailure() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithFailure();
-		
+
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(),als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(12,scheduleList.get(0).getScheduledOrder().getCarOrderID());
@@ -333,11 +380,11 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(time,scheduleList.get(22).getScheduledTime());
 		assertEquals(23,scheduleList.size());
 	}
-	
+
 	@Test
 	public void testScheduleToScheduledOrderListOneAdvance() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithFailure();
-		
+
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
 		orderList.remove(scheduleList.get(0).getScheduledOrder());
 		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
@@ -413,7 +460,7 @@ public class EffinciencySchedulingAlgorithmTest {
 	@Test
 	public void testScheduleToScheduledOrderListOneAdvanceNr2() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
-		
+
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(),als);
 		orderList.remove(scheduleList.get(0).getScheduledOrder());
 		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
@@ -462,7 +509,7 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(null,scheduleList2.get(13).getScheduledOrder());//0
 		assertEquals(time,scheduleList2.get(13).getScheduledTime());
 		assertEquals(14,scheduleList2.size());
-		
+
 	}
 	private ArrayList<Order> makeOrderListWithSingleTaskOrderWithFailure()
 			throws InvalidConfigurationException {
@@ -526,9 +573,9 @@ public class EffinciencySchedulingAlgorithmTest {
 		config1.complete();
 		config2.complete();
 		config3.complete();
-		
+
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
-		
+
 		orderList.add(new CarOrder(0, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);
 		orderList.add(new CarOrder(1, garageHolder, config2, time));

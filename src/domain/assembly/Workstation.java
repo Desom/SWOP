@@ -1,6 +1,7 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import domain.InternalFailureException;
 import domain.configuration.OptionType;
@@ -64,7 +65,7 @@ public class Workstation {
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<OptionType> getTaskTypes() {
-		return (ArrayList<OptionType>) workstationType.getacceptedOptionTypes().clone();
+		return new ArrayList<OptionType>(((LinkedList<OptionType>) workstationType.getacceptedOptionTypes().clone()));
 	}
 	
 	/**

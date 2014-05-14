@@ -168,7 +168,7 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(15,scheduleList.size());
 	}
 	@Test
-	public void testScheduleToListForTruckLine() throws InvalidConfigurationException{
+	public void testScheduleToListForTruckLineNoSTOrders() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
 		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, alsT);
@@ -190,6 +190,35 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(null,scheduleList.get(14));
 		assertEquals(null,scheduleList.get(15));
 		assertEquals(16,scheduleList.size());
+	}
+	
+	@Test
+	public void testScheduleToListForTruckLineSTOrdersNoFailure() throws InvalidConfigurationException{
+		ArrayList<Order> orderList = this.makeOrderListWithSingleTaskOrderWithNoFailure();
+
+		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, alsT);
+		assertEquals(12,scheduleList.get(0).getCarOrderID());
+		assertEquals(13,scheduleList.get(1).getCarOrderID());
+		assertEquals(null,scheduleList.get(2));
+		assertEquals(10,scheduleList.get(3).getCarOrderID());
+		assertEquals(11,scheduleList.get(4).getCarOrderID());
+		assertEquals(9,scheduleList.get(5).getCarOrderID());
+		assertEquals(8,scheduleList.get(6).getCarOrderID());
+		assertEquals(7,scheduleList.get(7).getCarOrderID());
+		assertEquals(6,scheduleList.get(8).getCarOrderID());
+		assertEquals(5,scheduleList.get(9).getCarOrderID());
+		assertEquals(4,scheduleList.get(10).getCarOrderID());
+		assertEquals(3,scheduleList.get(11).getCarOrderID());
+		assertEquals(2,scheduleList.get(12).getCarOrderID());
+		assertEquals(1,scheduleList.get(13).getCarOrderID());
+		assertEquals(0,scheduleList.get(14).getCarOrderID());
+		assertEquals(14,scheduleList.get(15).getCarOrderID());
+		assertEquals(15,scheduleList.get(16).getCarOrderID());
+		assertEquals(null,scheduleList.get(17));
+		assertEquals(null,scheduleList.get(18));
+		assertEquals(null,scheduleList.get(19));
+		assertEquals(null,scheduleList.get(20));
+		assertEquals(21,scheduleList.size());
 	}
 	@Test
 	public void testScheduleToScheduledOrderListNoSingleTaskOrder() throws InvalidConfigurationException{

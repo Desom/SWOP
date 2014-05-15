@@ -9,6 +9,7 @@ import domain.user.Manager;
 public class ManagerController {
 
 	AdaptSchedulingAlgorithmHandler adaptSchedulingAlgorithmHandler;
+	ChangeAssemblyLineStatusHandler changeAssemblyLineStatusHandler;
 	CheckProductionStatisticsHandler checkProductionStatisticsHandler;
 	
 	/**
@@ -19,6 +20,7 @@ public class ManagerController {
 	 */
 	public ManagerController() {
 		adaptSchedulingAlgorithmHandler = new AdaptSchedulingAlgorithmHandler();
+		changeAssemblyLineStatusHandler = new ChangeAssemblyLineStatusHandler();
 		checkProductionStatisticsHandler = new CheckProductionStatisticsHandler();
 	}
 
@@ -36,11 +38,14 @@ public class ManagerController {
 		loop: while(true) {
 			ArrayList<String> possibilities = new ArrayList<String>();
 			possibilities.add("Adapt scheduling algorithm");
+			possibilities.add("Change assembly line status");
 			possibilities.add("Check production statistics");
 			possibilities.add("Log out");
 			String answer = ui.askWithPossibilities("What do you want to do?", possibilities);
 			switch(answer) {
 			case "Adapt scheduling algorithm":		this.adaptSchedulingAlgorithmHandler.run(ui, company, manager);
+			break;
+			case "Change assembly line status":		this.changeAssemblyLineStatusHandler.run(ui, company);
 			break;
 			case "Check production statistics":		this.checkProductionStatisticsHandler.run(ui, company, manager);
 			break;

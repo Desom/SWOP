@@ -14,20 +14,25 @@ public class AssemblyLineCreator {
 	public AssemblyLineCreator(AssemblyLineScheduler scheduler) {
 		this.scheduler = scheduler;
 		createWorkstationTypes();
+		
 	}
 	
 	public ArrayList<AssemblyLine> create() {
 		ArrayList<AssemblyLine> assemblyLines = new ArrayList<AssemblyLine>();
 		
-		AssemblyLine assemblyLine1 = new AssemblyLine(this.scheduler);
+		ArrayList<AssemblyLineStatus> statuses = this.getAssemblyLineStatuses();
+		
+		// TODO schedulers
+		
+		AssemblyLine assemblyLine1 = new AssemblyLine(this.scheduler, statuses);
 		assemblyLine1.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine1);
 		
-		AssemblyLine assemblyLine2 = new AssemblyLine(this.scheduler);
+		AssemblyLine assemblyLine2 = new AssemblyLine(this.scheduler, statuses);
 		assemblyLine2.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine2);
 		
-		AssemblyLine assemblyLine3 = new AssemblyLine(this.scheduler);
+		AssemblyLine assemblyLine3 = new AssemblyLine(this.scheduler, statuses);
 		assemblyLine3.addAllWorkstation(this.createTruckWorkstations());
 		assemblyLines.add(assemblyLine3);
 		
@@ -83,6 +88,14 @@ public class AssemblyLineCreator {
 		cargoPost.add(CarModelCatalog.optionTypeCreator.getOptionType("ToolStorage"));
 		cargoPost.add(CarModelCatalog.optionTypeCreator.getOptionType("CargoProtection"));
 		workstationTypes.add(new WorkstationType("Cargo Post", cargoPost));
+	}
+	
+	private ArrayList<AssemblyLineStatus> getAssemblyLineStatuses() {
+		ArrayList<AssemblyLineStatus> statuses = new ArrayList<AssemblyLineStatus>();
+		statuses.add(new OperationalStatus());
+		statuses.add(new MaintenanceStatus());
+		statuses.add(new BrokenStatus());
+		return statuses;
 	}
 	
 	/**

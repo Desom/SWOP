@@ -11,16 +11,19 @@ public class AssemblyLine {
 
 	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 	private final AssemblyLineScheduler assemblyLineScheduler;
-	private AssemblyLineStatus assemblyLineStatus;
+	private ArrayList<AssemblyLineStatus> possibleStatuses;
+	private AssemblyLineStatus currentStatus;
 
 	/**
 	 * Constructor for the assembly line class.
 	 * This constructor is also responsible for the creation of 3 workstations.
+	 * TODO
 	 */
-	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler){
+	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, ArrayList<AssemblyLineStatus> possibleStatuses){
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
-		this.assemblyLineStatus = new OperationalStatus();
+		this.possibleStatuses = possibleStatuses;
+		this.currentStatus = possibleStatuses.get(0);
 		try {
 			this.advanceLine();
 		} catch (CannotAdvanceException e) {
@@ -46,7 +49,7 @@ public class AssemblyLine {
 	 * @return true if this assembly line can advance, otherwise false.
 	 */
 	public boolean canAdvanceLine() {
-		return this.assemblyLineStatus.canAdvanceLine(this);
+		return this.currentStatus.canAdvanceLine(this);
 	}
 
 	ArrayList<Workstation> getBlockingWorkstations() {
@@ -64,7 +67,7 @@ public class AssemblyLine {
 	 * 		If there are workstations that are blocking the assembly line.
 	 */
 	public void advanceLine() throws CannotAdvanceException {
-		this.assemblyLineStatus.advanceLine(this);
+		this.currentStatus.advanceLine(this);
 	}
 
 	/**
@@ -237,19 +240,32 @@ public class AssemblyLine {
 		return filteredWorkstations;
 	}
 
-	void setStatus(AssemblyLineStatus status) {
-		this.assemblyLineStatus = status;		
+	void setCurrentStatus(AssemblyLineStatus status) throws IllegalArgumentException {
+		if (this.possibleStatuses.contains(status))
+			this.currentStatus = status;
+		else
+			throw new IllegalArgumentException("The given status is not possible for this assembly line.");
 	}
+	
+	public AssemblyLineStatus getCurrentStatus() {
+		return this.currentStatus;
+	}
+	
 	public Boolean canAcceptNewOrders() {
-		return this.assemblyLineStatus.canAcceptNewOrders();
+		return this.currentStatus.canAcceptNewOrders();
 	}
+	
 	public LinkedList<Order> StateWhenAcceptingOrders() {
-		return this.assemblyLineStatus.stateWhenAcceptingOrders(this);
+		return this.currentStatus.stateWhenAcceptingOrders(this);
 	}
 
+	@SuppressWarnings("unchecked")
+	public ArrayList<AssemblyLineStatus> getPossibleStatuses() {
+		return (ArrayList<AssemblyLineStatus>) this.possibleStatuses.clone();
+	}
 
 	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
-		return this.assemblyLineStatus.timeWhenAcceptingOrders(this);
+		return this.currentStatus.timeWhenAcceptingOrders(this);
 	}
 	
 	/**

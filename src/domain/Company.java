@@ -51,7 +51,7 @@ public class Company {
 			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 			this.orderManager = new OrderManager(scheduler, time);
 			this.statistics = new Statistics(this.orderManager);
-			this.assemblyLine = new AssemblyLine(scheduler);
+			this.assemblyLine = new AssemblyLine(scheduler, null); // TODO
 		} catch (IOException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
 		} catch (CarModelCatalogException e) {
@@ -91,8 +91,13 @@ public class Company {
 	 * 
 	 * @return The company's assembly line.
 	 */
+	// TODO moet later weg
 	public AssemblyLine getAssemblyLine(){
 		return this.assemblyLine;
+	}
+	
+	public ArrayList<AssemblyLine> getAssemblyLines() {
+		return null; //TODO
 	}
 
 	/**

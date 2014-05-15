@@ -54,7 +54,7 @@ public class MaintenanceStatus implements AssemblyLineStatus{
 				finished.getAssemblyprocess().registerDelay(assemblyLine);
 			}
 			if(!assemblyLine.isEmpty()) return;
-			assemblyLine.setStatus(new OperationalStatus());
+			assemblyLine.setCurrentStatus(new OperationalStatus());
 			assemblyLine.getAssemblyLineScheduler().addCurrentTime(240);
 			try{
 			assemblyLine.advanceLine();

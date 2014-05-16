@@ -15,9 +15,13 @@ public class AssemblyLine {
 	private AssemblyLineStatus currentStatus;
 
 	/**
-	 * Constructor for the assembly line class.
-	 * This constructor is also responsible for the creation of 3 workstations.
-	 * TODO
+	 * Constructor of AssemblyLine.
+	 * 
+	 * @param assemblyLineScheduler
+	 * 		The scheduler of this assembly line.
+	 * @param possibleStatuses
+	 * 		The possible statuses of this assemblyLine.
+	 * 		The first status in this lists will be the current status upon creation of this assembly line.
 	 */
 	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, ArrayList<AssemblyLineStatus> possibleStatuses){
 		this.assemblyLineScheduler = assemblyLineScheduler;
@@ -240,7 +244,15 @@ public class AssemblyLine {
 		return filteredWorkstations;
 	}
 
-	void setCurrentStatus(AssemblyLineStatus status) throws IllegalArgumentException {
+	/**
+	 * Sets the current status of this assembly line.
+	 * 
+	 * @param status
+	 * 		The new current status.
+	 * @throws IllegalArgumentException
+	 * 		If the new current status is not a possible status for this assembly line.
+	 */
+	public void setCurrentStatus(AssemblyLineStatus status) throws IllegalArgumentException {
 		if (this.possibleStatuses.contains(status))
 			this.currentStatus = status;
 		else
@@ -255,7 +267,7 @@ public class AssemblyLine {
 		return this.currentStatus.canAcceptNewOrders();
 	}
 	
-	public LinkedList<Order> StateWhenAcceptingOrders() {
+	public LinkedList<Order> stateWhenAcceptingOrders() {
 		return this.currentStatus.stateWhenAcceptingOrders(this);
 	}
 
@@ -264,7 +276,7 @@ public class AssemblyLine {
 		return (ArrayList<AssemblyLineStatus>) this.possibleStatuses.clone();
 	}
 
-	public GregorianCalendar TimeWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		return this.currentStatus.timeWhenAcceptingOrders(this);
 	}
 	

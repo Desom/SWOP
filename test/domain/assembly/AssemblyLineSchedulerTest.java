@@ -38,6 +38,7 @@ public class AssemblyLineSchedulerTest {
 	private Order order3;
 	private Order order50;
 	private ArrayList<Order> unFinishedOrdered;
+	private ArrayList<AssemblyLineStatus> statuses;
 
 	private CarMechanic m1;
 	private CarMechanic m2;
@@ -53,7 +54,11 @@ public class AssemblyLineSchedulerTest {
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		Statistics statistics = new Statistics(orderManager);
-		line = new AssemblyLine(scheduler);
+		statuses = new ArrayList<AssemblyLineStatus>();
+		statuses.add(new OperationalStatus());
+		statuses.add(new MaintenanceStatus());
+		statuses.add(new BrokenStatus());
+		line = new AssemblyLine(scheduler, statuses);
 
 		ArrayList<Order> unfinished = orderManager.getAllUnfinishedOrders();
 		FIFOSchedulingAlgorithm fifo = new FIFOSchedulingAlgorithm();

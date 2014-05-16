@@ -31,5 +31,10 @@ public class BrokenStatus implements AssemblyLineStatus {
 	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine) {
 		return null;
 	}
+	
+	@Override
+	public String toString() {
+		return "Broken";
+	}
 
 }

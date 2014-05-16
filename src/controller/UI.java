@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import domain.Statistics;
+import domain.assembly.AssemblyLineStatus;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
 import domain.assembly.WorkstationType;
@@ -78,6 +79,7 @@ public class UI implements UIInterface{
 		return date;
 	}
 
+	// TODO de askWithPossibilities methoden hebben ook veel duplicate code, is dit erg?
 	public String askWithPossibilities(String question, List<String> possibilities){
 		System.out.println(question);
 		String possOutput = "";
@@ -127,6 +129,37 @@ public class UI implements UIInterface{
 		catch (NumberFormatException e) {
 		}
 		while(possibilities.length <= input || input < 0){
+			System.out.println("Not a possibility. Pick one from the list:");
+			System.out.println(possOutput);
+			try {
+				input = Integer.parseInt(scan.nextLine()) - 1;
+			}
+			catch (NumberFormatException e) {
+			}
+
+		}
+		return input;
+	}
+	
+	public int askWithPossibilitiesWithCancel(String question, Object[] possibilities) {
+		System.out.println(question);
+		String possOutput = "";
+		int visualInt = 1;
+		for(Object poss: possibilities){
+			possOutput += visualInt + ". ";
+			possOutput += poss;
+			possOutput += "\n";
+			visualInt++;
+		}
+		possOutput += "0. Cancel\n";
+		System.out.println(possOutput);
+		int input = -1;
+		try {
+			input = Integer.parseInt(scan.nextLine()) - 1;
+		}
+		catch (NumberFormatException e) {
+		}
+		while(possibilities.length <= input || input < -1){
 			System.out.println("Not a possibility. Pick one from the list:");
 			System.out.println(possOutput);
 			try {
@@ -357,6 +390,5 @@ public class UI implements UIInterface{
 		return calendar.get(Calendar.DAY_OF_MONTH)+"-"+(calendar.get(Calendar.MONTH)+1)+"-"+calendar.get(Calendar.YEAR)+" "+calendar.get(Calendar.HOUR_OF_DAY)+"h"+calendar.get(Calendar.MINUTE);
 
 	}
-
 
 }

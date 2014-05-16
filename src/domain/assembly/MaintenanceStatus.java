@@ -99,5 +99,10 @@ public class MaintenanceStatus implements AssemblyLineStatus{
 		result.add(GregorianCalendar.MINUTE, 240+assemblyLine.calculateTimeTillEmptyFor(assemblyLine.getAllOrders()));
 		return result;
 	}
+	
+	@Override
+	public String toString() {
+		return "Maintenance";
+	}
 
 }

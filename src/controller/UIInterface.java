@@ -35,6 +35,8 @@ public interface UIInterface {
 	void fillIn(CarOrderForm order);
 
 	int askWithPossibilities(String string, Object[] possibilities);
+	
+	int askWithPossibilitiesWithCancel(String string, Object[] possibilities);
 
 	void display(Object[] displayableObjects);
 

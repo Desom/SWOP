@@ -224,7 +224,7 @@ public class EffinciencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListNoSingleTaskOrder() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(10,scheduleList.get(0).getScheduledOrder().getCarOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -276,7 +276,7 @@ public class EffinciencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListSingleTaskOrderNoDeadLineFailure() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithNoFailure();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(),als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(12,scheduleList.get(0).getScheduledOrder().getCarOrderID());
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -338,7 +338,7 @@ public class EffinciencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListSingleTaskOrderDeadLineFailure() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithFailure();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(),als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(12,scheduleList.get(0).getScheduledOrder().getCarOrderID());
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -414,10 +414,10 @@ public class EffinciencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListOneAdvance() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithFailure();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		orderList.remove(scheduleList.get(0).getScheduledOrder());
 		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
-		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(13,scheduleList2.get(0).getScheduledOrder().getCarOrderID());
 		assertEquals(time,scheduleList2.get(0).getScheduledTime());
@@ -490,12 +490,12 @@ public class EffinciencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListOneAdvanceNr2() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().StateWhenAcceptingOrders(),als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
 		orderList.remove(scheduleList.get(0).getScheduledOrder());
 		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		time.add(GregorianCalendar.MINUTE, 70);//7u10
-		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,(GregorianCalendar) time.clone(),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,(GregorianCalendar) time.clone(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		assertEquals(11,scheduleList2.get(0).getScheduledOrder().getCarOrderID());//50
 		assertEquals(time,scheduleList2.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u20

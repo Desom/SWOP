@@ -106,5 +106,10 @@ public class OperationalStatus implements AssemblyLineStatus {
 		result.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assemblyLine.getAllOrders()));
 		return result;
 	}
+	
+	@Override
+	public String toString() {
+		return "Operational";
+	}
 
 }

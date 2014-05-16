@@ -12,6 +12,10 @@ import org.junit.Test;
 import domain.Statistics;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
+import domain.assembly.AssemblyLineStatus;
+import domain.assembly.BrokenStatus;
+import domain.assembly.MaintenanceStatus;
+import domain.assembly.OperationalStatus;
 import domain.assembly.ScheduledOrder;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
@@ -33,6 +37,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	AssemblyLineScheduler als;
 	AssemblyLine line;
 	Configuration specified = null;
+	ArrayList<AssemblyLineStatus> statuses;
 	
 	@Before
 	public void testCreate() throws IOException, CarModelCatalogException, InvalidConfigurationException {
@@ -46,8 +51,12 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		this.garageHolder = new GarageHolder(0);
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		this.als.setSchedulingAlgorithm(this.algorithm);
+		statuses = new ArrayList<AssemblyLineStatus>();
+		statuses.add(new OperationalStatus());
+		statuses.add(new MaintenanceStatus());
+		statuses.add(new BrokenStatus());
 		@SuppressWarnings("unused")
-		AssemblyLine assembly = new AssemblyLine(als);
+		AssemblyLine assembly = new AssemblyLine(als, statuses);
 
 	}
 	
@@ -75,7 +84,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	public void testScheduleToScheduledOrderList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderList();
 		
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
 		assertEquals(9,scheduleList.get(0).getScheduledOrder().getCarOrderID());//60
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -197,7 +206,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		Statistics stat = new Statistics(orderManager);
 		@SuppressWarnings("unused")
-		AssemblyLine line = new AssemblyLine(scheduler);
+		AssemblyLine line = new AssemblyLine(scheduler, statuses);
 		
 		assertEquals(algo.searchForBatchConfiguration(scheduler).size(), 1);
 	}

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import controller.UIInterface;
 import domain.Company;
+import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
@@ -14,8 +15,13 @@ import domain.user.Manager;
 public class AdaptSchedulingAlgorithmHandler {
 
 	public void run(UIInterface ui, Company company, Manager manager) {
+		
+//		The manager has to choose an assembly line.
+		int answer1 = ui.askWithPossibilities("Which assembly line do you want to choose?", company.getAssemblyLines().toArray());
+		AssemblyLine assemblyLine = company.getAssemblyLines().get(answer1);
+		
 //		1. The user wants to select an alternative scheduling algorithm.
-		AssemblyLineScheduler assemblyLineScheduler = company.getAssemblyLine().getAssemblyLineScheduler();
+		AssemblyLineScheduler assemblyLineScheduler = assemblyLine.getAssemblyLineScheduler();
 		
 //		2. The system shows the currently selected algorithm.
 		ui.display("This is the currently selected algorithm:");
@@ -34,9 +40,9 @@ public class AdaptSchedulingAlgorithmHandler {
 //		selected algorithm.
 //		3. The user selects the new scheduling algorithm to be used.
 		Object[] possibilities = assemblyLineScheduler.getPossibleAlgorithms().toArray();
-		int answer = ui.askWithPossibilities("Select one of the available algorithms.", possibilities);
+		int answer2 = ui.askWithPossibilities("Select one of the available algorithms.", possibilities);
 
-		SchedulingAlgorithm chosenAlgorithm = (SchedulingAlgorithm) possibilities[answer];
+		SchedulingAlgorithm chosenAlgorithm = (SchedulingAlgorithm) possibilities[answer2];
 		
 		if(chosenAlgorithm instanceof EfficiencySchedulingAlgorithm){
 			chosenAlgorithm = ((EfficiencySchedulingAlgorithm) chosenAlgorithm).getInnerAlgorithm();
@@ -53,9 +59,9 @@ public class AdaptSchedulingAlgorithmHandler {
 				ui.display("There are no configurations that can be batched.");
 				return;
 			}
-			int answer2 = ui.askWithPossibilities("Choose a configuration that needs to be produced in batch.", possibleBatch.toArray());
+			int answer3 = ui.askWithPossibilities("Choose a configuration that needs to be produced in batch.", possibleBatch.toArray());
 			
-			specBatch.setConfiguration(possibleBatch.get(answer2));
+			specBatch.setConfiguration(possibleBatch.get(answer3));
 			
 //			6. The use case continues in step 4.
 		}
@@ -63,7 +69,7 @@ public class AdaptSchedulingAlgorithmHandler {
 //		4. The system applies the new scheduling algorithm and updates its
 //		state accordingly.
 		
-		assemblyLineScheduler.setSchedulingAlgorithm((SchedulingAlgorithm) possibilities[answer]);
+		assemblyLineScheduler.setSchedulingAlgorithm((SchedulingAlgorithm) possibilities[answer2]);
 
 
 

@@ -36,7 +36,7 @@ public class dummyAssemblyLine extends AssemblyLine {
 	}
 	@SuppressWarnings("unchecked")
 	@Override
-	public LinkedList<Order> StateWhenAcceptingOrders() {
+	public LinkedList<Order> stateWhenAcceptingOrders() {
 		LinkedList<Order> temp = (LinkedList<Order>) this.orders.clone();
 		return temp;
 	}

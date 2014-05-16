@@ -11,6 +11,10 @@ import org.junit.Test;
 
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
+import domain.assembly.AssemblyLineStatus;
+import domain.assembly.BrokenStatus;
+import domain.assembly.MaintenanceStatus;
+import domain.assembly.OperationalStatus;
 import domain.assembly.ScheduledOrder;
 import domain.configuration.CarModelCatalog;
 import domain.configuration.CarModelCatalogException;
@@ -29,6 +33,7 @@ public class FIFOSchedulingAlgorithmTest {
 	GarageHolder garageHolder;
 	CarModelCatalog cmc;
 	AssemblyLineScheduler als;
+	ArrayList<AssemblyLineStatus> statuses;
 	
 	@Before
 	public void testCreate() throws IOException, CarModelCatalogException {
@@ -38,8 +43,12 @@ public class FIFOSchedulingAlgorithmTest {
 		this.garageHolder = new GarageHolder(0);
 		this.cmc = new CarModelCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
+		statuses = new ArrayList<AssemblyLineStatus>();
+		statuses.add(new OperationalStatus());
+		statuses.add(new MaintenanceStatus());
+		statuses.add(new BrokenStatus());
 		@SuppressWarnings("unused")
-		AssemblyLine assembly = new AssemblyLine(als);
+		AssemblyLine assembly = new AssemblyLine(als, statuses);
 	}
 	
 	@Test
@@ -66,7 +75,7 @@ public class FIFOSchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderList();
 		
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().StateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
 		assertEquals(10,scheduleList.get(0).getScheduledOrder().getCarOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());

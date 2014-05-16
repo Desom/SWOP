@@ -1,6 +1,7 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.configuration.CarModelCatalog;
@@ -8,13 +9,12 @@ import domain.configuration.OptionType;
 
 public class AssemblyLineCreator {
 	
-	private AssemblyLineScheduler scheduler;
+	private SchedulerCreator schedulerCreator;
 	private LinkedList<WorkstationType> workstationTypes;
 	
-	public AssemblyLineCreator(AssemblyLineScheduler scheduler) {
-		this.scheduler = scheduler;
+	public AssemblyLineCreator() {
 		createWorkstationTypes();
-		
+		this.schedulerCreator = new SchedulerCreator();
 	}
 	
 	public ArrayList<AssemblyLine> create() {
@@ -22,17 +22,17 @@ public class AssemblyLineCreator {
 		
 		ArrayList<AssemblyLineStatus> statuses = this.getAssemblyLineStatuses();
 		
-		// TODO schedulers
+		GregorianCalendar startTime = new GregorianCalendar(2014, 0, 1, 6, 0, 0);
 		
-		AssemblyLine assemblyLine1 = new AssemblyLine(this.scheduler, statuses);
+		AssemblyLine assemblyLine1 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses);
 		assemblyLine1.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine1);
 		
-		AssemblyLine assemblyLine2 = new AssemblyLine(this.scheduler, statuses);
+		AssemblyLine assemblyLine2 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses);
 		assemblyLine2.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine2);
 		
-		AssemblyLine assemblyLine3 = new AssemblyLine(this.scheduler, statuses);
+		AssemblyLine assemblyLine3 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses);
 		assemblyLine3.addAllWorkstation(this.createTruckWorkstations());
 		assemblyLines.add(assemblyLine3);
 		

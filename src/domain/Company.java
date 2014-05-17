@@ -6,7 +6,9 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
+import domain.assembly.AssemblyLineCreator;
 import domain.assembly.AssemblyLineScheduler;
+import domain.assembly.SchedulerCreator;
 import domain.assembly.Workstation;
 import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
@@ -23,7 +25,7 @@ import domain.user.User;
 
 public class Company {
 
-	private AssemblyLine assemblyLine = null;
+	private ArrayList<AssemblyLine> assemblyLines;
 	private final VehicleModelCatalog catalog;
 	private final OrderManager orderManager;
 	private final Statistics statistics;
@@ -43,15 +45,17 @@ public class Company {
 	 */
 	public Company() {
 		try {
-			ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
-			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
-			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
-			GregorianCalendar time = new GregorianCalendar(2014, 0, 1, 6, 0, 0);
+			SchedulerCreator schedulerCreator = new SchedulerCreator();
+			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(schedulerCreator);
+			
+			
 			this.catalog = new VehicleModelCatalog();
-			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-			this.orderManager = new OrderManager(scheduler);
+			
+			this.orderManager = new OrderManager(schedulerCreator.createFactoryScheduler());
 			this.statistics = new Statistics(this.orderManager);
-			this.assemblyLine = new AssemblyLine(scheduler, null); // TODO
+			
+			this.assemblyLines = assemblyLineCreator.create();
+				
 		} catch (IOException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
 		} catch (VehicleModelCatalogException e) {
@@ -60,11 +64,17 @@ public class Company {
 	}
 
 	/**
-	 * Returns a LinkedList of all the workstations.
+	 * Returns a LinkedList of all the workstations of the given assembly line.
 	 * 
+	 * @param assemblyLine
+	 * 		The assembly line of which the workstations have to be returned.
 	 * @return The list of all workstations.
+	 * @throws IllegalArgumentException
+	 * 		If the given assembly line is not part of the company.
 	 */
-	public LinkedList<Workstation> getAllWorkstations(){
+	public LinkedList<Workstation> getAllWorkstations(AssemblyLine assemblyLine) throws IllegalArgumentException {
+		if (!this.assemblyLines.contains(assemblyLine))
+			throw new IllegalArgumentException("The given assembly line is not part of the company.");
 		return assemblyLine.getAllWorkstations();
 	}
 
@@ -85,19 +95,15 @@ public class Company {
 	public OrderManager getOrderManager(){
 		return orderManager;
 	}
-
-	/**
-	 * Returns the company's assembly line.
-	 * 
-	 * @return The company's assembly line.
-	 */
-	// TODO moet later weg
-	public AssemblyLine getAssemblyLine(){
-		return this.assemblyLine;
-	}
 	
+	/**
+	 * Returns the assembly lines of this company.
+	 * 
+	 * @return The assembly lines of this company.
+	 */
+	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyLine> getAssemblyLines() {
-		return null; //TODO
+		return (ArrayList<AssemblyLine>) this.assemblyLines.clone();
 	}
 
 	/**

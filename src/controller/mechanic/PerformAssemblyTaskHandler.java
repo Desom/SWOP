@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import controller.UIInterface;
 import domain.Company;
+import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyTask;
 import domain.assembly.Workstation;
 import domain.user.Mechanic;
@@ -12,8 +13,12 @@ import domain.user.Mechanic;
 public class PerformAssemblyTaskHandler {
 
 	public void run(UIInterface ui, Company company, Mechanic mechanic) {
+		// The system asks the user what assembly line he is currently residing at
+		int assemblyLineIndex = ui.askWithPossibilities("Which assembly line are you currently residing at?", company.getAssemblyLines().toArray());
+		AssemblyLine assemblyLine = company.getAssemblyLines().get(assemblyLineIndex);
+		
 		// 1. The system asks the user what work post he is currently residing at
-		LinkedList<Workstation> workstations = company.getAllWorkstations();
+		LinkedList<Workstation> workstations = company.getAllWorkstations(assemblyLine);
 		int workstationIndex = ui.askWithPossibilities("Which workstation are you currently residing at?", workstations.toArray().clone());
 		Workstation workstation = workstations.get(workstationIndex);
 		// 2. The user selects the corresponding work post.

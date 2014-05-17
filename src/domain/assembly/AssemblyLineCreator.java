@@ -12,9 +12,9 @@ public class AssemblyLineCreator {
 	private SchedulerCreator schedulerCreator;
 	private LinkedList<WorkstationType> workstationTypes;
 	
-	public AssemblyLineCreator() {
+	public AssemblyLineCreator(SchedulerCreator schedulerCreator) {
 		createWorkstationTypes();
-		this.schedulerCreator = new SchedulerCreator();
+		this.schedulerCreator = schedulerCreator;
 	}
 	
 	public ArrayList<AssemblyLine> create() {

@@ -5,9 +5,10 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import domain.InternalFailureException;
 import domain.order.Order;
 
-public class AssemblyLine {
+public class AssemblyLine implements WorkstationObserver{
 
 	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 	private final AssemblyLineScheduler assemblyLineScheduler;
@@ -281,20 +282,18 @@ public class AssemblyLine {
 	}
 	
 	/**
-	 * adds the given workstation to the end of the assemblyLine.
+	 * Adds the given workstation to the end of the assemblyLine.
 	 * If the workstation does not yet have an assemblyLine.
 	 * 
-	 * @param w the specified workstation
+	 * @param workstation the specified workstation
 	 */
-	protected void addWorkstation(Workstation w){
-		if(w.getAssemblyLine() == null){
-			workstations.add(w);
-			w.setAssemblyLine(this);
-		}
+	protected void addWorkstation(Workstation workstation){
+		workstations.add(workstation);
+		workstation.addObserver(this);
 	}
 	
 	/**
-	 * add all the given workstations to the end of the assemblyLine.
+	 * Add all the given workstations to the end of the assemblyLine.
 	 * If the workstations do not yet have an assemblyLine.
 	 * 
 	 * @param list a list of the specified workstations
@@ -302,6 +301,20 @@ public class AssemblyLine {
 	protected void addAllWorkstation(List<Workstation> list){
 		for(Workstation w:list){
 			addWorkstation(w);
+		}
+	}
+
+	/**
+	 * React to a change in a workstation.
+	 */
+	@Override
+	public void update() {
+		if(this.canAdvanceLine()){
+			try {
+				this.advanceLine();
+			} catch (CannotAdvanceException e) {
+				throw new InternalFailureException("The AssemblyLine couldn't advance even though canAdvanceLine() returned true.");
+				}
 		}
 	}
 }

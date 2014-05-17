@@ -19,7 +19,7 @@ public class WorkstationType {
 	 */
 	WorkstationType(String name, LinkedList<OptionType> acceptedOptionTypes){
 		this.name = name;
-		this.acceptedOptionTypes = acceptedOptionTypes;
+		this.acceptedOptionTypes = new LinkedList<OptionType>(acceptedOptionTypes);
 	}
 	
 	/**
@@ -28,7 +28,7 @@ public class WorkstationType {
 	 * @return a LinkedList of all option types that can be processed on this type of workstation.
 	 */
 	public LinkedList<OptionType> getacceptedOptionTypes(){
-		return acceptedOptionTypes;
+		return new LinkedList<OptionType>(acceptedOptionTypes);
 	}
 	
 	/**

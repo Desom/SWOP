@@ -14,7 +14,7 @@ public class Workstation {
 	private Mechanic mechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
-	private AssemblyLine assemblyLine;
+	private ArrayList<WorkstationObserver> observers;
 	private int timeSpend;
 	private VehicleAssemblyProcess assemblyProcess;
 
@@ -40,7 +40,6 @@ public class Workstation {
 
 	/**
 	 * Clears this workstation of tasks and the active task and resets the time spend for the current vehicle.
-	 * Used by the AssemblyLine object in advanceLine().
 	 */
 	protected void clear() {
 		this.allTasks = new ArrayList<AssemblyTask>();
@@ -159,6 +158,7 @@ public class Workstation {
 	 * 		If there is no active task to complete in this workstation.
 	 * 		If there is no mechanic to complete the active task.
 	 */
+	//TODO moet je nog steeds deze mechanic meegeven?
 	public void completeTask(Mechanic mechanic, int timeSpent) throws IllegalStateException {
 		if (this.getMechanic().getId() != mechanic.getId())
 			throw new IllegalArgumentException("This user is not assigned to this workstation");
@@ -175,15 +175,15 @@ public class Workstation {
 			throw new IllegalStateException("There is no active task in this workstation");
 		}
 		this.addTimeSpend(timeSpent);
-		if(this.assemblyLine.canAdvanceLine()){
-			try {
-				this.assemblyLine.advanceLine();
-			}
-			catch (CannotAdvanceException e) {
-				throw new InternalFailureException("The AssemblyLine couldn't advance even though canAdvanceLine() returned true.");
-			}
+		this.notifyObservers();
+	}
+
+	private void notifyObservers() {
+		for(WorkstationObserver observer : this.observers){
+			observer.update();
 		}
 	}
+
 
 	/**
 	 * Gets the time already spent on the current assembly process.
@@ -326,24 +326,11 @@ public class Workstation {
 		return compatibleTasks;
 	}
 	
-	/**
-	 * Returns the assemblyLine of this workstation.
-	 * 
-	 * @return the assemblyLine of this workstation.
-	 */
-	protected AssemblyLine getAssemblyLine(){
-		return this.assemblyLine;
+	public void addObserver(WorkstationObserver observer){
+		this.observers.add(observer);
 	}
 	
-	/**
-	 * Sets the assemblyline for this workstation. Can only be set once.
-	 * 
-	 * @param line
-	 * 		the specified AssemblyLine.
-	 */
-	protected void setAssemblyLine(AssemblyLine line){
-		if(this.assemblyLine == null){
-			this.assemblyLine = line;
-		}
+	public void removeObserver(WorkstationObserver observer){
+		this.observers.remove(observer);
 	}
 }

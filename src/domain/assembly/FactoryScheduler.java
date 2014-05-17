@@ -2,6 +2,7 @@ package domain.assembly;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.LinkedHashMap;
 
 import domain.assembly.algorithm.FactorySchedulingAlgorithm;
 import domain.order.Order;
@@ -11,6 +12,9 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 
 	private ArrayList<AssemblyLineScheduler> schedulerList;
 	private FactorySchedulingAlgorithm currentAlgorithm;
+	private boolean outDated;
+	private ArrayList<ArrayList<Order>> ordersForSchedulers;
+	private OrderHandler orderHandler;
 	
 	@Override
 	public GregorianCalendar getCurrentTime() {
@@ -27,8 +31,39 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 
 	@Override
 	public GregorianCalendar completionEstimate(Order order) {
-		// TODO Auto-generated method stub
-		return null;
+		AssemblyLineScheduler scheduler = this.findScheduler(order);
+		return scheduler.completionEstimate(order);
+	}
+
+	private AssemblyLineScheduler findScheduler(Order order) {
+		ArrayList<ArrayList<Order>> ordersForSchedulers = this.getOrdersForSchedulers();
+		for(int i = 0; i < ordersForSchedulers.size(); i++){
+			if(ordersForSchedulers.get(i).contains(order)){
+				return this.schedulerList.get(i);
+			}
+		}
+		throw new IllegalArgumentException("The FactoryScheduler:" + this + " doesn't schedule the given Order:" + order);
+
+	}
+
+	private ArrayList<ArrayList<Order>> getOrdersForSchedulers() {
+		//controleer of de orders die nog moeten worden gedaan, nog steeds moeten worden gedaan.
+		//Mss vergelijken met AssemblyLineScheduler ipv OrderHandler?
+		ArrayList<Order> orders = this.orderHandler.getOrdersFor(this);
+		for(ArrayList<Order> orderList : this.ordersForSchedulers){
+			if(!orders.containsAll(orderList)){
+				this.updateSchedule();
+				break;
+			}
+		}
+		
+		//als outDated schedule, maak nieuw.
+		if(outDated){
+			this.ordersForSchedulers = this.currentAlgorithm.allocateOrders(orders,this);
+			outDated = false;
+		}
+		
+		return this.ordersForSchedulers;
 	}
 
 	@Override
@@ -39,8 +74,10 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 
 	@Override
 	public void updateSchedule() {
-		// TODO Auto-generated method stub
-
+		this.outDated = true;
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			scheduler.updateSchedule();
+		}
 	}
 
 	@Override

@@ -8,8 +8,8 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.policies.InvalidConfigurationException;
@@ -22,7 +22,7 @@ import domain.user.GarageHolder;
 public class OrderCreator {
 
 	private String path;
-	private CarModelCatalog catalog;
+	private VehicleModelCatalog catalog;
 	private ArrayList<Policy> policyChains;
 
 	/**
@@ -37,7 +37,7 @@ public class OrderCreator {
 	 * 		1st chain : VehicleOrders
 	 * 		2nd chain : SingleTaskOrders
 	 */
-	public OrderCreator(String path, CarModelCatalog catalog, ArrayList<Policy> policyChains){
+	public OrderCreator(String path, VehicleModelCatalog catalog, ArrayList<Policy> policyChains){
 		this.path = path;
 		this.catalog = catalog;
 		this.policyChains = policyChains;
@@ -93,7 +93,7 @@ public class OrderCreator {
 		return allOrders;
 	}
 
-	private CarOrder createVehicleOrder(String[] orderPieces, Policy policyChain) throws IOException{
+	private VehicleOrder createVehicleOrder(String[] orderPieces, Policy policyChain) throws IOException{
 
 		// Strings omvormen naar objecten
 		// 1 : OrderId
@@ -114,7 +114,7 @@ public class OrderCreator {
 			deliveredCalendar = this.createCalendarFor(orderPieces[5]);
 		}
 		// 6 : modelId -> Model (we hebben hiervoor de this.catalog nodig, hoe komen we daar aan?)
-		CarModel model = findModel(orderPieces[6]);
+		VehicleModel model = findModel(orderPieces[6]);
 		// 7 : options -> ArrayList<Option> (ook this.catalog nodig)
 		ArrayList<Option> optionsList = findOptions(orderPieces[7]);
 		Configuration config = new Configuration(model, policyChain);
@@ -127,7 +127,7 @@ public class OrderCreator {
 		catch(InvalidConfigurationException e){
 			throw new IOException("The file contains an order whose configuration wasn't conform with the policies.");
 		}
-		return new CarOrder(OrderId, garageHolder, config, orderedCalendar, deliveredCalendar, isDelivered);
+		return new VehicleOrder(OrderId, garageHolder, config, orderedCalendar, deliveredCalendar, isDelivered);
 
 
 	}
@@ -215,8 +215,8 @@ public class OrderCreator {
 	 * @throws IOException
 	 * 		If no  model can be found.
 	 */
-	private CarModel findModel(String ModelName) throws IOException {
-		for(CarModel model : this.catalog.getAllModels()){
+	private VehicleModel findModel(String ModelName) throws IOException {
+		for(VehicleModel model : this.catalog.getAllModels()){
 			if(model.getName().equals(ModelName))
 				return model;
 		}

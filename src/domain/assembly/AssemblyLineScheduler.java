@@ -259,7 +259,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @param minutes
 	 * 		The amount of minutes it took to complete the tasks in the
 	 *      Workstations. (in minutes)
-	 * @return The CarOrder that is scheduled to be built after the given amount of minutes.
+	 * @return The Order that is scheduled to be built after the given amount of minutes.
 	 * @throws NoOrdersToBeScheduledException
 	 * 		If there are no orders to be scheduled.
 	 */

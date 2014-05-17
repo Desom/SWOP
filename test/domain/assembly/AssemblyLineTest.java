@@ -15,19 +15,19 @@ import domain.Statistics;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.CannotAdvanceException;
-import domain.assembly.CarAssemblyProcess;
+import domain.assembly.VehicleAssemblyProcess;
 import domain.assembly.DoesNotExistException;
 import domain.assembly.Workstation;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.order.Order;
 import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
@@ -38,7 +38,7 @@ import domain.policies.InvalidConfigurationException;
 import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
-import domain.user.CarMechanic;
+import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
@@ -47,34 +47,34 @@ public class AssemblyLineTest {
 
 	private AssemblyLine line;
 	private AssemblyLineScheduler scheduler;
-	private CarMechanic m1;
-	private CarMechanic m2;
-	private CarMechanic m3;
+	private Mechanic m1;
+	private Mechanic m2;
+	private Mechanic m3;
 
 	@Before
-	public void testCreate() throws DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
-		m1 = new CarMechanic(2);
-		m2 = new CarMechanic(3);
-		m3 = new CarMechanic(4);
+	public void testCreate() throws DoesNotExistException, IOException, VehicleModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
+		m1 = new Mechanic(2);
+		m2 = new Mechanic(3);
+		m3 = new Mechanic(4);
 
 		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
 		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
 		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		CarModelCatalog catalog = new CarModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		Statistics statistics = new Statistics(orderManager);
 		line = new AssemblyLine(scheduler, statistics);
 
-		line.selectWorkstationById(1).addCarMechanic(m1);
-		assertEquals(line.selectWorkstationById(1).getCarMechanic(), m1);
+		line.selectWorkstationById(1).addMechanic(m1);
+		assertEquals(line.selectWorkstationById(1).getMechanic(), m1);
 
-		line.selectWorkstationById(2).addCarMechanic(m2);
-		assertEquals(line.selectWorkstationById(2).getCarMechanic(), m2);
+		line.selectWorkstationById(2).addMechanic(m2);
+		assertEquals(line.selectWorkstationById(2).getMechanic(), m2);
 
-		line.selectWorkstationById(3).addCarMechanic(m3);
-		assertEquals(line.selectWorkstationById(3).getCarMechanic(), m3);
+		line.selectWorkstationById(3).addMechanic(m3);
+		assertEquals(line.selectWorkstationById(3).getMechanic(), m3);
 
 		fullDefaultAdvance();
 		fullDefaultAdvance();
@@ -104,9 +104,9 @@ public class AssemblyLineTest {
 
 	@Test
 	public void testAdvanceLineSucces() throws DoesNotExistException, CannotAdvanceException, InternalFailureException, NoOrdersToBeScheduledException {
-		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
+		ArrayList<VehicleAssemblyProcess> processesBefore = new ArrayList<VehicleAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			processesBefore.add(w.getCarAssemblyProcess());
+			processesBefore.add(w.getVehicleAssemblyProcess());
 		}
 
 		Order order = null;
@@ -115,7 +115,7 @@ public class AssemblyLineTest {
 		}
 		catch(NoOrdersToBeScheduledException e){}
 
-		CarAssemblyProcess next;
+		VehicleAssemblyProcess next;
 		if(order != null){
 			next = order.getAssemblyprocess();
 		}else{
@@ -124,9 +124,9 @@ public class AssemblyLineTest {
 
 		fullDefaultAdvance();
 
-		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
+		ArrayList<VehicleAssemblyProcess> processesAfter = new ArrayList<VehicleAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			processesAfter.add(w.getCarAssemblyProcess());
+			processesAfter.add(w.getVehicleAssemblyProcess());
 		}
 
 		assertEquals(processesAfter.get(0), next);
@@ -137,16 +137,16 @@ public class AssemblyLineTest {
 
 	@Test(expected = CannotAdvanceException.class)  
 	public void testAdvanceLineBlocking() throws DoesNotExistException, CannotAdvanceException, InternalFailureException {
-		ArrayList<CarAssemblyProcess> processesBefore = new ArrayList<CarAssemblyProcess>();
+		ArrayList<VehicleAssemblyProcess> processesBefore = new ArrayList<VehicleAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			processesBefore.add(w.getCarAssemblyProcess());
+			processesBefore.add(w.getVehicleAssemblyProcess());
 		}
 
 		line.advanceLine();
 
-		ArrayList<CarAssemblyProcess> processesAfter = new ArrayList<CarAssemblyProcess>();
+		ArrayList<VehicleAssemblyProcess> processesAfter = new ArrayList<VehicleAssemblyProcess>();
 		for(Workstation w : line.getAllWorkstations()){
-			processesAfter.add(w.getCarAssemblyProcess());
+			processesAfter.add(w.getVehicleAssemblyProcess());
 		}
 
 		for(int i = 0; i<processesAfter.size(); i++){
@@ -168,7 +168,7 @@ public class AssemblyLineTest {
 				assertTrue(current.getAllTasksAt(i).containsAll(list));
 
 				if(current.getCarOrderIdAt(i) != -1){
-					assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i).getCarAssemblyProcess().getOrder().getCarOrderID());
+					assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i).getVehicleAssemblyProcess().getOrder().getOrderID());
 				}
 				assertTrue(current.getHeader().compareToIgnoreCase("Current Status") == 0);
 			}
@@ -225,23 +225,23 @@ public class AssemblyLineTest {
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){
-			CarMechanic mechanic = w.getCarMechanic();
+			Mechanic mechanic = w.getMechanic();
 			if(mechanic == null)
-				mechanic = new CarMechanic(100*w.getId()); // randomize ID een beetje
+				mechanic = new Mechanic(100*w.getId()); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);
 			}
 			if(w.getAllPendingTasks().size() != 0){
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(mechanic,w.getCarAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
 			}
 		}
 	}
 
 	@Test
-	public void testFilterWorkstation() throws InvalidConfigurationException, CarModelCatalogException, IOException{
-		CarAssemblyProcess process = this.createCar().getAssemblyprocess();
+	public void testFilterWorkstation() throws InvalidConfigurationException, VehicleModelCatalogException, IOException{
+		VehicleAssemblyProcess process = this.createCar().getAssemblyprocess();
 
 		ArrayList<Workstation> filtered = line.filterWorkstations(process);
 		
@@ -259,7 +259,7 @@ public class AssemblyLineTest {
 		assertFalse(filtered2.contains(line.getAllWorkstations().get(2)));
 	}
 
-	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
+	private VehicleOrder createCar() throws InvalidConfigurationException, IOException, VehicleModelCatalogException{
 
 		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
@@ -268,9 +268,9 @@ public class AssemblyLineTest {
 		Policy carOrderPolicy= pol4;
 
 
-		CarModelCatalog catalog = new CarModelCatalog();
-		CarModel carModel = null;
-		for(CarModel m : catalog.getAllModels()){
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModel carModel = null;
+		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){
 				carModel = m;
 				continue;
@@ -293,11 +293,11 @@ public class AssemblyLineTest {
 		GarageHolder garageHolder = new GarageHolder(1);
 
 		GregorianCalendar now = new GregorianCalendar();
-		CarOrder carOrder = new CarOrder(1, garageHolder, config, now);
+		VehicleOrder carOrder = new VehicleOrder(1, garageHolder, config, now);
 		return carOrder;
 	}
 	
-	private SingleTaskOrder createSingleTask() throws InvalidConfigurationException, CarModelCatalogException{
+	private SingleTaskOrder createSingleTask() throws InvalidConfigurationException, VehicleModelCatalogException{
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);

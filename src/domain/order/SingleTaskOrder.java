@@ -14,7 +14,7 @@ public class SingleTaskOrder extends Order {
 	 * Constructor of SingleTaskOrder.
 	 * 
 	 * @param singleTaskOrderId
-	 * 		The id of the car order.
+	 * 		The id of the order.
 	 * @param customShopManager
 	 * 		The custom shop manager who ordered this order.
 	 * @param configuration
@@ -43,7 +43,7 @@ public class SingleTaskOrder extends Order {
 	 * Constructor of SingleTaskOrder.
 	 * 
 	 * @param singleTaskOrderId
-	 * 		The id of the car order.
+	 * 		The id of the order.
 	 * @param customShopManager
 	 * 		The custom shop manager who ordered this order.
 	 * @param configuration

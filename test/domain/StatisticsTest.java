@@ -18,41 +18,41 @@ import domain.assembly.Workstation;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.order.OrderManager;
 import domain.policies.InvalidConfigurationException;
-import domain.user.CarMechanic;
+import domain.user.Mechanic;
 
 public class StatisticsTest {
 
 	AssemblyLine line = null;
 	Statistics stat = null;
 	@Before
-	public void testCreate() throws DoesNotExistException, IOException, CarModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
+	public void testCreate() throws DoesNotExistException, IOException, VehicleModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
 		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
 		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
 		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
-		CarModelCatalog catalog = new CarModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		stat = new Statistics(orderManager);
 		line = new AssemblyLine(scheduler, stat);
 		
 		
-		CarMechanic m1 = new CarMechanic(2);
-		CarMechanic m2 = new CarMechanic(3);
-		CarMechanic m3 = new CarMechanic(4);
+		Mechanic m1 = new Mechanic(2);
+		Mechanic m2 = new Mechanic(3);
+		Mechanic m3 = new Mechanic(4);
 		
-		line.selectWorkstationById(1).addCarMechanic(m1);
-		assertEquals(line.selectWorkstationById(1).getCarMechanic(), m1);
+		line.selectWorkstationById(1).addMechanic(m1);
+		assertEquals(line.selectWorkstationById(1).getMechanic(), m1);
 
-		line.selectWorkstationById(2).addCarMechanic(m2);
-		assertEquals(line.selectWorkstationById(2).getCarMechanic(), m2);
+		line.selectWorkstationById(2).addMechanic(m2);
+		assertEquals(line.selectWorkstationById(2).getMechanic(), m2);
 
-		line.selectWorkstationById(3).addCarMechanic(m3);
-		assertEquals(line.selectWorkstationById(3).getCarMechanic(), m3);
+		line.selectWorkstationById(3).addMechanic(m3);
+		assertEquals(line.selectWorkstationById(3).getMechanic(), m3);
 		
 		// advance alle behalve laatste order
 		while(orderManager.getAllUnfinishedOrders().size() != 1){
@@ -73,9 +73,9 @@ public class StatisticsTest {
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){
-			CarMechanic mechanic = w.getCarMechanic();
+			Mechanic mechanic = w.getMechanic();
 			if(mechanic == null)
-				mechanic = new CarMechanic(w.getName().hashCode()); // randomize ID een beetje
+				mechanic = new Mechanic(w.getName().hashCode()); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);
@@ -92,18 +92,18 @@ public class StatisticsTest {
 	
 	@Test
 	public void testAverageCars(){
-		assertEquals(11, stat.getAverageCarsPerDay());
+		assertEquals(11, stat.getAverageVehiclesPerDay());
 	}
 	
 	@Test
 	public void testMedianCars(){
-		assertEquals(14, stat.getMedianCarsPerDay());
+		assertEquals(14, stat.getMedianVehiclesPerDay());
 	}
 	
 	@Test
 	public void amountOfCarsLastDays(){
-		assertEquals(12, stat.getAmountOfCars1DayAgo());
-		assertEquals(14, stat.getAmountOfCars2DaysAgo());
+		assertEquals(12, stat.getAmountOfVehicles1DayAgo());
+		assertEquals(14, stat.getAmountOfVehicles2DaysAgo());
 	}
 	
 	@Test
@@ -149,16 +149,16 @@ public class StatisticsTest {
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){
-			CarMechanic mechanic = w.getCarMechanic();
+			Mechanic mechanic = w.getMechanic();
 			if(mechanic == null)
-				mechanic = new CarMechanic(w.getName().hashCode()); // randomize ID een beetje
+				mechanic = new Mechanic(w.getName().hashCode()); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);
 			}
 			if(w.getAllPendingTasks().size() != 0){
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(mechanic,w.getCarAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
 			}
 		}
 	}

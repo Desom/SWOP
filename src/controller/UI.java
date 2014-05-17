@@ -11,7 +11,7 @@ import domain.assembly.AssemblyLineStatus;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
 import domain.assembly.WorkstationType;
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
@@ -189,12 +189,12 @@ public class UI implements UIInterface{
 			System.out.println("---");
 			for(WorkstationType wsType : statusView.getAllWorkstationTypes()){
 				System.out.println("Workstation: " + wsType.toString());
-				int carOrderID = statusView.getCarOrderIdOf(wsType);
-				if (carOrderID < 0){
+				int orderID = statusView.getOrderIdOf(wsType);
+				if (orderID < 0){
 					System.out.println("Empty");
 				}
 				else{
-				System.out.println("working at Order " + carOrderID);
+				System.out.println("working at Order " + orderID);
 				}
 				for(OptionType taskType : statusView.getAllTasksAt(wsType)){
 					String taskStatus;
@@ -214,10 +214,10 @@ public class UI implements UIInterface{
 		}
 	}
 
-	public void fillIn(CarOrderForm orderForm) {
+	public void fillIn(VehicleOrderForm orderForm) {
 		ArrayList<OptionType> mandatoryList = new ArrayList<OptionType>();
 		ArrayList<OptionType> nonMandatoryList = new ArrayList<OptionType>();
-		for(OptionType oType:CarModelCatalog.optionTypeCreator.getAllTypes()){
+		for(OptionType oType:VehicleModelCatalog.optionTypeCreator.getAllTypes()){
 			if(oType.isMandatory()){
 				mandatoryList.add(oType);
 			}
@@ -262,7 +262,7 @@ public class UI implements UIInterface{
 	
 	public void fillIn(SingleTaskOrderForm orderForm){
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
-		for (OptionType type : CarModelCatalog.optionTypeCreator.getAllTypes())
+		for (OptionType type : VehicleModelCatalog.optionTypeCreator.getAllTypes())
 			if (type.isSingleTaskPossible())
 				possibleTypes.add(type);
 		int answer1 = this.askWithPossibilities("What do you want to order?", possibleTypes.toArray());
@@ -286,25 +286,25 @@ public class UI implements UIInterface{
 	}
 	
 	@Override
-	public void displayPendingCarOrders(ArrayList<Integer> tempIdList,
+	public void displayPendingOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList) {
 		display("Your pending orders:");
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
-			display("Car order "+ tempIdList.get(i) +" will be delivered around:"+ convertCalendarToDate(tempCalendarList.get(i)));
+			display("Order "+ tempIdList.get(i) +" will be delivered around:"+ convertCalendarToDate(tempCalendarList.get(i)));
 		}
 
 	}
 	@Override
-	public void displayCompletedCarOrders(ArrayList<Integer> tempIdList,
+	public void displayCompletedOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList) {
 		display("Your completed orders:");
 		for(int i =0; i< Math.max(tempIdList.size(), tempCalendarList.size());i++){
-			display(tempIdList.get(i) +" is delivered on:"+ convertCalendarToDate(tempCalendarList.get(i)));
+			display("Order "+ tempIdList.get(i) +" is delivered on:"+ convertCalendarToDate(tempCalendarList.get(i)));
 		}
 	}
 
 	@Override
-	public int askForCarOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates) {
+	public int askForOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates) {
 		int index = 1;
 		display("Your pending orders:");
 		for(int i =0; i< Math.max(pendingOrders.size(), completionEstimates.size());i++){
@@ -312,9 +312,9 @@ public class UI implements UIInterface{
 			if(pendingOrders.get(i) instanceof SingleTaskOrder){
 				type = "Single task order ";
 			}else{
-				type = "Car order ";
+				type = "Vehicle order ";
 			}
-			display(index + ". " + type + pendingOrders.get(i).getCarOrderID() + " will be delivered around: " + convertCalendarToDate(completionEstimates.get(i)));
+			display(index + ". " + type + pendingOrders.get(i).getOrderID() + " will be delivered around: " + convertCalendarToDate(completionEstimates.get(i)));
 			index++;
 		}
 		display("Your completed orders:");
@@ -323,9 +323,9 @@ public class UI implements UIInterface{
 			if(order instanceof SingleTaskOrder){
 				type = "Single task order ";
 			}else{
-				type = "Car order ";
+				type = "Vehicle order ";
 			}
-			display(index + ". " + type + order.getCarOrderID() + " is delivered on:" + convertCalendarToDate(order.getDeliveredTime()));
+			display(index + ". " + type + order.getOrderID() + " is delivered on:" + convertCalendarToDate(order.getDeliveredTime()));
 			index++;
 		}
 		display("");
@@ -335,7 +335,7 @@ public class UI implements UIInterface{
 	}
 
 	@Override
-	public void displayPendingCarOrderInfo(Order pendingOrder, Calendar completionEstimate) {
+	public void displayPendingOrderInfo(Order pendingOrder, Calendar completionEstimate) {
 		display(pendingOrder.getConfiguration());
 		display("Order time: " + convertCalendarToDate(pendingOrder.getOrderedTime()));
 		display("Estimated deliver time: " + convertCalendarToDate(completionEstimate));
@@ -344,7 +344,7 @@ public class UI implements UIInterface{
 				return;
 	}
 	@Override
-	public void displayCompletedCarOrderInfo(Order completedOrder) {
+	public void displayCompletedOrderInfo(Order completedOrder) {
 		this.display(completedOrder.getConfiguration());
 		display("Order time: " + completedOrder.getOrderedTime());
 		display("Delivered time: " + completedOrder.getDeliveredTime());
@@ -355,7 +355,7 @@ public class UI implements UIInterface{
 	
 	private void display(Configuration configuration) {
 		display("Specification:");
-		display("- Car model: " + configuration.getModel());
+		display("- Vehicle model: " + configuration.getModel());
 		display("- Options: ");
 		for (Option option : configuration.getAllOptions())
 			display("	- " + option);
@@ -364,14 +364,14 @@ public class UI implements UIInterface{
 	@Override
 	public void showStatistics(Statistics view) {
 		display("Current statistics:");
-		display("Average number of cars completed per day: " + view.getAverageCarsPerDay());
-		display("Median number of cars completed per day: " + view.getMedianCarsPerDay());
+		display("Average number of vehicles completed per day: " + view.getAverageVehiclesPerDay());
+		display("Median number of vehicles completed per day: " + view.getMedianVehiclesPerDay());
 
-		display("Cars produced yesterday: " + view.getAmountOfCars1DayAgo());
-		display("Cars produced 2 days ago: " + view.getAmountOfCars2DaysAgo());
+		display("Vehicles produced yesterday: " + view.getAmountOfVehicles1DayAgo());
+		display("Vehicles produced 2 days ago: " + view.getAmountOfVehicles2DaysAgo());
 
-		display("Average delay of all cars that had a delay: " + view.getAverageDelay());
-		display("Median delay of all cars that had a delay: " + view.getMedianDelay());
+		display("Average delay of all vehicles that had a delay: " + view.getAverageDelay());
+		display("Median delay of all vehicles that had a delay: " + view.getMedianDelay());
 
 		display("Last delay : " + view.getLastDelay() + " occurred on " + convertCalendarToDate(view.getLastDelayDay()));
 		display("Second to last delay : " + view.getSecondToLastDelay() + " occurred on " + convertCalendarToDate(view.getSecondToLastDelayDay()));

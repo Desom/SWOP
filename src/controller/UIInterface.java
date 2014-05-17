@@ -20,19 +20,19 @@ public interface UIInterface {
 
 	boolean askYesNoQuestion(String string);
 	
-	void displayPendingCarOrderInfo(Order pendingOrder, Calendar completionEstimate);
+	void displayPendingOrderInfo(Order pendingOrder, Calendar completionEstimate);
 	
-	void displayCompletedCarOrderInfo(Order completedOrder);
+	void displayCompletedOrderInfo(Order completedOrder);
 
-	void displayPendingCarOrders(ArrayList<Integer> tempIdList,
+	void displayPendingOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList);
 
-	void displayCompletedCarOrders(ArrayList<Integer> tempIdList,
+	void displayCompletedOrders(ArrayList<Integer> tempIdList,
 			ArrayList<Calendar> tempCalendarList);
 	
-	int askForCarOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates);
+	int askForOrder(ArrayList<Order> pendingOrders, ArrayList<Order> completedOrders, ArrayList<Calendar> completionEstimates);
 
-	void fillIn(CarOrderForm order);
+	void fillIn(VehicleOrderForm order);
 
 	int askWithPossibilities(String string, Object[] possibilities);
 	

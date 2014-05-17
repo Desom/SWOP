@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.policies.Policy;
 
 public class SingleTaskOrderForm extends OrderForm{
 	
-	private CarModelCatalog catalog;
+	private VehicleModelCatalog catalog;
 	private GregorianCalendar deadline;
 	private GregorianCalendar currentTime;
 	
@@ -19,13 +19,13 @@ public class SingleTaskOrderForm extends OrderForm{
 	 * Constructor of SingleTaskOrderForm.
 	 * 
 	 * @param catalog
-	 * 		The car model catalog to find the possible options.
+	 * 		The vehicle model catalog to find the possible options.
 	 * @param policies
 	 * 		The policy chain which has to be checked.
 	 * @param currentTime
 	 * 		The current time in the system.
 	 */
-	public SingleTaskOrderForm(CarModelCatalog catalog, Policy policies, GregorianCalendar currentTime) {
+	public SingleTaskOrderForm(VehicleModelCatalog catalog, Policy policies, GregorianCalendar currentTime) {
 		super(null, policies);
 		this.catalog = catalog;
 		this.currentTime = (GregorianCalendar) currentTime.clone();

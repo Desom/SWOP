@@ -13,33 +13,33 @@ import domain.Company;
 import domain.InternalFailureException;
 import domain.assembly.AssemblyTask;
 import domain.assembly.Workstation;
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
-import domain.user.CarMechanic;
+import domain.user.Mechanic;
 import domain.user.GarageHolder;
 
 public class WorkstationTest {
 
-	private CarMechanic carMechanic;
+	private Mechanic carMechanic;
 	private Workstation workstation;
 	private AssemblyTask validTask;
 	private AssemblyTask validTask2;
 	private AssemblyTask invalidTask;
 	
 	@Before
-	public void testCreate() throws InvalidConfigurationException, IOException, CarModelCatalogException, InternalFailureException {
-		carMechanic = new CarMechanic(1);
+	public void testCreate() throws InvalidConfigurationException, IOException, VehicleModelCatalogException, InternalFailureException {
+		carMechanic = new Mechanic(1);
 		Company comp = new Company();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
 		taskTypes.add(OptionType.Seats);
@@ -53,7 +53,7 @@ public class WorkstationTest {
 		assertTrue(workstation.getAllPendingTasks().isEmpty());
 		
 		
-		CarOrder order = createCar();
+		VehicleOrder order = createCar();
 		validTask = workstation.compatibleWith(order.getAssemblyprocess()).get(0);
 		validTask2 = workstation.compatibleWith(order.getAssemblyprocess()).get(1);
 		
@@ -65,7 +65,7 @@ public class WorkstationTest {
 	}
 	
 	@Test
-	public void testCar() throws IOException, CarModelCatalogException {
+	public void testCar() throws IOException, VehicleModelCatalogException {
 		workstation.clear();
 		try {
 			workstation.getActiveTaskInformation();
@@ -80,7 +80,7 @@ public class WorkstationTest {
 	public void testCompleteTask() throws IllegalStateException, InternalFailureException {
 		workstation.addAssemblyTask(validTask);
 		workstation.addAssemblyTask(validTask2);
-		workstation.addCarMechanic(carMechanic);
+		workstation.addMechanic(carMechanic);
 		workstation.selectTask(validTask);
 		workstation.completeTask(carMechanic,60);
 		assertTrue(workstation.getAllCompletedTasks().contains(validTask));
@@ -93,7 +93,7 @@ public class WorkstationTest {
 	@Test
 	public void testSelectTask() throws IllegalStateException, IllegalArgumentException {
 		workstation.addAssemblyTask(validTask);
-		workstation.addCarMechanic(carMechanic);
+		workstation.addMechanic(carMechanic);
 		try {
 			workstation.selectTask(invalidTask);
 			assertTrue("IllegalArgumentException was not thrown", false);
@@ -139,7 +139,7 @@ public class WorkstationTest {
 	
 	
 	
-	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
+	private VehicleOrder createCar() throws InvalidConfigurationException, IOException, VehicleModelCatalogException{
 	
 		Policy pol1 = new CompletionPolicy(null, OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
@@ -148,9 +148,9 @@ public class WorkstationTest {
 		Policy carOrderPolicy= pol4;
 		
 		
-		CarModelCatalog catalog = new CarModelCatalog();
-		CarModel carModel = null;
-		for(CarModel m : catalog.getAllModels()){
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModel carModel = null;
+		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){
 				carModel = m;
 				continue;
@@ -175,7 +175,7 @@ public class WorkstationTest {
 		GarageHolder garageHolder = new GarageHolder(1);
 		
 		GregorianCalendar now = new GregorianCalendar();
-		CarOrder carOrder = new CarOrder(1, garageHolder, config, now);
+		VehicleOrder carOrder = new VehicleOrder(1, garageHolder, config, now);
 		return carOrder;
 	}
 }

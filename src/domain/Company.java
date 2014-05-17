@@ -12,10 +12,10 @@ import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.order.OrderManager;
-import domain.user.CarMechanic;
+import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 import domain.user.Manager;
@@ -24,7 +24,7 @@ import domain.user.User;
 public class Company {
 
 	private AssemblyLine assemblyLine = null;
-	private final CarModelCatalog catalog;
+	private final VehicleModelCatalog catalog;
 	private final OrderManager orderManager;
 	private final Statistics statistics;
 
@@ -35,7 +35,7 @@ public class Company {
 	 * 			the possible scheduling algorithms,
 	 * 			the order manager,
 	 * 			one or more assembly lines,
-	 * 			the car model catalog,
+	 * 			the vehicle model catalog,
 	 *  		the statistics object.
 	 * 
 	 * @throws InternalFailureException
@@ -47,15 +47,15 @@ public class Company {
 			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 			possibleAlgorithms.add(new EfficiencySchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 			GregorianCalendar time = new GregorianCalendar(2014, 0, 1, 6, 0, 0);
-			this.catalog = new CarModelCatalog();
+			this.catalog = new VehicleModelCatalog();
 			AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-			this.orderManager = new OrderManager(scheduler, time);
+			this.orderManager = new OrderManager(scheduler);
 			this.statistics = new Statistics(this.orderManager);
 			this.assemblyLine = new AssemblyLine(scheduler, null); // TODO
 		} catch (IOException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
-		} catch (CarModelCatalogException e) {
-			throw new InternalFailureException("Failed to initialise Company due to an CarModelCatalog exception");
+		} catch (VehicleModelCatalogException e) {
+			throw new InternalFailureException("Failed to initialise Company due to an VehicleModelCatalog exception");
 		}
 	}
 
@@ -69,11 +69,11 @@ public class Company {
 	}
 
 	/**
-	 * Returns the company's car model catalog.
+	 * Returns the company's vehicle model catalog.
 	 * 
-	 * @return The company's car model catalog.
+	 * @return The company's vehicle model catalog.
 	 */
-	public CarModelCatalog getCatalog()  {
+	public VehicleModelCatalog getCatalog()  {
 		return catalog;
 	}
 
@@ -121,14 +121,14 @@ public class Company {
 	}
 	
 	/**
-	 * Creates and returns a car mechanic with the given id.
+	 * Creates and returns a mechanic with the given id.
 	 * 
 	 * @param id
-	 * 		The id that is to be associated with this car mechanic.
-	 * @return The CarMechanic object that was created.
+	 * 		The id that is to be associated with this mechanic.
+	 * @return The Mechanic object that was created.
 	 */
-	public User createCarmechanic(int id){
-		return new CarMechanic(id);
+	public User createMechanic(int id){
+		return new Mechanic(id);
 	}
 	
 	/**
@@ -143,13 +143,13 @@ public class Company {
 	}
 	
 	/**
-	 * Creates and returns a custom shop owner with the given id.
+	 * Creates and returns a custom shop manager with the given id.
 	 * 
 	 * @param id
-	 * 		The id that is to be associated with this custom shop owner.	
-	 * @return The CustomShopOwner object that was created.
+	 * 		The id that is to be associated with this custom shop manager.	
+	 * @return The CustomShopManager object that was created.
 	 */
-	public User createCustomShopOwner(int id){
+	public User createCustomShopManager(int id){
 		return new CustomShopManager(id);
 	}
 }

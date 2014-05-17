@@ -18,8 +18,8 @@ import domain.assembly.Scheduler;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
@@ -34,14 +34,14 @@ public class OrderManagerTest {
 	public ExpectedException exception = ExpectedException.none();
 	
 	public OrderManager orderManager;
-	private static CarModelCatalog catalog;
+	private static VehicleModelCatalog catalog;
 	private static GarageHolder user1;
 	private static GarageHolder user2;
 	private static GarageHolder user3;
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
-		catalog = new CarModelCatalog();
+		catalog = new VehicleModelCatalog();
 		user1 = new GarageHolder(1);
 		user2 = new GarageHolder(2);
 		user3 = new GarageHolder(3);
@@ -53,7 +53,7 @@ public class OrderManagerTest {
 		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
 		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		CarModelCatalog catalog = new CarModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		@SuppressWarnings("unused")
 		AssemblyLine als = new AssemblyLine((AssemblyLineScheduler) scheduler, null);
@@ -71,17 +71,17 @@ public class OrderManagerTest {
 		assertEquals(82,orders2.size());
 		assertEquals(0,orders3.size());
 		
-		assertEquals(1,orders1.get(0).getCarOrderID());
-		assertEquals(2,orders2.get(0).getCarOrderID());
-		assertEquals(3,orders2.get(1).getCarOrderID());
-		assertEquals(4,orders2.get(2).getCarOrderID());
+		assertEquals(1,orders1.get(0).getOrderID());
+		assertEquals(2,orders2.get(0).getOrderID());
+		assertEquals(3,orders2.get(1).getOrderID());
+		assertEquals(4,orders2.get(2).getOrderID());
 	}
 
 	
 	@Test
 	public void testPlaceOrder() throws InvalidConfigurationException{
-		CarModel model = null;
-		for(CarModel m : catalog.getAllModels()){
+		VehicleModel model = null;
+		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A"))
 				model = m;
 		}
@@ -103,16 +103,16 @@ public class OrderManagerTest {
 			}
 		}
 		
-		Policy pol4= this.orderManager.getCarOrderPolicies();
+		Policy pol4= this.orderManager.getVehicleOrderPolicies();
 		
 		Configuration config = new Configuration(model, pol4);
 		for(Option option: options){			
 			config.addOption(option);
 		}
 		config.complete();
-		orderManager.placeCarOrder(user3, config);
+		orderManager.placeVehicleOrder(user3, config);
 		ArrayList<Order> orders = orderManager.getOrders(user3);
-		assertEquals(84,orders.get(0).getCarOrderID());
+		assertEquals(84,orders.get(0).getOrderID());
 		assertEquals(3,orders.get(0).getUserId());
 	}
 
@@ -141,9 +141,9 @@ public class OrderManagerTest {
 
 		ArrayList<Order> pendOrder2 = orderManager.getPendingOrders(user2);
 		assertEquals(82,pendOrder2.size());
-		assertEquals(2,pendOrder2.get(0).getCarOrderID());
-		assertEquals(3,pendOrder2.get(1).getCarOrderID());
-		assertEquals(4,pendOrder2.get(2).getCarOrderID());
+		assertEquals(2,pendOrder2.get(0).getOrderID());
+		assertEquals(3,pendOrder2.get(1).getOrderID());
+		assertEquals(4,pendOrder2.get(2).getOrderID());
 
 		ArrayList<Order> pendOrder3 = orderManager.getPendingOrders(user3);
 		assertEquals(0,pendOrder3.size());
@@ -155,7 +155,7 @@ public class OrderManagerTest {
 		ArrayList<Order> compOrder1 = orderManager.getCompletedOrders(user1);
 		assertEquals(1,compOrder1.size());
 		
-		assertEquals(1,compOrder1.get(0).getCarOrderID());
+		assertEquals(1,compOrder1.get(0).getOrderID());
 		
 		ArrayList<Order> compOrder2 = orderManager.getCompletedOrders(user2);
 		assertEquals(0,compOrder2.size());

@@ -2,7 +2,7 @@ package domain.policies;
 
 import java.util.ArrayList;
 
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
@@ -23,7 +23,7 @@ public class SingleTaskOrderTaskTypePolicy extends AlwaysPolicy {
 	 */
 	public SingleTaskOrderTaskTypePolicy(Policy successor) {
 		super(successor);
-		this.validOptionTypes = CarModelCatalog.optionTypeCreator.getAllSingleTaskPossibleTypes();
+		this.validOptionTypes = VehicleModelCatalog.optionTypeCreator.getAllSingleTaskPossibleTypes();
 	}
 	
 	/**

@@ -41,9 +41,9 @@ public class OptionTypeCreator {
 	}
 	
 	/**
-	 * Returns all option types that are mandatory for car orders.
+	 * Returns all option types that are mandatory for vehicle orders.
 	 * 
-	 * @return all option types that are mandatory for car orders.
+	 * @return all option types that are mandatory for vehicle orders.
 	 */
 	public ArrayList<OptionType> getAllMandatoryTypes(){
 		ArrayList<OptionType> mandatoryTypes = new ArrayList<OptionType>();

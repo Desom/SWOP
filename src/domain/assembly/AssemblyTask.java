@@ -13,7 +13,7 @@ public class AssemblyTask {
 	private ArrayList<String> actions;
 	private final OptionType type;
 	private boolean isCompleted;
-	private final CarAssemblyProcess assemblyProcess;
+	private final VehicleAssemblyProcess assemblyProcess;
 
 	/**
 	 * Constructor of AssemblyTask.
@@ -25,7 +25,7 @@ public class AssemblyTask {
 	 * @param	type
 	 * 			An enum object that indicates the type of this AssemblyTask
 	 */
-	public AssemblyTask(ArrayList<String> actions, OptionType type, CarAssemblyProcess process) {
+	public AssemblyTask(ArrayList<String> actions, OptionType type, VehicleAssemblyProcess process) {
 		this(actions, type, false, process);
 	}
 	
@@ -40,7 +40,7 @@ public class AssemblyTask {
 	 * @param	isCompleted
 	 * 			A boolean telling if this assembly task is already completed or not
 	 */
-	public AssemblyTask(ArrayList<String> actions, OptionType type, boolean isCompleted, CarAssemblyProcess process) {
+	public AssemblyTask(ArrayList<String> actions, OptionType type, boolean isCompleted, VehicleAssemblyProcess process) {
 		this.setActions(actions);
 		this.type = type;
 		this.isCompleted = isCompleted;

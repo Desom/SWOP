@@ -7,7 +7,7 @@ import domain.policies.Policy;
 
 public class Configuration {
 	
-	private final CarModel model;
+	private final VehicleModel model;
 	private final ArrayList<Option> options;
 	private final Policy policyChain;
 	private boolean isComplete;
@@ -16,11 +16,11 @@ public class Configuration {
 	 * Constructor of Configuration.
 	 * 
 	 * @param model
-	 * 		The car model used for this configuration.
+	 * 		The vehicle model used for this configuration.
 	 * @param policyChain
 	 * 		The chain of policies to check whether this configuration is conform to the company policies.
 	 */
-	public Configuration(CarModel model, Policy policyChain) {
+	public Configuration(VehicleModel model, Policy policyChain) {
 		this.model = model;
 		this.options = new ArrayList<Option>();
 		if(policyChain == null){
@@ -101,11 +101,11 @@ public class Configuration {
 	}
 
 	/**
-	 * Returns the car model of this configuration. 
+	 * Returns the vehicle model of this configuration. 
 	 * 
-	 * @return The car model of this configuration.
+	 * @return The vehicle model of this configuration.
 	 */
-	public CarModel getModel() {
+	public VehicleModel getModel() {
 		return this.model;
 	}
 	

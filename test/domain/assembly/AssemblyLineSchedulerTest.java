@@ -15,8 +15,8 @@ import domain.Statistics;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
@@ -26,7 +26,7 @@ import domain.order.SingleTaskOrder;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
-import domain.user.CarMechanic;
+import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 
 public class AssemblyLineSchedulerTest {
@@ -40,17 +40,17 @@ public class AssemblyLineSchedulerTest {
 	private ArrayList<Order> unFinishedOrdered;
 	private ArrayList<AssemblyLineStatus> statuses;
 
-	private CarMechanic m1;
-	private CarMechanic m2;
-	private CarMechanic m3;
+	private Mechanic m1;
+	private Mechanic m2;
+	private Mechanic m3;
 	
 	@Before
-	public void create() throws InvalidConfigurationException, IOException, CarModelCatalogException, DoesNotExistException{
+	public void create() throws InvalidConfigurationException, IOException, VehicleModelCatalogException, DoesNotExistException{
 		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
 		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
 		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		CarModelCatalog catalog = new CarModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
 		Statistics statistics = new Statistics(orderManager);
@@ -64,26 +64,26 @@ public class AssemblyLineSchedulerTest {
 		FIFOSchedulingAlgorithm fifo = new FIFOSchedulingAlgorithm();
 		unFinishedOrdered = fifo.scheduleToList(unfinished, null);
 		order1 = unFinishedOrdered.get(0);
-		assertEquals(2,order1.getCarOrderID());
+		assertEquals(2,order1.getOrderID());
 		order2 = unFinishedOrdered.get(1);
-		assertEquals(3,order2.getCarOrderID());
+		assertEquals(3,order2.getOrderID());
 		order3 = unFinishedOrdered.get(2);
-		assertEquals(4,order3.getCarOrderID());
+		assertEquals(4,order3.getOrderID());
 		order50 = unFinishedOrdered.get(51);
-		assertEquals(53,order50.getCarOrderID());
+		assertEquals(53,order50.getOrderID());
 		
-		m1 = new CarMechanic(2);
-		m2 = new CarMechanic(3);
-		m3 = new CarMechanic(4);
+		m1 = new Mechanic(2);
+		m2 = new Mechanic(3);
+		m3 = new Mechanic(4);
 		
-		line.selectWorkstationById(1).addCarMechanic(m1);
-		assertEquals(line.selectWorkstationById(1).getCarMechanic(), m1);
+		line.selectWorkstationById(1).addMechanic(m1);
+		assertEquals(line.selectWorkstationById(1).getMechanic(), m1);
 
-		line.selectWorkstationById(2).addCarMechanic(m2);
-		assertEquals(line.selectWorkstationById(2).getCarMechanic(), m2);
+		line.selectWorkstationById(2).addMechanic(m2);
+		assertEquals(line.selectWorkstationById(2).getMechanic(), m2);
 
-		line.selectWorkstationById(3).addCarMechanic(m3);
-		assertEquals(line.selectWorkstationById(3).getCarMechanic(), m3);		
+		line.selectWorkstationById(3).addMechanic(m3);
+		assertEquals(line.selectWorkstationById(3).getMechanic(), m3);		
 	}
 	@Test
 	public void testCompletionEstimate() {
@@ -117,7 +117,7 @@ public class AssemblyLineSchedulerTest {
 	}
 
 	@Test
-	public void testCanFinishOrderBeforeDeadline() throws InvalidConfigurationException, CarModelCatalogException {
+	public void testCanFinishOrderBeforeDeadline() throws InvalidConfigurationException, VehicleModelCatalogException {
 		SingleTaskOrder singleTask1 = this.createSingleTask(new GregorianCalendar(2014, 2, 1, 12, 0, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask1));
 		SingleTaskOrder singleTask2 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 3, 0, 0));
@@ -219,16 +219,16 @@ public class AssemblyLineSchedulerTest {
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){
-			CarMechanic mechanic = w.getCarMechanic();
+			Mechanic mechanic = w.getMechanic();
 			if(mechanic == null)
-				mechanic = new CarMechanic(w.getName().hashCode()); // randomize ID een beetje
+				mechanic = new Mechanic(w.getName().hashCode()); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);
 			}
 			if(w.getAllPendingTasks().size() != 0){
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(mechanic,w.getCarAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
 			}
 		}
 	}
@@ -246,9 +246,9 @@ public class AssemblyLineSchedulerTest {
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){
-			CarMechanic mechanic = w.getCarMechanic();
+			Mechanic mechanic = w.getMechanic();
 			if(mechanic == null)
-				mechanic = new CarMechanic(w.getName().hashCode()); // randomize ID een beetje
+				mechanic = new Mechanic(w.getName().hashCode()); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);
@@ -261,7 +261,7 @@ public class AssemblyLineSchedulerTest {
 	}
 	
 
-	private SingleTaskOrder createSingleTask(GregorianCalendar now) throws InvalidConfigurationException, CarModelCatalogException{
+	private SingleTaskOrder createSingleTask(GregorianCalendar now) throws InvalidConfigurationException, VehicleModelCatalogException{
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);

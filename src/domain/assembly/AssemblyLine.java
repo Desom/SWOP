@@ -163,8 +163,8 @@ public class AssemblyLine {
 	public LinkedList<Order> getAllOrders() {
 		LinkedList<Order> orders = new LinkedList<Order>();
 		for(Workstation w : getAllWorkstations()){
-			if(w.getCarAssemblyProcess() != null){
-				orders.addLast(w.getCarAssemblyProcess().getOrder());
+			if(w.getVehicleAssemblyProcess() != null){
+				orders.addLast(w.getVehicleAssemblyProcess().getOrder());
 			}
 			else{
 				orders.addLast(null);
@@ -220,7 +220,7 @@ public class AssemblyLine {
 	 */
 	public boolean isEmpty() {
 		for(Workstation workstation : getAllWorkstations()){
-			if(workstation.getCarAssemblyProcess() != null){
+			if(workstation.getVehicleAssemblyProcess() != null){
 				return false;
 			}
 		}
@@ -228,13 +228,13 @@ public class AssemblyLine {
 	}
 
 	/**
-	 * Returns all workstations which can complete tasks of the given car assembly process.
+	 * Returns all workstations which can complete tasks of the given vehicle assembly process.
 	 * 
 	 * @param process
-	 * 		The car assembly process to be checked.
-	 * @return All workstations required to complete all the tasks of this car assembly process.
+	 * 		The vehicle assembly process to be checked.
+	 * @return All workstations required to complete all the tasks of this vehicle assembly process.
 	 */
-	public ArrayList<Workstation> filterWorkstations(CarAssemblyProcess process){
+	public ArrayList<Workstation> filterWorkstations(VehicleAssemblyProcess process){
 		ArrayList<Workstation> filteredWorkstations = new ArrayList<Workstation>();
 		for(Workstation workstation : workstations){
 			if(workstation.compatibleWith(process).size() > 0){

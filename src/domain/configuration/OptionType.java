@@ -15,7 +15,7 @@ public class OptionType {
 	 * @param singleTaskPossible
 	 * 		True if this option is available for single task orders, otherwise false.
 	 * @param mandatory
-	 * 		True if this option is mandatory for car orders, otherwise false.
+	 * 		True if this option is mandatory for vehicle orders, otherwise false.
 	 */
 	OptionType(String name, boolean singleTaskPossible, boolean mandatory){
 		this.name = name;
@@ -25,7 +25,7 @@ public class OptionType {
 
 	/**
 	 * Constructor of OptionType.
-	 * The option type won't be available for single task orders and won't be mandatory for car orders.
+	 * The option type won't be available for single task orders and won't be mandatory for vehicle orders.
 	 */
 	OptionType(String name){
 		this.name = name;
@@ -43,9 +43,9 @@ public class OptionType {
 	}
 	
 	/**
-	 * Returns whether the option type is mandatory for car orders.
+	 * Returns whether the option type is mandatory for vehicle orders.
 	 * 
-	 * @return true if the option type is mandatory for car orders, otherwise false.
+	 * @return true if the option type is mandatory for vehicle orders, otherwise false.
 	 */
 	public boolean isMandatory() {
 		return mandatory;

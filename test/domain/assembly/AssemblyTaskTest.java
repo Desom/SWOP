@@ -10,13 +10,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import domain.assembly.AssemblyTask;
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
@@ -30,8 +30,8 @@ public class AssemblyTaskTest {
 	private static AssemblyTask task;
 
 	@BeforeClass
-	public static void testCreate() throws IOException, CarModelCatalogException, InvalidConfigurationException {
-		CarOrder o = buildCar();
+	public static void testCreate() throws IOException, VehicleModelCatalogException, InvalidConfigurationException {
+		VehicleOrder o = buildCar();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
 		taskTypes.add(OptionType.Body);
 		taskTypes.add(OptionType.Color);
@@ -46,7 +46,7 @@ public class AssemblyTaskTest {
 		assertEquals("dummy action", task.getActions().get(0));
 	}
 	
-	public static CarOrder buildCar() throws IOException, CarModelCatalogException, InvalidConfigurationException{
+	public static VehicleOrder buildCar() throws IOException, VehicleModelCatalogException, InvalidConfigurationException{
 		// MAAK EEN AUTO MET OPTIONS EN MODEL AAN
 
 		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
@@ -56,9 +56,9 @@ public class AssemblyTaskTest {
 		Policy carOrderPolicy= pol4;
 		
 		
-		CarModelCatalog catalog = new CarModelCatalog();
-		CarModel carModel = null;
-		for(CarModel m : catalog.getAllModels()){
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModel carModel = null;
+		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){
 				carModel = m;
 				continue;
@@ -86,7 +86,7 @@ public class AssemblyTaskTest {
 		GarageHolder garageHolder = new GarageHolder(1);
 		
 		GregorianCalendar now = new GregorianCalendar();
-		return new CarOrder(1, garageHolder, config, now);
+		return new VehicleOrder(1, garageHolder, config, now);
 	}
 
 }

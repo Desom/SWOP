@@ -12,16 +12,16 @@ public class ModelCreator {
 	
 	private String path;
 	private List<Option> options;
-	private HashMap<String, CarModel> allCarModels;
+	private HashMap<String, VehicleModel> allModels;
 	
 	/**
 	 * Constructor of ModelCreator.
 	 * 
 	 * @param options
-	 * 		All possible options that can be associated with a car model.
+	 * 		All possible options that can be associated with a vehicle model.
 	 * 		In other words, all possible options that could be given to a configuration.
 	 * @param path
-	 * 		The path to the file containing the car models.
+	 * 		The path to the file containing the vehicle models.
 	 */
 	public ModelCreator(List<Option> options, String path){
 		this.options = options;
@@ -30,10 +30,10 @@ public class ModelCreator {
 
 	/**
 	 * Constructor of ModelCreator.
-	 * Uses the default path the the file containing the car models.
+	 * Uses the default path the the file containing the vehicle models.
 	 * 
 	 * @param options
-	 * 		All possible options that can be associated with a car model.
+	 * 		All possible options that can be associated with a vehicle model.
 	 * 		In other words, all possible options that could be given to a configuration.
 	 */
 	public ModelCreator(List<Option> options){
@@ -43,13 +43,13 @@ public class ModelCreator {
 	/**
 	 * Creates the models from the file of the path of this model creator.
 	 * 
-	 * @return a list with all possible car models
+	 * @return a list with all possible vehicle models
 	 * @throws IOException
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 * 		If a model line is not in the right format.
 	 */
-	public ArrayList<CarModel> createModels() throws IOException, CarModelCatalogException{
-		this.allCarModels = new HashMap<String,CarModel>();
+	public ArrayList<VehicleModel> createModels() throws IOException, VehicleModelCatalogException{
+		this.allModels = new HashMap<String,VehicleModel>();
 		BufferedReader input = new BufferedReader(new FileReader(path));
 		String inputline = input.readLine();
 		while(inputline != null){
@@ -57,20 +57,20 @@ public class ModelCreator {
 			inputline = input.readLine();
 		}
 		input.close();
-		return new ArrayList<CarModel>(allCarModels.values());
+		return new ArrayList<VehicleModel>(allModels.values());
 	}
 	
 	/**
-	 * Processes a line of the car model file.
+	 * Processes a line of the vehicle model file.
 	 * 
 	 * @param inputline
-	 * 		A line of the car model file.
-	 * @throws CarModelCatalogException 
+	 * 		A line of the vehicle model file.
+	 * @throws VehicleModelCatalogException 
 	 * 		If the line is in the wrong format.
 	 * 		If the model name already exists.
 	 * 		If an option type is missing.
 	 */
-	private void processModelLine(String inputline) throws CarModelCatalogException {
+	private void processModelLine(String inputline) throws VehicleModelCatalogException {
 		// Determine default task time
 		int defaultTaskTime = 60;
 		if(inputline.contains("%")){
@@ -80,13 +80,13 @@ public class ModelCreator {
 		}
 		// continue loading the options
 		String[] input=inputline.split(";");
-		if(input.length != 2) throw new CarModelCatalogException("Model: wrong input format: " + inputline);
-		if(allCarModels.containsKey(input[0])) throw new CarModelCatalogException("Model name already exists: "+input[0] );
+		if(input.length != 2) throw new VehicleModelCatalogException("Model: wrong input format: " + inputline);
+		if(allModels.containsKey(input[0])) throw new VehicleModelCatalogException("Model name already exists: "+input[0] );
 		try{
 			ArrayList<String> a = new ArrayList<String>(Arrays.asList(input[1].split(",")));
-			allCarModels.put(input[0], new CarModel(input[0], collectOption(a), defaultTaskTime));
+			allModels.put(input[0], new VehicleModel(input[0], collectOption(a), defaultTaskTime));
 		}catch(ClassCastException e){
-			throw new CarModelCatalogException("Wrong Option Type in form: " + inputline);
+			throw new VehicleModelCatalogException("Wrong Option Type in form: " + inputline);
 		}
 	}
 
@@ -96,17 +96,17 @@ public class ModelCreator {
 	 * @param descriptions 
 	 * 		The list of option descriptions.
 	 * @return a list of options associated with the given descriptions
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 * 		If there is no option with one of the given descriptions.
 	 */
-	private ArrayList<Option> collectOption(ArrayList<String> descriptions) throws CarModelCatalogException {
+	private ArrayList<Option> collectOption(ArrayList<String> descriptions) throws VehicleModelCatalogException {
 		ArrayList<Option> options = new ArrayList<Option>();
 		for(String description : descriptions){
 			Option option = getOption(description);
 			if(option != null)
 				options.add(option);
 			else
-				throw new CarModelCatalogException("Option does not exists: "+ description);
+				throw new VehicleModelCatalogException("Option does not exists: "+ description);
 		}
 		return options;
 	}

@@ -103,7 +103,7 @@ public class SpecificationBatchSchedulingAlgorithm implements
 			assembly.removeLast();
 			//Zet volgende op assembly
 			assembly.addFirst(order);
-			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een CarOrder is.
+			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een Order is.
 			int totalDuration = assemblyLine.calculateTimeTillEmptyFor(assembly);
 			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
 			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLineScheduler)){

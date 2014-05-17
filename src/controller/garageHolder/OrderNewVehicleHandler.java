@@ -6,18 +6,18 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import controller.CommunicationTool;
-import controller.CarOrderForm;
+import controller.VehicleOrderForm;
 import controller.UIInterface;
 import domain.Company;
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
 import domain.order.Order;
 import domain.order.OrderManager;
 import domain.user.GarageHolder;
 
-public class OrderNewCarHandler implements CommunicationTool{
+public class OrderNewVehicleHandler implements CommunicationTool{
 
 
 
@@ -33,10 +33,10 @@ public class OrderNewCarHandler implements CommunicationTool{
 		ArrayList<Integer> tempIdList= new ArrayList<Integer>();
 		ArrayList<Calendar> tempCalendarList= new ArrayList<Calendar>();
 		for(Order order:ordermanager.getPendingOrders(garageHolder)){
-			tempIdList.add(order.getCarOrderID());
+			tempIdList.add(order.getOrderID());
 			tempCalendarList.add(ordermanager.completionEstimate(order));
 		}
-		ui.displayPendingCarOrders(tempIdList, tempCalendarList);
+		ui.displayPendingOrders(tempIdList, tempCalendarList);
 		tempIdList= new ArrayList<Integer>();
 		tempCalendarList= new ArrayList<Calendar>();
 		//1.the second part shows a history
@@ -46,31 +46,31 @@ public class OrderNewCarHandler implements CommunicationTool{
 			tempIdList.add(order.getUserId());
 			tempCalendarList.add(order.getDeliveredTime());
 		}
-		ui.displayCompletedCarOrders(tempIdList, tempCalendarList);
-		//2.The user indicates he wants to place a new car order.
+		ui.displayCompletedOrders(tempIdList, tempCalendarList);
+		//2.The user indicates he wants to place a new vehicle order.
 
 		ArrayList<String> list = new ArrayList<String>();
 		list.add("Leave");
 		list.add("Place a new order");
 		String antwoord = ui.askWithPossibilities("Do you want to leave this overview or place a new order?",list);
 
-		//3. The system shows a list of available car models
-		//4. The user indicates the car model he wishes to order.
+		//3. The system shows a list of available vehicle models
+		//4. The user indicates the vehicle model he wishes to order.
 		if(antwoord.equals("Place a new order")){
-			CarModelCatalog catalog = company.getCatalog();
-			CarModel model = null;
+			VehicleModelCatalog catalog = company.getCatalog();
+			VehicleModel model = null;
 			while(model == null ){
-				List<CarModel> modelList = catalog.getAllModels();
-				int modelInt = ui.askWithPossibilities("Please input your car model", modelList.toArray());
+				List<VehicleModel> modelList = catalog.getAllModels();
+				int modelInt = ui.askWithPossibilities("Please input your vehicle model", modelList.toArray());
 				model = modelList.get(modelInt);			
 			}
 			//5. The system displays the ordering form.
 			//6. The user completes the ordering form.
-			CarOrderForm orderForm = new CarOrderForm(model, ordermanager.getCarOrderPolicies());
+			VehicleOrderForm orderForm = new VehicleOrderForm(model, ordermanager.getVehicleOrderPolicies());
 			ui.fillIn(orderForm);
 			
 			while(!orderForm.getConfiguration().isCompleted()){
-				orderForm = new CarOrderForm(model, ordermanager.getCarOrderPolicies());
+				orderForm = new VehicleOrderForm(model, ordermanager.getVehicleOrderPolicies());
 				ui.fillIn(orderForm);
 			}
 			
@@ -78,7 +78,7 @@ public class OrderNewCarHandler implements CommunicationTool{
 			if(antwoord2){
 				//7. The system stores the new order and updates the production schedule.
 				//8. The system presents an estimated completion date for the new order.
-				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeCarOrder(garageHolder, orderForm.getConfiguration()));
+				GregorianCalendar calender = ordermanager.completionEstimate(ordermanager.placeVehicleOrder(garageHolder, orderForm.getConfiguration()));
 				String time = getTime(calender);
 				ui.display("Your order should be ready at "+ time+".");
 			}else{
@@ -115,20 +115,20 @@ public class OrderNewCarHandler implements CommunicationTool{
 	
 	public List<String> getOptionTypes() {
 		ArrayList<String> result = new ArrayList<String>();
-		for(OptionType i:CarModelCatalog.optionTypeCreator.getAllTypes()) result.add(i.toString());
+		for(OptionType i:VehicleModelCatalog.optionTypeCreator.getAllTypes()) result.add(i.toString());
 		return result;
 	}
 
 
 	/**
-	 * Get a car option based on the description
+	 * Get a vehicle option based on the description
 	 * @param description the description
 	 * @param company 
-	 * @return a car option based with the description description
+	 * @return a vehicle option based with the description description
 	 *         null if the description does not match an option
 	 */
 	public Option getOption(String description){
-		CarModelCatalog catalog = company.getCatalog();
+		VehicleModelCatalog catalog = company.getCatalog();
 		for(Option possible: catalog.getAllOptions()){
 			if(possible.getDescription().equals(description)) return possible;
 		}

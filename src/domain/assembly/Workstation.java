@@ -5,18 +5,18 @@ import java.util.LinkedList;
 
 import domain.InternalFailureException;
 import domain.configuration.OptionType;
-import domain.user.CarMechanic;
+import domain.user.Mechanic;
 
 public class Workstation {
 
 	private String name;
 	private final WorkstationType workstationType;
-	private CarMechanic carMechanic;
+	private Mechanic mechanic;
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
 	private AssemblyLine assemblyLine;
 	private int timeSpend;
-	private CarAssemblyProcess assemblyProcess;
+	private VehicleAssemblyProcess assemblyProcess;
 
 	/**
 	 * Constructor of Workstation.
@@ -39,14 +39,14 @@ public class Workstation {
 
 
 	/**
-	 * Clears this workstation of tasks and the active task and resets the time spend for the current car.
+	 * Clears this workstation of tasks and the active task and resets the time spend for the current vehicle.
 	 * Used by the AssemblyLine object in advanceLine().
 	 */
 	protected void clear() {
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
 		this.resetTimeSpend();
-		setCarAssemblyProcess(null);
+		setVehicleAssemblyProcess(null);
 	}
 
 	/**
@@ -78,39 +78,39 @@ public class Workstation {
 	}
 
 	/**
-	 * Gives the car mechanic that is operating at this workstation.
+	 * Gives the mechanic that is operating at this workstation.
 	 * 
-	 * @return The CarMechanic operating at this Workstation.
+	 * @return The Mechanic operating at this Workstation.
 	 * @throws IllegalStateException
-	 * 		If there is no car mechanic at this workstation.
+	 * 		If there is no mechanic at this workstation.
 	 */
-	public CarMechanic getCarMechanic() throws IllegalStateException{
-		if (carMechanic == null)
-			throw new IllegalStateException("There is no car mechanic at this workstation");
-		return carMechanic;
+	public Mechanic getMechanic() throws IllegalStateException{
+		if (mechanic == null)
+			throw new IllegalStateException("There is no mechanic at this workstation");
+		return mechanic;
 	}
 
 	/**
-	 * Add a given car mechanic to this workstation.
+	 * Add a given mechanic to this workstation.
 	 * 
-	 * @param carMechanic
-	 * 		The desired car mechanic to operate at this Workstation.
+	 * @param mechanic
+	 * 		The desired mechanic to operate at this Workstation.
 	 */
-	public void addCarMechanic(CarMechanic carMechanic) {
-		this.carMechanic = carMechanic;
+	public void addMechanic(Mechanic mechanic) {
+		this.mechanic = mechanic;
 	}
 	
 	/**
-	 * Removes the current car mechanic from this workstation.
+	 * Removes the current mechanic from this workstation.
 	 * 
 	 * @throws IllegalStateException
 	 * 		If there is an active task in this workstation.
 	 */
-	public void removeCarMechanic() {
+	public void removeMechanic() {
 		if(activeTask != null){
-			throw new IllegalStateException("A car mechanic cannot leave when there is an active task");
+			throw new IllegalStateException("A mechanic cannot leave when there is an active task");
 		}
-		this.carMechanic = null;
+		this.mechanic = null;
 	}
 
 	/**
@@ -149,26 +149,26 @@ public class Workstation {
 	}
 
 	/**
-	 * Completes the assembly task that the operating car mechanic is working on.
+	 * Completes the assembly task that the operating mechanic is working on.
 	 * 
-	 * @param carMechanic
+	 * @param mechanic
 	 * 		The user that wants to call this method.
 	 * @param timeSpent
 	 * 		The amount of minutes it took to complete the current activeTask.
 	 * @throws IllegalArgumentException
 	 * 		If there is no active task to complete in this workstation.
-	 * 		If there is no car mechanic to complete the active task.
+	 * 		If there is no mechanic to complete the active task.
 	 */
-	public void completeTask(CarMechanic carMechanic, int timeSpent) throws IllegalStateException {
-		if (this.getCarMechanic().getId() != carMechanic.getId())
+	public void completeTask(Mechanic mechanic, int timeSpent) throws IllegalStateException {
+		if (this.getMechanic().getId() != mechanic.getId())
 			throw new IllegalArgumentException("This user is not assigned to this workstation");
 		if (this.activeTask != null) {
-			if (this.carMechanic != null) {
+			if (this.mechanic != null) {
 				this.activeTask.completeTask(timeSpent);
 				this.activeTask = null;
 			}
 			else {
-				throw new IllegalStateException("There is no car mechanic to complete the active task");
+				throw new IllegalStateException("There is no mechanic to complete the active task");
 			}
 		}
 		else {
@@ -286,13 +286,13 @@ public class Workstation {
 	}
 	
 	/**
-	 * Sets the car assembly process this workstation is currently working on.
-	 * Also sets all tasks in the car assembly process compatible with the workstation.
+	 * Sets the vehicle assembly process this workstation is currently working on.
+	 * Also sets all tasks in the vehicle assembly process compatible with the workstation.
 	 * 
 	 * @param process
-	 * 		the specified car assembly process
+	 * 		the specified vehicle assembly process
 	 */
-	public void setCarAssemblyProcess(CarAssemblyProcess process){
+	public void setVehicleAssemblyProcess(VehicleAssemblyProcess process){
 		if (process != null)
 			for (AssemblyTask task : this.compatibleWith(process))
 				this.addAssemblyTask(task);
@@ -300,11 +300,11 @@ public class Workstation {
 	}
 	
 	/**
-	 * Gets the car assembly process this workstation is currently working on.
+	 * Gets the vehicle assembly process this workstation is currently working on.
 	 * 
-	 * @return the car assembly process this workstation is currently working on.
+	 * @return the vehicle assembly process this workstation is currently working on.
 	 */
-	public CarAssemblyProcess getCarAssemblyProcess(){
+	public VehicleAssemblyProcess getVehicleAssemblyProcess(){
 		return this.assemblyProcess;
 	}
 	
@@ -313,9 +313,9 @@ public class Workstation {
 	 * 
 	 * @param assemblyProcess
 	 * 		The assembly process to check against.
-	 * @return All assembly tasks of the car assembly process on which can be worked on in this workstation.
+	 * @return All assembly tasks of the vehicle assembly process on which can be worked on in this workstation.
 	 */
-	protected ArrayList<AssemblyTask> compatibleWith(CarAssemblyProcess assemblyProcess){
+	protected ArrayList<AssemblyTask> compatibleWith(VehicleAssemblyProcess assemblyProcess){
 		ArrayList<OptionType> acceptedTypes = this.getTaskTypes();
 		ArrayList<AssemblyTask> compatibleTasks = new ArrayList<AssemblyTask>();
 		for(AssemblyTask task : assemblyProcess.getAssemblyTasks()){

@@ -2,7 +2,7 @@ package controller;
 
 import java.util.List;
 
-import domain.configuration.CarModel;
+import domain.configuration.VehicleModel;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
@@ -17,11 +17,11 @@ public abstract class OrderForm {
 	 * Constructor of OrderForm.
 	 * 
 	 * @param model
-	 * 		The car model of the order of this order form.
+	 * 		The vehicle model of the order of this order form.
 	 * @param policies
 	 * 		The policy chain which has to be checked.
 	 */
-	public OrderForm(CarModel model, Policy policies) {
+	public OrderForm(VehicleModel model, Policy policies) {
 		this.configuration = new Configuration(model, policies);
 	}
 	

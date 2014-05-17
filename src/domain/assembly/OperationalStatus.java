@@ -23,16 +23,16 @@ public class OperationalStatus implements AssemblyLineStatus {
 							timeSpendForTasks = workstation.getTimeSpend();
 					}
 
-					// move huidige cars 1 plek
-					//neem CarOrder van WorkStation 3
+					// move huidige vehicles 1 plek
+					//neem vehicle van WorkStation 3
 					Workstation workstationLast = assemblyLine.selectWorkstationById(assemblyLine.getNumberOfWorkstations());
 					Order finished = null;
-					if(workstationLast.getCarAssemblyProcess() != null){
-						// zoek welke CarOrder klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
-						finished = workstationLast.getCarAssemblyProcess().getOrder();
+					if(workstationLast.getVehicleAssemblyProcess() != null){
+						// zoek welke order klaar is, wacht met het zetten van de deliveryTime omdat de tijd van het schedule nog moet worden geupdate.
+						finished = workstationLast.getVehicleAssemblyProcess().getOrder();
 					}
 
-					//voeg nieuwe car toe.
+					//voeg nieuwe vehicle toe.
 					boolean tryNextAdvance = true;
 					Order newOrder = null;
 					try {
@@ -46,19 +46,19 @@ public class OperationalStatus implements AssemblyLineStatus {
 						Workstation workstationNext = assemblyLine.selectWorkstationById(i);
 						workstationNext.clear();;
 						Workstation workstationPrev = assemblyLine.selectWorkstationById(i-1);
-						workstationNext.setCarAssemblyProcess(workstationPrev.getCarAssemblyProcess());
+						workstationNext.setVehicleAssemblyProcess(workstationPrev.getVehicleAssemblyProcess());
 					}
 
 
 
-					CarAssemblyProcess newAssemblyProcess = null;
+					VehicleAssemblyProcess newAssemblyProcess = null;
 					if(newOrder != null){
 						newAssemblyProcess = newOrder.getAssemblyprocess();
 					}
 
 					Workstation workstation1 = assemblyLine.selectWorkstationById(1);
 					workstation1.clear();
-					workstation1.setCarAssemblyProcess(newAssemblyProcess);
+					workstation1.setVehicleAssemblyProcess(newAssemblyProcess);
 
 					if(finished != null){
 						finished.getAssemblyprocess().setDeliveredTime(assemblyLine.getAssemblyLineScheduler().getCurrentTime());

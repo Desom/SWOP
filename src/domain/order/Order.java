@@ -2,7 +2,7 @@ package domain.order;
 
 import java.util.GregorianCalendar;
 
-import domain.assembly.CarAssemblyProcess;
+import domain.assembly.VehicleAssemblyProcess;
 import domain.configuration.Configuration;
 import domain.user.User;
 
@@ -11,7 +11,7 @@ public abstract class Order {
 	private int orderId;
 	private User user;
 	private Configuration configuration;
-	private CarAssemblyProcess assemblyProcess;
+	private VehicleAssemblyProcess assemblyProcess;
 	private GregorianCalendar orderedTime;
 	
 	/**
@@ -59,7 +59,7 @@ public abstract class Order {
 		this.configuration = configuration;
 		if (deliveredTime != null && deliveredTime.before(orderedTime))
 			throw new IllegalArgumentException("The delivered time is older then the ordered time.");
-		this.assemblyProcess = new CarAssemblyProcess(this, configuration.getAllOptions(), isDelivered, deliveredTime);
+		this.assemblyProcess = new VehicleAssemblyProcess(this, configuration.getAllOptions(), isDelivered, deliveredTime);
 		this.setOrderedTime(orderedTime);
 	}
 	
@@ -83,31 +83,31 @@ public abstract class Order {
 	}
 	
 	/**
-	 * Returns the time the car of this order was delivered.
+	 * Returns the time this order was delivered.
 	 * 
-	 * @return The time the car of this order was delivered.
+	 * @return The time this order was delivered.
 	 * @throws IllegalStateException
-	 * 		If this car of this order hasn't been delivered yet.
+	 * 		If this order hasn't been delivered yet.
 	 */
 	public GregorianCalendar getDeliveredTime() throws IllegalStateException{
 		return this.getAssemblyprocess().getDeliveredTime();
 	}
 	
 	/**
-	 * Returns if this car is already completed or not.
+	 * Returns if this order is already completed or not.
 	 * 
-	 * @return True if the car is already completed, otherwise false.
+	 * @return True if the order is already completed, otherwise false.
 	 */
 	public Boolean isCompleted() {
 		return this.assemblyProcess.isCompleted();
 	}
 	
 	/**
-	 * Returns the id of this car order.
+	 * Returns the id of this order.
 	 * 
-	 * @return The id of this car order.
+	 * @return The id of this order.
 	 */
-	public int getCarOrderID() {
+	public int getOrderID() {
 		return this.orderId;
 	}
 	
@@ -125,7 +125,7 @@ public abstract class Order {
 	 * 
 	 * @return The assembly process of this order.
 	 */
-	public CarAssemblyProcess getAssemblyprocess(){
+	public VehicleAssemblyProcess getAssemblyprocess(){
 		return this.assemblyProcess;
 	}
 	
@@ -157,7 +157,7 @@ public abstract class Order {
 	}
 	
 	/**
-	 * Returns a string representation of the CarOrder
+	 * Returns a string representation of the Order
 	 */
 	@Override
 	public String toString(){

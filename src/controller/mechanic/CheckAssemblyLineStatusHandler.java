@@ -1,4 +1,4 @@
-package controller.carMechanic;
+package controller.mechanic;
 
 import controller.UIInterface;
 import domain.Company;

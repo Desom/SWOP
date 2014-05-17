@@ -16,12 +16,12 @@ import domain.assembly.BrokenStatus;
 import domain.assembly.MaintenanceStatus;
 import domain.assembly.OperationalStatus;
 import domain.assembly.ScheduledOrder;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.order.Order;
 import domain.policies.CompletionPolicy;
 import domain.policies.InvalidConfigurationException;
@@ -31,17 +31,17 @@ public class FIFOSchedulingAlgorithmTest {
 
 	FIFOSchedulingAlgorithm algorithm;
 	GarageHolder garageHolder;
-	CarModelCatalog cmc;
+	VehicleModelCatalog cmc;
 	AssemblyLineScheduler als;
 	ArrayList<AssemblyLineStatus> statuses;
 	
 	@Before
-	public void testCreate() throws IOException, CarModelCatalogException {
+	public void testCreate() throws IOException, VehicleModelCatalogException {
 		this.algorithm = new FIFOSchedulingAlgorithm();
 		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
-		this.cmc = new CarModelCatalog();
+		this.cmc = new VehicleModelCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		statuses = new ArrayList<AssemblyLineStatus>();
 		statuses.add(new OperationalStatus());
@@ -57,18 +57,18 @@ public class FIFOSchedulingAlgorithmTest {
 		
 		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, als);
 
-		assertEquals(10,scheduleList.get(0).getCarOrderID());
-		assertEquals(11,scheduleList.get(1).getCarOrderID());
-		assertEquals(9,scheduleList.get(2).getCarOrderID());
-		assertEquals(8,scheduleList.get(3).getCarOrderID());
-		assertEquals(7,scheduleList.get(4).getCarOrderID());
-		assertEquals(6,scheduleList.get(5).getCarOrderID());
-		assertEquals(5,scheduleList.get(6).getCarOrderID());
-		assertEquals(4,scheduleList.get(7).getCarOrderID());
-		assertEquals(3,scheduleList.get(8).getCarOrderID());
-		assertEquals(2,scheduleList.get(9).getCarOrderID());
-		assertEquals(1,scheduleList.get(10).getCarOrderID());
-		assertEquals(0,scheduleList.get(11).getCarOrderID());
+		assertEquals(10,scheduleList.get(0).getOrderID());
+		assertEquals(11,scheduleList.get(1).getOrderID());
+		assertEquals(9,scheduleList.get(2).getOrderID());
+		assertEquals(8,scheduleList.get(3).getOrderID());
+		assertEquals(7,scheduleList.get(4).getOrderID());
+		assertEquals(6,scheduleList.get(5).getOrderID());
+		assertEquals(5,scheduleList.get(6).getOrderID());
+		assertEquals(4,scheduleList.get(7).getOrderID());
+		assertEquals(3,scheduleList.get(8).getOrderID());
+		assertEquals(2,scheduleList.get(9).getOrderID());
+		assertEquals(1,scheduleList.get(10).getOrderID());
+		assertEquals(0,scheduleList.get(11).getOrderID());
 	}
 
 	@Test
@@ -77,25 +77,25 @@ public class FIFOSchedulingAlgorithmTest {
 		
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
-		assertEquals(10,scheduleList.get(0).getScheduledOrder().getCarOrderID());//70
+		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//13h10
-		assertEquals(11,scheduleList.get(1).getScheduledOrder().getCarOrderID());//50
+		assertEquals(11,scheduleList.get(1).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(1).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//14h20
-		assertEquals(9,scheduleList.get(2).getScheduledOrder().getCarOrderID());//60
+		assertEquals(9,scheduleList.get(2).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(2).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//15h30
-		assertEquals(8,scheduleList.get(3).getScheduledOrder().getCarOrderID());//50
+		assertEquals(8,scheduleList.get(3).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(3).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//16h30
-		assertEquals(7,scheduleList.get(4).getScheduledOrder().getCarOrderID());//70
+		assertEquals(7,scheduleList.get(4).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(4).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//17h40
-		assertEquals(6,scheduleList.get(5).getScheduledOrder().getCarOrderID());//60
+		assertEquals(6,scheduleList.get(5).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(5).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//18h50
-		assertEquals(5,scheduleList.get(6).getScheduledOrder().getCarOrderID());//50
+		assertEquals(5,scheduleList.get(6).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(6).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//20h00
 		
@@ -113,19 +113,19 @@ public class FIFOSchedulingAlgorithmTest {
 		time = new GregorianCalendar(2000,0,2,6,0,0);//06h00
 		
 		
-		assertEquals(4,scheduleList.get(10).getScheduledOrder().getCarOrderID());//70
+		assertEquals(4,scheduleList.get(10).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(10).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//7h10
-		assertEquals(3,scheduleList.get(11).getScheduledOrder().getCarOrderID());//60
+		assertEquals(3,scheduleList.get(11).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(11).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8h20
-		assertEquals(2,scheduleList.get(12).getScheduledOrder().getCarOrderID());//50
+		assertEquals(2,scheduleList.get(12).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(12).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//9h30
-		assertEquals(1,scheduleList.get(13).getScheduledOrder().getCarOrderID());//70
+		assertEquals(1,scheduleList.get(13).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(13).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//10h40
-		assertEquals(0,scheduleList.get(14).getScheduledOrder().getCarOrderID());//60
+		assertEquals(0,scheduleList.get(14).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(14).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//11h50
 		
@@ -169,29 +169,29 @@ public class FIFOSchedulingAlgorithmTest {
 		
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
 		
-		orderList.add(new CarOrder(0, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(0, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(1, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(1, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(2, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(2, garageHolder, config3, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(3, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(3, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(4, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(4, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(5, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(5, garageHolder, config3, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(6, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(6, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(7, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(7, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(8, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(8, garageHolder, config3, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(9, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(9, garageHolder, config1, time));
 		time.add(GregorianCalendar.HOUR, -1);
-		orderList.add(new CarOrder(10, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(10, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, 1);
-		orderList.add(new CarOrder(11, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(11, garageHolder, config3, time));
 		return orderList;
 	}
 

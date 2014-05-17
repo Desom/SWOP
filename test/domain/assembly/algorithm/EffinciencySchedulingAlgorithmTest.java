@@ -15,12 +15,12 @@ import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
 import domain.assembly.Workstation;
 import domain.assembly.WorkstationType;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.order.Order;
 import domain.order.SingleTaskOrder;
 import domain.policies.CompletionPolicy;
@@ -33,7 +33,7 @@ public class EffinciencySchedulingAlgorithmTest {
 
 	SchedulingAlgorithm algorithm;
 	GarageHolder garageHolder;
-	CarModelCatalog cmc;
+	VehicleModelCatalog cmc;
 	AssemblyLineScheduler als;
 	dummyAssemblyLine AssemblyLine;
 	AssemblyLineScheduler alsT;
@@ -41,13 +41,13 @@ public class EffinciencySchedulingAlgorithmTest {
 	CustomShopManager customShopManager;
 	
 	@Before
-	public void testCreate() throws IOException, CarModelCatalogException {
+	public void testCreate() throws IOException, VehicleModelCatalogException {
 		this.algorithm = new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.customShopManager = new CustomShopManager(0);
-		this.cmc = new CarModelCatalog();
+		this.cmc = new VehicleModelCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		this.AssemblyLine = new dummyAssemblyLine(als, 3);
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
@@ -87,7 +87,7 @@ public class EffinciencySchedulingAlgorithmTest {
 
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
 		for(int i =1; i<= 17;i++){
-			orderList.add(new CarOrder(i, garageHolder, config, time));
+			orderList.add(new VehicleOrder(i, garageHolder, config, time));
 			time.add(GregorianCalendar.MILLISECOND, 1);
 		}
 		Configuration config2 = new Configuration(null,new SingleTaskOrderNumbersOfTasksPolicy(null));
@@ -101,41 +101,41 @@ public class EffinciencySchedulingAlgorithmTest {
 		orderList.add(new SingleTaskOrder(19, customShopManager, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
 		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, als);
 		//6u00
-		assertEquals(1,scheduleList.get(0).getCarOrderID());
+		assertEquals(1,scheduleList.get(0).getOrderID());
 		//6u50
-		assertEquals(2,scheduleList.get(1).getCarOrderID());
+		assertEquals(2,scheduleList.get(1).getOrderID());
 		//7u40
-		assertEquals(3,scheduleList.get(2).getCarOrderID());
+		assertEquals(3,scheduleList.get(2).getOrderID());
 		//8u30
-		assertEquals(4,scheduleList.get(3).getCarOrderID());
+		assertEquals(4,scheduleList.get(3).getOrderID());
 		//9u20
-		assertEquals(5,scheduleList.get(4).getCarOrderID());
+		assertEquals(5,scheduleList.get(4).getOrderID());
 		//10u10
-		assertEquals(6,scheduleList.get(5).getCarOrderID());
+		assertEquals(6,scheduleList.get(5).getOrderID());
 		//11u00
-		assertEquals(7,scheduleList.get(6).getCarOrderID());
+		assertEquals(7,scheduleList.get(6).getOrderID());
 		//11u50
-		assertEquals(8,scheduleList.get(7).getCarOrderID());
+		assertEquals(8,scheduleList.get(7).getOrderID());
 		//12u40
-		assertEquals(9,scheduleList.get(8).getCarOrderID());
+		assertEquals(9,scheduleList.get(8).getOrderID());
 		//13u30
-		assertEquals(10,scheduleList.get(9).getCarOrderID());
+		assertEquals(10,scheduleList.get(9).getOrderID());
 		//14u20
-		assertEquals(11,scheduleList.get(10).getCarOrderID());
+		assertEquals(11,scheduleList.get(10).getOrderID());
 		//15u10
-		assertEquals(12,scheduleList.get(11).getCarOrderID());
+		assertEquals(12,scheduleList.get(11).getOrderID());
 		//16u00
-		assertEquals(13,scheduleList.get(12).getCarOrderID());
+		assertEquals(13,scheduleList.get(12).getOrderID());
 		//16u50
-		assertEquals(14,scheduleList.get(13).getCarOrderID());
+		assertEquals(14,scheduleList.get(13).getOrderID());
 		//17u40
-		assertEquals(15,scheduleList.get(14).getCarOrderID());
+		assertEquals(15,scheduleList.get(14).getOrderID());
 		//18u30
-		assertEquals(16,scheduleList.get(15).getCarOrderID());
+		assertEquals(16,scheduleList.get(15).getOrderID());
 		//19u20
-		assertEquals(18,scheduleList.get(16).getCarOrderID());
+		assertEquals(18,scheduleList.get(16).getOrderID());
 		//20u20
-		assertEquals(19,scheduleList.get(17).getCarOrderID());
+		assertEquals(19,scheduleList.get(17).getOrderID());
 		//21u20
 		assertEquals(null,scheduleList.get(18));
 		//21u20
@@ -150,18 +150,18 @@ public class EffinciencySchedulingAlgorithmTest {
 
 		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, als);
 
-		assertEquals(10,scheduleList.get(0).getCarOrderID());
-		assertEquals(11,scheduleList.get(1).getCarOrderID());
-		assertEquals(9,scheduleList.get(2).getCarOrderID());
-		assertEquals(8,scheduleList.get(3).getCarOrderID());
-		assertEquals(7,scheduleList.get(4).getCarOrderID());
-		assertEquals(6,scheduleList.get(5).getCarOrderID());
-		assertEquals(5,scheduleList.get(6).getCarOrderID());
-		assertEquals(4,scheduleList.get(7).getCarOrderID());
-		assertEquals(3,scheduleList.get(8).getCarOrderID());
-		assertEquals(2,scheduleList.get(9).getCarOrderID());
-		assertEquals(1,scheduleList.get(10).getCarOrderID());
-		assertEquals(0,scheduleList.get(11).getCarOrderID());
+		assertEquals(10,scheduleList.get(0).getOrderID());
+		assertEquals(11,scheduleList.get(1).getOrderID());
+		assertEquals(9,scheduleList.get(2).getOrderID());
+		assertEquals(8,scheduleList.get(3).getOrderID());
+		assertEquals(7,scheduleList.get(4).getOrderID());
+		assertEquals(6,scheduleList.get(5).getOrderID());
+		assertEquals(5,scheduleList.get(6).getOrderID());
+		assertEquals(4,scheduleList.get(7).getOrderID());
+		assertEquals(3,scheduleList.get(8).getOrderID());
+		assertEquals(2,scheduleList.get(9).getOrderID());
+		assertEquals(1,scheduleList.get(10).getOrderID());
+		assertEquals(0,scheduleList.get(11).getOrderID());
 		assertEquals(null,scheduleList.get(12));
 		assertEquals(null,scheduleList.get(13));
 		assertEquals(null,scheduleList.get(14));
@@ -173,18 +173,18 @@ public class EffinciencySchedulingAlgorithmTest {
 
 		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, alsT);
 
-		assertEquals(10,scheduleList.get(0).getCarOrderID());
-		assertEquals(11,scheduleList.get(1).getCarOrderID());
-		assertEquals(9,scheduleList.get(2).getCarOrderID());
-		assertEquals(8,scheduleList.get(3).getCarOrderID());
-		assertEquals(7,scheduleList.get(4).getCarOrderID());
-		assertEquals(6,scheduleList.get(5).getCarOrderID());
-		assertEquals(5,scheduleList.get(6).getCarOrderID());
-		assertEquals(4,scheduleList.get(7).getCarOrderID());
-		assertEquals(3,scheduleList.get(8).getCarOrderID());
-		assertEquals(2,scheduleList.get(9).getCarOrderID());
-		assertEquals(1,scheduleList.get(10).getCarOrderID());
-		assertEquals(0,scheduleList.get(11).getCarOrderID());
+		assertEquals(10,scheduleList.get(0).getOrderID());
+		assertEquals(11,scheduleList.get(1).getOrderID());
+		assertEquals(9,scheduleList.get(2).getOrderID());
+		assertEquals(8,scheduleList.get(3).getOrderID());
+		assertEquals(7,scheduleList.get(4).getOrderID());
+		assertEquals(6,scheduleList.get(5).getOrderID());
+		assertEquals(5,scheduleList.get(6).getOrderID());
+		assertEquals(4,scheduleList.get(7).getOrderID());
+		assertEquals(3,scheduleList.get(8).getOrderID());
+		assertEquals(2,scheduleList.get(9).getOrderID());
+		assertEquals(1,scheduleList.get(10).getOrderID());
+		assertEquals(0,scheduleList.get(11).getOrderID());
 		assertEquals(null,scheduleList.get(12));
 		assertEquals(null,scheduleList.get(13));
 		assertEquals(null,scheduleList.get(14));
@@ -197,23 +197,23 @@ public class EffinciencySchedulingAlgorithmTest {
 		ArrayList<Order> orderList = this.makeOrderListWithSingleTaskOrderWithNoFailure();
 
 		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, alsT);
-		assertEquals(12,scheduleList.get(0).getCarOrderID());
-		assertEquals(13,scheduleList.get(1).getCarOrderID());
+		assertEquals(12,scheduleList.get(0).getOrderID());
+		assertEquals(13,scheduleList.get(1).getOrderID());
 		assertEquals(null,scheduleList.get(2));
-		assertEquals(10,scheduleList.get(3).getCarOrderID());
-		assertEquals(11,scheduleList.get(4).getCarOrderID());
-		assertEquals(9,scheduleList.get(5).getCarOrderID());
-		assertEquals(8,scheduleList.get(6).getCarOrderID());
-		assertEquals(7,scheduleList.get(7).getCarOrderID());
-		assertEquals(6,scheduleList.get(8).getCarOrderID());
-		assertEquals(5,scheduleList.get(9).getCarOrderID());
-		assertEquals(4,scheduleList.get(10).getCarOrderID());
-		assertEquals(3,scheduleList.get(11).getCarOrderID());
-		assertEquals(2,scheduleList.get(12).getCarOrderID());
-		assertEquals(1,scheduleList.get(13).getCarOrderID());
-		assertEquals(0,scheduleList.get(14).getCarOrderID());
-		assertEquals(14,scheduleList.get(15).getCarOrderID());
-		assertEquals(15,scheduleList.get(16).getCarOrderID());
+		assertEquals(10,scheduleList.get(3).getOrderID());
+		assertEquals(11,scheduleList.get(4).getOrderID());
+		assertEquals(9,scheduleList.get(5).getOrderID());
+		assertEquals(8,scheduleList.get(6).getOrderID());
+		assertEquals(7,scheduleList.get(7).getOrderID());
+		assertEquals(6,scheduleList.get(8).getOrderID());
+		assertEquals(5,scheduleList.get(9).getOrderID());
+		assertEquals(4,scheduleList.get(10).getOrderID());
+		assertEquals(3,scheduleList.get(11).getOrderID());
+		assertEquals(2,scheduleList.get(12).getOrderID());
+		assertEquals(1,scheduleList.get(13).getOrderID());
+		assertEquals(0,scheduleList.get(14).getOrderID());
+		assertEquals(14,scheduleList.get(15).getOrderID());
+		assertEquals(15,scheduleList.get(16).getOrderID());
 		assertEquals(null,scheduleList.get(17));
 		assertEquals(null,scheduleList.get(18));
 		assertEquals(null,scheduleList.get(19));
@@ -226,40 +226,40 @@ public class EffinciencySchedulingAlgorithmTest {
 
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
-		assertEquals(10,scheduleList.get(0).getScheduledOrder().getCarOrderID());//70
+		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//7u10
-		assertEquals(11,scheduleList.get(1).getScheduledOrder().getCarOrderID());//50
+		assertEquals(11,scheduleList.get(1).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(1).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u20
-		assertEquals(9,scheduleList.get(2).getScheduledOrder().getCarOrderID());//60
+		assertEquals(9,scheduleList.get(2).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(2).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//9u30
-		assertEquals(8,scheduleList.get(3).getScheduledOrder().getCarOrderID());//50
+		assertEquals(8,scheduleList.get(3).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(3).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//10u30
-		assertEquals(7,scheduleList.get(4).getScheduledOrder().getCarOrderID());//70
+		assertEquals(7,scheduleList.get(4).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(4).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//11u40
-		assertEquals(6,scheduleList.get(5).getScheduledOrder().getCarOrderID());//60
+		assertEquals(6,scheduleList.get(5).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(5).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//12u50
-		assertEquals(5,scheduleList.get(6).getScheduledOrder().getCarOrderID());//50
+		assertEquals(5,scheduleList.get(6).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(6).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//14u00
-		assertEquals(4,scheduleList.get(7).getScheduledOrder().getCarOrderID());//70
+		assertEquals(4,scheduleList.get(7).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(7).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//15h10
-		assertEquals(3,scheduleList.get(8).getScheduledOrder().getCarOrderID());//60
+		assertEquals(3,scheduleList.get(8).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(8).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//16h20
-		assertEquals(2,scheduleList.get(9).getScheduledOrder().getCarOrderID());//50
+		assertEquals(2,scheduleList.get(9).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(9).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//17h30
-		assertEquals(1,scheduleList.get(10).getScheduledOrder().getCarOrderID());//70
+		assertEquals(1,scheduleList.get(10).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(10).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//18h40
-		assertEquals(0,scheduleList.get(11).getScheduledOrder().getCarOrderID());//60
+		assertEquals(0,scheduleList.get(11).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(11).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//19h50
 		assertEquals(null,scheduleList.get(12).getScheduledOrder());//0
@@ -278,50 +278,50 @@ public class EffinciencySchedulingAlgorithmTest {
 
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
-		assertEquals(12,scheduleList.get(0).getScheduledOrder().getCarOrderID());
+		assertEquals(12,scheduleList.get(0).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
-		assertEquals(13,scheduleList.get(1).getScheduledOrder().getCarOrderID());
+		assertEquals(13,scheduleList.get(1).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(1).getScheduledTime());
-		assertEquals(10,scheduleList.get(2).getScheduledOrder().getCarOrderID());//70
+		assertEquals(10,scheduleList.get(2).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(2).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//7u10
-		assertEquals(11,scheduleList.get(3).getScheduledOrder().getCarOrderID());//50
+		assertEquals(11,scheduleList.get(3).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(3).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u20
-		assertEquals(9,scheduleList.get(4).getScheduledOrder().getCarOrderID());//60
+		assertEquals(9,scheduleList.get(4).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(4).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//9u30
-		assertEquals(8,scheduleList.get(5).getScheduledOrder().getCarOrderID());//50
+		assertEquals(8,scheduleList.get(5).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(5).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//10u30
-		assertEquals(7,scheduleList.get(6).getScheduledOrder().getCarOrderID());//70
+		assertEquals(7,scheduleList.get(6).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(6).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//11u40
-		assertEquals(6,scheduleList.get(7).getScheduledOrder().getCarOrderID());//60
+		assertEquals(6,scheduleList.get(7).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(7).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//12u50
-		assertEquals(5,scheduleList.get(8).getScheduledOrder().getCarOrderID());//50
+		assertEquals(5,scheduleList.get(8).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(8).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//14u00
-		assertEquals(4,scheduleList.get(9).getScheduledOrder().getCarOrderID());//70
+		assertEquals(4,scheduleList.get(9).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(9).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//15h10
-		assertEquals(3,scheduleList.get(10).getScheduledOrder().getCarOrderID());//60
+		assertEquals(3,scheduleList.get(10).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(10).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//16h20
-		assertEquals(2,scheduleList.get(11).getScheduledOrder().getCarOrderID());//50
+		assertEquals(2,scheduleList.get(11).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(11).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//17h30
-		assertEquals(1,scheduleList.get(12).getScheduledOrder().getCarOrderID());//70
+		assertEquals(1,scheduleList.get(12).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(12).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//18h40
-		assertEquals(0,scheduleList.get(13).getScheduledOrder().getCarOrderID());//60
+		assertEquals(0,scheduleList.get(13).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(13).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//19u50
-		assertEquals(14,scheduleList.get(14).getScheduledOrder().getCarOrderID());
+		assertEquals(14,scheduleList.get(14).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(14).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//21h00
-		assertEquals(15,scheduleList.get(15).getScheduledOrder().getCarOrderID());
+		assertEquals(15,scheduleList.get(15).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(15).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//22u
 		assertEquals(null,scheduleList.get(16).getScheduledOrder());//0
@@ -340,50 +340,50 @@ public class EffinciencySchedulingAlgorithmTest {
 
 		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
-		assertEquals(12,scheduleList.get(0).getScheduledOrder().getCarOrderID());
+		assertEquals(12,scheduleList.get(0).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
-		assertEquals(13,scheduleList.get(1).getScheduledOrder().getCarOrderID());
+		assertEquals(13,scheduleList.get(1).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(1).getScheduledTime());
-		assertEquals(16,scheduleList.get(2).getScheduledOrder().getCarOrderID());//60
+		assertEquals(16,scheduleList.get(2).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(2).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//7u10
-		assertEquals(10,scheduleList.get(3).getScheduledOrder().getCarOrderID());//70
+		assertEquals(10,scheduleList.get(3).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(3).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u10
-		assertEquals(11,scheduleList.get(4).getScheduledOrder().getCarOrderID());//50
+		assertEquals(11,scheduleList.get(4).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(4).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//9u20
-		assertEquals(9,scheduleList.get(5).getScheduledOrder().getCarOrderID());//60
+		assertEquals(9,scheduleList.get(5).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(5).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//10u30
-		assertEquals(8,scheduleList.get(6).getScheduledOrder().getCarOrderID());//50
+		assertEquals(8,scheduleList.get(6).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(6).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//11u30
-		assertEquals(7,scheduleList.get(7).getScheduledOrder().getCarOrderID());//70
+		assertEquals(7,scheduleList.get(7).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(7).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//12u40
-		assertEquals(6,scheduleList.get(8).getScheduledOrder().getCarOrderID());//60
+		assertEquals(6,scheduleList.get(8).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(8).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//13u50
-		assertEquals(5,scheduleList.get(9).getScheduledOrder().getCarOrderID());//50
+		assertEquals(5,scheduleList.get(9).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(9).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//15u00
-		assertEquals(4,scheduleList.get(10).getScheduledOrder().getCarOrderID());//70
+		assertEquals(4,scheduleList.get(10).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(10).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//16h10
-		assertEquals(3,scheduleList.get(11).getScheduledOrder().getCarOrderID());//60
+		assertEquals(3,scheduleList.get(11).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(11).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//17h20
-		assertEquals(2,scheduleList.get(12).getScheduledOrder().getCarOrderID());//50
+		assertEquals(2,scheduleList.get(12).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList.get(12).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//18h30
-		assertEquals(1,scheduleList.get(13).getScheduledOrder().getCarOrderID());//70
+		assertEquals(1,scheduleList.get(13).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(13).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//19h40
-		assertEquals(14,scheduleList.get(14).getScheduledOrder().getCarOrderID());
+		assertEquals(14,scheduleList.get(14).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(14).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//20h50
-		assertEquals(15,scheduleList.get(15).getScheduledOrder().getCarOrderID());
+		assertEquals(15,scheduleList.get(15).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(15).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//22u
 		assertEquals(null,scheduleList.get(16).getScheduledOrder());//0
@@ -396,7 +396,7 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(time,scheduleList.get(18).getScheduledTime());
 		// new day
 		time = new GregorianCalendar(2000,0,2,6,0,0);//6u
-		assertEquals(0,scheduleList.get(19).getScheduledOrder().getCarOrderID());//60
+		assertEquals(0,scheduleList.get(19).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(19).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//7u
 		assertEquals(null,scheduleList.get(20).getScheduledOrder());//0
@@ -419,48 +419,48 @@ public class EffinciencySchedulingAlgorithmTest {
 		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
 		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
-		assertEquals(13,scheduleList2.get(0).getScheduledOrder().getCarOrderID());
+		assertEquals(13,scheduleList2.get(0).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList2.get(0).getScheduledTime());
-		assertEquals(16,scheduleList2.get(1).getScheduledOrder().getCarOrderID());//60
+		assertEquals(16,scheduleList2.get(1).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(1).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//7u10
-		assertEquals(10,scheduleList2.get(2).getScheduledOrder().getCarOrderID());//70
+		assertEquals(10,scheduleList2.get(2).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList2.get(2).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u10
-		assertEquals(11,scheduleList2.get(3).getScheduledOrder().getCarOrderID());//50
+		assertEquals(11,scheduleList2.get(3).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(3).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//9u20
-		assertEquals(9,scheduleList2.get(4).getScheduledOrder().getCarOrderID());//60
+		assertEquals(9,scheduleList2.get(4).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(4).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//10u30
-		assertEquals(8,scheduleList2.get(5).getScheduledOrder().getCarOrderID());//50
+		assertEquals(8,scheduleList2.get(5).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(5).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//11u30
-		assertEquals(7,scheduleList2.get(6).getScheduledOrder().getCarOrderID());//70
+		assertEquals(7,scheduleList2.get(6).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList2.get(6).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//12u40
-		assertEquals(6,scheduleList2.get(7).getScheduledOrder().getCarOrderID());//60
+		assertEquals(6,scheduleList2.get(7).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(7).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//13u50
-		assertEquals(5,scheduleList2.get(8).getScheduledOrder().getCarOrderID());//50
+		assertEquals(5,scheduleList2.get(8).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(8).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//15u00
-		assertEquals(4,scheduleList2.get(9).getScheduledOrder().getCarOrderID());//70
+		assertEquals(4,scheduleList2.get(9).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList2.get(9).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//16h10
-		assertEquals(3,scheduleList2.get(10).getScheduledOrder().getCarOrderID());//60
+		assertEquals(3,scheduleList2.get(10).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(10).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//17h20
-		assertEquals(2,scheduleList2.get(11).getScheduledOrder().getCarOrderID());//50
+		assertEquals(2,scheduleList2.get(11).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(11).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//18h30
-		assertEquals(1,scheduleList2.get(12).getScheduledOrder().getCarOrderID());//70
+		assertEquals(1,scheduleList2.get(12).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList2.get(12).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//19h40
-		assertEquals(14,scheduleList2.get(13).getScheduledOrder().getCarOrderID());
+		assertEquals(14,scheduleList2.get(13).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList2.get(13).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//20h50
-		assertEquals(15,scheduleList2.get(14).getScheduledOrder().getCarOrderID());
+		assertEquals(15,scheduleList2.get(14).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList2.get(14).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//22u
 		assertEquals(null,scheduleList2.get(15).getScheduledOrder());//0
@@ -473,7 +473,7 @@ public class EffinciencySchedulingAlgorithmTest {
 		assertEquals(time,scheduleList2.get(17).getScheduledTime());
 		// new day
 		time = new GregorianCalendar(2000,0,2,6,0,0);//6u
-		assertEquals(0,scheduleList2.get(18).getScheduledOrder().getCarOrderID());//60
+		assertEquals(0,scheduleList2.get(18).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(18).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//7u
 		assertEquals(null,scheduleList2.get(19).getScheduledOrder());//0
@@ -496,37 +496,37 @@ public class EffinciencySchedulingAlgorithmTest {
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		time.add(GregorianCalendar.MINUTE, 70);//7u10
 		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,(GregorianCalendar) time.clone(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
-		assertEquals(11,scheduleList2.get(0).getScheduledOrder().getCarOrderID());//50
+		assertEquals(11,scheduleList2.get(0).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u20
-		assertEquals(9,scheduleList2.get(1).getScheduledOrder().getCarOrderID());//60
+		assertEquals(9,scheduleList2.get(1).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(1).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//9u30
-		assertEquals(8,scheduleList2.get(2).getScheduledOrder().getCarOrderID());//50
+		assertEquals(8,scheduleList2.get(2).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(2).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//10u30
-		assertEquals(7,scheduleList2.get(3).getScheduledOrder().getCarOrderID());//70
+		assertEquals(7,scheduleList2.get(3).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList2.get(3).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//11u40
-		assertEquals(6,scheduleList2.get(4).getScheduledOrder().getCarOrderID());//60
+		assertEquals(6,scheduleList2.get(4).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(4).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//12u50
-		assertEquals(5,scheduleList2.get(5).getScheduledOrder().getCarOrderID());//50
+		assertEquals(5,scheduleList2.get(5).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(5).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//14u00
-		assertEquals(4,scheduleList2.get(6).getScheduledOrder().getCarOrderID());//70
+		assertEquals(4,scheduleList2.get(6).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList2.get(6).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//15h10
-		assertEquals(3,scheduleList2.get(7).getScheduledOrder().getCarOrderID());//60
+		assertEquals(3,scheduleList2.get(7).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(7).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//16h20
-		assertEquals(2,scheduleList2.get(8).getScheduledOrder().getCarOrderID());//50
+		assertEquals(2,scheduleList2.get(8).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(8).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//17h30
-		assertEquals(1,scheduleList2.get(9).getScheduledOrder().getCarOrderID());//70
+		assertEquals(1,scheduleList2.get(9).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList2.get(9).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//18h40
-		assertEquals(0,scheduleList2.get(10).getScheduledOrder().getCarOrderID());//60
+		assertEquals(0,scheduleList2.get(10).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList2.get(10).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//19h50
 		assertEquals(null,scheduleList2.get(11).getScheduledOrder());//0
@@ -605,29 +605,29 @@ public class EffinciencySchedulingAlgorithmTest {
 
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
 
-		orderList.add(new CarOrder(0, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(0, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(1, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(1, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(2, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(2, garageHolder, config3, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(3, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(3, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(4, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(4, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(5, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(5, garageHolder, config3, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(6, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(6, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(7, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(7, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(8, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(8, garageHolder, config3, time));
 		time.add(GregorianCalendar.MINUTE, -1);
-		orderList.add(new CarOrder(9, garageHolder, config1, time));
+		orderList.add(new VehicleOrder(9, garageHolder, config1, time));
 		time.add(GregorianCalendar.HOUR, -1);
-		orderList.add(new CarOrder(10, garageHolder, config2, time));
+		orderList.add(new VehicleOrder(10, garageHolder, config2, time));
 		time.add(GregorianCalendar.MINUTE, 1);
-		orderList.add(new CarOrder(11, garageHolder, config3, time));
+		orderList.add(new VehicleOrder(11, garageHolder, config3, time));
 		return orderList;
 	}
 

@@ -36,17 +36,17 @@ public class AssemblyStatusView {
 	}
 	
 	/**
-	 * Returns the car order at the workstation indicated with the id.
+	 * Returns the order at the workstation indicated with the id.
 	 * 
 	 * @param workstationId
 	 * 		The id that indicates the workstation.
-	 * @return The car order at the indicated workstation. If no car order is present, it will return -1.
+	 * @return The order at the indicated workstation. If no order is present, it will return -1.
 	 * @throws DoesNotExistException
 	 * 		If the workstation with the associated id does not exist.
 	 */
-	public int getCarOrderIdOf(WorkstationType workstationType) throws DoesNotExistException{
-		if(getWorkstation(workstationType) != null && getWorkstation(workstationType).getCarAssemblyProcess() != null){
-			return getWorkstation(workstationType).getCarAssemblyProcess().getOrder().getCarOrderID();
+	public int getOrderIdOf(WorkstationType workstationType) throws DoesNotExistException{
+		if(getWorkstation(workstationType) != null && getWorkstation(workstationType).getVehicleAssemblyProcess() != null){
+			return getWorkstation(workstationType).getVehicleAssemblyProcess().getOrder().getOrderID();
 		}
 		return -1;
 	}

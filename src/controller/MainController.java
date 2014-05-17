@@ -2,13 +2,13 @@ package controller;
 
 import java.util.ArrayList;
 
-import controller.carMechanic.CarMechanicController;
 import controller.customShop.CustomShopController;
 import controller.garageHolder.GarageHolderController;
 import controller.manager.ManagerController;
+import controller.mechanic.MechanicController;
 import domain.Company;
 import domain.InternalFailureException;
-import domain.user.CarMechanic;
+import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 import domain.user.Manager;
@@ -17,7 +17,7 @@ public class MainController {
 
 	protected UIInterface ui;
 
-	private CarMechanicController carMechanicController;
+	private MechanicController mechanicController;
 	private CustomShopController customShopController;
 	private GarageHolderController garageHolderController;
 	private ManagerController managerController;
@@ -29,7 +29,7 @@ public class MainController {
 	public MainController(UIInterface ui) {
 		this.ui = ui;
 
-		this.carMechanicController = new CarMechanicController();
+		this.mechanicController = new MechanicController();
 		this.customShopController = new CustomShopController();
 		this.garageHolderController = new GarageHolderController();
 		this.managerController = new ManagerController();
@@ -41,21 +41,21 @@ public class MainController {
 			company = new Company();
 		
 
-		CarMechanic carMechanic = new CarMechanic(1);
+		Mechanic mechanic = new Mechanic(1);
 		CustomShopManager customShopManager = new CustomShopManager(2);
 		GarageHolder garageHolder = new GarageHolder(3);
 		Manager manager = new Manager(4);
 		
 		while (true) {
 			ArrayList<String> possibilities = new ArrayList<String>();
-			possibilities.add("Car mechanic");
+			possibilities.add("Mechanic");
 			possibilities.add("Custom shop manager");
 			possibilities.add("Garage holder");
 			possibilities.add("Manager");
 			possibilities.add("Exit");
 			String answer =ui.askWithPossibilities("Tell us what you are.", possibilities);
 			switch(answer) {
-			case "Car mechanic":		carMechanicController.run(ui, company, carMechanic);
+			case "Mechanic":		mechanicController.run(ui, company, mechanic);
 										break;
 			case "Custom shop manager":	customShopController.run(ui, company, customShopManager);
 										break;

@@ -10,13 +10,13 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
@@ -24,10 +24,10 @@ import domain.policies.InvalidConfigurationException;
 import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.user.GarageHolder;
-import domain.assembly.CarAssemblyProcess;
+import domain.assembly.VehicleAssemblyProcess;
 import domain.assembly.Workstation;
 
-public class CarAssemblyProcessTest {
+public class VehicleAssemblyProcessTest {
 
 	Workstation w1;
 	Workstation w2;
@@ -37,11 +37,11 @@ public class CarAssemblyProcessTest {
 	ArrayList<OptionType> taskTypes2;
 	ArrayList<OptionType> taskTypes3;
 	
-	CarAssemblyProcess process;
+	VehicleAssemblyProcess process;
 
 	
 	@Before
-	public void testCreate() throws IOException, CarModelCatalogException, InvalidConfigurationException{
+	public void testCreate() throws IOException, VehicleModelCatalogException, InvalidConfigurationException{
 		
 		// MAAK EEN AUTO MET OPTIONS EN MODEL AAN
 		
@@ -95,7 +95,7 @@ public class CarAssemblyProcessTest {
 		assertEquals(1020, process.getTotalTimeSpend());
 	}
 	
-	private CarOrder createCar() throws InvalidConfigurationException, IOException, CarModelCatalogException{
+	private VehicleOrder createCar() throws InvalidConfigurationException, IOException, VehicleModelCatalogException{
 		
 		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
@@ -104,9 +104,9 @@ public class CarAssemblyProcessTest {
 		Policy carOrderPolicy= pol4;
 		
 		
-		CarModelCatalog catalog = new CarModelCatalog();
-		CarModel carModel = null;
-		for(CarModel m : catalog.getAllModels()){
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModel carModel = null;
+		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){
 				carModel = m;
 				continue;
@@ -129,7 +129,7 @@ public class CarAssemblyProcessTest {
 		GarageHolder garageHolder = new GarageHolder(1);
 		
 		GregorianCalendar now = new GregorianCalendar();
-		CarOrder carOrder = new CarOrder(1, garageHolder, config, now);
+		VehicleOrder carOrder = new VehicleOrder(1, garageHolder, config, now);
 		return carOrder;
 	}
 	

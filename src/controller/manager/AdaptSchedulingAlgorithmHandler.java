@@ -51,7 +51,7 @@ public class AdaptSchedulingAlgorithmHandler {
 		if(chosenAlgorithm instanceof SpecificationBatchSchedulingAlgorithm){
 			SpecificationBatchSchedulingAlgorithm specBatch = (SpecificationBatchSchedulingAlgorithm) chosenAlgorithm;
 //			3. (a) The user indicates he wants to use the Specication Batch algorithm.
-//			4. The system shows a list of the sets of car options for which more
+//			4. The system shows a list of the sets of vehicle options for which more
 //			than 3 orders are pending in the production queue.
 //			5. The user selects one of these sets for batch processing
 			ArrayList<Configuration> possibleBatch = specBatch.searchForBatchConfiguration(assemblyLineScheduler);

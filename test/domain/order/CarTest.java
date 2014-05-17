@@ -8,13 +8,13 @@ import java.util.GregorianCalendar;
 
 import org.junit.Test;
 
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
@@ -30,7 +30,7 @@ public class CarTest {
 	private static ArrayList<Option> allOptions;
 
 	@Test
-	public void testCreate() throws IOException, CarModelCatalogException {
+	public void testCreate() throws IOException, VehicleModelCatalogException {
 
 		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
@@ -39,9 +39,9 @@ public class CarTest {
 
 
 		GarageHolder holder = new GarageHolder(1);
-		CarModelCatalog catalog = new CarModelCatalog();
-		CarModel carModel = null;
-		for(CarModel m : catalog.getAllModels()){
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModel carModel = null;
+		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){
 				carModel = m;
 				continue;
@@ -70,7 +70,7 @@ public class CarTest {
 			fail();
 		}
 
-		CarOrder car = new CarOrder(1, holder, config, new GregorianCalendar());
+		VehicleOrder car = new VehicleOrder(1, holder, config, new GregorianCalendar());
 		assertEquals(false, car.isCompleted());
 	}
 

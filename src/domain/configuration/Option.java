@@ -16,13 +16,13 @@ public class Option {
 	 * 		The description of the option.
 	 * @param type
 	 * 		The type of this option.
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 * 		If the description is null.
 	 * 		If the type is null.
 	 */
-	public Option(String description, OptionType type) throws CarModelCatalogException {
+	public Option(String description, OptionType type) throws VehicleModelCatalogException {
 		if(description == null || type == null)
-			throw new CarModelCatalogException("null in non null value of Option");
+			throw new VehicleModelCatalogException("null in non null value of Option");
 		this.incompatibles = new ArrayList<Option>();
 		this.description = description;
 		this.type = type;

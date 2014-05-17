@@ -33,20 +33,20 @@ public class CheckOrderDetailsHandler {
 			Collections.sort(completedOrders, comparator);
 
 			ArrayList<Calendar> completionEstimates = new ArrayList<Calendar>();
-			for (Order carOrder : pendingOrders)
-				completionEstimates.add(orderManager.completionEstimate(carOrder));
+			for (Order order : pendingOrders)
+				completionEstimates.add(orderManager.completionEstimate(order));
 			
 			// 2. The user indicates the order he wants to check the details for.
-			int answer = ui.askForCarOrder(pendingOrders, completedOrders, completionEstimates);
+			int answer = ui.askForOrder(pendingOrders, completedOrders, completionEstimates);
 			if (answer == 0)
 				return;
 			answer--;
 			// 3. The system shows the details of the order.
 			// 4. The user indicates he is finished viewing the details.
 			if (answer < pendingOrders.size())
-				ui.displayPendingCarOrderInfo(pendingOrders.get(answer), completionEstimates.get(answer));
+				ui.displayPendingOrderInfo(pendingOrders.get(answer), completionEstimates.get(answer));
 			else
-				ui.displayCompletedCarOrderInfo(completedOrders.get(answer));
+				ui.displayCompletedOrderInfo(completedOrders.get(answer));
 
 			
 		}

@@ -1,16 +1,16 @@
 package domain.configuration;
 
-public class CarModelCatalogException extends Exception {
+public class VehicleModelCatalogException extends Exception {
 
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * Constructor of CarModelCatalogException.
+	 * Constructor of VehicleModelCatalogException.
 	 * 
 	 * @param message
 	 * 		The message of this exception.
 	 */
-	public CarModelCatalogException(String message) {
+	public VehicleModelCatalogException(String message) {
 		super(message);
 	}
 }

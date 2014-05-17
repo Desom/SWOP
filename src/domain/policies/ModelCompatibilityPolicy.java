@@ -2,7 +2,7 @@ package domain.policies;
 
 import java.util.ArrayList;
 
-import domain.configuration.CarModel;
+import domain.configuration.VehicleModel;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 
@@ -23,16 +23,16 @@ public class ModelCompatibilityPolicy extends AlwaysPolicy {
 	}
 
 	/**
-	 * Returns a list of options of the given configuration which conflict with the car model.
+	 * Returns a list of options of the given configuration which conflict with the vehicle model.
 	 *  
 	 * @param configuration
 	 * 		The configuration to be checked on conflicts.
-	 * @return a list of options of the given configuration which conflict with the car model
+	 * @return a list of options of the given configuration which conflict with the vehicle model
 	 */
 	private ArrayList<Option> compatibilityCheck(Configuration configuration){
 		ArrayList<Option> conflictingOptions = new ArrayList<Option>();
 		
-		CarModel model = configuration.getModel();
+		VehicleModel model = configuration.getModel();
 		ArrayList<Option> possibleOptions = model.getPossibleOptions();
 		for(Option option : configuration.getAllOptions()){
 			if(!possibleOptions.contains(option)){
@@ -43,11 +43,11 @@ public class ModelCompatibilityPolicy extends AlwaysPolicy {
 	}
 	
 	/**
-	 * Checks whether the configuration has no options conflicting with the car model.
+	 * Checks whether the configuration has no options conflicting with the vehicle model.
 	 * 
 	 * @param configuration
 	 * 		The configuration to be checked.
-	 * @return True if the configuration has no options conflicting with the car model, otherwise false.
+	 * @return True if the configuration has no options conflicting with the vehicle model, otherwise false.
 	 */
 	@Override
 	protected boolean checkTest(Configuration configuration) {
@@ -55,11 +55,11 @@ public class ModelCompatibilityPolicy extends AlwaysPolicy {
 	}
 	
 	/**
-	 * Builds an exception message indicating which options in the configuration are conflicting with the car model.
+	 * Builds an exception message indicating which options in the configuration are conflicting with the vehicle model.
 	 * 
 	 * @param configuration
 	 * 		The configuration on which the message is based.
-	 * @return An exception message indicating which options in the configuration are conflicting with the car model.
+	 * @return An exception message indicating which options in the configuration are conflicting with the vehicle model.
 	 */
 	@Override
 	protected String buildMessage(Configuration configuration){

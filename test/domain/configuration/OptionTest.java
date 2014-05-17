@@ -3,7 +3,7 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import domain.configuration.CarModelCatalogException;
+import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
 
@@ -11,7 +11,7 @@ import domain.configuration.OptionType;
 public class OptionTest {
 	
 	@Test
-	public void testcreate() throws CarModelCatalogException {
+	public void testcreate() throws VehicleModelCatalogException {
 		Option opt = new Option("green", OptionType.Color);
 		assertEquals(opt.getDescription(), "green");
 	}
@@ -21,32 +21,32 @@ public class OptionTest {
 		try {
 			 new Option("red", null);
 			 fail();
-		} catch (CarModelCatalogException e) {
+		} catch (VehicleModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
 			 new Option("green", null);
 			 fail();
-		} catch (CarModelCatalogException e) {
+		} catch (VehicleModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
 			 new Option(null, OptionType.Color);
 			 fail();
-		} catch (CarModelCatalogException e) {
+		} catch (VehicleModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
 			 new Option("red", null);
 			 fail();
-		} catch (CarModelCatalogException e) {
+		} catch (VehicleModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 	}
 	
 	
 	@Test
-	public void testconflictsWith_False() throws CarModelCatalogException {
+	public void testconflictsWith_False() throws VehicleModelCatalogException {
 		Option opt = new Option("green", OptionType.Color);
 		Option opt2 = new Option("red", OptionType.Seats);
 		assertFalse(opt.conflictsWith(opt2));
@@ -54,7 +54,7 @@ public class OptionTest {
 	}
 
 	@Test
-	public void testconflictsWith_True() throws CarModelCatalogException {
+	public void testconflictsWith_True() throws VehicleModelCatalogException {
 		Option opt = new Option("green", OptionType.Color);
 		Option opt2 = new Option("red",  OptionType.Seats);
 		opt.addIncompatible(opt2);

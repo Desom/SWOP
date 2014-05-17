@@ -9,12 +9,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import domain.configuration.CarModel;
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModel;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.order.CarOrder;
+import domain.order.VehicleOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
@@ -22,18 +22,18 @@ import domain.policies.ModelCompatibilityPolicy;
 import domain.policies.Policy;
 import domain.user.GarageHolder;
 
-public class CarOrderTest {
+public class VehicleOrderTest {
 
 	public static ArrayList<Option> arrayOption;
-	public static CarModel carModel;
+	public static VehicleModel carModel;
 	public static GarageHolder garageHolder;
 	public static Configuration config;
 	public static Policy carOrderPolicy;
 
-	public CarOrder carOrder;
-	public CarOrder carOrder1;
-	public CarOrder carOrder2;
-	public CarOrder carOrderNew;
+	public VehicleOrder carOrder;
+	public VehicleOrder carOrder1;
+	public VehicleOrder carOrder2;
+	public VehicleOrder carOrderNew;
 	public GregorianCalendar now;
 	public GregorianCalendar now1;
 	public GregorianCalendar now3;
@@ -48,9 +48,9 @@ public class CarOrderTest {
 		carOrderPolicy= pol4;
 		
 		
-		CarModelCatalog catalog = new CarModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		carModel = null;
-		for(CarModel m : catalog.getAllModels()){
+		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){
 				carModel = m;
 				continue;
@@ -82,9 +82,9 @@ public class CarOrderTest {
 		now1.add(GregorianCalendar.HOUR_OF_DAY, 1);
 		now3 = (GregorianCalendar) now.clone();
 		now3.add(GregorianCalendar.HOUR_OF_DAY, 3);
-		carOrder = new CarOrder(0, garageHolder, config, now, now3, true);
-		carOrder1 = new CarOrder(1, garageHolder, config, now1);
-		carOrder2 = new CarOrder(3, garageHolder, config, now3);
+		carOrder = new VehicleOrder(0, garageHolder, config, now, now3, true);
+		carOrder1 = new VehicleOrder(1, garageHolder, config, now1);
+		carOrder2 = new VehicleOrder(3, garageHolder, config, now3);
 		//carOrderNew = new CarOrder(5, garageHolder,carModel, arrayOption);
 	}
 
@@ -92,7 +92,7 @@ public class CarOrderTest {
 	public void testCreation() {
 		//TODO meer testen?
 		assertEquals(carModel,carOrder.getConfiguration().getModel());
-		assertEquals(0,carOrder.getCarOrderID());
+		assertEquals(0,carOrder.getOrderID());
 		assertEquals(now3,carOrder.getDeliveredTime());
 		assertEquals(now,carOrder.getOrderedTime());
 		assertEquals(garageHolder.getId(),carOrder.getUserId());

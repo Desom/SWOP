@@ -21,44 +21,44 @@ public class Statistics {
 	}
 
 	/**
-	 * Get the median of the amount of cars that are produced per day.
+	 * Get the median of the amount of vehicles that are produced per day.
 	 * 
-	 * @return The median amount of cars produced per day
+	 * @return The median amount of vehicles produced per day
 	 */
-	public int getMedianCarsPerDay(){
+	public int getMedianVehiclesPerDay(){
 		update();
-		LinkedList<Integer> carsPerDay = getCarsPerDay();
-		Collections.sort(carsPerDay);
-		if(carsPerDay.size() == 0){
+		LinkedList<Integer> vehiclesPerDay = getVehiclesPerDay();
+		Collections.sort(vehiclesPerDay);
+		if(vehiclesPerDay.size() == 0){
 			return 0;
 		}else{
-			return carsPerDay.get((int) Math.floor(carsPerDay.size()/2));
+			return vehiclesPerDay.get((int) Math.floor(vehiclesPerDay.size()/2));
 		}
 	}
 
 	/**
-	 * Get the average of the amount of cars that are produced per day.
+	 * Get the average of the amount of vehicles that are produced per day.
 	 * 
-	 * @return The average amount of cars produced per day
+	 * @return The average amount of vehicles produced per day
 	 */
-	public int getAverageCarsPerDay(){
+	public int getAverageVehiclesPerDay(){
 		update();
-		LinkedList<Integer> carsPerDay = getCarsPerDay();
-		if(carsPerDay.size() == 0){
+		LinkedList<Integer> vehiclesPerDay = getVehiclesPerDay();
+		if(vehiclesPerDay.size() == 0){
 			return 0;
 		}
 		int average = 0;
-		for(int i : carsPerDay){
+		for(int i : vehiclesPerDay){
 			average += i;
 		}
-		average /= carsPerDay.size();
+		average /= vehiclesPerDay.size();
 		return average;
 	}
 
 	/**
-	 * Get the median delay time of all cars ever made. (Only delays greater than zero are taken into account).
+	 * Get the median delay time of all vehicles ever made. (Only delays greater than zero are taken into account).
 	 * 
-	 * @return The median delay time of all cars ever made.
+	 * @return The median delay time of all vehicles ever made.
 	 */
 	public int getMedianDelay(){
 		update();
@@ -72,9 +72,9 @@ public class Statistics {
 	}
 
 	/**
-	 * Get the average delay time of all cars ever made. (Only delays greater than zero are taken into account).
+	 * Get the average delay time of all vehicles ever made. (Only delays greater than zero are taken into account).
 	 * 
-	 * @return The average delay time of all cars ever made.
+	 * @return The average delay time of all vehicles ever made.
 	 */
 	public int getAverageDelay(){
 		update();
@@ -91,11 +91,11 @@ public class Statistics {
 	}
 
 	/**
-	 * Get the amount of cars that were completed yesterday.
+	 * Get the amount of vehicles that were completed yesterday.
 	 * 
-	 * @return The amount of cars completed yesterday.
+	 * @return The amount of vehicles completed yesterday.
 	 */
-	public int getAmountOfCars1DayAgo(){
+	public int getAmountOfVehicles1DayAgo(){
 		update();
 		int yesterday = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -1;
 		if(dailyMapping.get(yesterday) == null){
@@ -105,11 +105,11 @@ public class Statistics {
 	}
 
 	/**
-	 * Get the amount of cars that were completed 2 days ago.
+	 * Get the amount of vehicles that were completed 2 days ago.
 	 * 
-	 * @return The amount of cars completed 2 days ago.
+	 * @return The amount of vehicles completed 2 days ago.
 	 */
-	public int getAmountOfCars2DaysAgo(){
+	public int getAmountOfVehicles2DaysAgo(){
 		update();
 		int day = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -2;
 		if(dailyMapping.get(day) == null){
@@ -119,9 +119,9 @@ public class Statistics {
 	}
 
 	/**
-	 * Get the delay time of the last car that had a delay.
+	 * Get the delay time of the last vehicle that had a delay.
 	 * 
-	 * @return the delay time of the last car that had a delay.
+	 * @return the delay time of the last vehicle that had a delay.
 	 */
 	public int getLastDelay(){
 		update();
@@ -153,9 +153,9 @@ public class Statistics {
 	}
 
 	/**
-	 * Get the delay time of the second to last car that had a delay.
+	 * Get the delay time of the second to last vehicle that had a delay.
 	 * 
-	 * @return the delay time of the second to last car that had a delay.
+	 * @return the delay time of the second to last vehicle that had a delay.
 	 */
 	public int getSecondToLastDelay(){
 		update();
@@ -210,24 +210,24 @@ public class Statistics {
 		}
 	}
 
-	private LinkedList<Integer> getCarsPerDay(){
-		LinkedList<Integer> carsPerDay = new LinkedList<Integer>();
+	private LinkedList<Integer> getVehiclesPerDay(){
+		LinkedList<Integer> vehiclesPerDay = new LinkedList<Integer>();
 		LinkedList<LinkedList<Order>> l = new LinkedList<LinkedList<Order>>();
 		for(LinkedList<Order> list : this.dailyMapping.values()){
 				l.add(list);
 		}
 		l.remove(this.dailyMapping.get(this.orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR)));
 		for(LinkedList<Order> list : l){
-			carsPerDay.add(list.size());
+			vehiclesPerDay.add(list.size());
 		}
-		return carsPerDay;
+		return vehiclesPerDay;
 	}
 
 	private LinkedList<Integer> getDelays(){
 		LinkedList<Integer> delays = new LinkedList<Integer>();
 		for(LinkedList<Order> list : this.dailyMapping.values()){
 			for(Order o : list){
-				if(o.getCarOrderID() == 83){
+				if(o.getOrderID() == 83){
 				}
 				if(o.getDelay() > 0){
 					delays.add(o.getDelay());
@@ -251,7 +251,7 @@ public class Statistics {
 	}
 	
 	/**
-	 * A customized comparator class to compare car orders on delivered time.
+	 * A customized comparator class to compare vehicle orders on delivered time.
 	 */
 	class OrderComparator implements Comparator<Order> {
 		@Override

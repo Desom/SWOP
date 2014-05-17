@@ -19,13 +19,13 @@ import domain.policies.SingleTaskOrderTaskTypePolicy;
 
 public class PolicyTest {
 
-	CarModelCatalog cmc;
+	VehicleModelCatalog cmc;
 	Policy policyChainCarOrders;
 	Policy policyChainSTOrders;
 
 	@Before
-	public void makePolicies() throws IOException, CarModelCatalogException {
-		this.cmc = new CarModelCatalog();
+	public void makePolicies() throws IOException, VehicleModelCatalogException {
+		this.cmc = new VehicleModelCatalog();
 
 		//Creates the car order policy chain.
 		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());

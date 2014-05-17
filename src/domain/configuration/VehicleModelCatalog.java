@@ -4,25 +4,25 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarModelCatalog {
+public class VehicleModelCatalog {
 	
 	private ArrayList<Option> allOptions;
-	private ArrayList<CarModel> allCarModels;
+	private ArrayList<VehicleModel> allModels;
 	public static OptionTypeCreator optionTypeCreator = new OptionTypeCreator();
 
 	/**
-	 * Constructor of CarModelCatalog.
+	 * Constructor of VehicleModelCatalog.
 	 * 
 	 * @throws IOException
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 */
-	public CarModelCatalog() throws IOException, CarModelCatalogException{
+	public VehicleModelCatalog() throws IOException, VehicleModelCatalogException{
 		allOptions = (new OptionCreator()).createOptions();
-		allCarModels= (new ModelCreator(this.getAllOptions())).createModels();
+		allModels= (new ModelCreator(this.getAllOptions())).createModels();
 	}
 
 	/**
-	 * Constructor of CarModelCatalog.
+	 * Constructor of VehicleModelCatalog.
 	 * 
 	 * @param optionPath
 	 * 		The path to the file containing the options.
@@ -31,11 +31,11 @@ public class CarModelCatalog {
 	 * @param modelPath
 	 * 		The path to the file containing the models.
 	 * @throws IOException
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 */
-	public CarModelCatalog(String optionPath, String dependancyPath, String modelPath) throws IOException, CarModelCatalogException{
+	public VehicleModelCatalog(String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleModelCatalogException{
 		allOptions = (new OptionCreator(optionPath,dependancyPath)).createOptions();
-		allCarModels= (new ModelCreator(this.getAllOptions(),modelPath)).createModels();
+		allModels= (new ModelCreator(this.getAllOptions(),modelPath)).createModels();
 	}
 
 	/**
@@ -44,8 +44,8 @@ public class CarModelCatalog {
 	 * @return the list of all models
 	 */
 	@SuppressWarnings("unchecked")
-	public List<CarModel> getAllModels()  {
-		return  (List<CarModel>) allCarModels.clone();
+	public List<VehicleModel> getAllModels()  {
+		return  (List<VehicleModel>) allModels.clone();
 
 	}
 	

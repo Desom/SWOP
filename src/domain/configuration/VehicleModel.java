@@ -2,31 +2,31 @@ package domain.configuration;
 import java.util.ArrayList;
 
 
-public class CarModel {
+public class VehicleModel {
 	
 	private final String name;
 	private final ArrayList<Option> possibleOptions;
 	private final int expectedTaskTime;
 	
 	/**
-	 * Constructor of CarModel.
+	 * Constructor of VehicleModel.
 	 * 
 	 * @param name
-	 * 		Name of the car model.
+	 * 		Name of the vehicle model.
 	 * @param possibleOptions
-	 * 		A list of options which are possible for this car model.
+	 * 		A list of options which are possible for this vehicle model.
 	 * @param expectedTaskTime
-	 * 		The time it normally takes to complete a task of this car model.
-	 * @throws CarModelCatalogException
+	 * 		The time it normally takes to complete a task of this vehicle model.
+	 * @throws VehicleModelCatalogException
 	 * 		If the name or possibleOptions equals null or if an option type is not represented in the possibleOptions.
 	 */
-	public CarModel(String name, ArrayList<Option> possibleOptions, int expectedTaskTime) throws CarModelCatalogException{
+	public VehicleModel(String name, ArrayList<Option> possibleOptions, int expectedTaskTime) throws VehicleModelCatalogException{
 		if(name == null || possibleOptions == null)
-			throw new CarModelCatalogException("null in non null value of Model");
+			throw new VehicleModelCatalogException("null in non null value of Model");
 
-		for(OptionType type:CarModelCatalog.optionTypeCreator.getAllTypes()){
+		for(OptionType type:VehicleModelCatalog.optionTypeCreator.getAllTypes()){
 			if(type.isMandatory() && !existstype(type, possibleOptions))
-				throw new CarModelCatalogException("Missing type: "+ type);
+				throw new VehicleModelCatalogException("Missing type: "+ type);
 		}
 		this.possibleOptions = possibleOptions;
 		this.name = name;
@@ -34,17 +34,17 @@ public class CarModel {
 	}
 	
 	/**
-	 * Constructor of CarModel.
-	 * Creates a car model with a default expected working time of 60 minutes.
+	 * Constructor of VehicleModel.
+	 * Creates a vehicle model with a default expected working time of 60 minutes.
 	 * 
 	 * @param name
-	 * 		Name of the car model.
+	 * 		Name of the vehicle model.
 	 * @param possibleOptions
-	 * 		A list of options which are possible for this car model.
-	 * @throws CarModelCatalogException
+	 * 		A list of options which are possible for this vehicle model.
+	 * @throws VehicleModelCatalogException
 	 * 		If the name or possibleOptions equals null or if an option type is not represented in the possibleOptions.
 	 */
-	public CarModel(String name, ArrayList<Option> possibleOptions) throws CarModelCatalogException{
+	public VehicleModel(String name, ArrayList<Option> possibleOptions) throws VehicleModelCatalogException{
 		this(name, possibleOptions, 60);
 	}
 	
@@ -64,9 +64,9 @@ public class CarModel {
 	}
 
 	/**
-	 * Returns a list of possible options for this car model.
+	 * Returns a list of possible options for this vehicle model.
 	 * 
-	 * @return a list of possible options for this car model
+	 * @return a list of possible options for this vehicle model
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Option> getPossibleOptions() {
@@ -74,9 +74,9 @@ public class CarModel {
 	}
 
 	/**
-	 * Returns the name of this car model.
+	 * Returns the name of this vehicle model.
 	 * 
-	 * @return the name of this car model
+	 * @return the name of this vehicle model
 	 */
 	public String getName() {
 		return name;

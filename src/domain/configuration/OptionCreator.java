@@ -39,10 +39,10 @@ public class OptionCreator {
 	 * 
 	 * @return all options contained in the file.
 	 * @throws IOException
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 * 		If an option line is not in the right format.
 	 */
-	public ArrayList<Option> createOptions() throws IOException, CarModelCatalogException{
+	public ArrayList<Option> createOptions() throws IOException, VehicleModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(optionpath));
 		this.allOptions = new HashMap<String,Option>();
 		String inputline = input.readLine();
@@ -61,10 +61,10 @@ public class OptionCreator {
 		return new ArrayList<Option>(allOptions.values());
 	}
 
-	private void processDependancyLine(String inputline) throws CarModelCatalogException {
+	private void processDependancyLine(String inputline) throws VehicleModelCatalogException {
 		String[] input=inputline.split(";");
-		if(input.length != 2) throw new CarModelCatalogException("Dependancy: wrong input format: " + inputline);
-		if(!allOptions.containsKey(input[0])) throw new CarModelCatalogException("Option does not exist: " + input[0]);
+		if(input.length != 2) throw new VehicleModelCatalogException("Dependancy: wrong input format: " + inputline);
+		if(!allOptions.containsKey(input[0])) throw new VehicleModelCatalogException("Option does not exist: " + input[0]);
 		ArrayList<String> optionNames = new ArrayList<String>();
 		for(String j:input[1].split(","))optionNames.add(j);
 		allOptions.get(input[0]).addDependancy(collectOption(optionNames));
@@ -73,16 +73,16 @@ public class OptionCreator {
 	 * Processes a line which stores the information of a single option.
 	 * @param inputline
 	 * 		The line to be processed.
-	 * @throws CarModelCatalogException 
+	 * @throws VehicleModelCatalogException 
 	 * 		If the option the line describes already exists
 	 * 		If the line isn't in the right format
 	 * 		If the option the line describes is of the wrong subtype
 	 * 		IF the lines use an option that does not exist
 	 */
-	private void processOptionLine(String inputline) throws CarModelCatalogException   {
+	private void processOptionLine(String inputline) throws VehicleModelCatalogException   {
 		String[] input=inputline.split(";");
-		if(input.length != 3) throw new CarModelCatalogException("Option: wrong input format: " + inputline);
-		if(allOptions.containsKey(input[0])) throw new CarModelCatalogException("Option already exists: " + input[0]);
+		if(input.length != 3) throw new VehicleModelCatalogException("Option: wrong input format: " + inputline);
+		if(allOptions.containsKey(input[0])) throw new VehicleModelCatalogException("Option already exists: " + input[0]);
 		ArrayList<String> incomp = new ArrayList<String>(Arrays.asList(input[2].split(",")));
 		ArrayList<String> comp = new ArrayList<String>();
 		comp.addAll(allOptions.keySet());
@@ -122,13 +122,13 @@ public class OptionCreator {
 	 * 		The list in which strings will be removed.
 	 * @param stringsToBeRemoved
 	 * 		The list of strings that have to be removed.
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 * 		If a string in stringsToBeRemoved is not in strings.
 	 */
-	private void checkAndRemove(ArrayList<String> strings, ArrayList<String> stringsToBeRemoved) throws CarModelCatalogException {
+	private void checkAndRemove(ArrayList<String> strings, ArrayList<String> stringsToBeRemoved) throws VehicleModelCatalogException {
 		if(strings == stringsToBeRemoved) return;
 		for(String i: stringsToBeRemoved){
-			if( !strings.remove(i)) throw new CarModelCatalogException("Option does not exists: "+ i);
+			if( !strings.remove(i)) throw new VehicleModelCatalogException("Option does not exists: "+ i);
 		}
 	}
 
@@ -142,19 +142,19 @@ public class OptionCreator {
 	 * @param incompatibles
 	 * 		The list containing descriptions of options incompatible with the option to be made.
 	 * @return the new option
-	 * @throws CarModelCatalogException
+	 * @throws VehicleModelCatalogException
 	 * 		If the option type is not supported.
 	 */
-	private Option createOption(String description, String typeName, ArrayList<String> incompatibles) throws CarModelCatalogException {
+	private Option createOption(String description, String typeName, ArrayList<String> incompatibles) throws VehicleModelCatalogException {
 		try{
-			Option result = new Option(description,  CarModelCatalog.optionTypeCreator.getOptionType(typeName));
+			Option result = new Option(description,  VehicleModelCatalog.optionTypeCreator.getOptionType(typeName));
 			for(Option option : collectOption(incompatibles)){
 				result.addIncompatible(option);
 				option.addIncompatible(result);
 			}
 			return result;
 		}catch(IllegalArgumentException e){
-			throw new CarModelCatalogException("no valid type: " + typeName);
+			throw new VehicleModelCatalogException("no valid type: " + typeName);
 		}
 
 	}
@@ -164,17 +164,17 @@ public class OptionCreator {
 	 * @param descriptions
 	 * 		The list of descriptions of the options to be made.
 	 * @return a list of options corresponding to the given option descriptions
-	 * @throws CarModelCatalogException 
+	 * @throws VehicleModelCatalogException 
 	 * 		If the option does not exist.
 	 */
-	private ArrayList<Option> collectOption(ArrayList<String> descriptions) throws CarModelCatalogException {
+	private ArrayList<Option> collectOption(ArrayList<String> descriptions) throws VehicleModelCatalogException {
 		ArrayList<Option> options = new ArrayList<Option>();
 		for(String description : descriptions){
 			Option option = allOptions.get(description);
 			if(option != null)
 				options.add(option);
 			else {
-				throw new CarModelCatalogException("Option does not exists: "+ description);
+				throw new VehicleModelCatalogException("Option does not exists: "+ description);
 			}
 		}
 		return options;

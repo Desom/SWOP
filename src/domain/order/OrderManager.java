@@ -7,7 +7,7 @@ import java.util.HashMap;
 
 import domain.assembly.OrderHandler;
 import domain.assembly.Scheduler;
-import domain.configuration.CarModelCatalog;
+import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.OptionType;
 import domain.policies.CompletionPolicy;
@@ -26,49 +26,46 @@ public class OrderManager implements OrderHandler{
 
 	private final Scheduler scheduler;
 	private final HashMap<User,ArrayList<Order>> ordersPerUser;
-	private int highestCarOrderID;
+	private int highestOrderID;
 	private Policy singleTaskPolicy;
-	private Policy carOrderPolicy;
+	private Policy vehicleOrderPolicy;
 	
 	/**
 	 * Constructor for the OrderManager class.
-	 * This constructor is also responsible for creating objects for all the placed carOrders.
-	 * This constructor is also responsible for creating a ProductionSchedule and feeding it the unfinished carOrders.
+	 * This constructor is also responsible for creating objects for all the placed Orders.
 	 * 
 	 * @param scheduler
 	 * 		The scheduler for the orders.
 	 * @param dataFilePath
-	 * 		The path to the data file containing all the previously placed CarOrders.
+	 * 		The path to the data file containing all the previously placed Orders.
 	 * @param catalog
-	 * 		The car model catalog necessary for finding the options and car models of all car orders
-	 * @param currentTime 
-	 * 		The Calendar indicating the current time and date used by the created ProductionSchedule.
+	 * 		The model catalog necessary for finding the options and models of all orders
 	 * @throws InvalidConfigurationException 
-	 * 		If the configurations made in car order creator are invalid.
+	 * 		If the configurations made in order creator are invalid.
 	 * @throws IOException
-	 * 		If a car model can't be read in.
+	 * 		If a model can't be read in.
 	 */
-	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws IOException {
+	public OrderManager(Scheduler scheduler, String dataFilePath, VehicleModelCatalog catalog) throws IOException {
 		this.scheduler = scheduler;
 		this.createPolicies();
 		ArrayList<Policy> policies = new ArrayList<Policy>();
-		policies.add(carOrderPolicy);
+		policies.add(vehicleOrderPolicy);
 		policies.add(singleTaskPolicy);
-		OrderCreator carOrderCreator = new OrderCreator(dataFilePath, catalog, policies);
-		ArrayList<Order> allCarOrders = carOrderCreator.createOrderList();
+		OrderCreator orderCreator = new OrderCreator(dataFilePath, catalog, policies);
+		ArrayList<Order> allOrders = orderCreator.createOrderList();
 		
 		this.ordersPerUser = new HashMap<User,ArrayList<Order>>();
-		for(Order order : allCarOrders) {
+		for(Order order : allOrders) {
 			this.addOrder(order);
 		}
 
-		ArrayList<Order> allUnfinishedCarOrders = new ArrayList<Order>();
-		for(Order order : allCarOrders) {
-			if(order.getCarOrderID() > this.highestCarOrderID){
-				this.highestCarOrderID = order.getCarOrderID();
+		ArrayList<Order> allUnfinishedOrders = new ArrayList<Order>();
+		for(Order order : allOrders) {
+			if(order.getOrderID() > this.highestOrderID){
+				this.highestOrderID = order.getOrderID();
 			}
 			if(!order.isCompleted()){
-				allUnfinishedCarOrders.add(order);
+				allUnfinishedOrders.add(order);
 			}
 		}
 		scheduler.setOrderHandler(this);
@@ -76,32 +73,29 @@ public class OrderManager implements OrderHandler{
 	
 	/**
 	 * Constructor for the OrderManager class.
-	 * This OrderManager starts without any CarOrders.
-	 * This constructor is also responsible for creating a ProductionSchedule.
+	 * This OrderManager starts without any Orders.
 	 * 
 	 * @param scheduler
 	 * 		The scheduler for the orders.
-	 * @param currentTime 
-	 * 		The Calendar indicating the current time and date used by the created ProductionSchedule.
 	 */
-	public OrderManager(Scheduler scheduler, GregorianCalendar currentTime) {
+	public OrderManager(Scheduler scheduler) {
 		this.scheduler = scheduler;
 		this.ordersPerUser = new HashMap<User,ArrayList<Order>>();
-		this.highestCarOrderID = 0;
+		this.highestOrderID = 0;
 		this.createPolicies();
 		scheduler.setOrderHandler(this);
 	}
 	
 	/**
-	 * Returns a list of all the orders placed by a given garage holder.
+	 * Returns a list of all the orders placed by a given user.
 	 * 
-	 * @param garageHolder
-	 * 		The GarageHolder whose CarOrders are requested.
-	 * @return A copy of the list of all orders made by the given GarageHolder. An empty list if there are none.
+	 * @param user
+	 * 		The user whose Orders are requested.
+	 * @return A copy of the list of all orders made by the given user. An empty list if there are none.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<Order> getOrders(GarageHolder garageHolder){
-		ArrayList<Order> ordersOfUser = this.getAllOrdersFromUser().get(garageHolder);
+	public ArrayList<Order> getOrders(User user){
+		ArrayList<Order> ordersOfUser = this.getAllOrdersFromUser().get(user);
 		if(ordersOfUser == null)
 			return new ArrayList<Order>();
 		else
@@ -114,18 +108,18 @@ public class OrderManager implements OrderHandler{
 	 * @param garageHolder
 	 * 		The garage holder who is placing the order.
 	 * @param configuration
-	 * 		The configuration of the ordered car.
+	 * 		The configuration of the ordered vehicle.
 	 * @return The order that was made with the given configuration.
 	 */
-	public CarOrder placeCarOrder(GarageHolder garageHolder, Configuration configuration){
-		if(configuration.getPolicyChain() != this.getCarOrderPolicies()){
-			throw new IllegalArgumentException("The given Configuration doesn't have the right policy chain for a CarOrder.");
+	public VehicleOrder placeVehicleOrder(GarageHolder garageHolder, Configuration configuration){
+		if(configuration.getPolicyChain() != this.getVehicleOrderPolicies()){
+			throw new IllegalArgumentException("The given Configuration doesn't have the right policy chain for a VehicleOrder.");
 		}
 		if(!configuration.isCompleted()){
 			throw new IllegalArgumentException("The given Configuration is not yet completed.");
 		}
-		int carOrderId = this.getUniqueCarOrderId();
-		CarOrder newOrder = new CarOrder(carOrderId, garageHolder, configuration, this.getScheduler().getCurrentTime());
+		int orderId = this.getUniqueOrderId();
+		VehicleOrder newOrder = new VehicleOrder(orderId, garageHolder, configuration, this.getScheduler().getCurrentTime());
 		this.addOrder(newOrder);
 		return newOrder;
 	}
@@ -166,9 +160,9 @@ public class OrderManager implements OrderHandler{
 	 * 
 	 * @return an orderId which is higher than all other orderId's of the orders in this OrderManager
 	 */
-	private int getUniqueCarOrderId() {
-		this.highestCarOrderID += 1;
-		return this.highestCarOrderID;
+	private int getUniqueOrderId() {
+		this.highestOrderID += 1;
+		return this.highestOrderID;
 	}
 
 	/**
@@ -188,27 +182,27 @@ public class OrderManager implements OrderHandler{
 	}
 
 	/**
-	 * Returns a list of all still pending car orders placed by a given user.
+	 * Returns a list of all still pending orders placed by a given user.
 	 * 
-	 * @param garageHolder
+	 * @param user
 	 * 		The User that wants to call this method.
-	 * 		The User whose CarOrders are requested.
-	 * @return List of the pending CarOrders placed by the given user.
+	 * 		The User whose Orders are requested.
+	 * @return List of the pending Orders placed by the given user.
 	 * @throws UserAccessException
 	 * 		If the user is not authorized to call this method.
 	 */
-	public ArrayList<Order> getPendingOrders(GarageHolder garageHolder) {
-		return getOrdersWithStatus(garageHolder, false);
+	public ArrayList<Order> getPendingOrders(User user) {
+		return getOrdersWithStatus(user, false);
 	}
 
 	/**
-	 * Give a list of all the still completed CarOrders placed by a given user.
+	 * Give a list of all the still completed Orders placed by a given user.
 	 * @param user
 	 * 			The User that wants to call this method.
-	 * 			The User whose CarOrders are requested.
-	 * @return List of the completed CarOrders placed by the given user.
+	 * 			The User whose Orders are requested.
+	 * @return List of the completed Orders placed by the given user.
 	 */
-	public ArrayList<Order> getCompletedOrders(GarageHolder user){
+	public ArrayList<Order> getCompletedOrders(User user){
 		return getOrdersWithStatus(user,true);
 	}
 	
@@ -221,7 +215,7 @@ public class OrderManager implements OrderHandler{
 	 * 		The boolean indicating if the orders have to be completed.
 	 * @return The list of orders placed by the given user, completed or not completed (depending on the boolean).
 	 */
-	private ArrayList<Order> getOrdersWithStatus(GarageHolder user, boolean completed){
+	private ArrayList<Order> getOrdersWithStatus(User user, boolean completed){
 		ArrayList<Order> orders = new ArrayList<Order>();
 		for(Order order : this.getOrders(user)){
 			if(order.isCompleted().equals(completed)) orders.add(order);
@@ -234,18 +228,18 @@ public class OrderManager implements OrderHandler{
 	 */
 	private void createPolicies(){
 		createSingleTaskPolicy();
-		createCarOrderPolicy();
+		createVehicleOrderPolicy();
 	}
 
 	/**
-	 * Creates the car order policy chain.
+	 * Creates the vehicle order policy chain.
 	 */
-	private void createCarOrderPolicy() {
-		Policy pol1 = new CompletionPolicy(null,CarModelCatalog.optionTypeCreator.getAllMandatoryTypes());
+	private void createVehicleOrderPolicy() {
+		Policy pol1 = new CompletionPolicy(null,VehicleModelCatalog.optionTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
-		this.carOrderPolicy = pol4;
+		this.vehicleOrderPolicy = pol4;
 		
 	}
 
@@ -259,12 +253,12 @@ public class OrderManager implements OrderHandler{
 	}
 
 	 /**
-	  * Returns the car order policy chain.
+	  * Returns the vehicle order policy chain.
 	  * 
-	  * @return the car order policy chain.
+	  * @return the vehicle order policy chain.
 	  */
-	public Policy getCarOrderPolicies(){
-		return this.carOrderPolicy;
+	public Policy getVehicleOrderPolicies(){
+		return this.vehicleOrderPolicy;
 	 }
 	 
 	 /**
@@ -304,8 +298,8 @@ public class OrderManager implements OrderHandler{
 		if(!configuration.isCompleted()){
 			throw new IllegalArgumentException("The given Configuration is not yet completed.");
 		}
-		int carOrderId = this.getUniqueCarOrderId();
-		SingleTaskOrder newOrder = new SingleTaskOrder(carOrderId, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
+		int orderId = this.getUniqueOrderId();
+		SingleTaskOrder newOrder = new SingleTaskOrder(orderId, customShopManager, configuration, this.getScheduler().getCurrentTime(), deadline);
 		if(!this.getScheduler().canFinishOrderBeforeDeadline(newOrder)){
 			throw new CannotMeetDeadlineException();
 		}
@@ -321,8 +315,8 @@ public class OrderManager implements OrderHandler{
 	public ArrayList<Order> getAllUnfinishedOrders() {
 		ArrayList<Order> unfinished = new ArrayList<Order>();
 		
-		for(ArrayList<Order> carOrders : this.ordersPerUser.values()){
-			for(Order order : carOrders){
+		for(ArrayList<Order> orders : this.ordersPerUser.values()){
+			for(Order order : orders){
 				if(!order.isCompleted()){
 					unfinished.add(order);
 				}

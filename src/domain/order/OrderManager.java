@@ -48,11 +48,14 @@ public class OrderManager implements OrderHandler{
 	 * @throws IOException
 	 * 		If a car model can't be read in.
 	 */
-	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws InvalidConfigurationException, IOException {
+	public OrderManager(Scheduler scheduler, String dataFilePath, CarModelCatalog catalog, GregorianCalendar currentTime) throws IOException {
 		this.scheduler = scheduler;
 		this.createPolicies();
-		CarOrderCreator carOrderCreator = new CarOrderCreator(dataFilePath, catalog, this.carOrderPolicy);
-		ArrayList<Order> allCarOrders = carOrderCreator.createCarOrderList();
+		ArrayList<Policy> policies = new ArrayList<Policy>();
+		policies.add(carOrderPolicy);
+		policies.add(singleTaskPolicy);
+		OrderCreator carOrderCreator = new OrderCreator(dataFilePath, catalog, policies);
+		ArrayList<Order> allCarOrders = carOrderCreator.createOrderList();
 		
 		this.ordersPerUser = new HashMap<User,ArrayList<Order>>();
 		for(Order order : allCarOrders) {

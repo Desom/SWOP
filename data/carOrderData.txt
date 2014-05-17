@@ -1,2 +1,4 @@
-Begin_CarOrderInfo(carOrderId,,,,orderedById,,,,delivered?,,,,orderTime,,,,deliveryTime(unDelivered=(00-00-0000==00-00-00),,,,modelName,,,,{optionType=optionId}-...)-
-End_CarOrderInfo
+0(Vehicle),,,,vehicleOrderId,,,,orderedById,,,,delivered?,,,,orderTime,,,,deliveryTime(unDelivered=(00-00-0000==00-00-00),,,,modelName,,,,({optionName};-;...)
+1(SingleTask),,,,singleTaskOrderId,,,,orderedById,,,,delivered?,,,,orderTime,,,,deliveryTime(unDelivered=(00-00-0000==00-00-00),,,,optionName,,,,deadlineTime
+Begin_OrderInfo
+End_OrderInfo

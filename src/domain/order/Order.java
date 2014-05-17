@@ -42,10 +42,13 @@ public abstract class Order {
 	 * 		The configuration of this order.
 	 * @param orderedTime
 	 * 		The time when it was ordered
+	 * @param deliveredTime
+	 * 		The time when it was delivered
 	 * @param isDelivered
 	 * 		True if the order has been delivered already, otherwise false.
 	 * @throws IllegalArgumentException
 	 * 		If the given configuration is not completed yet.
+	 * 		If the deliveredTime is before the orderedTime
 	 */
 	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime, GregorianCalendar deliveredTime, boolean isDelivered) 
 			throws IllegalArgumentException {

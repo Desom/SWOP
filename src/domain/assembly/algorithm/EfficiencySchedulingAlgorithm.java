@@ -13,7 +13,7 @@ import domain.configuration.OptionType;
 import domain.order.Order;
 import domain.order.SingleTaskOrder;
 
-public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
+public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulingAlgorithm {
 
 	private SchedulingAlgorithm innerAlgorithm;
 
@@ -25,27 +25,6 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	 */
 	public EfficiencySchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
 		this.innerAlgorithm = innerAlgorithm;
-	}
-
-	/**
-	 * Schedules the given list of orders and returns it.
-	 * 
-	 * @param orderList
-	 * 		List of orders to be scheduled.
-	 * @param assemblyLineScheduler
-	 * 		The scheduler of the assembly line.
-	 * @return A scheduled version of the given list of orders.
-	 */
-	@Override
-	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList,
-			AssemblyLineScheduler assemblyLineScheduler) {
-		GregorianCalendar allTasksCompletedTime = assemblyLineScheduler.getCurrentTime();
-		LinkedList<Order> temp = new LinkedList<Order>();
-		for(int j =0; j< assemblyLineScheduler.getAssemblyLine().getNumberOfWorkstations();j++){
-			temp.add(null);
-		}
-		return convert(this.scheduleToScheduledOrderList(orderList, allTasksCompletedTime , temp, assemblyLineScheduler));
-
 	}
 
 	/**
@@ -620,23 +599,6 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		simulator.removeLast();
 		time += assemblyLineScheduler.getAssemblyLine().calculateTimeTillEmptyFor(simulator);
 		return time;
-	}
-
-	/**
-	 * Makes a GregorianCalendar which represents the beginning of the first workday after the given calendar.
-	 * 
-	 * @param currentTime
-	 * 		The current time and date.
-	 * @return The GregorianCalendar representing the beginning of the first workday after the day in currentTime. 
-	 */
-	private GregorianCalendar nextDay(GregorianCalendar currentTime) {
-		GregorianCalendar nextDay = (GregorianCalendar) currentTime.clone();
-		if(nextDay.get(GregorianCalendar.HOUR_OF_DAY) <= 6)
-			nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
-		nextDay.set(GregorianCalendar.HOUR_OF_DAY, AssemblyLineScheduler.BEGIN_OF_DAY);
-		nextDay.set(GregorianCalendar.MINUTE, 0);
-		nextDay.set(GregorianCalendar.SECOND, 0);
-		return nextDay;
 	}
 
 	/**

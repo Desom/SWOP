@@ -5,7 +5,7 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.InternalFailureException;
-import domain.assembly.algorithm.SchedulingAlgorithm;
+import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.order.Order;
 import domain.order.SingleTaskOrder;
 
@@ -15,8 +15,8 @@ public class AssemblyLineScheduler implements Scheduler{
 	public static final int BEGIN_OF_DAY = 6;
 	private int overTimeInMinutes;
 	private AssemblyLine assemblyLine;
-	private ArrayList<SchedulingAlgorithm> possibleAlgorithms;
-	private SchedulingAlgorithm currentAlgorithm;
+	private ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms;
+	private AssemblyLineSchedulingAlgorithm currentAlgorithm;
 	private GregorianCalendar currentTime;
 	private OrderHandler orderHandler;
 	private ArrayList<ScheduledOrder> schedule;
@@ -32,9 +32,9 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * 		The first algorithm of this list is the default algorithm.
 	 */
 	@SuppressWarnings("unchecked")
-	public AssemblyLineScheduler(GregorianCalendar time, ArrayList<SchedulingAlgorithm> possibleAlgorithms) {
+	public AssemblyLineScheduler(GregorianCalendar time, ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms) {
 		this.currentTime = (GregorianCalendar) time.clone();
-		this.possibleAlgorithms = (ArrayList<SchedulingAlgorithm>) possibleAlgorithms.clone();
+		this.possibleAlgorithms = (ArrayList<AssemblyLineSchedulingAlgorithm>) possibleAlgorithms.clone();
 		this.currentAlgorithm = this.possibleAlgorithms.get(0);
 		this.outDated = true;
 	}
@@ -346,7 +346,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @throws IllegalArgumentException
 	 * 		If the given algorithm isn't one of the possible algorithms.
 	 */
-	public void setSchedulingAlgorithm(SchedulingAlgorithm algorithm) throws IllegalArgumentException {
+	public void setSchedulingAlgorithm(AssemblyLineSchedulingAlgorithm algorithm) throws IllegalArgumentException {
 		if(!this.possibleAlgorithms.contains(algorithm))
 			throw new IllegalArgumentException("This SchedulingAlgorithm is not one of the possible SchedulingAlgorithms");
 		this.currentAlgorithm = algorithm;
@@ -367,7 +367,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * 
 	 * @return All possible algorithms of this assembly line scheduler.
 	 */
-	public ArrayList<SchedulingAlgorithm> getPossibleAlgorithms() {
+	public ArrayList<AssemblyLineSchedulingAlgorithm> getPossibleAlgorithms() {
 		return possibleAlgorithms;
 	}
 	
@@ -376,7 +376,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * 
 	 * @return The current algorithm of this assembly line scheduler.
 	 */
-	public SchedulingAlgorithm getCurrentAlgorithm(){
+	public AssemblyLineSchedulingAlgorithm getCurrentAlgorithm(){
 		return this.currentAlgorithm;
 	}
 

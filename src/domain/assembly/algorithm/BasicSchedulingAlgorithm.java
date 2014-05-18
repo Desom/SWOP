@@ -3,15 +3,18 @@ package domain.assembly.algorithm;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map.Entry;
 
+import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.FactoryScheduler;
 import domain.assembly.ScheduledOrder;
 import domain.order.Order;
 
-public class BasicFactorySchedulingAlgorithm implements
-FactorySchedulingAlgorithm {
+public class BasicSchedulingAlgorithm
+	extends AbstractAssemblyLineSchedulingAlgorithm  
+	implements FactorySchedulingAlgorithm {
 
 	private SchedulingAlgorithm innerAlgorithm;
 
@@ -21,7 +24,7 @@ FactorySchedulingAlgorithm {
 	 * @param innerAlgorithm
 	 * 		The inner algorithm of this basic factory algorithm.
 	 */
-	public BasicFactorySchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
+	public BasicSchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
 		this.innerAlgorithm = innerAlgorithm;
 	}
 
@@ -113,5 +116,78 @@ FactorySchedulingAlgorithm {
 		}
 		
 		return mapping;
+	}
+	
+	/**
+	 * Schedules the given list of orders and returns a scheduled list of ScheduledOrder objects.
+	 * 
+	 * @param orderList
+	 * 		List of orders to be scheduled.
+	 * @param allTasksCompletedTime
+	 * 		The time by which all tasks have to be completed.
+	 * @param assemblyLineScheduler
+	 * @return A scheduled list of ScheduledOrder objects.
+	 */
+	@Override
+	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
+			ArrayList<Order> orderList, 
+			GregorianCalendar allTasksCompletedTime,LinkedList<Order> stateOfAssemblyLine,
+			AssemblyLineScheduler assemblyLineScheduler) {
+
+		AssemblyLine assemblyLine = assemblyLineScheduler.getAssemblyLine();
+		//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
+		@SuppressWarnings("unchecked")
+		LinkedList<Order> assembly = (LinkedList<Order>) stateOfAssemblyLine.clone();
+		ArrayList<Order> sList = this.innerAlgorithm.scheduleToList(orderList, assemblyLineScheduler);
+		GregorianCalendar movingTime = (GregorianCalendar) allTasksCompletedTime.clone();
+
+		ArrayList<ScheduledOrder> scheduledList = new ArrayList<ScheduledOrder>();
+
+		//Simuleer heel het toekomstig proces, waarbij aan het begin van de loop alle tasks completed zijn.
+		for(Order order : sList){
+
+			//haal de laatste order van de assemblyLine
+			assembly.removeLast();
+			//Zet volgende op assembly
+			assembly.addFirst(order);
+			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een Order is.
+			int totalDuration = assemblyLine.calculateTimeTillEmptyFor(assembly);
+			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
+			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLineScheduler)){
+				// haal order er weer af, omdat het toch niet gaat.
+				assembly.removeFirst();
+				// zet een null in de plaats
+				assembly.addFirst(null);
+				scheduledList.add(new ScheduledOrder(movingTime,null));
+				movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
+				
+				//Simuleer leeg maken aan het einde van de dag.
+				while(!this.isEmptyAssembly(assembly)){
+					assembly.removeLast();
+					assembly.addFirst(null);
+					scheduledList.add(new ScheduledOrder(movingTime,null));
+					movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
+				}
+				// Voeg de order voorraan toe en zet de time op het begin van de volgende dag.
+				assembly.removeLast();
+				assembly.addFirst(order);
+				movingTime = this.nextDay(movingTime);
+			}
+
+			// voeg een scheduledOrder toe, movingTime is het moment dat de order op de AssemblyLine gaat.
+			scheduledList.add(new ScheduledOrder(movingTime,order));
+			//verschuif tijd totdat alle workstations klaar zijn.
+			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
+		}
+		
+		//maak leeg wanneer er niets meer moet worden gescheduled.
+		while(!this.isEmptyAssembly(assembly)){
+			assembly.removeLast();
+			assembly.addFirst(null);
+			scheduledList.add(new ScheduledOrder(movingTime,null));
+			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
+		}
+
+		return scheduledList;
 	}
 }

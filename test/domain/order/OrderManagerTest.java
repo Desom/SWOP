@@ -57,7 +57,7 @@ public class OrderManagerTest {
 		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		@SuppressWarnings("unused")
 		AssemblyLine als = new AssemblyLine((AssemblyLineScheduler) scheduler, null);
-		orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
+		orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 	}
 
 

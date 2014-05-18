@@ -10,7 +10,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 
-public class CarModelTest {
+public class VehicleModelTest {
 	ArrayList<Option> a;
 	Option A;
 	Option B;

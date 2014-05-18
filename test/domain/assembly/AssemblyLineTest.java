@@ -63,7 +63,7 @@ public class AssemblyLineTest {
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
+		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics statistics = new Statistics(orderManager);
 		line = new AssemblyLine(scheduler, statistics);
 

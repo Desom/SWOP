@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -32,10 +33,10 @@ public class AssemblyTaskTest {
 	@BeforeClass
 	public static void testCreate() throws IOException, VehicleModelCatalogException, InvalidConfigurationException {
 		VehicleOrder o = buildCar();
-		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
-		taskTypes.add(OptionType.Body);
-		taskTypes.add(OptionType.Color);
-		Workstation w = new Workstation(null, "name", taskTypes);
+		LinkedList<OptionType> bodyPost = new LinkedList<OptionType>();
+		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Body"));
+		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Color"));
+		Workstation w = new Workstation("name", new WorkstationType("Body Post", bodyPost));
 		task = w.compatibleWith(o.getAssemblyprocess()).get(0);;
 	}
 	

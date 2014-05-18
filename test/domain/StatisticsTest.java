@@ -36,10 +36,9 @@ public class StatisticsTest {
 		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
 		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
+		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		stat = new Statistics(orderManager);
 		line = new AssemblyLine(scheduler, stat);
-		
 		
 		Mechanic m1 = new Mechanic(2);
 		Mechanic m2 = new Mechanic(3);

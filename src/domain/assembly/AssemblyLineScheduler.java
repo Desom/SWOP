@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import domain.InternalFailureException;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.order.Order;
-import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
 
 public class AssemblyLineScheduler implements Scheduler{
@@ -325,9 +324,9 @@ public class AssemblyLineScheduler implements Scheduler{
 
 	/**
 	 * Returns the orders to be scheduled.
-	 * Returns null if this assembly line scheduler has no order manager.
+	 * Returns null if this assembly line scheduler has no order handler.
 	 * 
-	 * @return The orders to be scheduled, or null if this assembly line scheduler has no order manager.
+	 * @return The orders to be scheduled, or null if this assembly line scheduler has no order handler.
 	 */
 	public ArrayList<Order> getOrdersToBeScheduled() {
 		if(this.getOrderHandler() != null){
@@ -496,9 +495,9 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @param orderHandler
 	 * 		The orderHandler to be set.
 	 * @throws IllegalStateException
-	 * 		If this assembly line scheduler is already coupled with an order manager.
+	 * 		If this assembly line scheduler is already coupled with an order handler.
 	 * @throws IllegalArgumentException
-	 * 		If the given order manager is already coupled to another assembly line scheduler.
+	 * 		If the given order handler is already coupled to another assembly line scheduler.
 	 */
 	public void setOrderHandler(OrderHandler orderHandler) throws IllegalStateException, IllegalArgumentException {
 		if(this.orderHandler != null){

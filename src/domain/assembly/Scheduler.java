@@ -32,7 +32,7 @@ public interface Scheduler {
 	public void setOrderHandler(OrderHandler orderHandler);
 	
 	/**
-	 * Updates the schedule.
+	 * Signals the scheduler that the schedule needs to be updated.
 	 */
 	public void updateSchedule();
 	

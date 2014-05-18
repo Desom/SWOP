@@ -62,6 +62,7 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 
 		AssemblyLine assemblyLine = assemblyLineScheduler.getAssemblyLine();
 		//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
+		@SuppressWarnings("unchecked")
 		LinkedList<Order> assembly = (LinkedList<Order>) stateOfAssemblyLine.clone();
 		ArrayList<Order> sList = this.scheduleToList(orderList, assemblyLineScheduler);
 		GregorianCalendar movingTime = (GregorianCalendar) allTasksCompletedTime.clone();

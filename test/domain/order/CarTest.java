@@ -26,13 +26,16 @@ import domain.user.GarageHolder;
 public class CarTest {
 
 
+	private static VehicleModelCatalog catalog;
 	private static Configuration config;
 	private static ArrayList<Option> allOptions;
 
 	@Test
 	public void testCreate() throws IOException, VehicleModelCatalogException {
 
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		catalog = new VehicleModelCatalog();
+		
+		Policy pol1 = new CompletionPolicy(null,catalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);

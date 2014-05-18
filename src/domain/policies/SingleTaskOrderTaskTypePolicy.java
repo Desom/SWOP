@@ -2,6 +2,7 @@ package domain.policies;
 
 import java.util.ArrayList;
 
+import domain.configuration.TaskType;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
@@ -13,7 +14,7 @@ import domain.configuration.OptionType;
  */
 public class SingleTaskOrderTaskTypePolicy extends AlwaysPolicy {
 
-	private ArrayList<OptionType> validOptionTypes;
+	private ArrayList<TaskType> validOptionTypes;
 	
 	/**
 	 * Constructor of SingleTaskOrderTaskTypePolicy.
@@ -23,7 +24,7 @@ public class SingleTaskOrderTaskTypePolicy extends AlwaysPolicy {
 	 */
 	public SingleTaskOrderTaskTypePolicy(Policy successor) {
 		super(successor);
-		this.validOptionTypes = VehicleModelCatalog.optionTypeCreator.getAllSingleTaskPossibleTypes();
+		this.validOptionTypes = VehicleModelCatalog.taskTypeCreator.getAllSingleTaskPossibleTypes();
 	}
 	
 	/**

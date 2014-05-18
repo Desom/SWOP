@@ -2,18 +2,12 @@ package domain;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineCreator;
-import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.SchedulerCreator;
 import domain.assembly.Workstation;
-import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
-import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
-import domain.assembly.algorithm.SchedulingAlgorithm;
-import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 import domain.order.OrderManager;

@@ -3,8 +3,8 @@ package domain.assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import domain.InternalFailureException;
 import domain.configuration.OptionType;
+import domain.configuration.TaskType;
 import domain.user.Mechanic;
 
 public class Workstation {
@@ -63,8 +63,8 @@ public class Workstation {
 	 * @return A copy of all possible types of the tasks this Workstation can perform.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<OptionType> getTaskTypes() {
-		return new ArrayList<OptionType>(((LinkedList<OptionType>) workstationType.getacceptedOptionTypes().clone()));
+	public ArrayList<TaskType> getTaskTypes() {
+		return new ArrayList<TaskType>(((LinkedList<OptionType>) workstationType.getacceptedTaskTypes().clone()));
 	}
 	
 	/**
@@ -121,7 +121,7 @@ public class Workstation {
 	 * 		If task does not match with the task types list.
 	 */
 	public void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
-		if (this.workstationType.getacceptedOptionTypes().contains(task.getType()))
+		if (this.workstationType.getacceptedTaskTypes().contains(task.getType()))
 			this.allTasks.add(task);
 		else
 			throw new IllegalArgumentException("This assembly task can't be assigned to this workstation");
@@ -316,7 +316,7 @@ public class Workstation {
 	 * @return All assembly tasks of the vehicle assembly process on which can be worked on in this workstation.
 	 */
 	protected ArrayList<AssemblyTask> compatibleWith(VehicleAssemblyProcess assemblyProcess){
-		ArrayList<OptionType> acceptedTypes = this.getTaskTypes();
+		ArrayList<TaskType> acceptedTypes = this.getTaskTypes();
 		ArrayList<AssemblyTask> compatibleTasks = new ArrayList<AssemblyTask>();
 		for(AssemblyTask task : assemblyProcess.getAssemblyTasks()){
 			if(acceptedTypes.contains(task.getType())){

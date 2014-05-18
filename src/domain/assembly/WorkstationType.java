@@ -2,33 +2,33 @@ package domain.assembly;
 
 import java.util.LinkedList;
 
-import domain.configuration.OptionType;
+import domain.configuration.TaskType;
 
 public class WorkstationType {
 	
 	private String name;
-	private LinkedList<OptionType> acceptedOptionTypes;
+	private LinkedList<TaskType> acceptedTaskTypes;
 
 	/**
 	 * Constructor of WorkstationType.
 	 * 
 	 * @param name
 	 * 		The name of this workstationType.
-	 * @param acceptedOptionTypes
-	 * 		A list of optionTypes that can be processed on this type of workstation.
+	 * @param acceptedTaskTypes
+	 * 		A list of taskTypes that can be processed on this type of workstation.
 	 */
-	WorkstationType(String name, LinkedList<OptionType> acceptedOptionTypes){
+	WorkstationType(String name, LinkedList<TaskType> acceptedTaskTypes){
 		this.name = name;
-		this.acceptedOptionTypes = new LinkedList<OptionType>(acceptedOptionTypes);
+		this.acceptedTaskTypes = new LinkedList<TaskType>(acceptedTaskTypes);
 	}
 	
 	/**
-	 * Returns a LinkedList of all option types that can be processed on this type of workstation.
+	 * Returns a LinkedList of all task types that can be processed on this type of workstation.
 	 * 
-	 * @return a LinkedList of all option types that can be processed on this type of workstation.
+	 * @return a LinkedList of all task types that can be processed on this type of workstation.
 	 */
-	public LinkedList<OptionType> getacceptedOptionTypes(){
-		return new LinkedList<OptionType>(acceptedOptionTypes);
+	public LinkedList<TaskType> getacceptedTaskTypes(){
+		return new LinkedList<TaskType>(acceptedTaskTypes);
 	}
 	
 	/**

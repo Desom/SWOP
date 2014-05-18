@@ -147,7 +147,7 @@ public class OptionCreator {
 	 */
 	private Option createOption(String description, String typeName, ArrayList<String> incompatibles) throws VehicleModelCatalogException {
 		try{
-			Option result = new Option(description,  VehicleModelCatalog.optionTypeCreator.getOptionType(typeName));
+			Option result = new Option(description,  VehicleModelCatalog.taskTypeCreator.getOptionType(typeName));
 			for(Option option : collectOption(incompatibles)){
 				result.addIncompatible(option);
 				option.addIncompatible(result);

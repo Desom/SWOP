@@ -36,16 +36,18 @@ public class WorkstationTest {
 	private AssemblyTask validTask;
 	private AssemblyTask validTask2;
 	private AssemblyTask invalidTask;
+	private VehicleModelCatalog catalog;
 	
 	@Before
 	public void testCreate() throws InvalidConfigurationException, IOException, VehicleModelCatalogException, InternalFailureException {
+		catalog = new VehicleModelCatalog();
 		carMechanic = new Mechanic(1);
 		Company comp = new Company();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
-		taskTypes.add(OptionType.Seats);
-		taskTypes.add(OptionType.Airco);
-		taskTypes.add(OptionType.Wheels);
-		taskTypes.add(OptionType.Spoiler);
+		taskTypes.add(catalog.taskTypeCreator.Seats);
+		taskTypes.add(catalog.taskTypeCreator.Airco);
+		taskTypes.add(catalog.taskTypeCreator.Wheels);
+		taskTypes.add(catalog.taskTypeCreator.Spoiler);
 		workstation = comp.getAllWorkstations().get(2);
 		assertEquals("3", workstation.getName());
 		assertEquals(taskTypes, workstation.getTaskTypes());
@@ -58,7 +60,7 @@ public class WorkstationTest {
 		validTask2 = workstation.compatibleWith(order.getAssemblyprocess()).get(1);
 		
 		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
-		taskTypes2.add(OptionType.Gearbox);
+		taskTypes2.add(catalog.taskTypeCreator.Gearbox);
 		Workstation workstation2 = new Workstation(null, "W1", taskTypes2);
 		invalidTask = workstation2.compatibleWith(order.getAssemblyprocess()).get(0);
 		
@@ -141,7 +143,7 @@ public class WorkstationTest {
 	
 	private VehicleOrder createCar() throws InvalidConfigurationException, IOException, VehicleModelCatalogException{
 	
-		Policy pol1 = new CompletionPolicy(null, OptionType.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null, catalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);

@@ -3,7 +3,7 @@ package domain.assembly;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import domain.configuration.OptionType;
+import domain.configuration.TaskType;
 
 public class AssemblyStatusView {
 
@@ -60,8 +60,8 @@ public class AssemblyStatusView {
 	 * @throws DoesNotExistException
 	 * 		If the given id isn't associated with a workstation.
 	 */
-	public LinkedList<OptionType> getAllTasksAt(WorkstationType type) throws DoesNotExistException{
-		LinkedList<OptionType> tasks = new LinkedList<OptionType>();
+	public LinkedList<TaskType> getAllTasksAt(WorkstationType type) throws DoesNotExistException{
+		LinkedList<TaskType> tasks = new LinkedList<TaskType>();
 		Workstation workstation = getWorkstation(type);
 		for(AssemblyTask t : workstation.getAllTasks()){
 			tasks.add(t.getType());
@@ -81,14 +81,14 @@ public class AssemblyStatusView {
 	 * 		If the workstation with the given id doesn't exist.
 	 * 		If the option type has no corresponding task in the workstation. 
 	 */
-	public boolean taskIsDoneAt(OptionType optionType, WorkstationType type) throws DoesNotExistException{
+	public boolean taskIsDoneAt(TaskType taskType, WorkstationType type) throws DoesNotExistException{
 		Workstation workstation = getWorkstation(type);
 		for(AssemblyTask task : workstation.getAllTasks()){
-			if(task.getType() == optionType){
+			if(task.getType() == taskType){
 				return task.isCompleted();
 			}
 		}
-		throw new DoesNotExistException("The workstation with ID " + type + " does not have a task with type " + optionType);
+		throw new DoesNotExistException("The workstation with ID " + type + " does not have a task with type " + taskType);
 	}
 
 	/**
@@ -108,6 +108,7 @@ public class AssemblyStatusView {
 	 * @throws DoesNotExistException
 	 * 		If the desired workstation does not exist.
 	 */
+	@SuppressWarnings("unused")
 	private Workstation getWorkstation(int position) throws DoesNotExistException{
 		if(this.workstations.size() <= position){
 			throw new DoesNotExistException("There is no workstation at position: " + position);

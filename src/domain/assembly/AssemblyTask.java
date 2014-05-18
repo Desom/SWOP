@@ -2,7 +2,7 @@ package domain.assembly;
 
 import java.util.ArrayList;
 
-import domain.configuration.OptionType;
+import domain.configuration.TaskType;
 
 /**
  * In this class can't exist any methods with public visibility which can harm the integrity of its objects.
@@ -11,7 +11,7 @@ import domain.configuration.OptionType;
 public class AssemblyTask {
 	
 	private ArrayList<String> actions;
-	private final OptionType type;
+	private final TaskType type;
 	private boolean isCompleted;
 	private final VehicleAssemblyProcess assemblyProcess;
 
@@ -25,7 +25,7 @@ public class AssemblyTask {
 	 * @param	type
 	 * 			An enum object that indicates the type of this AssemblyTask
 	 */
-	public AssemblyTask(ArrayList<String> actions, OptionType type, VehicleAssemblyProcess process) {
+	public AssemblyTask(ArrayList<String> actions, TaskType type, VehicleAssemblyProcess process) {
 		this(actions, type, false, process);
 	}
 	
@@ -40,7 +40,7 @@ public class AssemblyTask {
 	 * @param	isCompleted
 	 * 			A boolean telling if this assembly task is already completed or not
 	 */
-	public AssemblyTask(ArrayList<String> actions, OptionType type, boolean isCompleted, VehicleAssemblyProcess process) {
+	public AssemblyTask(ArrayList<String> actions, TaskType type, boolean isCompleted, VehicleAssemblyProcess process) {
 		this.setActions(actions);
 		this.type = type;
 		this.isCompleted = isCompleted;
@@ -50,9 +50,9 @@ public class AssemblyTask {
 	/**
 	 * Gives the type of this assembly task.
 	 * 
-	 * @return	The type of this AssemblyTask indicated by an enum object.
+	 * @return	The taskType of this assemblyTask.
 	 */
-	public OptionType getType() {
+	public TaskType getType() {
 		return type;
 	}
 	

@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Scanner;
 
 import domain.Statistics;
-import domain.assembly.AssemblyLineStatus;
 import domain.assembly.AssemblyStatusView;
 import domain.assembly.DoesNotExistException;
 import domain.assembly.WorkstationType;
+import domain.configuration.TaskType;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
@@ -196,7 +196,7 @@ public class UI implements UIInterface{
 				else{
 				System.out.println("working at Order " + orderID);
 				}
-				for(OptionType taskType : statusView.getAllTasksAt(wsType)){
+				for(TaskType taskType : statusView.getAllTasksAt(wsType)){
 					String taskStatus;
 					if(statusView.taskIsDoneAt(taskType, wsType)){
 						taskStatus = "finished";
@@ -217,7 +217,7 @@ public class UI implements UIInterface{
 	public void fillIn(VehicleOrderForm orderForm) {
 		ArrayList<OptionType> mandatoryList = new ArrayList<OptionType>();
 		ArrayList<OptionType> nonMandatoryList = new ArrayList<OptionType>();
-		for(OptionType oType:VehicleModelCatalog.optionTypeCreator.getAllTypes()){
+		for(OptionType oType:VehicleModelCatalog.taskTypeCreator.getAllTypes()){
 			if(oType.isMandatory()){
 				mandatoryList.add(oType);
 			}
@@ -262,7 +262,7 @@ public class UI implements UIInterface{
 	
 	public void fillIn(SingleTaskOrderForm orderForm){
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
-		for (OptionType type : VehicleModelCatalog.optionTypeCreator.getAllTypes())
+		for (OptionType type : VehicleModelCatalog.taskTypeCreator.getAllTypes())
 			if (type.isSingleTaskPossible())
 				possibleTypes.add(type);
 		int answer1 = this.askWithPossibilities("What do you want to order?", possibleTypes.toArray());

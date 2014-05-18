@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import domain.InternalFailureException;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.order.Order;
-import domain.order.OrderManager;
 import domain.order.SingleTaskOrder;
 
 public class AssemblyLineScheduler implements Scheduler{

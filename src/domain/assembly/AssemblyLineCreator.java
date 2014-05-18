@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import domain.configuration.TaskType;
 import domain.configuration.VehicleModelCatalog;
-import domain.configuration.OptionType;
 
 public class AssemblyLineCreator {
 	
@@ -66,27 +66,26 @@ public class AssemblyLineCreator {
 	
 	private void createWorkstationTypes(){
 		workstationTypes = new LinkedList<WorkstationType>();
-		LinkedList<OptionType> bodyPost = new LinkedList<OptionType>();
-		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Body"));
-		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Color"));
+		LinkedList<TaskType> bodyPost = new LinkedList<TaskType>();
+		bodyPost.add(VehicleModelCatalog.taskTypeCreator.Body);
+		bodyPost.add(VehicleModelCatalog.taskTypeCreator.Color);
 		workstationTypes.add(new WorkstationType("Body Post", bodyPost));
 		
-		LinkedList<OptionType> driveTrainPost = new LinkedList<OptionType>();
-		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Engine"));
-		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Gearbox"));
+		LinkedList<TaskType> driveTrainPost = new LinkedList<TaskType>();
+		driveTrainPost.add(VehicleModelCatalog.taskTypeCreator.Engine);
+		driveTrainPost.add(VehicleModelCatalog.taskTypeCreator.Gearbox);
 		workstationTypes.add(new WorkstationType("DriveTrain Post", driveTrainPost));
 		
-		LinkedList<OptionType> accessoriesPost = new LinkedList<OptionType>();
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Seats"));
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Airco"));
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Wheels"));
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Spoiler"));
+		LinkedList<TaskType> accessoriesPost = new LinkedList<TaskType>();
+		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Seats);
+		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Airco);
+		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Wheels);
+		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Spoiler);
 		workstationTypes.add(new WorkstationType("Accessories Post", accessoriesPost));
 		
-		LinkedList<OptionType> cargoPost = new LinkedList<OptionType>(); 
-		// TODO Deze 2 optionTypes bestaan nog niet
-		cargoPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("ToolStorage"));
-		cargoPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("CargoProtection"));
+		LinkedList<TaskType> cargoPost = new LinkedList<TaskType>(); 
+		cargoPost.add(VehicleModelCatalog.taskTypeCreator.ToolStorage);
+		cargoPost.add(VehicleModelCatalog.taskTypeCreator.CargoProtection);
 		workstationTypes.add(new WorkstationType("Cargo Post", cargoPost));
 	}
 	

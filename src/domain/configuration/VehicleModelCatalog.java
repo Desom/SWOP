@@ -8,7 +8,7 @@ public class VehicleModelCatalog {
 	
 	private ArrayList<Option> allOptions;
 	private ArrayList<VehicleModel> allModels;
-	public static OptionTypeCreator optionTypeCreator = new OptionTypeCreator();
+	public static TaskTypeCreator taskTypeCreator = new TaskTypeCreator();
 
 	/**
 	 * Constructor of VehicleModelCatalog.

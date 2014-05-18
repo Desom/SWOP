@@ -9,7 +9,6 @@ import domain.assembly.OrderHandler;
 import domain.assembly.Scheduler;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.OptionType;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
@@ -235,7 +234,7 @@ public class OrderManager implements OrderHandler{
 	 * Creates the vehicle order policy chain.
 	 */
 	private void createVehicleOrderPolicy() {
-		Policy pol1 = new CompletionPolicy(null,VehicleModelCatalog.optionTypeCreator.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null,VehicleModelCatalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);

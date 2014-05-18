@@ -115,7 +115,7 @@ public class OrderNewVehicleHandler implements CommunicationTool{
 	
 	public List<String> getOptionTypes() {
 		ArrayList<String> result = new ArrayList<String>();
-		for(OptionType i:VehicleModelCatalog.optionTypeCreator.getAllTypes()) result.add(i.toString());
+		for(OptionType i:VehicleModelCatalog.taskTypeCreator.getAllTypes()) result.add(i.toString());
 		return result;
 	}
 

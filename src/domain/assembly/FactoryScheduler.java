@@ -2,7 +2,6 @@ package domain.assembly;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.LinkedHashMap;
 
 import domain.assembly.algorithm.FactorySchedulingAlgorithm;
 import domain.order.Order;

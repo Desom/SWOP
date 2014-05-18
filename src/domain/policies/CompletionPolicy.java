@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
+import domain.configuration.TaskType;
 
 /**
  * This policy class checks if a configuration is complete (if it has all required option types).
@@ -12,19 +13,19 @@ import domain.configuration.OptionType;
  */
 public class CompletionPolicy extends CompletedPolicy {
 
-	private ArrayList<OptionType> requiredTypes;
+	private ArrayList<TaskType> requiredTypes;
 
 	/**
 	 * Constructor of CompletionPolicy.
 	 * 
 	 * @param successor
 	 * 		The next policy in the policy chain.
-	 * @param requiredTypes
+	 * @param arrayList
 	 * 		The option types which are required for the configuration to be complete.
 	 */
-	public CompletionPolicy(Policy successor, ArrayList<OptionType> requiredTypes) {
+	public CompletionPolicy(Policy successor, ArrayList<TaskType> arrayList) {
 		super(successor);
-		this.requiredTypes = requiredTypes;
+		this.requiredTypes = arrayList;
 	}
 
 	/**

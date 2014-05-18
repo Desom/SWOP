@@ -70,8 +70,8 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 		ArrayList<Order> orderList2 = (ArrayList<Order>) orderList.clone();
 		ArrayList<SingleTaskOrder> STOrderList = combSingleTaskOrders(orderList2);
 		orderList2 = innerAlgorithm.scheduleToList(orderList2, assemblyLineScheduler);
-		ArrayList<SingleTaskOrder> STOrderListWorkStation3 = combSingleTaskOrdersByType( STOrderList,VehicleModelCatalog.optionTypeCreator.getOptionType("Seats"));
-		ArrayList<SingleTaskOrder> STOrderListWorkStation1 = combSingleTaskOrdersByType( STOrderList,VehicleModelCatalog.optionTypeCreator.getOptionType("Color"));
+		ArrayList<SingleTaskOrder> STOrderListWorkStation3 = combSingleTaskOrdersByType( STOrderList,VehicleModelCatalog.taskTypeCreator.Seats);
+		ArrayList<SingleTaskOrder> STOrderListWorkStation1 = combSingleTaskOrdersByType( STOrderList,VehicleModelCatalog.taskTypeCreator.Color);
 		deadlineSort(STOrderListWorkStation1);
 		deadlineSort(STOrderListWorkStation3); 
 		//combine the three lists into one schedule 
@@ -297,11 +297,11 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 
 	private int canPlaceAtbeginning(LinkedList<Order> stateOfAssemblyLine, AssemblyLineScheduler assemblyLineScheduler) {
 		int k =0;
-		while(!assemblyLineScheduler.getAssemblyLine().getAllWorkstations().get(k).getTaskTypes().contains(VehicleModelCatalog.optionTypeCreator.getOptionType("Seats"))){
+		while(!assemblyLineScheduler.getAssemblyLine().getAllWorkstations().get(k).getTaskTypes().contains(VehicleModelCatalog.taskTypeCreator.Seats)){
 			k++;
 		}
 		for(Order order:stateOfAssemblyLine){
-			if(order != null && (!(order instanceof SingleTaskOrder) ||  ((SingleTaskOrder) order).getType() != VehicleModelCatalog.optionTypeCreator.getOptionType("Seats"))) return 0;
+			if(order != null && (!(order instanceof SingleTaskOrder) ||  ((SingleTaskOrder) order).getType() != VehicleModelCatalog.taskTypeCreator.Seats)) return 0;
 		}
 		if(stateOfAssemblyLine.get(k) != null) return 0;
 		for(int i=0;i<=k-1;i++){
@@ -369,6 +369,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	 */
 	private void timeOfBeltWithAssembly(ArrayList<Order> ordersToComplete,
 			GregorianCalendar time, LinkedList<Order> stateOfAssemblyLine, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> result) {
+		@SuppressWarnings("unchecked")
 		LinkedList<Order> simulator = (LinkedList<Order>) stateOfAssemblyLine.clone();
 		int timespent = 0;
 		int j= 0;
@@ -408,6 +409,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 	 */
 	private int timeToFinishWithFilled(ArrayList<Order> ordersToComplete,
 			LinkedList<Order> stateOfAssemblyLine, AssemblyLineScheduler assemblyLineScheduler) {
+		@SuppressWarnings("unchecked")
 		LinkedList<Order> simulator = (LinkedList<Order>) stateOfAssemblyLine.clone();
 		int time = 0;
 		for(Order i : ordersToComplete){
@@ -446,7 +448,7 @@ public class EfficiencySchedulingAlgorithm implements SchedulingAlgorithm {
 			ArrayList<Order> orderList2, GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> scheduledOrdersWithCompletionTime) {
 		ArrayList<Order> temp = new ArrayList<Order>();
 		int k =0;
-		while(!assemblyLineScheduler.getAssemblyLine().getAllWorkstations().get(k).getTaskTypes().contains(VehicleModelCatalog.optionTypeCreator.getOptionType("Seats"))){
+		while(!assemblyLineScheduler.getAssemblyLine().getAllWorkstations().get(k).getTaskTypes().contains(VehicleModelCatalog.taskTypeCreator.Seats)){
 			k++;
 		}
 		for(int i=0;i<k;i++){

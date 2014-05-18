@@ -12,7 +12,7 @@ import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 
 
-public class CarModelCatalogTest {
+public class VehicleModelCatalogTest {
 	@Before
 	public void setUp() throws Exception {
 		BufferedWriter write = new BufferedWriter(new FileWriter("testData/test_option.txt"));

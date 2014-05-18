@@ -16,6 +16,13 @@ public interface OrderHandler {
 	//TODO wat als scheduler niet hoort bij deze orderhandler? null,exception,lege lijst??? Zie OrderManager,FactoryScheduler
 	public ArrayList<Order> getOrdersFor(Scheduler scheduler);
 
-	//TODO
+	/**
+	 * Checks if this OrderHandler has scheduler?? 
+	 * 
+	 * @param scheduler
+	 * 		The Scheduler that will be checked.
+	 * @return True if it scheduler is used by the OrderHandler?
+	 */
+	//TODO betere doc nodig. (ook bij implementing classes)
 	public boolean hasScheduler(Scheduler scheduler);
 }

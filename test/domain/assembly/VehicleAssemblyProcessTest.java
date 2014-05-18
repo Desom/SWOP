@@ -2,6 +2,7 @@ package domain.assembly;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import static org.junit.Assert.*;
 
@@ -47,22 +48,23 @@ public class VehicleAssemblyProcessTest {
 		
 		
 		process = createCar().getAssemblyprocess();
-	
-		taskTypes1 = new ArrayList<OptionType>();
-		taskTypes1.add(OptionType.Body);
-		taskTypes1.add(OptionType.Color);
-		Workstation workStation1 = new Workstation(null, "W1", taskTypes1);
+
+		LinkedList<OptionType> bodyPost = new LinkedList<OptionType>();
+		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Body"));
+		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Color"));
+		Workstation workStation1 = new Workstation("W1", new WorkstationType("Body Post", bodyPost));
 		
-		taskTypes2 = new ArrayList<OptionType>();
-		taskTypes2.add(OptionType.Engine);
-		taskTypes2.add(OptionType.Gearbox);
-		Workstation workStation2 = new Workstation(null, "W2", taskTypes2);
+		LinkedList<OptionType> driveTrainPost = new LinkedList<OptionType>();
+		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Engine"));
+		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Gearbox"));
+		Workstation workStation2 = new Workstation("W2", new WorkstationType("DriveTrain Post", bodyPost));
 		
-		taskTypes3 = new ArrayList<OptionType>();
-		taskTypes3.add(OptionType.Seats);
-		taskTypes3.add(OptionType.Airco);
-		taskTypes3.add(OptionType.Wheels);
-		Workstation workStation3 = new Workstation(null, "W3", taskTypes3);
+		LinkedList<OptionType> accessoriesPost = new LinkedList<OptionType>();
+		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Seats"));
+		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Airco"));
+		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Wheels"));
+		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Spoiler"));
+		Workstation workStation3 = new Workstation("W3", new WorkstationType("Accessories Post", bodyPost));
 		
 		w1 = workStation1;
 		w2 = workStation2;

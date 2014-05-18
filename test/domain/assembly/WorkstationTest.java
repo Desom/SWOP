@@ -5,6 +5,7 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -44,11 +45,19 @@ public class WorkstationTest {
 		carMechanic = new Mechanic(1);
 		Company comp = new Company();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
+<<<<<<< HEAD
 		taskTypes.add(catalog.taskTypeCreator.Seats);
 		taskTypes.add(catalog.taskTypeCreator.Airco);
 		taskTypes.add(catalog.taskTypeCreator.Wheels);
 		taskTypes.add(catalog.taskTypeCreator.Spoiler);
 		workstation = comp.getAllWorkstations().get(2);
+=======
+		taskTypes.add(OptionType.Seats);
+		taskTypes.add(OptionType.Airco);
+		taskTypes.add(OptionType.Wheels);
+		taskTypes.add(OptionType.Spoiler);
+		workstation = comp.getAllWorkstations(comp.getAssemblyLines().get(0)).get(2);//TODO juiste assemblyLine?
+>>>>>>> 996294ea06fb25433742bb990c9912593c54bdda
 		assertEquals("3", workstation.getName());
 		assertEquals(taskTypes, workstation.getTaskTypes());
 		assertTrue(workstation.getAllCompletedTasks().isEmpty());
@@ -59,9 +68,16 @@ public class WorkstationTest {
 		validTask = workstation.compatibleWith(order.getAssemblyprocess()).get(0);
 		validTask2 = workstation.compatibleWith(order.getAssemblyprocess()).get(1);
 		
+<<<<<<< HEAD
 		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
 		taskTypes2.add(catalog.taskTypeCreator.Gearbox);
 		Workstation workstation2 = new Workstation(null, "W1", taskTypes2);
+=======
+		LinkedList<OptionType> driveTrainPost = new LinkedList<OptionType>();
+		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Gearbox"));
+
+		Workstation workstation2 = new Workstation("W1", new WorkstationType("DriveTrain Post", driveTrainPost));
+>>>>>>> 996294ea06fb25433742bb990c9912593c54bdda
 		invalidTask = workstation2.compatibleWith(order.getAssemblyprocess()).get(0);
 		
 	}

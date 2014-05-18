@@ -203,7 +203,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		scheduler.setSchedulingAlgorithm(algo);
-		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog, time);
+		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics stat = new Statistics(orderManager);
 		@SuppressWarnings("unused")
 		AssemblyLine line = new AssemblyLine(scheduler, statuses);

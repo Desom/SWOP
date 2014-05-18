@@ -40,7 +40,6 @@ public class StatisticsTest {
 		stat = new Statistics(orderManager);
 		line = new AssemblyLine(scheduler, stat);
 		
-		
 		Mechanic m1 = new Mechanic(2);
 		Mechanic m2 = new Mechanic(3);
 		Mechanic m3 = new Mechanic(4);

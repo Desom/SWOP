@@ -29,7 +29,7 @@ import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
-public class EffinciencySchedulingAlgorithmTest {
+public class EfficiencySchedulingAlgorithmTest {
 
 	SchedulingAlgorithm algorithm;
 	GarageHolder garageHolder;

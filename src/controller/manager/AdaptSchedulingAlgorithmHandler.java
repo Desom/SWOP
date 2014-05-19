@@ -6,7 +6,10 @@ import controller.UIInterface;
 import domain.Company;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
+import domain.assembly.FactoryScheduler;
+import domain.assembly.algorithm.BasicSchedulingAlgorithm;
 import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
+import domain.assembly.algorithm.FactorySchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.configuration.Configuration;
@@ -15,61 +18,59 @@ import domain.user.Manager;
 public class AdaptSchedulingAlgorithmHandler {
 
 	public void run(UIInterface ui, Company company, Manager manager) {
-		
-//		The manager has to choose an assembly line.
-		int answer1 = ui.askWithPossibilities("Which assembly line do you want to choose?", company.getAssemblyLines().toArray());
-		AssemblyLine assemblyLine = company.getAssemblyLines().get(answer1);
-		
-//		1. The user wants to select an alternative scheduling algorithm.
-		AssemblyLineScheduler assemblyLineScheduler = assemblyLine.getAssemblyLineScheduler();
-		
-//		2. The system shows the currently selected algorithm.
-		ui.display("This is the currently selected algorithm:");
-		SchedulingAlgorithm[] currentAlgorithm = new SchedulingAlgorithm[1];
-		currentAlgorithm[0] = assemblyLineScheduler.getCurrentAlgorithm();
-		ui.display(currentAlgorithm);
-		
-		if(!ui.askYesNoQuestion("Do you want to change the algorithm used?")){
-//		2. (a) The user indicates he wants to cancel selecting a new scheduling
-//		algorithm.
-//		3. The use case ends here.
-		return;
-	}
-		
-//		2. The system shows the available algorithms, as well as the currently
-//		selected algorithm.
-//		3. The user selects the new scheduling algorithm to be used.
-		Object[] possibilities = assemblyLineScheduler.getPossibleAlgorithms().toArray();
-		int answer2 = ui.askWithPossibilities("Select one of the available algorithms.", possibilities);
 
-		SchedulingAlgorithm chosenAlgorithm = (SchedulingAlgorithm) possibilities[answer2];
-		
-		if(chosenAlgorithm instanceof EfficiencySchedulingAlgorithm){
-			chosenAlgorithm = ((EfficiencySchedulingAlgorithm) chosenAlgorithm).getInnerAlgorithm();
+
+		//		1. The user wants to select an alternative scheduling algorithm.
+		FactoryScheduler factoryScheduler = company.getFactoryScheduler();
+
+		//		2. The system shows the currently selected algorithm.
+		ui.display("This is the currently selected algorithm:");
+		FactorySchedulingAlgorithm[] currentAlgorithm = new FactorySchedulingAlgorithm[1];
+		currentAlgorithm[0] = factoryScheduler.getCurrentAlgorithm();
+		ui.display(currentAlgorithm);
+
+		if(!ui.askYesNoQuestion("Do you want to change the algorithm used?")){
+			//		2. (a) The user indicates he wants to cancel selecting a new scheduling
+			//		algorithm.
+			//		3. The use case ends here.
+			return;
 		}
 
-		if(chosenAlgorithm instanceof SpecificationBatchSchedulingAlgorithm){
-			SpecificationBatchSchedulingAlgorithm specBatch = (SpecificationBatchSchedulingAlgorithm) chosenAlgorithm;
-//			3. (a) The user indicates he wants to use the Specication Batch algorithm.
-//			4. The system shows a list of the sets of vehicle options for which more
-//			than 3 orders are pending in the production queue.
-//			5. The user selects one of these sets for batch processing
-			ArrayList<Configuration> possibleBatch = specBatch.searchForBatchConfiguration(assemblyLineScheduler);
+		//		2. The system shows the available algorithms, as well as the currently
+		//		selected algorithm.
+		//		3. The user selects the new scheduling algorithm to be used.
+		Object[] possibilities = factoryScheduler.getPossibleAlgorithms().toArray();
+		int answer2 = ui.askWithPossibilities("Select one of the available algorithms.", possibilities);
+
+		FactorySchedulingAlgorithm chosenAlgorithm = (FactorySchedulingAlgorithm) possibilities[answer2];
+
+		SchedulingAlgorithm innerChosenAlgorithm = null;
+		if(chosenAlgorithm instanceof BasicSchedulingAlgorithm){
+			innerChosenAlgorithm = ((BasicSchedulingAlgorithm) chosenAlgorithm).getInnerAlgorithm();
+		}
+
+		if(innerChosenAlgorithm instanceof SpecificationBatchSchedulingAlgorithm){
+			SpecificationBatchSchedulingAlgorithm specBatch = (SpecificationBatchSchedulingAlgorithm) innerChosenAlgorithm;
+			//			3. (a) The user indicates he wants to use the Specication Batch algorithm.
+			//			4. The system shows a list of the sets of vehicle options for which more
+			//			than 3 orders are pending in the production queue.
+			//			5. The user selects one of these sets for batch processing
+			ArrayList<Configuration> possibleBatch = specBatch.searchForBatchConfiguration(factoryScheduler);
 			if(possibleBatch.isEmpty()){
 				ui.display("There are no configurations that can be batched.");
 				return;
 			}
 			int answer3 = ui.askWithPossibilities("Choose a configuration that needs to be produced in batch.", possibleBatch.toArray());
-			
+
 			specBatch.setConfiguration(possibleBatch.get(answer3));
-			
-//			6. The use case continues in step 4.
+
+			//			6. The use case continues in step 4.
 		}
-		
-//		4. The system applies the new scheduling algorithm and updates its
-//		state accordingly.
-		
-		assemblyLineScheduler.setSchedulingAlgorithm((SchedulingAlgorithm) possibilities[answer2]);
+
+		//		4. The system applies the new scheduling algorithm and updates its
+		//		state accordingly.
+
+		factoryScheduler.setSchedulingAlgorithm((FactorySchedulingAlgorithm) possibilities[answer2]);
 
 
 

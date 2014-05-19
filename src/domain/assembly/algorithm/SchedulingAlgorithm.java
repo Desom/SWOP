@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
+import domain.assembly.Scheduler;
 import domain.order.Order;
 
 public interface SchedulingAlgorithm {
@@ -15,9 +16,9 @@ public interface SchedulingAlgorithm {
 	 * 
 	 * @param orderList
 	 * 		List of orders to be scheduled.
-	 * @param assemblyLineScheduler
-	 * 		The scheduler of the assembly line.
+	 * @param scheduler
+	 * 		The scheduler.
 	 * @return A scheduled version of the given list of orders.
 	 */
-	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList, AssemblyLineScheduler assemblyLineScheduler);
+	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList, Scheduler scheduler);
 }

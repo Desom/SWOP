@@ -313,6 +313,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	public void updateSchedule(){
 		this.outDated = true;
 		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty()){
+			//TODO dit zal ook niet mogen waarschijnlijk (zoals bij workstation). weer een notify ofzoiets maken ...
 			try{
 				this.getAssemblyLine().advanceLine();
 			}
@@ -324,10 +325,10 @@ public class AssemblyLineScheduler implements Scheduler{
 
 	/**
 	 * Returns the orders to be scheduled.
-	 * Returns null if this assembly line scheduler has no order handler.
 	 * 
-	 * @return The orders to be scheduled, or null if this assembly line scheduler has no order handler.
+	 * @return The orders to be scheduled, empty if this assembly line scheduler has no order handler.
 	 */
+	@Override
 	public ArrayList<Order> getOrdersToBeScheduled() {
 		if(this.getOrderHandler() != null){
 			ArrayList<Order> orders = this.getOrderHandler().getOrdersFor(this);

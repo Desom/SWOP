@@ -6,6 +6,7 @@ import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineCreator;
+import domain.assembly.FactoryScheduler;
 import domain.assembly.SchedulerCreator;
 import domain.assembly.Workstation;
 import domain.configuration.VehicleModelCatalog;
@@ -23,6 +24,7 @@ public class Company {
 	private final VehicleModelCatalog catalog;
 	private final OrderManager orderManager;
 	private final Statistics statistics;
+	private final FactoryScheduler factoryScheduler;
 
 	/**
 	 * Constructor of Company.
@@ -41,8 +43,8 @@ public class Company {
 		try {
 			SchedulerCreator schedulerCreator = new SchedulerCreator();
 			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(schedulerCreator);
-			
-			
+			this.factoryScheduler = schedulerCreator.createFactoryScheduler();
+			//TODO hang assemblySchedulers aan FactoryScheduler.
 			this.catalog = new VehicleModelCatalog();
 			
 			this.orderManager = new OrderManager(schedulerCreator.createFactoryScheduler());
@@ -98,6 +100,15 @@ public class Company {
 	@SuppressWarnings("unchecked")
 	public ArrayList<AssemblyLine> getAssemblyLines() {
 		return (ArrayList<AssemblyLine>) this.assemblyLines.clone();
+	}
+
+	/**
+	 * Returns the factory scheduler of this company.
+	 * 
+	 * @return The factory scheduler of this company.
+	 */
+	public FactoryScheduler getFactoryScheduler() {
+		return factoryScheduler;
 	}
 
 	/**

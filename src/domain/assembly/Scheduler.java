@@ -1,5 +1,6 @@
 package domain.assembly;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import domain.order.Order;
@@ -55,4 +56,17 @@ public interface Scheduler {
 	 * @return True if the order can be completed, false otherwise.
 	 */
 	public boolean canScheduleOrder(Order order);
+
+	/**
+	 * Returns the orders to be scheduled.
+	 * 
+	 * @return The orders to be scheduled, empty if this scheduler has no order handler.
+	 */
+	public ArrayList<Order> getOrdersToBeScheduled();
+
+	/**
+	 * Sets the current algorithm to the default algorithm.
+	 * Updates the schedule afterwards.
+	 */
+	public void setSchedulingAlgorithmToDefault();
 }

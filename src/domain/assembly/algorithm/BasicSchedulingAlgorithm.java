@@ -59,6 +59,9 @@ public class BasicSchedulingAlgorithm
 			GregorianCalendar timeWithChosen = null;
 			ArrayList<ScheduledOrder> newScheduleOfChosen = null;
 			for(AssemblyLineScheduler scheduler : schedulers){
+				if(!scheduler.canScheduleOrder(order)){
+					continue;
+				}
 				//addToSchedule voegt dan order toe aan het huidige schedule, mss niet de beste methode?
 				ArrayList<ScheduledOrder> newSchedule = scheduler.addToSchedule(scheduleMapping.get(scheduler),order);
 				GregorianCalendar time = this.findTimeOf(order, newSchedule);
@@ -198,5 +201,9 @@ public class BasicSchedulingAlgorithm
 	 */
 	public SchedulingAlgorithm getInnerAlgorithm() {
 		return innerAlgorithm;
+	}
+	
+	public String toString(){
+		return "Basic scheduling algorithm using " + this.innerAlgorithm.toString();
 	}
 }

@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
+import domain.assembly.Scheduler;
 import domain.order.Order;
 
 public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
@@ -32,13 +33,13 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	 * 
 	 * @param orderList
 	 * 		List of orders to be scheduled.
-	 * @param assemblyLineScheduler
-	 * 		The scheduler of the assembly line.
+	 * @param scheduler
+	 * 		The scheduler.
 	 * @return A scheduled version of the given list of orders.
 	 */
 	@SuppressWarnings("unchecked")
 	@Override
-	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList, AssemblyLineScheduler assemblyLineScheduler) {
+	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList, Scheduler scheduler){
 		ArrayList<Order> orderedList = (ArrayList<Order>) orderList.clone();
 		Collections.sort(orderedList, this.comparator);
 		return orderedList;

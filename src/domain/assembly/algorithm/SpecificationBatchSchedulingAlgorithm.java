@@ -7,6 +7,7 @@ import java.util.LinkedList;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
+import domain.assembly.Scheduler;
 import domain.configuration.Configuration;
 import domain.order.Order;
 
@@ -39,15 +40,16 @@ public class SpecificationBatchSchedulingAlgorithm implements
 
 	/**
 	 * Schedules the given list of orders and returns it.
+	 * Sets schedulers algorithm back to default when there are no more orders left to batch.
 	 * 
 	 * @param orderList
 	 * 		List of orders to be scheduled.
-	 * @param assemblyLineScheduler
-	 * 		The scheduler of the assembly line.
+	 * @param scheduler
+	 * 		The scheduler.
 	 * @return A scheduled version of the given list of orders.
 	 */
 	@Override
-	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList, AssemblyLineScheduler assemblyLineScheduler) {
+	public ArrayList<Order> scheduleToList(ArrayList<Order> orderList, Scheduler scheduler) {
 
 		ArrayList<Order> batchList = new ArrayList<Order>();
 		ArrayList<Order> standardList = new ArrayList<Order>();
@@ -62,12 +64,12 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		}
 		
 		if(batchList.isEmpty()){
-			assemblyLineScheduler.setSchedulingAlgorithmToDefault();
+			scheduler.setSchedulingAlgorithmToDefault();
 		}
 
-		ArrayList<Order> orderedList = this.innerAlgorithm.scheduleToList(batchList, assemblyLineScheduler);
+		ArrayList<Order> orderedList = this.innerAlgorithm.scheduleToList(batchList, scheduler);
 		
-		orderedList.addAll(this.innerAlgorithm.scheduleToList(standardList, assemblyLineScheduler));
+		orderedList.addAll(this.innerAlgorithm.scheduleToList(standardList, scheduler));
 		return orderedList;
 	}
 	
@@ -79,10 +81,10 @@ public class SpecificationBatchSchedulingAlgorithm implements
 	 * 		The AssemblyLineScheduler from which the orders will be fetched.
 	 * @return A list of Configuration which are all used by more than 3 orders.
 	 */
-	public ArrayList<Configuration> searchForBatchConfiguration(AssemblyLineScheduler assemblyLineScheduler){
+	public ArrayList<Configuration> searchForBatchConfiguration(Scheduler scheduler){
 		ArrayList<Configuration> batchList = new ArrayList<Configuration>();
 		
-		ArrayList<Order> orders = assemblyLineScheduler.getOrdersToBeScheduled();
+		ArrayList<Order> orders = scheduler.getOrdersToBeScheduled();
 		for(int i = 0; i < orders.size() - 2; i++){
 			if(batchList.contains(orders.get(i).getConfiguration())){
 				continue;

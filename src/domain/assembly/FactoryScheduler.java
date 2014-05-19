@@ -1,10 +1,15 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
+import java.util.LinkedList;
 
+import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.assembly.algorithm.FactorySchedulingAlgorithm;
+import domain.assembly.algorithm.SchedulingAlgorithm;
+import domain.configuration.Configuration;
 import domain.order.Order;
 import domain.order.SingleTaskOrder;
 
@@ -15,6 +20,7 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	private boolean outDated;
 	private HashMap<AssemblyLineScheduler,ArrayList<Order>> ordersForSchedulers;
 	private OrderHandler orderHandler;
+	private ArrayList<FactorySchedulingAlgorithm> possibleAlgorithms;
 	
 	/**
 	 * Returns the current time of the system. The oldest time out of all the current times of the AssemblyLineSchedulers.
@@ -73,7 +79,7 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	private HashMap<AssemblyLineScheduler,ArrayList<Order>> getOrdersForSchedulers() {
 		//controleer of de orders die nog moeten worden gedaan, nog steeds moeten worden gedaan.
 		//Mss vergelijken met AssemblyLineScheduler ipv OrderHandler?
-		ArrayList<Order> orders = this.orderHandler.getOrdersFor(this);
+		ArrayList<Order> orders = this.getOrdersToBeScheduled();
 		for(ArrayList<Order> orderList : this.ordersForSchedulers.values()){
 			if(!orders.containsAll(orderList)){
 				this.updateSchedule();
@@ -183,6 +189,67 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	 */
 	public ArrayList<AssemblyLineScheduler> getSchedulerList() {
 		return new ArrayList<AssemblyLineScheduler>(schedulerList);
+	}
+
+	/**
+	 * Returns the current algorithm of this factory scheduler.
+	 * 
+	 * @return The current algorithm of this factory scheduler.
+	 */
+	public FactorySchedulingAlgorithm getCurrentAlgorithm() {
+		return this.currentAlgorithm;
+	}
+
+	/**
+	 * Returns all possible algorithms of this factory scheduler.
+	 * 
+	 * @return All possible algorithms of this factory scheduler.
+	 */
+	public ArrayList<FactorySchedulingAlgorithm> getPossibleAlgorithms() {
+		return new ArrayList<FactorySchedulingAlgorithm>(this.possibleAlgorithms);
+	}
+
+	/**
+	 * Returns the orders to be scheduled.
+	 * 
+	 * @return The orders to be scheduled, empty if this factory scheduler has no order handler.
+	 */
+	@Override
+	public ArrayList<Order> getOrdersToBeScheduled() {
+		if(this.orderHandler != null){
+			ArrayList<Order> orders = this.orderHandler.getOrdersFor(this);
+			for(AssemblyLineScheduler assemblyLineScheduler : this.getSchedulerList()){
+				//ok of moet dit aan alscheduer worden gevraagd en die vraagt dat dan aan assemblyLine?
+				LinkedList<Order> onAssembly = assemblyLineScheduler.getAssemblyLine().getAllOrders();
+				orders.removeAll(onAssembly);
+			}
+			return orders;
+		}
+		return new ArrayList<Order>();
+	}
+
+	/**
+	 * Sets the scheduling algorithm.
+	 * 
+	 * @param algorithm
+	 * 		The new active scheduling algorithm.
+	 * @throws IllegalArgumentException
+	 * 		If the given algorithm isn't one of the possible algorithms.
+	 */
+	public void setSchedulingAlgorithm(FactorySchedulingAlgorithm algorithm) throws IllegalArgumentException {
+		if(!this.possibleAlgorithms.contains(algorithm))
+			throw new IllegalArgumentException("This FactorySchedulingAlgorithm is not one of the possible FactorySchedulingAlgorithm");
+		this.currentAlgorithm = algorithm;
+		this.updateSchedule();
+	}
+
+	/**
+	 * Sets the current algorithm to the default algorithm.
+	 * Updates the schedule afterwards.
+	 */
+	public void setSchedulingAlgorithmToDefault(){
+		this.setSchedulingAlgorithm(this.getPossibleAlgorithms().get(0));
+		this.updateSchedule();
 	}
 
 }

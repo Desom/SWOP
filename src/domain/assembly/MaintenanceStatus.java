@@ -3,13 +3,16 @@ package domain.assembly;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import domain.InternalFailureException;
 import domain.order.Order;
 
 public class MaintenanceStatus extends Status{
 
 	@Override
 	public void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException {
-		this.advanceLine(assemblyLine, null, false);
+		if (!this.canAdvanceLine(assemblyLine))
+			throw new CannotAdvanceException(assemblyLine.getBlockingWorkstations());
+		
 	}
 
 	@Override

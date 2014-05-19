@@ -71,6 +71,40 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		return orderedList;
 	}
 	
+	/**
+	 * Searches for Configurations that can be executed in batch. 
+	 * These Configurations must be used by more than 3 Orders.
+	 * 
+	 * @param assemblyLineScheduler
+	 * 		The AssemblyLineScheduler from which the orders will be fetched.
+	 * @return A list of Configuration which are all used by more than 3 orders.
+	 */
+	public ArrayList<Configuration> searchForBatchConfiguration(AssemblyLineScheduler assemblyLineScheduler){
+		ArrayList<Configuration> batchList = new ArrayList<Configuration>();
+		
+		ArrayList<Order> orders = assemblyLineScheduler.getOrdersToBeScheduled();
+		for(int i = 0; i < orders.size() - 2; i++){
+			if(batchList.contains(orders.get(i).getConfiguration())){
+				continue;
+			}
+			for(int j = i+1; j < orders.size() - 1; j++){
+				if(!orders.get(i).getConfiguration().equals(orders.get(j).getConfiguration())){
+					continue;
+				}
+				for(int k = j + 1; k < orders.size(); k++){
+					if(orders.get(i).getConfiguration().equals(orders.get(k).getConfiguration())){
+						if(!batchList.contains(orders.get(i).getConfiguration())){
+							batchList.add(orders.get(i).getConfiguration());
+						}
+					}
+				}
+			}
+		}
+		
+		return batchList;
+	}
+
+	
 	@Override
 	public String toString(){
 		return "Specification Batch with " + this.innerAlgorithm.toString();

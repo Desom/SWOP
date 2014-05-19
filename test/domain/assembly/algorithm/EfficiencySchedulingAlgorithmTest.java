@@ -34,7 +34,7 @@ import domain.user.GarageHolder;
 
 public class EfficiencySchedulingAlgorithmTest {
 
-	SchedulingAlgorithm algorithm;
+	AssemblyLineSchedulingAlgorithm algorithm;
 	GarageHolder garageHolder;
 	VehicleModelCatalog cmc;
 	AssemblyLineScheduler als;
@@ -46,7 +46,7 @@ public class EfficiencySchedulingAlgorithmTest {
 	@Before
 	public void testCreate() throws IOException, VehicleModelCatalogException {
 		this.algorithm = new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm());
-		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
+		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.customShopManager = new CustomShopManager(0);

@@ -30,6 +30,7 @@ import domain.user.GarageHolder;
 public class FIFOSchedulingAlgorithmTest {
 
 	FIFOSchedulingAlgorithm algorithm;
+	AssemblyLineSchedulingAlgorithm basicAlgorithm;
 	GarageHolder garageHolder;
 	VehicleModelCatalog cmc;
 	AssemblyLineScheduler als;
@@ -38,8 +39,9 @@ public class FIFOSchedulingAlgorithmTest {
 	@Before
 	public void testCreate() throws IOException, VehicleModelCatalogException {
 		this.algorithm = new FIFOSchedulingAlgorithm();
-		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
-		list.add(algorithm);
+		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+		basicAlgorithm = new BasicSchedulingAlgorithm(algorithm);
+		list.add(basicAlgorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.cmc = new VehicleModelCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
@@ -75,7 +77,7 @@ public class FIFOSchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderList();
 		
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = basicAlgorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
 		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());

@@ -32,6 +32,7 @@ import domain.user.GarageHolder;
 public class SpecificationBatchSchedulingAgorithmTest {
 
 	SpecificationBatchSchedulingAlgorithm algorithm;
+	AssemblyLineSchedulingAlgorithm basicAlgorithm;
 	GarageHolder garageHolder;
 	VehicleModelCatalog cmc;
 	AssemblyLineScheduler als;
@@ -45,12 +46,13 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		makeConfiguration();
 		this.algorithm = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		this.algorithm.setConfiguration(specified);
-		ArrayList<SchedulingAlgorithm> list = new ArrayList<SchedulingAlgorithm>();
-		list.add(new FIFOSchedulingAlgorithm());
-		list.add(algorithm);
+		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+		basicAlgorithm = new BasicSchedulingAlgorithm(algorithm);
+		list.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+		list.add(basicAlgorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
-		this.als.setSchedulingAlgorithm(this.algorithm);
+		this.als.setSchedulingAlgorithm(this.basicAlgorithm);
 		statuses = new ArrayList<AssemblyLineStatus>();
 		statuses.add(new OperationalStatus());
 		statuses.add(new MaintenanceStatus());
@@ -84,7 +86,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	public void testScheduleToScheduledOrderList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderList();
 		
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = basicAlgorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
 		assertEquals(9,scheduleList.get(0).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -195,14 +197,15 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	
 	@Test
 	public void testSearchConfiguration() throws IOException, VehicleModelCatalogException, InvalidConfigurationException{
-		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
+		ArrayList<	AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		SpecificationBatchSchedulingAlgorithm algo = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
-		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
-		possibleAlgorithms.add(algo);
+		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+		BasicSchedulingAlgorithm basicSpec = new BasicSchedulingAlgorithm(algo);
+		possibleAlgorithms.add(basicSpec);
 		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
 		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-		scheduler.setSchedulingAlgorithm(algo);
+		scheduler.setSchedulingAlgorithm(basicSpec);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics stat = new Statistics(orderManager);
 		@SuppressWarnings("unused")

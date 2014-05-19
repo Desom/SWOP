@@ -18,6 +18,8 @@ import domain.assembly.CannotAdvanceException;
 import domain.assembly.VehicleAssemblyProcess;
 import domain.assembly.DoesNotExistException;
 import domain.assembly.Workstation;
+import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
+import domain.assembly.algorithm.BasicSchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
@@ -59,9 +61,9 @@ public class AssemblyLineTest {
 		m2 = new Mechanic(3);
 		m3 = new Mechanic(4);
 
-		ArrayList<SchedulingAlgorithm> possibleAlgorithms = new ArrayList<SchedulingAlgorithm>();
-		possibleAlgorithms.add(new FIFOSchedulingAlgorithm());
-		possibleAlgorithms.add(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
 		VehicleModelCatalog catalog = new VehicleModelCatalog();
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);

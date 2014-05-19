@@ -190,4 +190,13 @@ public class BasicSchedulingAlgorithm
 
 		return scheduledList;
 	}
+	
+	/**
+	 * Returns the inner algorithm of this efficiency scheduling algorithm.
+	 * 
+	 * @return The inner algorithm of this efficiency scheduling algorithm.
+	 */
+	public SchedulingAlgorithm getInnerAlgorithm() {
+		return innerAlgorithm;
+	}
 }

@@ -41,17 +41,18 @@ public class Company {
 	 */
 	public Company() {
 		try {
+			this.catalog = new VehicleModelCatalog();
 			SchedulerCreator schedulerCreator = new SchedulerCreator();
-			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(schedulerCreator);
+			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(schedulerCreator, catalog);
 			this.factoryScheduler = schedulerCreator.createFactoryScheduler();
 			//TODO hang assemblySchedulers aan FactoryScheduler.
-			this.catalog = new VehicleModelCatalog();
 			
 			this.orderManager = new OrderManager(schedulerCreator.createFactoryScheduler());
 			this.statistics = new Statistics(this.orderManager);
 			
 			this.assemblyLines = assemblyLineCreator.create();
-				
+			
+			//TODO kunnen we niet beter de IOException door laten? nu vangen we die en geven we een vage verklaring, terwijl IOException kan uitleggen waaraan het ligt.
 		} catch (IOException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
 		} catch (VehicleModelCatalogException e) {

@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import domain.InternalFailureException;
+import domain.configuration.VehicleModel;
 import domain.order.Order;
 
 public class AssemblyLine implements WorkstationObserver{
@@ -14,6 +15,7 @@ public class AssemblyLine implements WorkstationObserver{
 	private final AssemblyLineScheduler assemblyLineScheduler;
 	private ArrayList<AssemblyLineStatus> possibleStatuses;
 	private AssemblyLineStatus currentStatus;
+	private ArrayList<VehicleModel> possibleModels;
 
 	/**
 	 * Constructor of AssemblyLine.
@@ -23,11 +25,14 @@ public class AssemblyLine implements WorkstationObserver{
 	 * @param possibleStatuses
 	 * 		The possible statuses of this assemblyLine.
 	 * 		The first status in this lists will be the current status upon creation of this assembly line.
+	 * @param possibleModels
+	 * 		Only these VehicleModels will be able to be built on this assembly line.
 	 */
-	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, ArrayList<AssemblyLineStatus> possibleStatuses){
+	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, ArrayList<AssemblyLineStatus> possibleStatuses, ArrayList<VehicleModel> possibleModels){
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
-		this.possibleStatuses = possibleStatuses;
+		this.possibleStatuses = new ArrayList<AssemblyLineStatus>(possibleStatuses);
+		this.possibleModels = new ArrayList<VehicleModel>(possibleModels);
 		this.currentStatus = possibleStatuses.get(0);
 		try {
 			this.advanceLine();
@@ -91,7 +96,7 @@ public class AssemblyLine implements WorkstationObserver{
 	}
 
 	
-	// OUTDATED
+	// OUTDATED TODO
 	/*
 	 * This method creates 3 workstations, specifies their ID's and the respective assembly task types those workstations can perform.
 	 * 
@@ -316,5 +321,26 @@ public class AssemblyLine implements WorkstationObserver{
 				throw new InternalFailureException("The AssemblyLine couldn't advance even though canAdvanceLine() returned true.");
 				}
 		}
+	}
+
+	/**
+	 * Returns all the models whose orders can be completed on this assemblyLine.
+	 * 
+	 * @return A list of the models whose orders can be completed on this assemblyLine.
+	 */
+	public ArrayList<VehicleModel> getPossibleModels() {
+		return new ArrayList<VehicleModel>(possibleModels);
+	}
+	
+	/**
+	 * Checks if order can be completed on this assembly line.
+	 * 
+	 * @param order
+	 * 		The order for which will be checked.
+	 * @return True if the model of order is in the list of possibleModels or if the model is null. Otherwise false.
+	 */
+	public boolean canDoOrder(Order order){
+		VehicleModel model = order.getConfiguration().getModel();
+		return model == null || this.getPossibleModels().contains(model);
 	}
 }

@@ -521,9 +521,15 @@ public class AssemblyLineScheduler implements Scheduler{
 		return orderHandler;
 	}
 
+	/**
+	 * Checks if this assembly line scheduler has the means to complete the given order.
+	 * 
+	 * @param order
+	 * 		The order for which will be checked.
+	 * @return True if the order can be completed, false otherwise.
+	 */
 	@Override
 	public boolean canScheduleOrder(Order order) {
-		// TODO dit vragen aan AssemblyLine of toch hier de berekeningen doen?
-		return true;
+		return this.getAssemblyLine().canAcceptNewOrders() && this.getAssemblyLine().canDoOrder(order);
 	}
 }

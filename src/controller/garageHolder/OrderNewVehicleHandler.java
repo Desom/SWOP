@@ -5,27 +5,18 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import controller.CommunicationTool;
 import controller.VehicleOrderForm;
 import controller.UIInterface;
 import domain.Company;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
 import domain.order.Order;
 import domain.order.OrderManager;
 import domain.user.GarageHolder;
 
-public class OrderNewVehicleHandler implements CommunicationTool{
-
-
-
-	private Company company;
-
+public class OrderNewVehicleHandler{
 
 	public void run(UIInterface ui, Company company, GarageHolder garageHolder) {
-		this.company = company;
 		OrderManager ordermanager= company.getOrderManager();
 		//1.The system presents an overview of the orders placed by the user,
 		//divided into two parts. The first part shows a list of pending orders,
@@ -111,27 +102,5 @@ public class OrderNewVehicleHandler implements CommunicationTool{
 			result.add(min);
 		}
 		return result;
-	}
-	
-	public List<String> getOptionTypes() {
-		ArrayList<String> result = new ArrayList<String>();
-		for(OptionType i:VehicleModelCatalog.taskTypeCreator.getAllTypes()) result.add(i.toString());
-		return result;
-	}
-
-
-	/**
-	 * Get a vehicle option based on the description
-	 * @param description the description
-	 * @param company 
-	 * @return a vehicle option based with the description description
-	 *         null if the description does not match an option
-	 */
-	public Option getOption(String description){
-		VehicleModelCatalog catalog = company.getCatalog();
-		for(Option possible: catalog.getAllOptions()){
-			if(possible.getDescription().equals(description)) return possible;
-		}
-		return null;
 	}
 }

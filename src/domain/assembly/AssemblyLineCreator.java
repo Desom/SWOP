@@ -5,16 +5,19 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.configuration.TaskType;
+import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 
 public class AssemblyLineCreator {
 	
 	private SchedulerCreator schedulerCreator;
 	private LinkedList<WorkstationType> workstationTypes;
+	private VehicleModelCatalog catalog;
 	
-	public AssemblyLineCreator(SchedulerCreator schedulerCreator) {
+	public AssemblyLineCreator(SchedulerCreator schedulerCreator, VehicleModelCatalog catalog) {
 		createWorkstationTypes();
 		this.schedulerCreator = schedulerCreator;
+		this.catalog = catalog;
 	}
 	
 	public ArrayList<AssemblyLine> create() {
@@ -24,15 +27,32 @@ public class AssemblyLineCreator {
 		
 		GregorianCalendar startTime = new GregorianCalendar(2014, 0, 1, 6, 0, 0);
 		
-		AssemblyLine assemblyLine1 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses);
+		ArrayList<VehicleModel> models = new ArrayList<VehicleModel>();
+		for(VehicleModel model : this.catalog.getAllModels()){
+			if(model.getName().equals("Model A") || model.getName().equals("Model B")){
+				models.add(model);
+			}
+		}
+		AssemblyLine assemblyLine1 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses, models);
 		assemblyLine1.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine1);
-		
-		AssemblyLine assemblyLine2 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses);
+
+		for(VehicleModel model : this.catalog.getAllModels()){
+			if(model.getName().equals("Model C")){
+				models.add(model);
+			}
+		}
+		AssemblyLine assemblyLine2 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses, models);
 		assemblyLine2.addAllWorkstation(this.createCarWorkstations());
 		assemblyLines.add(assemblyLine2);
 		
-		AssemblyLine assemblyLine3 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses);
+
+		for(VehicleModel model : this.catalog.getAllModels()){
+			if(model.getName().equals("Model X") || model.getName().equals("Model Y")){
+				models.add(model);
+			}
+		}
+		AssemblyLine assemblyLine3 = new AssemblyLine(this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), statuses, models);
 		assemblyLine3.addAllWorkstation(this.createTruckWorkstations());
 		assemblyLines.add(assemblyLine3);
 		

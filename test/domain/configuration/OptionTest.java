@@ -12,7 +12,7 @@ public class OptionTest {
 	
 	@Test
 	public void testcreate() throws VehicleModelCatalogException {
-		Option opt = new Option("green", OptionType.Color);
+		Option opt = new Option("green", new TaskTypeCreator().Color);
 		assertEquals(opt.getDescription(), "green");
 	}
 
@@ -31,7 +31,7 @@ public class OptionTest {
 			assertEquals("null in non null value of Option", e.getMessage());
 		}
 		try {
-			 new Option(null, OptionType.Color);
+			 new Option(null, new TaskTypeCreator().Color);
 			 fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("null in non null value of Option", e.getMessage());
@@ -47,16 +47,16 @@ public class OptionTest {
 	
 	@Test
 	public void testconflictsWith_False() throws VehicleModelCatalogException {
-		Option opt = new Option("green", OptionType.Color);
-		Option opt2 = new Option("red", OptionType.Seats);
+		Option opt = new Option("green", new TaskTypeCreator().Color);
+		Option opt2 = new Option("red", new TaskTypeCreator().Seats);
 		assertFalse(opt.conflictsWith(opt2));
 		assertFalse(opt2.conflictsWith(opt));
 	}
 
 	@Test
 	public void testconflictsWith_True() throws VehicleModelCatalogException {
-		Option opt = new Option("green", OptionType.Color);
-		Option opt2 = new Option("red",  OptionType.Seats);
+		Option opt = new Option("green", new TaskTypeCreator().Color);
+		Option opt2 = new Option("red",  new TaskTypeCreator().Seats);
 		opt.addIncompatible(opt2);
 		opt2.addIncompatible(opt);
 		assertTrue(opt.conflictsWith(opt2));

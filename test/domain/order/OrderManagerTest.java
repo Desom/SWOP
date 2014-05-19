@@ -18,6 +18,7 @@ import domain.assembly.Scheduler;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
@@ -98,7 +99,7 @@ public class OrderManagerTest {
 		}
 		ArrayList<OptionType> List = new ArrayList<OptionType>();
 		for(OptionType i: OptionType.values()){
-			if(i != OptionType.Airco || i != OptionType.Spoiler ){
+			if(i != new TaskTypeCreator().Airco || i != new TaskTypeCreator().Spoiler ){
 				List.add(i);
 			}
 		}

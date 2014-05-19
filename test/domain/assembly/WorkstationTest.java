@@ -14,6 +14,8 @@ import domain.Company;
 import domain.InternalFailureException;
 import domain.assembly.AssemblyTask;
 import domain.assembly.Workstation;
+import domain.configuration.TaskType;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
@@ -45,19 +47,13 @@ public class WorkstationTest {
 		carMechanic = new Mechanic(1);
 		Company comp = new Company();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
-<<<<<<< HEAD
-		taskTypes.add(catalog.taskTypeCreator.Seats);
-		taskTypes.add(catalog.taskTypeCreator.Airco);
-		taskTypes.add(catalog.taskTypeCreator.Wheels);
-		taskTypes.add(catalog.taskTypeCreator.Spoiler);
-		workstation = comp.getAllWorkstations().get(2);
-=======
-		taskTypes.add(OptionType.Seats);
-		taskTypes.add(OptionType.Airco);
-		taskTypes.add(OptionType.Wheels);
-		taskTypes.add(OptionType.Spoiler);
+
+		taskTypes.add(new TaskTypeCreator().Seats);
+		taskTypes.add(new TaskTypeCreator().Airco);
+		taskTypes.add(new TaskTypeCreator().Wheels);
+		taskTypes.add(new TaskTypeCreator().Spoiler);
+
 		workstation = comp.getAllWorkstations(comp.getAssemblyLines().get(0)).get(2);//TODO juiste assemblyLine?
->>>>>>> 996294ea06fb25433742bb990c9912593c54bdda
 		assertEquals("3", workstation.getName());
 		assertEquals(taskTypes, workstation.getTaskTypes());
 		assertTrue(workstation.getAllCompletedTasks().isEmpty());
@@ -68,16 +64,11 @@ public class WorkstationTest {
 		validTask = workstation.compatibleWith(order.getAssemblyprocess()).get(0);
 		validTask2 = workstation.compatibleWith(order.getAssemblyprocess()).get(1);
 		
-<<<<<<< HEAD
-		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
-		taskTypes2.add(catalog.taskTypeCreator.Gearbox);
-		Workstation workstation2 = new Workstation(null, "W1", taskTypes2);
-=======
-		LinkedList<OptionType> driveTrainPost = new LinkedList<OptionType>();
-		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Gearbox"));
+		LinkedList<TaskType> driveTrainPost = new LinkedList<TaskType>();
+		driveTrainPost.add(new TaskTypeCreator().Gearbox);
 
 		Workstation workstation2 = new Workstation("W1", new WorkstationType("DriveTrain Post", driveTrainPost));
->>>>>>> 996294ea06fb25433742bb990c9912593c54bdda
+
 		invalidTask = workstation2.compatibleWith(order.getAssemblyprocess()).get(0);
 		
 	}

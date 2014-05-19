@@ -12,8 +12,10 @@ import org.junit.Test;
 
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
+import domain.assembly.AssemblyLineStatus;
 import domain.assembly.CannotAdvanceException;
 import domain.assembly.DoesNotExistException;
+import domain.assembly.OperationalStatus;
 import domain.assembly.Workstation;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
@@ -38,7 +40,9 @@ public class StatisticsTest {
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		stat = new Statistics(orderManager);
-		line = new AssemblyLine(scheduler, stat);
+		ArrayList<AssemblyLineStatus> possibleStates = new ArrayList<AssemblyLineStatus>();
+		possibleStates.add(new OperationalStatus());
+		line = new AssemblyLine(scheduler, possibleStates);
 		
 		Mechanic m1 = new Mechanic(2);
 		Mechanic m2 = new Mechanic(3);

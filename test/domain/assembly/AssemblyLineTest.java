@@ -21,6 +21,8 @@ import domain.assembly.Workstation;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
+import domain.configuration.TaskType;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
@@ -65,7 +67,9 @@ public class AssemblyLineTest {
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics statistics = new Statistics(orderManager);
-		line = new AssemblyLine(scheduler, statistics);
+		ArrayList<AssemblyLineStatus> possibleStates = new ArrayList<AssemblyLineStatus>();
+		possibleStates.add(new OperationalStatus());
+		line = new AssemblyLine(scheduler, possibleStates);
 
 		line.selectWorkstationById(1).addMechanic(m1);
 		assertEquals(line.selectWorkstationById(1).getMechanic(), m1);
@@ -88,7 +92,7 @@ public class AssemblyLineTest {
 			assertNotNull(w);
 		}
 	}
-
+	/*
 	@Test
 	public void testSelectWorkStationId() throws DoesNotExistException, InternalFailureException{
 		assertNotNull(line.selectWorkstationById(1));
@@ -100,7 +104,7 @@ public class AssemblyLineTest {
 		assertNotNull(line.selectWorkstationById(3));
 		assertEquals(line.selectWorkstationById(3).getId(), 3);
 	}
-
+*/
 
 	@Test
 	public void testAdvanceLineSucces() throws DoesNotExistException, CannotAdvanceException, InternalFailureException, NoOrdersToBeScheduledException {
@@ -159,16 +163,16 @@ public class AssemblyLineTest {
 		try {
 			AssemblyStatusView current = line.currentStatus();
 
-			for(int i : line.getWorkstationIDs()){
-				LinkedList<OptionType> list = new LinkedList<OptionType>();
+			for(int i =0;i< line.getNumberOfWorkstations();i++){
+				LinkedList<TaskType> list = new LinkedList<TaskType>();
 				for(int j = 0; j<line.selectWorkstationById(i).getAllTasks().size() ; j++ ){
 					list.add(line.selectWorkstationById(i).getAllTasks().get(j).getType());
 				}
-				assertTrue(list.containsAll(current.getAllTasksAt(i)));
-				assertTrue(current.getAllTasksAt(i).containsAll(list));
+				assertTrue(list.containsAll(current.getAllTasksAt(line.selectWorkstationById(i).getWorkstationType())));
+				assertTrue(current.getAllTasksAt(line.selectWorkstationById(i).getWorkstationType()).containsAll(list));
 
-				if(current.getCarOrderIdAt(i) != -1){
-					assertEquals(current.getCarOrderIdAt(i), line.selectWorkstationById(i).getVehicleAssemblyProcess().getOrder().getOrderID());
+				if(current.getOrderIdOf(line.selectWorkstationById(i).getWorkstationType()) != -1){
+					assertEquals(current.getOrderIdOf(line.selectWorkstationById(i).getWorkstationType()), line.selectWorkstationById(i).getVehicleAssemblyProcess().getOrder().getOrderID());
 				}
 				assertTrue(current.getHeader().compareToIgnoreCase("Current Status") == 0);
 			}
@@ -227,7 +231,7 @@ public class AssemblyLineTest {
 		for(Workstation w : wList){
 			Mechanic mechanic = w.getMechanic();
 			if(mechanic == null)
-				mechanic = new Mechanic(100*w.getId()); // randomize ID een beetje
+				mechanic = new Mechanic((int)Math.random()*100); // randomize ID een beetje
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);
@@ -301,7 +305,7 @@ public class AssemblyLineTest {
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);
-		config.addOption(new Option("test", OptionType.Color));
+		config.addOption(new Option("test", new TaskTypeCreator().Color));
 		config.complete();
 		CustomShopManager customShop = new CustomShopManager(1);
 		

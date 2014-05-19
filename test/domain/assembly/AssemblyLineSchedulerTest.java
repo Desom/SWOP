@@ -15,6 +15,7 @@ import domain.Statistics;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
@@ -265,7 +266,7 @@ public class AssemblyLineSchedulerTest {
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);
-		config.addOption(new Option("test", OptionType.Color));
+		config.addOption(new Option("test",new TaskTypeCreator().Color));
 		config.complete();
 		CustomShopManager customShop = new CustomShopManager(1);
 		

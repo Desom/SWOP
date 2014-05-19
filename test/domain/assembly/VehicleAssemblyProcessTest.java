@@ -11,6 +11,8 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.configuration.TaskType;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
@@ -49,22 +51,22 @@ public class VehicleAssemblyProcessTest {
 		
 		process = createCar().getAssemblyprocess();
 
-		LinkedList<OptionType> bodyPost = new LinkedList<OptionType>();
-		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Body"));
-		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Color"));
+		LinkedList<TaskType> bodyPost = new LinkedList<TaskType>();
+		bodyPost.add(new TaskTypeCreator().Body);
+		bodyPost.add(new TaskTypeCreator().Color);
 		Workstation workStation1 = new Workstation("W1", new WorkstationType("Body Post", bodyPost));
 		
-		LinkedList<OptionType> driveTrainPost = new LinkedList<OptionType>();
-		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Engine"));
-		driveTrainPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Gearbox"));
-		Workstation workStation2 = new Workstation("W2", new WorkstationType("DriveTrain Post", bodyPost));
+		LinkedList<TaskType> driveTrainPost = new LinkedList<TaskType>();
+		driveTrainPost.add(new TaskTypeCreator().Engine);
+		driveTrainPost.add(new TaskTypeCreator().Gearbox);
+		Workstation workStation2 = new Workstation("W2", new WorkstationType("DriveTrain Post", driveTrainPost));
 		
-		LinkedList<OptionType> accessoriesPost = new LinkedList<OptionType>();
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Seats"));
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Airco"));
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Wheels"));
-		accessoriesPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Spoiler"));
-		Workstation workStation3 = new Workstation("W3", new WorkstationType("Accessories Post", bodyPost));
+		LinkedList<TaskType> accessoriesPost = new LinkedList<TaskType>();
+		accessoriesPost.add(new TaskTypeCreator().Seats);
+		accessoriesPost.add(new TaskTypeCreator().Airco);
+		accessoriesPost.add(new TaskTypeCreator().Wheels);
+		accessoriesPost.add(new TaskTypeCreator().Spoiler);
+		Workstation workStation3 = new Workstation("W3", new WorkstationType("Accessories Post", accessoriesPost));
 		
 		w1 = workStation1;
 		w2 = workStation2;

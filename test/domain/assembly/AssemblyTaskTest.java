@@ -11,6 +11,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import domain.assembly.AssemblyTask;
+import domain.configuration.TaskType;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
@@ -33,9 +35,9 @@ public class AssemblyTaskTest {
 	@BeforeClass
 	public static void testCreate() throws IOException, VehicleModelCatalogException, InvalidConfigurationException {
 		VehicleOrder o = buildCar();
-		LinkedList<OptionType> bodyPost = new LinkedList<OptionType>();
-		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Body"));
-		bodyPost.add(VehicleModelCatalog.optionTypeCreator.getOptionType("Color"));
+		LinkedList<TaskType> bodyPost = new LinkedList<TaskType>();
+		bodyPost.add(new TaskTypeCreator().Body);
+		bodyPost.add(new TaskTypeCreator().Color);
 		Workstation w = new Workstation("name", new WorkstationType("Body Post", bodyPost));
 		task = w.compatibleWith(o.getAssemblyprocess()).get(0);;
 	}

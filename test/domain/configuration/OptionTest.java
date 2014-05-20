@@ -5,7 +5,6 @@ import org.junit.Test;
 
 import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Option;
-import domain.configuration.OptionType;
 
 
 public class OptionTest {

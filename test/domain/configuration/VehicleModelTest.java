@@ -46,7 +46,7 @@ public class VehicleModelTest {
 
 	@Test
 	public void testconstructer() throws VehicleModelCatalogException {
-		VehicleModel car = new VehicleModel(Name,a,60);
+		VehicleModel car = new VehicleModel(Name,a,null, null);
 		
 		assertEquals(Name, car.getName());
 		assertEquals(a, car.getPossibleOptions());
@@ -64,13 +64,13 @@ public class VehicleModelTest {
 	@Test
 	public void testnull()  {
 		try {
-			new VehicleModel(null,a);
+			new VehicleModel(null,a, null, null);
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("null in non null value of Model",e.getMessage());
 		}
 		try {
-			new VehicleModel(Name,null);
+			new VehicleModel(Name,null, null, null);
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("null in non null value of Model",e.getMessage());
@@ -80,7 +80,7 @@ public class VehicleModelTest {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(A);
-			new VehicleModel(Name,fake);
+			new VehicleModel(Name,fake, null, null);
 			
 		} catch (VehicleModelCatalogException e) {
 			fail();
@@ -88,7 +88,7 @@ public class VehicleModelTest {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(B);
-			new VehicleModel(Name,fake);
+			new VehicleModel(Name,fake, null, null);
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals(e.getMessage(),"Missing type: Body");
@@ -96,7 +96,7 @@ public class VehicleModelTest {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(C);
-			new VehicleModel(Name,fake);
+			new VehicleModel(Name,fake, null, null);
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals(e.getMessage(),"Missing type: Color");
@@ -104,7 +104,7 @@ public class VehicleModelTest {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(E);
-			new VehicleModel(Name,fake);
+			new VehicleModel(Name,fake, null, null);
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals(e.getMessage(),"Missing type: Engine");
@@ -112,7 +112,7 @@ public class VehicleModelTest {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(G);
-			new VehicleModel(Name,fake);
+			new VehicleModel(Name,fake, null, null);
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals(e.getMessage(),"Missing type: Gearbox");
@@ -120,7 +120,7 @@ public class VehicleModelTest {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(S);
-			new VehicleModel(Name,fake);
+			new VehicleModel(Name,fake, null, null);
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals(e.getMessage(),"Missing type: Seats");
@@ -128,7 +128,7 @@ public class VehicleModelTest {
 		try {
 			fake = ((ArrayList<Option>) a.clone());
 			fake.remove(Sp);
-			new VehicleModel(Name,fake);
+			new VehicleModel(Name,fake, null, null);
 		} catch (VehicleModelCatalogException e) {
 			fail();
 		}
@@ -138,7 +138,7 @@ public class VehicleModelTest {
 	public void testgetOfOptionType() {
 		VehicleModel car = null;
 		try {
-			car = new VehicleModel(Name,a);
+			car = new VehicleModel(Name,a, null, null);
 		} catch (VehicleModelCatalogException e) {
 			fail();
 		}

@@ -5,13 +5,7 @@ import java.util.GregorianCalendar;
 
 import domain.assembly.algorithm.AlgorithmCreator;
 import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
-import domain.assembly.algorithm.BasicSchedulingAlgorithm;
-import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
-import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.FactorySchedulingAlgorithm;
-import domain.assembly.algorithm.SameOrderSchedulingAlgorithm;
-import domain.assembly.algorithm.SchedulingAlgorithm;
-import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 
 public class SchedulerCreator {
 	

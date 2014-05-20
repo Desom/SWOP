@@ -39,11 +39,9 @@ public class WorkstationTest {
 	private AssemblyTask validTask;
 	private AssemblyTask validTask2;
 	private AssemblyTask invalidTask;
-	private VehicleModelCatalog catalog;
 	
 	@Before
 	public void testCreate() throws InvalidConfigurationException, IOException, VehicleModelCatalogException, InternalFailureException {
-		catalog = new VehicleModelCatalog();
 		carMechanic = new Mechanic(1);
 		Company comp = new Company();
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
@@ -150,14 +148,14 @@ public class WorkstationTest {
 	
 	private VehicleOrder createCar() throws InvalidConfigurationException, IOException, VehicleModelCatalogException{
 	
-		Policy pol1 = new CompletionPolicy(null, catalog.taskTypeCreator.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null, VehicleModelCatalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
 		Policy carOrderPolicy= pol4;
 		
 		
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		VehicleModel carModel = null;
 		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){

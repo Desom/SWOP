@@ -17,11 +17,12 @@ import domain.assembly.CannotAdvanceException;
 import domain.assembly.DoesNotExistException;
 import domain.assembly.OperationalStatus;
 import domain.assembly.Workstation;
+import domain.assembly.WorkstationTypeCreator;
 import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.assembly.algorithm.BasicSchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
-import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
+import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 import domain.order.OrderManager;
@@ -38,13 +39,14 @@ public class StatisticsTest {
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		stat = new Statistics(orderManager);
 		ArrayList<AssemblyLineStatus> possibleStates = new ArrayList<AssemblyLineStatus>();
 		possibleStates.add(new OperationalStatus());
-		line = new AssemblyLine(scheduler, possibleStates);
+		ArrayList<VehicleModel> models = new ArrayList<VehicleModel>(catalog.getAllModels());
+		line = new AssemblyLine(scheduler, possibleStates,models);
 		
 		Mechanic m1 = new Mechanic(2);
 		Mechanic m2 = new Mechanic(3);
@@ -163,7 +165,7 @@ public class StatisticsTest {
 			}
 			if(w.getAllPendingTasks().size() != 0){
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime(w.getWorkstationType()));
 			}
 		}
 	}

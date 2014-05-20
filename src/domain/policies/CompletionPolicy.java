@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
 import domain.configuration.OptionType;
-import domain.configuration.TaskType;
 
 /**
  * This policy class checks if a configuration is complete (if it has all required option types).

@@ -185,16 +185,18 @@ public class OrderCreator {
 		ArrayList<Option> optionsList = new ArrayList<Option>();
 		String[] optionStr = optionsString.split(";-;");
 		for(String optionDescr: optionStr){
+			Option found = null;
 			for(Option option : this.catalog.getAllOptions()){
 				if(option.getDescription().equals(optionDescr)){
-					optionsList.add(option);
+					found = option;
 					break;
 				}
 			}
-		}
-
-		if(optionStr.length != optionsList.size()){
-			throw new IOException("The file contains an option that doesn't exist.");
+			if(found!=null){
+				optionsList.add(found);				
+			}else{
+				throw new IOException("The file contains an option that doesn't exist. named: " + optionDescr);
+			}
 		}
 
 		for(Option option : optionsList){

@@ -53,7 +53,7 @@ public class AssemblyLineSchedulerTest {
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics statistics = new Statistics(orderManager);
@@ -232,7 +232,7 @@ public class AssemblyLineSchedulerTest {
 			}
 			if(w.getAllPendingTasks().size() != 0){
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime(w.getWorkstationType()));
 			}
 		}
 	}

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.assembly.WorkstationTypeCreator;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;
@@ -25,10 +26,10 @@ public class PolicyTest {
 
 	@Before
 	public void makePolicies() throws IOException, VehicleModelCatalogException {
-		this.cmc = new VehicleModelCatalog();
+		this.cmc = new VehicleModelCatalog(new WorkstationTypeCreator());
 
 		//Creates the car order policy chain.
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null,VehicleModelCatalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);

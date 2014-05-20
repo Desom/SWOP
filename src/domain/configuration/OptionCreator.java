@@ -46,6 +46,7 @@ public class OptionCreator {
 	public ArrayList<Option> createOptions() throws IOException, VehicleModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(optionpath));
 		this.allOptions = new HashMap<String,Option>();
+		this.allParts = new HashMap<String,Part>();
 		String inputline = input.readLine();
 		while( inputline!=null){
 			if(inputline.equals("!")){
@@ -79,8 +80,11 @@ public class OptionCreator {
 		this.allOptions = new HashMap<String,Option>();
 		String inputline = input.readLine();
 		while( inputline!=null){
-			if(inputline.equals("!"))
+			if(inputline.equals("!")){
+				inputline = input.readLine();
 				break;
+			}
+			inputline = input.readLine();
 		}
 		while( inputline!=null){
 			processPartLine(inputline);
@@ -174,7 +178,8 @@ public class OptionCreator {
 	private void checkAndRemove(ArrayList<String> strings, ArrayList<String> stringsToBeRemoved) throws VehicleModelCatalogException {
 		if(strings == stringsToBeRemoved) return;
 		for(String i: stringsToBeRemoved){
-			if( !strings.remove(i)) throw new VehicleModelCatalogException("Option does not exists: "+ i);
+			if( !strings.remove(i)) 
+				throw new VehicleModelCatalogException("Option does not exists: "+ i);
 		}
 	}
 
@@ -221,6 +226,9 @@ public class OptionCreator {
 	private Part createPart(String description, String typeName) throws VehicleModelCatalogException {
 		try{
 			PartType type = (PartType) VehicleModelCatalog.taskTypeCreator.getTaskType(typeName);
+			if(type == null){
+				System.out.println("damn");
+			}
 			Part result = new Part(description,  type);
 			return result;
 		}catch(IllegalArgumentException e){

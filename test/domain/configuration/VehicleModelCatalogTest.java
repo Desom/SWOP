@@ -8,13 +8,18 @@ import java.io.IOException;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.assembly.WorkstationTypeCreator;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 
 
 public class VehicleModelCatalogTest {
+
+	WorkstationTypeCreator creator;
+	
 	@Before
 	public void setUp() throws Exception {
+		creator = new WorkstationTypeCreator();
 		BufferedWriter write = new BufferedWriter(new FileWriter("testData/test_option.txt"));
 		write.write("sedan;Body;,\n");
 		write.write("break;Body;,\n");
@@ -39,10 +44,12 @@ public class VehicleModelCatalogTest {
 		write2.write("Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue,no spoiler");
 		write2.close();
 	}
-	@SuppressWarnings("unused")
+	
+	
 	@Test
 	public void testcreate() throws IOException, VehicleModelCatalogException {
-		VehicleModelCatalog catalog =new VehicleModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/init_model.txt");
+		@SuppressWarnings("unused")
+		VehicleModelCatalog catalog =new VehicleModelCatalog(creator,"testData/test_option.txt","testData/testDependancies.txt","testData/init_model.txt");
 //		assertTrue(catalog.getOption("red").conflictsWith(catalog.getOption("blue")));
 //		assertFalse(catalog.getOption("manual").conflictsWith(catalog.getOption("blue")));
 	}
@@ -52,7 +59,7 @@ public class VehicleModelCatalogTest {
 		write.write("a;Body");
 		write.close();
 		try {
-			new VehicleModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
+			new VehicleModelCatalog(creator,"testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("Option: wrong input format: a;Body",e.getMessage());
@@ -65,7 +72,7 @@ public class VehicleModelCatalogTest {
 		write.write("a;Gear;,");
 		write.close();
 		try {
-			new VehicleModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
+			new VehicleModelCatalog(creator,"testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("Option already exists: a",e.getMessage());
@@ -78,7 +85,7 @@ public class VehicleModelCatalogTest {
 		write.write("a;Body;b,");
 		write.close();
 		try {
-			new VehicleModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
+			new VehicleModelCatalog(creator,"testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("Option does not exists: b",e.getMessage());
@@ -91,7 +98,7 @@ public class VehicleModelCatalogTest {
 		write.write("a;fake;,");
 		write.close();
 		try {
-			new VehicleModelCatalog("testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
+			new VehicleModelCatalog(creator,"testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("no valid type: fake",e.getMessage());
@@ -103,7 +110,7 @@ public class VehicleModelCatalogTest {
 		write.write("a;Body;,");
 		write.close();
 		try {
-			new VehicleModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
+			new VehicleModelCatalog(creator,"testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("Model: wrong input format: a;Body;,",e.getMessage());
@@ -116,7 +123,7 @@ public class VehicleModelCatalogTest {
 		write.write("a;manual,sedan,red,standard 2l 4 cilinders,6 speed manual,leather black,comfort,no spoiler,");
 		write.close();
 		try {
-			new VehicleModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
+			new VehicleModelCatalog(creator,"testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("Model name already exists: a",e.getMessage());
@@ -128,7 +135,7 @@ public class VehicleModelCatalogTest {
 		write.write("a;manual,sedan,red,nospoiler,standard 2l 4 cilinders,6 speed manual,leather black,comfort,");
 		write.close();
 		try {
-			new VehicleModelCatalog("testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
+			new VehicleModelCatalog(creator,"testData/test_option.txt","testData/testDependancies.txt","testData/test_model.txt");
 			fail();
 		} catch (VehicleModelCatalogException e) {
 			assertEquals("Option does not exists: nospoiler",e.getMessage());

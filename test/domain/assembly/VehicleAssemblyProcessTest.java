@@ -101,14 +101,14 @@ public class VehicleAssemblyProcessTest {
 	
 	private VehicleOrder createCar() throws InvalidConfigurationException, IOException, VehicleModelCatalogException{
 		
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null,VehicleModelCatalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
 		Policy carOrderPolicy= pol4;
 		
 		
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		VehicleModel carModel = null;
 		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){

@@ -3,7 +3,6 @@ package domain.assembly;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import domain.configuration.Option;
 import domain.configuration.Taskable;
 import domain.order.Order;
 

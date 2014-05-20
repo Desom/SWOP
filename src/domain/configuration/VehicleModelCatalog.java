@@ -42,7 +42,9 @@ public class VehicleModelCatalog {
 	 */
 	public VehicleModelCatalog(WorkstationTypeCreator workstationTypeCreator, String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleModelCatalogException{
 		this.workstationTypeCreator = workstationTypeCreator;
-		allOptions = (new OptionCreator(optionPath,dependancyPath)).createOptions();
+		OptionCreator oCreator = new OptionCreator(optionPath,dependancyPath);
+		allParts = oCreator.createParts();
+		allOptions = oCreator.createOptions();
 		allModels= (new ModelCreator(this.workstationTypeCreator, this.getAllOptions(), this.getAllParts(), modelPath)).createModels();
 	}
 

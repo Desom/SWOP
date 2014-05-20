@@ -8,7 +8,12 @@ import domain.order.Order;
 
 
 
-public abstract class Status implements AssemblyLineStatus {
+public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
+	
+	public AbstractAdvancingStatus(StatusCreator creator) {
+		super(creator);
+	}
+
 	protected void standardAdvanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException{
 		// Check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 		if (!this.canAdvanceLine(assemblyLine))
@@ -91,8 +96,22 @@ public abstract class Status implements AssemblyLineStatus {
 	}
 
 	protected abstract Order notifyOrderAsked(AssemblyLine assemblyLine);
+	
 	@Override
 	public abstract void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException;
+	
+	@Override
+	public Boolean canAdvanceLine(AssemblyLine assemblyLine) {
+		for(Workstation workstation : assemblyLine.getAllWorkstations())
+			if(!workstation.hasAllTasksCompleted())
+				return false;
+		return true;
+	}
+	
+	@Override
+	public Boolean canAcceptNewOrders() {
+		return true;
+	}
 
 	public int calculateTimeTillEmptyFor(AssemblyLine assemblyLine, LinkedList<Order> assembly) {
 		@SuppressWarnings("unchecked")

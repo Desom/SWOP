@@ -65,7 +65,7 @@ public class AssemblyLineTest {
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics statistics = new Statistics(orderManager);
@@ -240,7 +240,7 @@ public class AssemblyLineTest {
 			}
 			if(w.getAllPendingTasks().size() != 0){
 				w.selectTask(w.getAllPendingTasks().get(0));
-				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime());
+				w.completeTask(mechanic,w.getVehicleAssemblyProcess().getOrder().getConfiguration().getExpectedWorkingTime(w.getWorkstationType()));
 			}
 		}
 	}
@@ -267,14 +267,14 @@ public class AssemblyLineTest {
 
 	private VehicleOrder createCar() throws InvalidConfigurationException, IOException, VehicleModelCatalogException{
 
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null,VehicleModelCatalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
 		Policy carOrderPolicy= pol4;
 
 
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		VehicleModel carModel = null;
 		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){

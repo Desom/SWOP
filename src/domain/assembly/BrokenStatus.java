@@ -37,4 +37,10 @@ public class BrokenStatus implements AssemblyLineStatus {
 		return "Broken";
 	}
 
+	@Override
+	public int calculateTimeTillEmptyFor(AssemblyLine assemblyLine,
+			LinkedList<Order> assembly) {
+		return -1;
+	}
+
 }

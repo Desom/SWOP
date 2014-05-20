@@ -1,6 +1,7 @@
 package domain.assembly;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 import domain.InternalFailureException;
 import domain.order.Order;
@@ -81,7 +82,40 @@ public abstract class Status implements AssemblyLineStatus {
 			throw new InternalFailureException("Suddenly a Workstation disappeared while that should not be possible.");
 		}
 	}
-
+	
 	@Override
 	public abstract void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException;
+	
+	public int calculateTimeTillEmptyFor(AssemblyLine assemblyLine, LinkedList<Order> assembly) {
+		@SuppressWarnings("unchecked")
+		LinkedList<Order> simulAssembly = (LinkedList<Order>) assembly.clone();
+		int time = 0;
+		for(int i = 0; i < assemblyLine.getNumberOfWorkstations(); i++){
+			time += assemblyLine.calculateTimeTillAdvanceFor(simulAssembly);
+			simulAssembly.removeLast();
+			simulAssembly.addFirst(null);
+			for(int j= assemblyLine.getNumberOfWorkstations()-1; j>=0;j--){
+				try {
+					if(simulAssembly.get(j) != null && !assemblyLine.filterWorkstations(simulAssembly.get(j).getAssemblyprocess()).contains(assemblyLine.selectWorkstationById(j))){
+						if(j==assemblyLine.getNumberOfWorkstations()-1){
+							simulAssembly.removeLast();
+							simulAssembly.addLast(null);
+						}
+						else{
+							if(simulAssembly.get(j+1)==null){
+								simulAssembly.remove(j+1);
+								simulAssembly.add(j+1, simulAssembly.get(j));
+								simulAssembly.remove(j);
+								simulAssembly.add(j, null);
+								j+=2;
+							}
+						}
+					}
+				} catch (DoesNotExistException e) {
+					// onmogelijk
+				}
+			}
+		}
+		return time;
+	}
 }

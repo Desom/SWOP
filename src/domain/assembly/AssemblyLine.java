@@ -188,14 +188,7 @@ public class AssemblyLine implements WorkstationObserver{
 	 */
 	@SuppressWarnings("unchecked")
 	public int calculateTimeTillEmptyFor(LinkedList<Order> assembly) {
-		LinkedList<Order> simulAssembly = (LinkedList<Order>) assembly.clone();
-		int time = 0;
-		for(int i = 0; i < 3; i++){
-			time += this.calculateTimeTillAdvanceFor(simulAssembly);
-			simulAssembly.removeLast();
-			simulAssembly.addFirst(null);
-		}
-		return time;
+		return this.currentStatus.calculateTimeTillEmptyFor(this,assembly);
 	}
 
 	/**
@@ -209,7 +202,7 @@ public class AssemblyLine implements WorkstationObserver{
 	public int calculateTimeTillAdvanceFor(LinkedList<Order> assembly) {
 		LinkedList<Workstation> allWorkstations = this.getAllWorkstations();
 		int maxTime = 0;
-		for(int j = 0; j < 3; j++){
+		for(int j = 0; j < this.getNumberOfWorkstations(); j++){
 			if(assembly.get(j) != null
 					&& (this.filterWorkstations(assembly.get(j).getAssemblyprocess())).contains(allWorkstations.get(j))
 					&& assembly.get(j).getConfiguration().getExpectedWorkingTime() > maxTime){

@@ -12,7 +12,6 @@ public class MaintenanceStatus extends Status{
 	public void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException {
 		if (!this.canAdvanceLine(assemblyLine))
 			throw new CannotAdvanceException(assemblyLine.getBlockingWorkstations());
-		
 	}
 
 	@Override

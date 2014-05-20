@@ -12,4 +12,5 @@ public interface AssemblyLineStatus {
 	public Boolean canAcceptNewOrders();
 	public LinkedList<Order> stateWhenAcceptingOrders(AssemblyLine assemblyLine);
 	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine);
+	public int calculateTimeTillEmptyFor(AssemblyLine assemblyLine, LinkedList<Order> assembly);
 }

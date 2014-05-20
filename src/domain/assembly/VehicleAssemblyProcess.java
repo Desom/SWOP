@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import domain.configuration.Option;
+import domain.configuration.Taskable;
 import domain.order.Order;
 
 public class VehicleAssemblyProcess {
@@ -20,11 +21,11 @@ public class VehicleAssemblyProcess {
 	 * 
 	 * @param order 
 	 * 			The order related to this assembly process.
-	 * @param options 
-	 * 			The options that are to be converted into assembly tasks.
+	 * @param tasks
+	 * 			The taskables that are to be converted into assembly tasks.
 	 */
-	public VehicleAssemblyProcess(Order order, ArrayList<Option> options){
-		this(order, options, false);
+	public VehicleAssemblyProcess(Order order, ArrayList<Taskable> tasks){
+		this(order, tasks, false);
 	}
 	
 	/**
@@ -32,19 +33,19 @@ public class VehicleAssemblyProcess {
 	 * 
 	 * @param order 
 	 * 			The order related to this assembly process.
-	 * @param options 
-	 * 			The options that are to be converted into assembly tasks.
+	 * @param tasks
+	 * 			The taskables that are to be converted into assembly tasks.
 	 * @param isCompleted 
 	 * 			Indicates if the vehicle assembly process is already completed.
 	 */
-	public VehicleAssemblyProcess(Order order, ArrayList<Option> options, boolean isCompleted){
-		ArrayList<AssemblyTask> tasks = new ArrayList<AssemblyTask>();
-		for(Option o : options){
+	public VehicleAssemblyProcess(Order order, ArrayList<Taskable> tasks, boolean isCompleted){
+		ArrayList<AssemblyTask> assemblyTasks = new ArrayList<AssemblyTask>();
+		for(Taskable t : tasks){
 			ArrayList<String> actions = new ArrayList<String>();
 			actions.add("dummy action");
-			tasks.add(new AssemblyTask(actions, o.getType(), isCompleted, this)); 
+			assemblyTasks.add(new AssemblyTask(actions, t, isCompleted, this)); 
 		}
-		this.tasks = tasks;
+		this.tasks = assemblyTasks;
 		this.order = order;
 	}
 	/**
@@ -52,16 +53,16 @@ public class VehicleAssemblyProcess {
 	 * 
 	 * @param order 
 	 * 			The order related to this assembly process.
-	 * @param options 
-	 * 			The options that are to be converted into assembly tasks.
+	 * @param tasks 
+	 * 			The taskables that are to be converted into assembly tasks.
 	 * @param isCompleted 
 	 * 			Indicates if the vehicle assembly process is already completed.
 	 * @param deliveredTime
 	 * 			The time this VehicleAssemblyProcess was completed
 	 */
-	public VehicleAssemblyProcess(Order order, ArrayList<Option> options,
+	public VehicleAssemblyProcess(Order order, ArrayList<Taskable> tasks,
 			boolean isCompleted, GregorianCalendar deliveredTime) {
-		this(order,options,isCompleted);
+		this(order,tasks,isCompleted);
 		if(isCompleted){
 			this.deliveredTime =deliveredTime;
 		}

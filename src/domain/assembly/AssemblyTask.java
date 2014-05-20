@@ -3,6 +3,7 @@ package domain.assembly;
 import java.util.ArrayList;
 
 import domain.configuration.TaskType;
+import domain.configuration.Taskable;
 
 /**
  * In this class can't exist any methods with public visibility which can harm the integrity of its objects.
@@ -11,7 +12,7 @@ import domain.configuration.TaskType;
 public class AssemblyTask {
 	
 	private ArrayList<String> actions;
-	private final TaskType type;
+	private final Taskable taskable;
 	private boolean isCompleted;
 	private final VehicleAssemblyProcess assemblyProcess;
 
@@ -25,8 +26,8 @@ public class AssemblyTask {
 	 * @param	type
 	 * 			An enum object that indicates the type of this AssemblyTask
 	 */
-	public AssemblyTask(ArrayList<String> actions, TaskType type, VehicleAssemblyProcess process) {
-		this(actions, type, false, process);
+	public AssemblyTask(ArrayList<String> actions, Taskable taskable, VehicleAssemblyProcess process) {
+		this(actions, taskable, false, process);
 	}
 	
 	/**
@@ -40,9 +41,9 @@ public class AssemblyTask {
 	 * @param	isCompleted
 	 * 			A boolean telling if this assembly task is already completed or not
 	 */
-	public AssemblyTask(ArrayList<String> actions, TaskType type, boolean isCompleted, VehicleAssemblyProcess process) {
+	public AssemblyTask(ArrayList<String> actions, Taskable taskable, boolean isCompleted, VehicleAssemblyProcess process) {
 		this.setActions(actions);
-		this.type = type;
+		this.taskable = taskable;
 		this.isCompleted = isCompleted;
 		this.assemblyProcess = process;
 	}
@@ -53,8 +54,19 @@ public class AssemblyTask {
 	 * @return	The taskType of this assemblyTask.
 	 */
 	public TaskType getType() {
-		return type;
+		return taskable.getType();
 	}
+	
+	
+	/**
+	 * Gives the Option or Part (Taskable) corresponding to this type.
+	 * 
+	 * @return	the Option or Part (Taskable) corresponding to this type.
+	 */
+	public Taskable getTaskable() {
+		return taskable;
+	}
+	
 	
 	/**
 	 * Gives a list of the actions needed to complete this assembly task.
@@ -115,7 +127,7 @@ public class AssemblyTask {
 	 */
 	@Override
 	public String toString() {
-		String name = this.type + ":";
+		String name = this.taskable.getDescription() + ":";
 		for (String action : this.actions)
 			name += " " + action;
 		return name;

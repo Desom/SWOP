@@ -5,7 +5,11 @@ import java.util.LinkedList;
 
 import domain.order.Order;
 
-public class BrokenStatus implements AssemblyLineStatus {
+public class BrokenStatus extends AssemblyLineStatus {
+	
+	public BrokenStatus(StatusCreator creator) {
+		super(creator);
+	}
 
 	@Override
 	public void advanceLine(AssemblyLine assemblyLine) {

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
+import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
 import domain.order.Order;
@@ -22,5 +23,5 @@ public interface AssemblyLineSchedulingAlgorithm {
 	 * 		The scheduler of the assembly line.
 	 * @return A scheduled list of ScheduledOrder objects.
 	 */
-	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(ArrayList<Order> orderList, GregorianCalendar allTasksCompletedTime, LinkedList<Order> stateOfAssemblyLine, AssemblyLineScheduler assemblyLineScheduler);
+	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(ArrayList<Order> orderList, AssemblyLine assemblyLine);
 }

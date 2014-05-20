@@ -1,5 +1,6 @@
 package domain.assembly;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
@@ -10,8 +11,11 @@ public class MaintenanceStatus extends Status{
 
 	@Override
 	public void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException {
-		if (!this.canAdvanceLine(assemblyLine))
-			throw new CannotAdvanceException(assemblyLine.getBlockingWorkstations());
+		this.standardAdvanceLine(assemblyLine);
+		if(assemblyLine.isEmpty()){
+			assemblyLine.getAssemblyLineScheduler().addCurrentTime(240);
+			assemblyLine.setCurrentStatus(new OperationalStatus());
+		}
 	}
 
 	@Override
@@ -48,6 +52,11 @@ public class MaintenanceStatus extends Status{
 	@Override
 	public String toString() {
 		return "Maintenance";
+	}
+
+	@Override
+	protected Order notifyOrderAsked(AssemblyLine assemblyLine) {
+		return null;
 	}
 
 }

@@ -189,7 +189,7 @@ public class AssemblyLineScheduler implements Scheduler{
 		
 		ArrayList<Order> orders = this.getOrdersToBeScheduled();
 		orders.add(orderWithDeadline);
-		ArrayList<ScheduledOrder> scheduledOrdersWithExtra = this.currentAlgorithm.scheduleToScheduledOrderList(orders, (GregorianCalendar) futureTime.clone(),this.assemblyLine.stateWhenAcceptingOrders(), this);
+		ArrayList<ScheduledOrder> scheduledOrdersWithExtra = this.currentAlgorithm.scheduleToScheduledOrderList(orders,this.assemblyLine);
 		int newAmountOfDeadlineFailures = this.calculateAmountOfDeadlineFailures(scheduledOrdersWithExtra);
 		
 		return amountOfDeadlineFailures >= newAmountOfDeadlineFailures;
@@ -293,11 +293,11 @@ public class AssemblyLineScheduler implements Scheduler{
 				|| this.schedule == null 
 				|| this.schedule.size() == 0
 				|| !nextAdvanceTime.equals(this.schedule.get(0).getScheduledTime())){
-			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), nextAdvanceTime,stateOfAssemblyLine, this);
+			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), assemblyLine);
 			this.outDated = false;
 		}
 		if(this.getAssemblyLine() != null && !this.schedule.isEmpty() && this.getAssemblyLine().getAllOrders().contains(this.schedule.get(0).getScheduledOrder())){
-			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), nextAdvanceTime,stateOfAssemblyLine, this);
+			this.schedule = this.getCurrentAlgorithm().scheduleToScheduledOrderList(this.getOrdersToBeScheduled(), assemblyLine);
 		}
 		
 		if(this.schedule.isEmpty()){

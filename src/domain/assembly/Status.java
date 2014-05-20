@@ -9,16 +9,22 @@ import domain.order.Order;
 
 
 public abstract class Status implements AssemblyLineStatus {
+	protected void standardAdvanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException{
+		// Check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
+		if (!this.canAdvanceLine(assemblyLine))
+			throw new CannotAdvanceException(assemblyLine.getBlockingWorkstations());
 
-	protected void advanceLine(AssemblyLine assemblyLine, Order newOrder, boolean tryNextAdvance) throws CannotAdvanceException {
 
-		try{
-			//zoek de tijd die nodig was om alle tasks uit te voeren.
-			int timeSpendForTasks = 0;
-			for(Workstation workstation : assemblyLine.getAllWorkstations()){
-				if(workstation.getTimeSpend() > timeSpendForTasks)
-					timeSpendForTasks = workstation.getTimeSpend();
-			}
+		// Zoek de tijd die nodig was om alle tasks uit te voeren.
+		int timeSpendForTasks = 0;
+		for(Workstation workstation : assemblyLine.getAllWorkstations()){
+			if(workstation.getTimeSpend() > timeSpendForTasks)
+				timeSpendForTasks = workstation.getTimeSpend();
+		}
+		assemblyLine.getAssemblyLineScheduler().addCurrentTime(timeSpendForTasks);
+		// Vraag nieuwe order op.
+		Order newOrder = notifyOrderAsked(assemblyLine);
+		try{		
 
 			// move huidige vehicles 1 plek
 			//neem vehicle van WorkStation 3
@@ -49,8 +55,18 @@ public abstract class Status implements AssemblyLineStatus {
 			// Er wordt gecheckt of er workstations geskipt kunnen worden.
 			for (int i = assemblyLine.getAllWorkstations().size(); i > 0; i--) {
 				for (int id = i; id <= assemblyLine.getAllWorkstations().size(); id++) {
+					// als de eerste plaats van de workstation leeg is plaats nieuw order
+					if(id ==1 && assemblyLine.getAllOrders().get(0) ==null){
+						Order nextOrder = this.notifyOrderAsked(assemblyLine);
+						if(nextOrder != null){
+							VehicleAssemblyProcess nextAssemblyProcess = newOrder.getAssemblyprocess();
+							workstation1.setVehicleAssemblyProcess(nextAssemblyProcess);
+							i++;
+						}
+					}
 					// Er wordt gecheckt welke workstation geen taken uit te voeren heeft.
-					if (assemblyLine.selectWorkstationById(id).getAllPendingTasks().isEmpty()) {
+					if (assemblyLine.selectWorkstationById(id).getAllPendingTasks().isEmpty()) {					
+
 						// Als dit niet de laatste workstation is en de volgende is vrij, dan wordt het proces verschoven naar de volgende.
 						if (id < assemblyLine.getAllWorkstations().size() && assemblyLine.selectWorkstationById(id + 1).getVehicleAssemblyProcess() == null) {
 							assemblyLine.selectWorkstationById(id + 1).setVehicleAssemblyProcess(assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess());
@@ -68,24 +84,16 @@ public abstract class Status implements AssemblyLineStatus {
 				finishedOrder.getAssemblyprocess().setDeliveredTime(assemblyLine.getAssemblyLineScheduler().getCurrentTime());
 				finishedOrder.getAssemblyprocess().registerDelay(assemblyLine);
 			}
-
-			if(tryNextAdvance && assemblyLine.canAdvanceLine()){
-				try{
-					assemblyLine.advanceLine();
-				}
-				catch(CannotAdvanceException e){
-					throw new InternalFailureException("The AssemblyLine couldn't advance even though canAdvanceLine() returned true.");
-				}
-			}
 		}
 		catch(DoesNotExistException e){
 			throw new InternalFailureException("Suddenly a Workstation disappeared while that should not be possible.");
 		}
 	}
-	
+
+	protected abstract Order notifyOrderAsked(AssemblyLine assemblyLine);
 	@Override
 	public abstract void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException;
-	
+
 	public int calculateTimeTillEmptyFor(AssemblyLine assemblyLine, LinkedList<Order> assembly) {
 		@SuppressWarnings("unchecked")
 		LinkedList<Order> simulAssembly = (LinkedList<Order>) assembly.clone();

@@ -134,15 +134,14 @@ public class BasicSchedulingAlgorithm
 	@Override
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
 			ArrayList<Order> orderList, 
-			GregorianCalendar allTasksCompletedTime,LinkedList<Order> stateOfAssemblyLine,
-			AssemblyLineScheduler assemblyLineScheduler) {
+			AssemblyLine assemblyLine) {
 
-		AssemblyLine assemblyLine = assemblyLineScheduler.getAssemblyLine();
+		
 		//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
 		@SuppressWarnings("unchecked")
-		LinkedList<Order> assembly = (LinkedList<Order>) stateOfAssemblyLine.clone();
-		ArrayList<Order> sList = this.innerAlgorithm.scheduleToList(orderList, assemblyLineScheduler);
-		GregorianCalendar movingTime = (GregorianCalendar) allTasksCompletedTime.clone();
+		LinkedList<Order> assembly = (LinkedList<Order>) assemblyLine.stateWhenAcceptingOrders().clone();
+		ArrayList<Order> sList = this.innerAlgorithm.scheduleToList(orderList, assemblyLine.getAssemblyLineScheduler());
+		GregorianCalendar movingTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
 
 		ArrayList<ScheduledOrder> scheduledList = new ArrayList<ScheduledOrder>();
 
@@ -156,7 +155,7 @@ public class BasicSchedulingAlgorithm
 			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een Order is.
 			int totalDuration = assemblyLine.calculateTimeTillEmptyFor(assembly);
 			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
-			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLineScheduler)){
+			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLine.getAssemblyLineScheduler())){
 				// haal order er weer af, omdat het toch niet gaat.
 				assembly.removeFirst();
 				// zet een null in de plaats

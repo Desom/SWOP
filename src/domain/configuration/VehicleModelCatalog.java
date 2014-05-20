@@ -21,7 +21,7 @@ public class VehicleModelCatalog {
 		OptionCreator creator = new OptionCreator();
 		allOptions = creator.createOptions();
 		allParts = creator.createParts();
-		allModels= (new ModelCreator(this.getAllOptions())).createModels();
+		allModels= (new ModelCreator(this.getAllOptions(),this.getAllParts())).createModels();
 	}
 
 	/**
@@ -38,7 +38,7 @@ public class VehicleModelCatalog {
 	 */
 	public VehicleModelCatalog(String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleModelCatalogException{
 		allOptions = (new OptionCreator(optionPath,dependancyPath)).createOptions();
-		allModels= (new ModelCreator(this.getAllOptions(),modelPath)).createModels();
+		allModels= (new ModelCreator(this.getAllOptions(), this.getAllParts(), modelPath)).createModels();
 	}
 
 	/**

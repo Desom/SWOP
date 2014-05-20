@@ -3,8 +3,8 @@ package domain.configuration;
 
 public class Part implements Taskable {
 	
-	private String description; 
-	private PartType type;
+	private final String description; 
+	private final PartType type;
 	
 	/**
 	 * Constructor of Part.

@@ -6,6 +6,7 @@ public class VehicleModel {
 	
 	private final String name;
 	private final ArrayList<Option> possibleOptions;
+	private final ArrayList<Part> parts;
 	private final int expectedTaskTime;
 	
 	/**
@@ -20,15 +21,16 @@ public class VehicleModel {
 	 * @throws VehicleModelCatalogException
 	 * 		If the name or possibleOptions equals null or if an option type is not represented in the possibleOptions.
 	 */
-	public VehicleModel(String name, ArrayList<Option> possibleOptions, int expectedTaskTime) throws VehicleModelCatalogException{
+	public VehicleModel(String name, ArrayList<Option> possibleOptions, ArrayList<Part> parts, int expectedTaskTime) throws VehicleModelCatalogException{
 		if(name == null || possibleOptions == null)
 			throw new VehicleModelCatalogException("null in non null value of Model");
 
-		for(OptionType type:VehicleModelCatalog.taskTypeCreator.getAllTypes()){
+		for(OptionType type:VehicleModelCatalog.taskTypeCreator.getAllOptionTypes()){
 			if(type.isMandatory() && !existstype(type, possibleOptions))
 				throw new VehicleModelCatalogException("Missing type: "+ type);
 		}
 		this.possibleOptions = possibleOptions;
+		this.parts = parts;
 		this.name = name;
 		this.expectedTaskTime = expectedTaskTime;
 	}
@@ -44,8 +46,8 @@ public class VehicleModel {
 	 * @throws VehicleModelCatalogException
 	 * 		If the name or possibleOptions equals null or if an option type is not represented in the possibleOptions.
 	 */
-	public VehicleModel(String name, ArrayList<Option> possibleOptions) throws VehicleModelCatalogException{
-		this(name, possibleOptions, 60);
+	public VehicleModel(String name, ArrayList<Option> possibleOptions, ArrayList<Part> parts) throws VehicleModelCatalogException{
+		this(name, possibleOptions, parts, 60);
 	}
 	
 	/**
@@ -106,6 +108,16 @@ public class VehicleModel {
 	public int getExpectedTaskTime(){
 		return expectedTaskTime;
 	}
+	
+	/**
+	 * Get the parts this model has
+	 * 
+	 * @return this models Parts
+	 */
+	public ArrayList<Part> getParts(){
+		return this.parts;
+	}
+	
 
 	@Override
 	public String toString(){

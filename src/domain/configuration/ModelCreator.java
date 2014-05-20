@@ -12,6 +12,7 @@ public class ModelCreator {
 	
 	private String path;
 	private List<Option> options;
+	private List<Part> parts;
 	private HashMap<String, VehicleModel> allModels;
 	
 	/**
@@ -23,8 +24,9 @@ public class ModelCreator {
 	 * @param path
 	 * 		The path to the file containing the vehicle models.
 	 */
-	public ModelCreator(List<Option> options, String path){
+	public ModelCreator(List<Option> options, List<Part> parts, String path){
 		this.options = options;
+		this.parts = parts;
 		this.path = path;
 	}
 
@@ -36,8 +38,8 @@ public class ModelCreator {
 	 * 		All possible options that can be associated with a vehicle model.
 	 * 		In other words, all possible options that could be given to a configuration.
 	 */
-	public ModelCreator(List<Option> options){
-		this(options, "data/models.txt");
+	public ModelCreator(List<Option> options, List<Part> parts){
+		this(options, parts, "data/models.txt");
 	}
 
 	/**
@@ -71,6 +73,15 @@ public class ModelCreator {
 	 * 		If an option type is missing.
 	 */
 	private void processModelLine(String inputline) throws VehicleModelCatalogException {
+		
+		ArrayList<String> parts = new ArrayList<String>();
+		// determine if the model needs parts.
+		if(inputline.contains("!")){
+			String[] original = inputline.split("!");
+			parts = new ArrayList<String>(Arrays.asList(original[1].split(",")));
+			inputline = original[0];
+		}
+		
 		// Determine default task time
 		int defaultTaskTime = 60;
 		if(inputline.contains("%")){
@@ -84,7 +95,7 @@ public class ModelCreator {
 		if(allModels.containsKey(input[0])) throw new VehicleModelCatalogException("Model name already exists: "+input[0] );
 		try{
 			ArrayList<String> a = new ArrayList<String>(Arrays.asList(input[1].split(",")));
-			allModels.put(input[0], new VehicleModel(input[0], collectOption(a), defaultTaskTime));
+			allModels.put(input[0], new VehicleModel(input[0], collectOption(a), collectPart(parts), defaultTaskTime));
 		}catch(ClassCastException e){
 			throw new VehicleModelCatalogException("Wrong Option Type in form: " + inputline);
 		}
@@ -110,6 +121,27 @@ public class ModelCreator {
 		}
 		return options;
 	}
+	
+	/**
+	 * Makes a list of parts made associated with the given list of part descriptions.
+	 * 
+	 * @param descriptions 
+	 * 		The list of part descriptions.
+	 * @return a list of parts associated with the given descriptions
+	 * @throws VehicleModelCatalogException
+	 * 		If there is no part with one of the given descriptions.
+	 */
+	private ArrayList<Part> collectPart(ArrayList<String> descriptions) throws VehicleModelCatalogException {
+		ArrayList<Part> parts = new ArrayList<Part>();
+		for(String description : descriptions){
+			Part part = getPart(description);
+			if(part != null)
+				parts.add(part);
+			else
+				throw new VehicleModelCatalogException("Part does not exists: "+ description);
+		}
+		return parts;
+	}
 
 	/**
 	 * Returns the option associated with the option description. If there is none, null is returned.
@@ -122,6 +154,21 @@ public class ModelCreator {
 		for(Option option : options){
 			if(option.getDescription().equals(optionDescription))
 				return option;
+		}
+		return null;
+	}
+	
+	/**
+	 * Returns the part associated with the part description. If there is none, null is returned.
+	 * 
+	 * @param partDescription
+	 * 		The description of the part.
+	 * @return the part associated with the part name, or null when there is none
+	 */
+	private Part getPart(String partDescription) {
+		for(Part part: parts){
+			if(part.getDescription().equals(partDescription))
+				return part;
 		}
 		return null;
 	}

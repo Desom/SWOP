@@ -4,24 +4,15 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import domain.order.Order;
 
-public class OperationalStatus extends Status {
+public class OperationalStatus extends AbstractAdvancingStatus {
+
+	public OperationalStatus(StatusCreator creator) {
+		super(creator);
+	}
 
 	@Override
 	public void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException {
 		this.standardAdvanceLine(assemblyLine);
-	}
-
-	@Override
-	public Boolean canAdvanceLine(AssemblyLine assemblyLine) {
-		for(Workstation workstation : assemblyLine.getAllWorkstations())
-			if(!workstation.hasAllTasksCompleted())
-				return false;
-		return true;
-	}
-
-	@Override
-	public Boolean canAcceptNewOrders() {
-		return true;
 	}
 
 	@Override
@@ -36,11 +27,6 @@ public class OperationalStatus extends Status {
 		if(!this.canAdvanceLine(assemblyLine))
 			result.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assemblyLine.getAllOrders()));
 		return result;
-	}
-
-	@Override
-	public String toString() {
-		return "Operational";
 	}
 
 	@Override

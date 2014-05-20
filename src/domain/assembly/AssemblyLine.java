@@ -13,7 +13,6 @@ public class AssemblyLine implements WorkstationObserver{
 
 	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 	private final AssemblyLineScheduler assemblyLineScheduler;
-	private ArrayList<AssemblyLineStatus> possibleStatuses;
 	private AssemblyLineStatus currentStatus;
 	private ArrayList<VehicleModel> possibleModels;
 
@@ -28,12 +27,11 @@ public class AssemblyLine implements WorkstationObserver{
 	 * @param possibleModels
 	 * 		Only these VehicleModels will be able to be built on this assembly line.
 	 */
-	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, ArrayList<AssemblyLineStatus> possibleStatuses, ArrayList<VehicleModel> possibleModels){
+	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, AssemblyLineStatus currentStatus, ArrayList<VehicleModel> possibleModels){
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
-		this.possibleStatuses = new ArrayList<AssemblyLineStatus>(possibleStatuses);
 		this.possibleModels = new ArrayList<VehicleModel>(possibleModels);
-		this.currentStatus = possibleStatuses.get(0);
+		this.currentStatus = currentStatus;
 		try {
 			this.advanceLine();
 		} catch (CannotAdvanceException e) {
@@ -245,16 +243,11 @@ public class AssemblyLine implements WorkstationObserver{
 	/**
 	 * Sets the current status of this assembly line.
 	 * 
-	 * @param status
+	 * @param newStatus
 	 * 		The new current status.
-	 * @throws IllegalArgumentException
-	 * 		If the new current status is not a possible status for this assembly line.
 	 */
-	public void setCurrentStatus(AssemblyLineStatus status) throws IllegalArgumentException {
-		if (this.possibleStatuses.contains(status))
-			this.currentStatus = status;
-		else
-			throw new IllegalArgumentException("The given status is not possible for this assembly line.");
+	public void setCurrentStatus(AssemblyLineStatus newStatus) throws IllegalArgumentException {
+		this.currentStatus = newStatus;
 	}
 	
 	public AssemblyLineStatus getCurrentStatus() {
@@ -267,11 +260,6 @@ public class AssemblyLine implements WorkstationObserver{
 	
 	public LinkedList<Order> stateWhenAcceptingOrders() {
 		return this.currentStatus.stateWhenAcceptingOrders(this);
-	}
-
-	@SuppressWarnings("unchecked")
-	public ArrayList<AssemblyLineStatus> getPossibleStatuses() {
-		return (ArrayList<AssemblyLineStatus>) this.possibleStatuses.clone();
 	}
 
 	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine) {

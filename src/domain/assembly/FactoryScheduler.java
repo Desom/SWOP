@@ -1,15 +1,13 @@
 package domain.assembly;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
+
+
 import domain.assembly.algorithm.FactorySchedulingAlgorithm;
-import domain.assembly.algorithm.SchedulingAlgorithm;
-import domain.configuration.Configuration;
 import domain.order.Order;
 import domain.order.SingleTaskOrder;
 
@@ -135,6 +133,7 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 			SingleTaskOrder orderWithDeadline) {
 		ArrayList<Order> orders = this.orderHandler.getOrdersFor(this);
 		orders.add(orderWithDeadline);
+		@SuppressWarnings("unused")
 		HashMap<AssemblyLineScheduler, ArrayList<Order>> assigned = this.currentAlgorithm.assignOrders(orders, this);
 		//TODO
 		return false;

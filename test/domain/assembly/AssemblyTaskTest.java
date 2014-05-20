@@ -3,7 +3,6 @@ package domain.assembly;
 import static org.junit.Assert.*;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
@@ -18,7 +17,6 @@ import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.Option;
-import domain.configuration.OptionType;
 import domain.order.VehicleOrder;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
@@ -52,14 +50,14 @@ public class AssemblyTaskTest {
 	public static VehicleOrder buildCar() throws IOException, VehicleModelCatalogException, InvalidConfigurationException{
 		// MAAK EEN AUTO MET OPTIONS EN MODEL AAN
 
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		Policy pol1 = new CompletionPolicy(null,VehicleModelCatalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
 		Policy carOrderPolicy= pol4;
 		
 		
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		VehicleModel carModel = null;
 		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){

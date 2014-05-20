@@ -15,6 +15,7 @@ import org.junit.rules.ExpectedException;
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.Scheduler;
+import domain.assembly.WorkstationTypeCreator;
 import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.assembly.algorithm.BasicSchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
@@ -44,7 +45,7 @@ public class OrderManagerTest {
 	
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception{
-		catalog = new VehicleModelCatalog();
+		catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		user1 = new GarageHolder(1);
 		user2 = new GarageHolder(2);
 		user3 = new GarageHolder(3);
@@ -56,7 +57,7 @@ public class OrderManagerTest {
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
 		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		@SuppressWarnings("unused")
 		AssemblyLine als = new AssemblyLine((AssemblyLineScheduler) scheduler, null);
@@ -100,7 +101,7 @@ public class OrderManagerTest {
 				options.add(option);
 		}
 		ArrayList<OptionType> List = new ArrayList<OptionType>();
-		for(OptionType i: OptionType.values()){
+		for(OptionType i: VehicleModelCatalog.taskTypeCreator.getAllOptionTypes()){
 			if(i != new TaskTypeCreator().Airco || i != new TaskTypeCreator().Spoiler ){
 				List.add(i);
 			}

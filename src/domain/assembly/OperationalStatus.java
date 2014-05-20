@@ -1,10 +1,7 @@
 package domain.assembly;
 
-import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
-
-import domain.InternalFailureException;
 import domain.order.Order;
 
 public class OperationalStatus extends Status {

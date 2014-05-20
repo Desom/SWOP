@@ -110,7 +110,7 @@ public class TaskTypeCreator {
 	 * @return the requested tasktype, or null if it does not exist
 	 */
 	public TaskType getTaskType(String name){
-		for (TaskType optionType : optionTypes){
+		for (TaskType optionType : getAllTypes()){
 			if(optionType.getName().equals(name)){
 				return optionType;
 			}

@@ -2,7 +2,6 @@ package domain.policies;
 
 import java.util.ArrayList;
 
-import domain.configuration.TaskType;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.Option;

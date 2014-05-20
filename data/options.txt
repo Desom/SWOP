@@ -1,7 +1,6 @@
 sedan;Body;,
 break;Body;,
 sport;Body;,
-platform;Body;comfort,sports,winter,standard wheels,
 closed;Body;,
 red;Color;,
 blue;Color;,
@@ -32,7 +31,8 @@ standard wheels;Wheels;,
 heavy-duty;Wheels;,
 low;Spoiler;,
 high;Spoiler;,
+platform;Body;comfort,sports,winter,standard wheels,
 !
 ToolStorage;ToolStorage
 CargoProtection;CargoProtection
-Certification,Certification
+Certification;Certification

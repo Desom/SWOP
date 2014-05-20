@@ -4,11 +4,8 @@ import java.util.ArrayList;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.FactoryScheduler;
 import domain.assembly.algorithm.BasicSchedulingAlgorithm;
-import domain.assembly.algorithm.EfficiencySchedulingAlgorithm;
 import domain.assembly.algorithm.FactorySchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;

@@ -42,8 +42,7 @@ public class BasicSchedulingAlgorithm
 	public HashMap<AssemblyLineScheduler, ArrayList<Order>> assignOrders(
 			ArrayList<Order> orders, FactoryScheduler factoryScheduler) {
 
-		//TODO die null moet hier niet. slecht.
-		ArrayList<Order> orderedOrders = this.innerAlgorithm.scheduleToList(orders, null);
+		ArrayList<Order> orderedOrders = this.innerAlgorithm.scheduleToList(orders, factoryScheduler);
 
 		HashMap<AssemblyLineScheduler, ArrayList<ScheduledOrder>> scheduleMapping = new HashMap<AssemblyLineScheduler, ArrayList<ScheduledOrder>>();
 
@@ -70,7 +69,12 @@ public class BasicSchedulingAlgorithm
 					timeWithChosen = time;
 					newScheduleOfChosen = newSchedule;
 			}
-			scheduleMapping.put(chosenScheduler, newScheduleOfChosen);
+			if(chosenScheduler != null){
+				scheduleMapping.put(chosenScheduler, newScheduleOfChosen);
+			}
+			else{
+				//TODO iets doen?
+			}
 		}
 
 		return convertToMapping(scheduleMapping);

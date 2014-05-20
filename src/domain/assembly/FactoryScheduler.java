@@ -23,6 +23,27 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	private ArrayList<FactorySchedulingAlgorithm> possibleAlgorithms;
 	
 	/**
+	 * Constructor of FactoryScheduler.
+	 * 
+	 * @param schedulerList
+	 * 		The assembly line schedulers which this order will control.
+	 * @param possibleAlgorithms
+	 * 		Possible algorithms to schedule orders.
+	 * 		The first algorithm of this list is the default algorithm.
+	 */
+	public FactoryScheduler(ArrayList<AssemblyLineScheduler> schedulerList, ArrayList<FactorySchedulingAlgorithm> possibleAlgorithms){
+		this.schedulerList = new ArrayList<AssemblyLineScheduler>(schedulerList);
+		this.possibleAlgorithms = new ArrayList<FactorySchedulingAlgorithm>(possibleAlgorithms);
+		this.currentAlgorithm = this.possibleAlgorithms.get(0);
+		outDated = true;
+
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			scheduler.setOrderHandler(this);
+		}
+		
+	}
+	
+	/**
 	 * Returns the current time of the system. The oldest time out of all the current times of the AssemblyLineSchedulers.
 	 * 
 	 * @return The current time of the system.

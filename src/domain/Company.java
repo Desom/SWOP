@@ -6,10 +6,12 @@ import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineCreator;
+import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.FactoryScheduler;
 import domain.assembly.SchedulerCreator;
 import domain.assembly.Workstation;
 import domain.assembly.WorkstationTypeCreator;
+import domain.assembly.algorithm.AlgorithmCreator;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 import domain.order.OrderManager;
@@ -28,6 +30,8 @@ public class Company {
 	private final FactoryScheduler factoryScheduler;
 
 	/**
+	 * TODO docs
+	 * 
 	 * Constructor of Company.
 	 * 
 	 * This constructor is also responsible for the creation of:
@@ -44,15 +48,20 @@ public class Company {
 		try {
 			WorkstationTypeCreator workstationTypeCreator = new WorkstationTypeCreator();
 			this.catalog = new VehicleModelCatalog(workstationTypeCreator);
-			SchedulerCreator schedulerCreator = new SchedulerCreator();
+			SchedulerCreator schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
 			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, catalog);
-			this.factoryScheduler = schedulerCreator.createFactoryScheduler();
-			//TODO hang assemblySchedulers aan FactoryScheduler.
-			
-			this.orderManager = new OrderManager(schedulerCreator.createFactoryScheduler());
-			this.statistics = new Statistics(this.orderManager);
-			
+
 			this.assemblyLines = assemblyLineCreator.create();
+			ArrayList<AssemblyLineScheduler> alsList = new ArrayList<AssemblyLineScheduler>();
+			
+			//TODO goed zo of is er een beter manier?
+			for(AssemblyLine assembly : this.assemblyLines){
+				alsList.add(assembly.getAssemblyLineScheduler());
+			}
+			this.factoryScheduler = schedulerCreator.createFactoryScheduler(alsList);
+			
+			this.orderManager = new OrderManager(this.factoryScheduler);
+			this.statistics = new Statistics(this.orderManager);
 			
 			//TODO kunnen we niet beter de IOException door laten? nu vangen we die en geven we een vage verklaring, terwijl IOException kan uitleggen waaraan het ligt.
 		} catch (IOException e) {

@@ -10,6 +10,7 @@ import java.util.HashMap;
 public class OptionCreator {
 
 	private HashMap<String,Option> allOptions;
+	private HashMap<String,Part> allParts;
 	private String optionpath;
 	private String dependancypath;
 
@@ -47,6 +48,9 @@ public class OptionCreator {
 		this.allOptions = new HashMap<String,Option>();
 		String inputline = input.readLine();
 		while( inputline!=null){
+			if(inputline.equals("!")){
+				break;
+			}
 			processOptionLine(inputline);
 			inputline = input.readLine();
 		}
@@ -59,6 +63,32 @@ public class OptionCreator {
 		}
 		input.close();
 		return new ArrayList<Option>(allOptions.values());
+	}
+	
+	
+	/**
+	 * Creates the parts from the file.
+	 * 
+	 * @return all parts contained in the file.
+	 * @throws IOException
+	 * @throws VehicleModelCatalogException
+	 * 		If a part line is not in the right format.
+	 */
+	public ArrayList<Part> createParts() throws IOException, VehicleModelCatalogException{
+		BufferedReader input = new BufferedReader(new FileReader(optionpath));
+		this.allOptions = new HashMap<String,Option>();
+		String inputline = input.readLine();
+		while( inputline!=null){
+			if(inputline.equals("!"))
+				break;
+		}
+		while( inputline!=null){
+			processPartLine(inputline);
+			inputline = input.readLine();
+		}
+		input.close();
+		
+		return new ArrayList<Part>(allParts.values());
 	}
 
 	private void processDependancyLine(String inputline) throws VehicleModelCatalogException {
@@ -89,6 +119,22 @@ public class OptionCreator {
 		checkAndRemove(comp,incomp);
 		sameTypeFilter(comp,incomp,input[1]);
 		allOptions.put(input[0], createOption(input[0],input[1], incomp));
+	}
+	
+	/**
+	 * Processes a line which stores the information of a single part.
+	 * @param inputline
+	 * 		The line to be processed.
+	 * @throws VehicleModelCatalogException 
+	 * 		If the part the line describes already exists
+	 * 		If the part isn't in the right format
+	 * 		IF the lines use an part that does not exist
+	 */
+	private void processPartLine(String inputline) throws VehicleModelCatalogException   {
+		String[] input=inputline.split(";");
+		if(input.length != 2) throw new VehicleModelCatalogException("Part: wrong input format: " + inputline);
+		if(allParts.containsKey(input[0])) throw new VehicleModelCatalogException("Part already exists: " + input[0]);
+		allParts.put(input[0], createPart(input[0],input[1]));
 	}
 
 	/**
@@ -147,7 +193,8 @@ public class OptionCreator {
 	 */
 	private Option createOption(String description, String typeName, ArrayList<String> incompatibles) throws VehicleModelCatalogException {
 		try{
-			Option result = new Option(description,  VehicleModelCatalog.taskTypeCreator.getOptionType(typeName));
+			OptionType type = (OptionType) VehicleModelCatalog.taskTypeCreator.getTaskType(typeName);
+			Option result = new Option(description, type);
 			for(Option option : collectOption(incompatibles)){
 				result.addIncompatible(option);
 				option.addIncompatible(result);
@@ -158,6 +205,31 @@ public class OptionCreator {
 		}
 
 	}
+	
+	
+	/**
+	 * Creates an option.
+	 * 
+	 * @param description
+	 * 		The description of the part to be made.
+	 * @param typeName
+	 * 		The name of the type of the part to be made.
+	 * @return the new part
+	 * @throws VehicleModelCatalogException
+	 * 		If the part type is not supported.
+	 */
+	private Part createPart(String description, String typeName) throws VehicleModelCatalogException {
+		try{
+			PartType type = (PartType) VehicleModelCatalog.taskTypeCreator.getTaskType(typeName);
+			Part result = new Part(description,  type);
+			return result;
+		}catch(IllegalArgumentException e){
+			throw new VehicleModelCatalogException("no valid type: " + typeName);
+		}
+
+	}
+	
+	
 	/**
 	 * Makes a list of options made from a list of option descriptions.
 	 * 

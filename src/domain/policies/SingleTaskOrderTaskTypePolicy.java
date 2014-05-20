@@ -14,7 +14,7 @@ import domain.configuration.OptionType;
  */
 public class SingleTaskOrderTaskTypePolicy extends AlwaysPolicy {
 
-	private ArrayList<TaskType> validOptionTypes;
+	private ArrayList<OptionType> validOptionTypes;
 	
 	/**
 	 * Constructor of SingleTaskOrderTaskTypePolicy.

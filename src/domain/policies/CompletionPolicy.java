@@ -13,7 +13,7 @@ import domain.configuration.TaskType;
  */
 public class CompletionPolicy extends CompletedPolicy {
 
-	private ArrayList<TaskType> requiredTypes;
+	private ArrayList<OptionType> requiredTypes;
 
 	/**
 	 * Constructor of CompletionPolicy.
@@ -23,7 +23,7 @@ public class CompletionPolicy extends CompletedPolicy {
 	 * @param arrayList
 	 * 		The option types which are required for the configuration to be complete.
 	 */
-	public CompletionPolicy(Policy successor, ArrayList<TaskType> arrayList) {
+	public CompletionPolicy(Policy successor, ArrayList<OptionType> arrayList) {
 		super(successor);
 		this.requiredTypes = arrayList;
 	}

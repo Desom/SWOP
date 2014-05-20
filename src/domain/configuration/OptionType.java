@@ -1,9 +1,13 @@
 package domain.configuration;
 
 
-public class OptionType extends TaskType{
+public class OptionType implements TaskType{
 
-
+	private String name;
+	private boolean singleTaskPossible;
+	private boolean mandatory;
+	
+	
 	/**
 	 * Constructor of OptionType.
 	 * 
@@ -15,9 +19,9 @@ public class OptionType extends TaskType{
 	 * 		True if this option is mandatory for vehicle orders, otherwise false.
 	 */
 	OptionType(String name, boolean singleTaskPossible, boolean mandatory){
-		super.name = name;
-		super.singleTaskPossible = singleTaskPossible;
-		super.mandatory =mandatory;
+		this.name = name;
+		this.singleTaskPossible = singleTaskPossible;
+		this.mandatory =mandatory;
 	}
 
 	/**
@@ -25,8 +29,37 @@ public class OptionType extends TaskType{
 	 * The option type won't be available for single task orders and won't be mandatory for vehicle orders.
 	 */
 	OptionType(String name){
-		super.name = name;
-		super.singleTaskPossible = false;
-		super.mandatory = true;
+		this.name = name;
+		this.singleTaskPossible = false;
+		this.mandatory = true;
+	}
+	
+	/**
+	 * Returns whether the optiontype is available for single task orders.
+	 * 
+	 * @return true if the optiontype is available for single task orders, otherwise false.
+	 */
+	public boolean isSingleTaskPossible() {
+		return singleTaskPossible;
+	}
+	
+	/**
+	 * Returns whether the optionstype is mandatory for vehicle orders.
+	 * 
+	 * @return true if the optiontype is mandatory for vehicle orders, otherwise false.
+	 */
+	public boolean isMandatory() {
+		return mandatory;
+	}
+	
+	
+	
+	/**
+	 * Returns the name of this optiontype.
+	 * 
+	 * @return the name of this optiontype.
+	 */
+	public String getName(){
+		return this.name;
 	}
 }

@@ -1,35 +1,49 @@
 package domain.configuration;
 
 
-public class Part extends TaskType{
+public class Part implements Taskable {
 	
-
+	private String description; 
+	private PartType type;
+	
 	/**
 	 * Constructor of Part.
 	 * 
-	 * @param name
-	 * 		The name of this Part.
-	 * @param singleTaskPossible
-	 * 		True if this option is available for single task orders, otherwise false.
-	 * @param mandatory
-	 * 		True if this option is mandatory for vehicle orders, otherwise false.
+	 * @param description
+	 * 		The description of the part.
+	 * @param type
+	 * 		The type of this part.
+	 * @throws VehicleModelCatalogException
+	 * 		If the description is null.
+	 * 		If the type is null.
 	 */
-	Part(String name, boolean singleTaskPossible, boolean mandatory){
-		super.name = name;
-		super.singleTaskPossible = singleTaskPossible;
-		super.mandatory =mandatory;
+	public Part(String description, PartType type) throws VehicleModelCatalogException {
+		if(description == null || type == null)
+			throw new VehicleModelCatalogException("null in non null value of Part");
+		this.description = description;
+		this.type = type;
 	}
-
-	/**
-	 * Constructor of Part.
-	 * The part won't be available for single task orders and won't be mandatory for vehicle orders.
+	
+	
+	/* (non-Javadoc)
+	 * @see domain.configuration.Taskable#getDescription()
 	 */
-	Part(String name){
-		super.name = name;
-		super.singleTaskPossible = false;
-		super.mandatory = true;
+	@Override
+	public String getDescription(){
+		return description;
 	}
-
-
+	
+	/* (non-Javadoc)
+	 * @see domain.configuration.Taskable#getType()
+	 */
+	@Override
+	public PartType getType(){
+		return type;
+	}
+	
+	@Override
+	public String toString(){
+		return description;
+	}
 
 }

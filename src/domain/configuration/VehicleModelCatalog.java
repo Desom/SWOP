@@ -7,6 +7,7 @@ import java.util.List;
 public class VehicleModelCatalog {
 	
 	private ArrayList<Option> allOptions;
+	private ArrayList<Part> allParts;
 	private ArrayList<VehicleModel> allModels;
 	public static TaskTypeCreator taskTypeCreator = new TaskTypeCreator();
 
@@ -17,7 +18,9 @@ public class VehicleModelCatalog {
 	 * @throws VehicleModelCatalogException
 	 */
 	public VehicleModelCatalog() throws IOException, VehicleModelCatalogException{
-		allOptions = (new OptionCreator()).createOptions();
+		OptionCreator creator = new OptionCreator();
+		allOptions = creator.createOptions();
+		allParts = creator.createParts();
 		allModels= (new ModelCreator(this.getAllOptions())).createModels();
 	}
 
@@ -57,6 +60,16 @@ public class VehicleModelCatalog {
 	@SuppressWarnings("unchecked")
 	public List<Option> getAllOptions() {
 		return (List<Option>) (allOptions.clone());
+	}
+	
+	/**
+	 * Gets the list of all parts.
+	 * 
+	 * @return the list of all parts
+	 */
+	@SuppressWarnings("unchecked")
+	public List<Part> getAllParts() {
+		return (List<Part>) (allParts.clone());
 	}
 
 

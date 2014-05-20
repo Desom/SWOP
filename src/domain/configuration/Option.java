@@ -2,7 +2,7 @@ package domain.configuration;
 
 import java.util.ArrayList;
 
-public class Option {
+public class Option implements Taskable{
 	
 	private String description; 
 	private ArrayList<Option> incompatibles;

@@ -5,7 +5,8 @@ import java.util.LinkedList;
 
 public class TaskTypeCreator {
 
-	private LinkedList<TaskType> optionTypes = new LinkedList<TaskType>(); 
+	private LinkedList<OptionType> optionTypes = new LinkedList<OptionType>(); 
+	private LinkedList<PartType> partTypes = new LinkedList<PartType>(); 
 	public OptionType Body;
 	public OptionType Color;
 	public OptionType Engine;
@@ -15,8 +16,8 @@ public class TaskTypeCreator {
 	public OptionType Airco;
 	public OptionType Spoiler;
 	
-	public Part ToolStorage;
-	public Part CargoProtection;
+	public PartType ToolStorage;
+	public PartType CargoProtection;
 	
 
 	public TaskTypeCreator(){
@@ -36,8 +37,10 @@ public class TaskTypeCreator {
 		optionTypes.add(this.Airco);
 		this.Spoiler = new OptionType("Spoiler", false, false);
 		optionTypes.add(this.Spoiler);
-		
-		//TODO add the 2 parts as well!
+		this.ToolStorage = new PartType("ToolStorage");
+		partTypes.add(this.ToolStorage);
+		this.CargoProtection = new PartType("CargoProtection");
+		partTypes.add(CargoProtection);
 	}
 	
 	/**
@@ -46,30 +49,52 @@ public class TaskTypeCreator {
 	 * @return a LinkedList of containing all TaskTypes.
 	 */
 	public LinkedList<TaskType> getAllTypes(){
+		LinkedList<TaskType> taskTypes = new LinkedList<TaskType>(this.optionTypes);
+		taskTypes.addAll(this.partTypes);
+		return taskTypes;
+	}
+	
+	/**
+	 * Return all OptionTypes.
+	 * 
+	 * @return a LinkedList of containing all OptionTypes.
+	 */
+	public LinkedList<OptionType> getAllOptionTypes(){
+		LinkedList<OptionType> optionTypes = new LinkedList<OptionType>(this.optionTypes);
 		return optionTypes;
 	}
 	
 	/**
-	 * Returns all task types that are available for single task orders.
+	 * Return all PartTypes.
 	 * 
-	 * @return all task types that are available for single task orders.
+	 * @return a LinkedList of containing all PartTypes.
 	 */
-	public ArrayList<TaskType> getAllSingleTaskPossibleTypes() {
-		ArrayList<TaskType> singleTaskPossibleTypes = new ArrayList<TaskType>();
-		for (TaskType optionType : optionTypes)
+	public LinkedList<PartType> getAllPartTypes(){
+		LinkedList<PartType> partTypes = new LinkedList<PartType>(this.partTypes);
+		return partTypes;
+	}
+	
+	/**
+	 * Returns all option types that are available for single task orders.
+	 * 
+	 * @return all option types that are available for single task orders.
+	 */
+	public ArrayList<OptionType> getAllSingleTaskPossibleTypes() {
+		ArrayList<OptionType> singleTaskPossibleTypes = new ArrayList<OptionType>();
+		for (OptionType optionType : optionTypes)
 			if (optionType.isSingleTaskPossible())
 				singleTaskPossibleTypes.add(optionType);
 		return singleTaskPossibleTypes;
 	}
 	
 	/**
-	 * Returns all task types that are mandatory for vehicle orders.
+	 * Returns all option types that are mandatory for vehicle orders.
 	 * 
-	 * @return all task types that are mandatory for vehicle orders.
+	 * @return all option types that are mandatory for vehicle orders.
 	 */
-	public ArrayList<TaskType> getAllMandatoryTypes(){
-		ArrayList<TaskType> mandatoryTypes = new ArrayList<TaskType>();
-		for (TaskType optionType : optionTypes)
+	public ArrayList<OptionType> getAllMandatoryTypes(){
+		ArrayList<OptionType> mandatoryTypes = new ArrayList<OptionType>();
+		for (OptionType optionType : optionTypes)
 			if (optionType.isMandatory())
 				mandatoryTypes.add(optionType);
 		return mandatoryTypes;

@@ -9,6 +9,7 @@ import domain.assembly.AssemblyLineCreator;
 import domain.assembly.FactoryScheduler;
 import domain.assembly.SchedulerCreator;
 import domain.assembly.Workstation;
+import domain.assembly.WorkstationTypeCreator;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 import domain.order.OrderManager;
@@ -41,9 +42,10 @@ public class Company {
 	 */
 	public Company() {
 		try {
-			this.catalog = new VehicleModelCatalog();
+			WorkstationTypeCreator workstationTypeCreator = new WorkstationTypeCreator();
+			this.catalog = new VehicleModelCatalog(workstationTypeCreator);
 			SchedulerCreator schedulerCreator = new SchedulerCreator();
-			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(schedulerCreator, catalog);
+			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, catalog);
 			this.factoryScheduler = schedulerCreator.createFactoryScheduler();
 			//TODO hang assemblySchedulers aan FactoryScheduler.
 			

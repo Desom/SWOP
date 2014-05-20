@@ -124,7 +124,7 @@ public class VehicleAssemblyProcess {
 	 * 		The assembly line which handled this assembly process.
 	 */
 	void registerDelay(AssemblyLine assemblyLine){
-		this.delay = this.getTotalTimeSpend() - this.order.getConfiguration().getExpectedWorkingTime()*assemblyLine.filterWorkstations(this).size();
+		this.delay = this.getTotalTimeSpend() - this.order.getConfiguration().getExpectedWorkingTimes(assemblyLine.filterWorkstations(this));
 	}
 
 	public int getDelay() {

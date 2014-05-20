@@ -2,6 +2,8 @@ package domain.configuration;
 
 import java.util.ArrayList;
 
+import domain.assembly.Workstation;
+import domain.assembly.WorkstationType;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 
@@ -74,15 +76,40 @@ public class Configuration {
 	}
 	
 	/**
-	 * Get the expected time that will be spent working per workstation taking into account the model of this configuration.
+	 * Returns all taskables of this configuration.
 	 * 
-	 * @return the expected time that will be spent working per workstation.
+	 * @return the list of all taskables of this configuration.
 	 */
-	public int getExpectedWorkingTime(){
+	public ArrayList<Taskable> getAllTaskables(){
+		ArrayList<Taskable> taskables = new ArrayList<Taskable>();
+		taskables.addAll(getAllOptions());
+		taskables.addAll(model.getParts());
+		return taskables;
+	}
+	
+	/**
+	 * Get the expected working time spent on a task for this model on the specified workstationType.
+	 * 
+	 * @return returns the expected time it takes to complete a task on the specified workstationType.
+	 */
+	public int getExpectedWorkingTime(WorkstationType type){
 		if(this.model == null){
 			return 60;
 		}
-		return this.model.getExpectedTaskTime();
+		return this.model.getExpectedTaskTime(type);
+	}
+	
+	/**
+	 * Get the expected working time spent on all tasks for this model on the specified workstations.
+	 * 
+	 * @return returns the expected time it takes to complete all tasks on the specified workstations.
+	 */
+	public int getExpectedWorkingTimes(ArrayList<Workstation> workstations){
+		int time = 0;
+		for(Workstation w : workstations){
+			time += getExpectedWorkingTime(w.getWorkstationType());
+		}
+		return time;
 	}
 	
 	/**

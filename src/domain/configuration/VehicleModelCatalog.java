@@ -4,11 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import domain.assembly.WorkstationTypeCreator;
+
 public class VehicleModelCatalog {
 	
 	private ArrayList<Option> allOptions;
 	private ArrayList<Part> allParts;
 	private ArrayList<VehicleModel> allModels;
+	private final WorkstationTypeCreator workstationTypeCreator;
 	public static TaskTypeCreator taskTypeCreator = new TaskTypeCreator();
 
 	/**
@@ -17,11 +20,12 @@ public class VehicleModelCatalog {
 	 * @throws IOException
 	 * @throws VehicleModelCatalogException
 	 */
-	public VehicleModelCatalog() throws IOException, VehicleModelCatalogException{
+	public VehicleModelCatalog(WorkstationTypeCreator workstationTypeCreator) throws IOException, VehicleModelCatalogException{
 		OptionCreator creator = new OptionCreator();
+		this.workstationTypeCreator = workstationTypeCreator;
 		allOptions = creator.createOptions();
 		allParts = creator.createParts();
-		allModels= (new ModelCreator(this.getAllOptions(),this.getAllParts())).createModels();
+		allModels= (new ModelCreator(this.workstationTypeCreator, this.getAllOptions(),this.getAllParts())).createModels();
 	}
 
 	/**
@@ -36,9 +40,10 @@ public class VehicleModelCatalog {
 	 * @throws IOException
 	 * @throws VehicleModelCatalogException
 	 */
-	public VehicleModelCatalog(String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleModelCatalogException{
+	public VehicleModelCatalog(WorkstationTypeCreator workstationTypeCreator, String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleModelCatalogException{
+		this.workstationTypeCreator = workstationTypeCreator;
 		allOptions = (new OptionCreator(optionPath,dependancyPath)).createOptions();
-		allModels= (new ModelCreator(this.getAllOptions(), this.getAllParts(), modelPath)).createModels();
+		allModels= (new ModelCreator(this.workstationTypeCreator, this.getAllOptions(), this.getAllParts(), modelPath)).createModels();
 	}
 
 	/**
@@ -71,7 +76,6 @@ public class VehicleModelCatalog {
 	public List<Part> getAllParts() {
 		return (List<Part>) (allParts.clone());
 	}
-
 
 
 }

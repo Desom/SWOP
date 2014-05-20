@@ -1,5 +1,8 @@
 package domain.configuration;
 import java.util.ArrayList;
+import java.util.HashMap;
+
+import domain.assembly.WorkstationType;
 
 
 public class VehicleModel {
@@ -7,7 +10,7 @@ public class VehicleModel {
 	private final String name;
 	private final ArrayList<Option> possibleOptions;
 	private final ArrayList<Part> parts;
-	private final int expectedTaskTime;
+	private final HashMap<WorkstationType, Integer> workstationTimes;
 	
 	/**
 	 * Constructor of VehicleModel.
@@ -21,7 +24,7 @@ public class VehicleModel {
 	 * @throws VehicleModelCatalogException
 	 * 		If the name or possibleOptions equals null or if an option type is not represented in the possibleOptions.
 	 */
-	public VehicleModel(String name, ArrayList<Option> possibleOptions, ArrayList<Part> parts, int expectedTaskTime) throws VehicleModelCatalogException{
+	public VehicleModel(String name, ArrayList<Option> possibleOptions, ArrayList<Part> parts, HashMap<WorkstationType, Integer> workstationTimes) throws VehicleModelCatalogException{
 		if(name == null || possibleOptions == null)
 			throw new VehicleModelCatalogException("null in non null value of Model");
 
@@ -32,23 +35,9 @@ public class VehicleModel {
 		this.possibleOptions = possibleOptions;
 		this.parts = parts;
 		this.name = name;
-		this.expectedTaskTime = expectedTaskTime;
+		this.workstationTimes = workstationTimes;
 	}
 	
-	/**
-	 * Constructor of VehicleModel.
-	 * Creates a vehicle model with a default expected working time of 60 minutes.
-	 * 
-	 * @param name
-	 * 		Name of the vehicle model.
-	 * @param possibleOptions
-	 * 		A list of options which are possible for this vehicle model.
-	 * @throws VehicleModelCatalogException
-	 * 		If the name or possibleOptions equals null or if an option type is not represented in the possibleOptions.
-	 */
-	public VehicleModel(String name, ArrayList<Option> possibleOptions, ArrayList<Part> parts) throws VehicleModelCatalogException{
-		this(name, possibleOptions, parts, 60);
-	}
 	
 	/**
 	 * Checks if a the given option type is represented in the given list of options.
@@ -101,12 +90,15 @@ public class VehicleModel {
 	}
 	
 	/**
-	 * Get the expected working time spent on a task for this model.
+	 * Get the expected working time spent on a task for this model on the specified workstationType.
 	 * 
-	 * @return returns the expected time it takes to complete a task
+	 * @return returns the expected time it takes to complete a task on the specified workstationType.
 	 */
-	public int getExpectedTaskTime(){
-		return expectedTaskTime;
+	public int getExpectedTaskTime(WorkstationType type){
+		Integer time = workstationTimes.get(type);
+		if(time == null)
+			return 60;
+		return time;
 	}
 	
 	/**

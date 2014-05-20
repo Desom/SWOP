@@ -2,22 +2,19 @@ package domain.assembly;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.LinkedList;
-
-import domain.configuration.TaskType;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 
 public class AssemblyLineCreator {
 	
-	private SchedulerCreator schedulerCreator;
-	private LinkedList<WorkstationType> workstationTypes;
-	private VehicleModelCatalog catalog;
+	private final SchedulerCreator schedulerCreator;
+	private final VehicleModelCatalog catalog;
+	private final WorkstationTypeCreator workstationCreator;
 	
-	public AssemblyLineCreator(SchedulerCreator schedulerCreator, VehicleModelCatalog catalog) {
-		createWorkstationTypes();
+	public AssemblyLineCreator(WorkstationTypeCreator workstationCreator, SchedulerCreator schedulerCreator, VehicleModelCatalog catalog) {
 		this.schedulerCreator = schedulerCreator;
 		this.catalog = catalog;
+		this.workstationCreator = workstationCreator;
 	}
 	
 	public ArrayList<AssemblyLine> create() {
@@ -63,9 +60,9 @@ public class AssemblyLineCreator {
 	private ArrayList<Workstation> createCarWorkstations() {
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		
-		workstations.add(new Workstation("Body Post", getWorkstationType("Body Post")));
-		workstations.add(new Workstation("DriveTrain Post", getWorkstationType("DriveTrain Post")));
-		workstations.add(new Workstation("Accessories Post", getWorkstationType("Accessories Post")));
+		workstations.add(new Workstation("Body Post", workstationCreator.getWorkstationType("Body Post")));
+		workstations.add(new Workstation("DriveTrain Post", workstationCreator.getWorkstationType("DriveTrain Post")));
+		workstations.add(new Workstation("Accessories Post", workstationCreator.getWorkstationType("Accessories Post")));
 		
 		return workstations;
 	}
@@ -74,40 +71,18 @@ public class AssemblyLineCreator {
 	private ArrayList<Workstation> createTruckWorkstations() {
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		
-		workstations.add(new Workstation("Body Post", getWorkstationType("Body Post")));
-		workstations.add(new Workstation("Cargo Post", getWorkstationType("Cargo Post")));
-		workstations.add(new Workstation("DriveTrain Post", getWorkstationType("DriveTrain Post")));
-		workstations.add(new Workstation("Accessories Post", getWorkstationType("Accessories Post")));
+		workstations.add(new Workstation("Body Post", workstationCreator.getWorkstationType("Body Post")));
+		workstations.add(new Workstation("Cargo Post", workstationCreator.getWorkstationType("Cargo Post")));
+		workstations.add(new Workstation("DriveTrain Post", workstationCreator.getWorkstationType("DriveTrain Post")));
+		workstations.add(new Workstation("Accessories Post", workstationCreator.getWorkstationType("Accessories Post")));
+		workstations.add(new Workstation("Certification Post", workstationCreator.getWorkstationType("Certification Post")));
 		
 		return workstations;
 	}
 	
 	
 	
-	private void createWorkstationTypes(){
-		workstationTypes = new LinkedList<WorkstationType>();
-		LinkedList<TaskType> bodyPost = new LinkedList<TaskType>();
-		bodyPost.add(VehicleModelCatalog.taskTypeCreator.Body);
-		bodyPost.add(VehicleModelCatalog.taskTypeCreator.Color);
-		workstationTypes.add(new WorkstationType("Body Post", bodyPost));
-		
-		LinkedList<TaskType> driveTrainPost = new LinkedList<TaskType>();
-		driveTrainPost.add(VehicleModelCatalog.taskTypeCreator.Engine);
-		driveTrainPost.add(VehicleModelCatalog.taskTypeCreator.Gearbox);
-		workstationTypes.add(new WorkstationType("DriveTrain Post", driveTrainPost));
-		
-		LinkedList<TaskType> accessoriesPost = new LinkedList<TaskType>();
-		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Seats);
-		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Airco);
-		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Wheels);
-		accessoriesPost.add(VehicleModelCatalog.taskTypeCreator.Spoiler);
-		workstationTypes.add(new WorkstationType("Accessories Post", accessoriesPost));
-		
-		LinkedList<TaskType> cargoPost = new LinkedList<TaskType>(); 
-		cargoPost.add(VehicleModelCatalog.taskTypeCreator.ToolStorage);
-		cargoPost.add(VehicleModelCatalog.taskTypeCreator.CargoProtection);
-		workstationTypes.add(new WorkstationType("Cargo Post", cargoPost));
-	}
+	
 	
 	private ArrayList<AssemblyLineStatus> getAssemblyLineStatuses() {
 		ArrayList<AssemblyLineStatus> statuses = new ArrayList<AssemblyLineStatus>();
@@ -117,27 +92,5 @@ public class AssemblyLineCreator {
 		return statuses;
 	}
 	
-	/**
-	 * Return all WorkstationTypes.
-	 * 
-	 * @return a LinkedList of containing all WorkstationTypes.
-	 */
-	public LinkedList<WorkstationType> getAllWorkstationTypes(){
-		return workstationTypes;
-	}
 	
-	/**
-	 * Returns the workstationtype that has the specified name
-	 * 
-	 * @param name the name of the desired workstationType
-	 * @return the requested workstationtype, or null if it does not exist
-	 */
-	public WorkstationType getWorkstationType(String name){
-		for (WorkstationType workstationType : workstationTypes){
-			if(workstationType.getName().equals(name)){
-				return workstationType;
-			}
-		}
-		return null;
-	}
 }

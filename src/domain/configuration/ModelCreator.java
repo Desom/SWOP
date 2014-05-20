@@ -8,38 +8,49 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import domain.assembly.WorkstationType;
+import domain.assembly.WorkstationTypeCreator;
+
 public class ModelCreator {
 	
 	private String path;
 	private List<Option> options;
 	private List<Part> parts;
 	private HashMap<String, VehicleModel> allModels;
+	private final WorkstationTypeCreator workstationTypeCreator;
 	
 	/**
 	 * Constructor of ModelCreator.
-	 * 
+	 * @param creator
+	 * 		The assemblyLineCreator to be used to gather the workstationTypes.
 	 * @param options
 	 * 		All possible options that can be associated with a vehicle model.
 	 * 		In other words, all possible options that could be given to a configuration.
+	 * @param parts
+	 * 		All possible parts that can be associated with a vehicle model.
 	 * @param path
 	 * 		The path to the file containing the vehicle models.
 	 */
-	public ModelCreator(List<Option> options, List<Part> parts, String path){
+	public ModelCreator(WorkstationTypeCreator creator, List<Option> options, List<Part> parts, String path){
 		this.options = options;
 		this.parts = parts;
 		this.path = path;
+		this.workstationTypeCreator = creator;
 	}
 
 	/**
 	 * Constructor of ModelCreator.
 	 * Uses the default path the the file containing the vehicle models.
-	 * 
+	 * @param creator
+	 * 		The assemblyLineCreator to be used to gather the workstationTypes.
 	 * @param options
 	 * 		All possible options that can be associated with a vehicle model.
 	 * 		In other words, all possible options that could be given to a configuration.
+	 * @param parts
+	 * 		All possible parts that can be associated with a vehicle model.
 	 */
-	public ModelCreator(List<Option> options, List<Part> parts){
-		this(options, parts, "data/models.txt");
+	public ModelCreator(WorkstationTypeCreator creator, List<Option> options, List<Part> parts){
+		this(creator, options, parts, "data/models.txt");
 	}
 
 	/**
@@ -83,11 +94,30 @@ public class ModelCreator {
 		}
 		
 		// Determine default task time
-		int defaultTaskTime = 60;
+		HashMap<WorkstationType, Integer> workstationTimes = new HashMap<WorkstationType, Integer>();
 		if(inputline.contains("%")){
 			String[] original = inputline.split("%");
-			defaultTaskTime = Integer.parseInt(original[1]);
+			
+			try{
+				int TaskTime = Integer.parseInt(original[1]);
+				for(WorkstationType t : workstationTypeCreator.getAllWorkstationTypes()){
+					workstationTimes.put(t, TaskTime);
+				}
+			}catch(NumberFormatException e){
+				for(WorkstationType t : workstationTypeCreator.getAllWorkstationTypes()){
+					workstationTimes.put(t, 60);
+				}
+				HashMap<WorkstationType, Integer> parsedTimes = parseTimes(original[1]);
+				for(WorkstationType t : parsedTimes.keySet()){
+					workstationTimes.put(t, parsedTimes.get(t));
+				}
+			}
+			
 			inputline = original[0];
+		}else{
+			for(WorkstationType t : workstationTypeCreator.getAllWorkstationTypes()){
+				workstationTimes.put(t, 60);
+			}
 		}
 		// continue loading the options
 		String[] input=inputline.split(";");
@@ -95,7 +125,7 @@ public class ModelCreator {
 		if(allModels.containsKey(input[0])) throw new VehicleModelCatalogException("Model name already exists: "+input[0] );
 		try{
 			ArrayList<String> a = new ArrayList<String>(Arrays.asList(input[1].split(",")));
-			allModels.put(input[0], new VehicleModel(input[0], collectOption(a), collectPart(parts), defaultTaskTime));
+			allModels.put(input[0], new VehicleModel(input[0], collectOption(a), collectPart(parts), workstationTimes));
 		}catch(ClassCastException e){
 			throw new VehicleModelCatalogException("Wrong Option Type in form: " + inputline);
 		}
@@ -171,5 +201,22 @@ public class ModelCreator {
 				return part;
 		}
 		return null;
+	}
+	
+	
+	private HashMap<WorkstationType, Integer> parseTimes(String times){
+		HashMap<WorkstationType, Integer> timeMap = new HashMap<WorkstationType, Integer>();
+		String[] workstations = times.split(",");
+		for(String w : workstations){
+			String[] data = w.split(":");
+			WorkstationType type = null;
+			for(WorkstationType t : workstationTypeCreator.getAllWorkstationTypes()){
+				if(t.getName().equalsIgnoreCase(data[0].trim())){
+					type = t;
+				}
+			}
+			timeMap.put(type, Integer.parseInt(data[1]));
+		}
+		return timeMap;
 	}
 }

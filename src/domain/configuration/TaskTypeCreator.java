@@ -18,6 +18,7 @@ public class TaskTypeCreator {
 	
 	public PartType ToolStorage;
 	public PartType CargoProtection;
+	public PartType Certification;
 	
 
 	public TaskTypeCreator(){
@@ -41,6 +42,8 @@ public class TaskTypeCreator {
 		partTypes.add(this.ToolStorage);
 		this.CargoProtection = new PartType("CargoProtection");
 		partTypes.add(CargoProtection);
+		this.Certification = new PartType("Certification");
+		partTypes.add(Certification);
 	}
 	
 	/**

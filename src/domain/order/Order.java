@@ -59,7 +59,7 @@ public abstract class Order {
 		this.configuration = configuration;
 		if (deliveredTime != null && deliveredTime.before(orderedTime))
 			throw new IllegalArgumentException("The delivered time is older then the ordered time.");
-		this.assemblyProcess = new VehicleAssemblyProcess(this, configuration.getAllOptions(), isDelivered, deliveredTime);
+		this.assemblyProcess = new VehicleAssemblyProcess(this, configuration.getAllTaskables(), isDelivered, deliveredTime);
 		this.setOrderedTime(orderedTime);
 	}
 	

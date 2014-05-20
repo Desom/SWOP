@@ -1,5 +1,5 @@
-Model A;sedan,break,red,blue,black,white,standard 2l v4,performance 2.5l v6,6 speed manual,5 speed manual,5 speed automatic,leather white,leather black,vinyl grey,manual,automatic,winter,comfort,sports,%50
-Model B;sedan,break,sport,red,blue,green,yellow,standard 2l v4,performance 2.5l v6,ultra 3l v8,6 speed manual,5 speed automatic,leather white,leather black,vinyl grey,manual,automatic,winter,comfort,sports,low,%70
-Model C;sport,black,white,performance 2.5l v6,ultra 3l v8,6 speed manual,leather white,leather black,manual,automatic,winter,sports,low,high
-Model X;platform,closed,green,white,standard,hybrid,8 speed manual,8 speed automatic,vinyl grey,vinyl black,manual,automatic,standard wheels,heavy-duty,!ToolStorage,CargoProtection
-Model Y;platform,black,white,standard,hybrid,8 speed manual,8 speed automatic,vinyl grey,vinyl black,manual,automatic,standard wheels,heavy-duty,!ToolStorage,CargoProtection
+Model A;sedan,break,red,blue,black,white,standard 2l v4,performance 2.5l v6,6 speed manual,5 speed manual,5 speed automatic,leather white,leather black,vinyl grey,manual airco,automatic airco,winter,comfort,sports,%50
+Model B;sedan,break,sport,red,blue,green,yellow,standard 2l v4,performance 2.5l v6,ultra 3l v8,6 speed manual,5 speed automatic,leather white,leather black,vinyl grey,manual airco,automatic airco,winter,comfort,sports,low,%70
+Model C;sport,black,white,performance 2.5l v6,ultra 3l v8,6 speed manual,leather white,leather black,manual airco,automatic airco,winter,sports,low,high
+Model X;platform,closed,green,white,standard,hybrid,8 speed manual,automatic,vinyl grey,vinyl black,manual airco,automatic airco,standard wheels,heavy-duty,%Body Post:90,Certification Post:30!ToolStorage,CargoProtection,Certification
+Model Y;platform,black,white,standard,hybrid,8 speed manual,automatic,vinyl grey,vinyl black,manual airco,automatic airco,standard wheels,heavy-duty,%Body Post:120,Certification Post:45!ToolStorage,CargoProtection,Certification

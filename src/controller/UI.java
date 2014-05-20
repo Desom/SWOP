@@ -217,7 +217,7 @@ public class UI implements UIInterface{
 	public void fillIn(VehicleOrderForm orderForm) {
 		ArrayList<OptionType> mandatoryList = new ArrayList<OptionType>();
 		ArrayList<OptionType> nonMandatoryList = new ArrayList<OptionType>();
-		for(OptionType oType:VehicleModelCatalog.taskTypeCreator.getAllTypes()){
+		for(OptionType oType:VehicleModelCatalog.taskTypeCreator.getAllOptionTypes()){
 			if(oType.isMandatory()){
 				mandatoryList.add(oType);
 			}
@@ -262,7 +262,7 @@ public class UI implements UIInterface{
 	
 	public void fillIn(SingleTaskOrderForm orderForm){
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
-		for (OptionType type : VehicleModelCatalog.taskTypeCreator.getAllTypes())
+		for (OptionType type : VehicleModelCatalog.taskTypeCreator.getAllOptionTypes())
 			if (type.isSingleTaskPossible())
 				possibleTypes.add(type);
 		int answer1 = this.askWithPossibilities("What do you want to order?", possibleTypes.toArray());

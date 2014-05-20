@@ -186,7 +186,6 @@ public class AssemblyLine implements WorkstationObserver{
 	 * 		A list of Orders which represents the assemblyLine. ( null if there is no order on that respective Workstation.)
 	 * @return The calculated amount of minutes it will take to empty the given assemblyLine.
 	 */
-	@SuppressWarnings("unchecked")
 	public int calculateTimeTillEmptyFor(LinkedList<Order> assembly) {
 		return this.currentStatus.calculateTimeTillEmptyFor(this,assembly);
 	}
@@ -205,8 +204,8 @@ public class AssemblyLine implements WorkstationObserver{
 		for(int j = 0; j < this.getNumberOfWorkstations(); j++){
 			if(assembly.get(j) != null
 					&& (this.filterWorkstations(assembly.get(j).getAssemblyprocess())).contains(allWorkstations.get(j))
-					&& assembly.get(j).getConfiguration().getExpectedWorkingTime() > maxTime){
-				maxTime = assembly.get(j).getConfiguration().getExpectedWorkingTime();
+					&& assembly.get(j).getConfiguration().getExpectedWorkingTime(allWorkstations.get(j).getWorkstationType()) > maxTime){
+				maxTime = assembly.get(j).getConfiguration().getExpectedWorkingTime(allWorkstations.get(j).getWorkstationType());
 			}
 		}
 		return maxTime;

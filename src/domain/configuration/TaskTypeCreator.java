@@ -3,24 +3,10 @@ package domain.configuration;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-public class TaskTypeCreator {
+public class TaskTypeCreator extends AbstractTypeCreator {
 
-	private LinkedList<OptionType> optionTypes = new LinkedList<OptionType>(); 
-	private LinkedList<PartType> partTypes = new LinkedList<PartType>(); 
-	public OptionType Body;
-	public OptionType Color;
-	public OptionType Engine;
-	public OptionType Gearbox;
-	public OptionType Seats;
-	public OptionType Wheels;
-	public OptionType Airco;
-	public OptionType Spoiler;
-	
-	public PartType ToolStorage;
-	public PartType CargoProtection;
-	public PartType Certification;
-	
-
+	LinkedList<OptionType> optionTypes = new LinkedList<OptionType>(); 
+	LinkedList<PartType> partTypes = new LinkedList<PartType>(); 
 	public TaskTypeCreator(){
 		this.Body = new OptionType("Body");
 		optionTypes.add(this.Body);
@@ -45,34 +31,42 @@ public class TaskTypeCreator {
 		this.Certification = new PartType("Certification");
 		partTypes.add(Certification);
 	}
-	
-	/* (non-Javadoc)
-	 * @see domain.configuration.TaskTypeCreatorInterface#getAllTypes()
+
+	/**
+	 * Return all TaskTypes.
+	 * 
+	 * @return a LinkedList of containing all TaskTypes.
 	 */
-	public LinkedList<TaskType> getAllTypes(){
+	public LinkedList<TaskType> getAllTypes() {
 		LinkedList<TaskType> taskTypes = new LinkedList<TaskType>(this.optionTypes);
 		taskTypes.addAll(this.partTypes);
 		return taskTypes;
 	}
-	
-	/* (non-Javadoc)
-	 * @see domain.configuration.TaskTypeCreatorInterface#getAllOptionTypes()
+
+	/**
+	 * Return all OptionTypes.
+	 * 
+	 * @return a LinkedList of containing all OptionTypes.
 	 */
-	public LinkedList<OptionType> getAllOptionTypes(){
+	public LinkedList<OptionType> getAllOptionTypes() {
 		LinkedList<OptionType> optionTypes = new LinkedList<OptionType>(this.optionTypes);
 		return optionTypes;
 	}
-	
-	/* (non-Javadoc)
-	 * @see domain.configuration.TaskTypeCreatorInterface#getAllPartTypes()
+
+	/**
+	 * Return all PartTypes.
+	 * 
+	 * @return a LinkedList of containing all PartTypes.
 	 */
-	public LinkedList<PartType> getAllPartTypes(){
+	public LinkedList<PartType> getAllPartTypes() {
 		LinkedList<PartType> partTypes = new LinkedList<PartType>(this.partTypes);
 		return partTypes;
 	}
-	
-	/* (non-Javadoc)
-	 * @see domain.configuration.TaskTypeCreatorInterface#getAllSingleTaskPossibleTypes()
+
+	/**
+	 * Returns all option types that are available for single task orders.
+	 * 
+	 * @return all option types that are available for single task orders.
 	 */
 	public ArrayList<OptionType> getAllSingleTaskPossibleTypes() {
 		ArrayList<OptionType> singleTaskPossibleTypes = new ArrayList<OptionType>();
@@ -81,25 +75,27 @@ public class TaskTypeCreator {
 				singleTaskPossibleTypes.add(optionType);
 		return singleTaskPossibleTypes;
 	}
-	
-	/* (non-Javadoc)
-	 * @see domain.configuration.TaskTypeCreatorInterface#getAllMandatoryTypes()
+
+	/**
+	 * Returns all option types that are mandatory for vehicle orders.
+	 * 
+	 * @return all option types that are mandatory for vehicle orders.
 	 */
-	public ArrayList<OptionType> getAllMandatoryTypes(){
+	public ArrayList<OptionType> getAllMandatoryTypes() {
 		ArrayList<OptionType> mandatoryTypes = new ArrayList<OptionType>();
 		for (OptionType optionType : optionTypes)
 			if (optionType.isMandatory())
 				mandatoryTypes.add(optionType);
 		return mandatoryTypes;
 	}
-	
+
 	/**
 	 * Returns the tasktype that has the specified name
 	 * 
 	 * @param name the name of the desired taskType
 	 * @return the requested tasktype, or null if it does not exist
 	 */
-	public TaskType getTaskType(String name){
+	public TaskType getTaskType(String name) {
 		for (TaskType optionType : getAllTypes()){
 			if(optionType.getName().equals(name)){
 				return optionType;
@@ -108,5 +104,5 @@ public class TaskTypeCreator {
 		return null;
 	}
 
-	
+
 }

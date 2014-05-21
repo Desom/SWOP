@@ -12,7 +12,7 @@ public class VehicleModelCatalog {
 	private ArrayList<Part> allParts;
 	private ArrayList<VehicleModel> allModels;
 	private final WorkstationTypeCreatorInterface workstationTypeCreator;
-	public static TaskTypeCreator taskTypeCreator = new TaskTypeCreator();
+	public static AbstractTypeCreator taskTypeCreator = new TaskTypeCreator();
 
 	/**
 	 * Constructor of VehicleModelCatalog.

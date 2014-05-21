@@ -1,5 +1,6 @@
 package domain.assembly.assemblyline.status;
 
+import domain.assembly.assemblyline.BrokenStatus;
 
 public class StatusCreator implements StatusCreatorInterface {
 

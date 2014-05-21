@@ -1,9 +1,10 @@
-package domain.assembly.assemblyline.status;
+package domain.assembly.assemblyline;
 
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.status.AssemblyLineStatus;
+import domain.assembly.assemblyline.status.StatusCreatorInterface;
 import domain.scheduling.order.Order;
 
 public class BrokenStatus extends AssemblyLineStatus {

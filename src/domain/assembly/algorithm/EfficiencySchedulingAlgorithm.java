@@ -115,19 +115,6 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	}
 
 	/**
-	 * Converts a list of ScheduledOrders into a list of Orders.
-	 * 
-	 * @param scheduledOrders
-	 * 		The list of ScheduledOrder objects to be converted
-	 * @return A list of Orders which are all in arrayList and in the same order
-	 */
-	private ArrayList<Order> convert(ArrayList<ScheduledOrder> scheduledOrders) {
-		ArrayList<Order> orders = new ArrayList<Order>();
-		for(ScheduledOrder i : scheduledOrders)orders.add(i.getScheduledOrder());
-		return orders;
-	}
-
-	/**
 	 * Combines the three lists into one array of ScheduledOrders, with (if possible) 
 	 * 2 SingleTaskOrders at the beginning of the day and 2 at the end of the day.
 	 * 
@@ -153,7 +140,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			ArrayList<SingleTaskOrder> sTOrderList3, ArrayList<Order> orderList,
 			AssemblyLine assemblyLine, ArrayList<ScheduledOrder> scheduledOrdersWithDeadline) {
 		// clone the information that will be changed
-		GregorianCalendar time = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
+		GregorianCalendar time = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 		ArrayList<Order> orderList2 = (ArrayList<Order>) orderList.clone();
 		ArrayList<SingleTaskOrder> sTOrderList1clone = (ArrayList<SingleTaskOrder>) sTOrderList1.clone();
 		ArrayList<SingleTaskOrder> sTOrderList3clone = (ArrayList<SingleTaskOrder>) sTOrderList3.clone();
@@ -195,19 +182,13 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 
 		for(int i=0;i<canPlaceAtbeginning(assemblyLine);i++){
 			if(!sTOrderList3.isEmpty())temp.add(sTOrderList3.remove(0));
-			else{
-				if(i!=0) temp.add(null);
-				else{
-					break;
-				}
-			}
 		}
 		int corectionfactor = 0;
 		for(int i= 1;i<assemblyLine.getNumberOfWorkstations();i++){
 			// looks if a SingleTaskOrder can be placed at the end of the day
 			ArrayList<Order> temp2 = (ArrayList<Order>) temp.clone();
 			if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
-			GregorianCalendar temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
+			GregorianCalendar temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 			temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLine));
 			if(assemblyLine.getAssemblyLineScheduler().getRealEndOfDay().before(temporayTime)){
 				//finishes the day with three empty orders
@@ -238,7 +219,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			if(!sTOrderList1.isEmpty())temp2.add(sTOrderList1.get(0));
 		}
 		//checks if the test dummy exceeds the end of the day
-		temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
+		temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 		temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLine));
 		while(!assemblyLine.getAssemblyLineScheduler().getRealEndOfDay().before(temporayTime)){
 			//make the dummy the real situation 
@@ -263,7 +244,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 				}
 				if(empty) break;
 			}
-			temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
+			temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 			temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLine));
 		}
 		//finishes the day with three empty orders
@@ -287,7 +268,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		for(Order order :stateOfAssemblyLine){
 			if(order != null && (order instanceof SingleTaskOrder) && ((SingleTaskOrder) order).getType() == VehicleModelCatalog.taskTypeCreator.Seats) i++;
 		}
-		return k-1-i;
+		return k-i;
 	}
 
 	/**
@@ -310,7 +291,6 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			simulator.add(null);
 		}
 		int timespent = 0;
-		int j= 0;
 		// places  the orders one by one and remove the last one which will be added to result
 		ArrayList<Order> orderList = (ArrayList<Order>) ordersToComplete.clone();
 		while(!orderList.isEmpty() || !allNull(simulator)){
@@ -329,18 +309,17 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	private ArrayList<Order> advanceReturnOfBelt(LinkedList<Order> simulator,
 			ArrayList<Order> orderList, AssemblyLine assemblyLine) {
 		ArrayList<Order> result = new ArrayList<Order>();
-		@SuppressWarnings("unchecked")
-		LinkedList<Order> simulAssembly = (LinkedList<Order>) simulator.clone();
-		simulAssembly.removeLast();
+		LinkedList<Order> simulAssembly =  simulator;
+		result.add(simulAssembly.removeLast());
 		simulAssembly.addFirst(null);
 		for(int j= assemblyLine.getNumberOfWorkstations()-1; j>=0;j--){
 			try {
-				if(simulAssembly.get(j) != null && !assemblyLine.filterWorkstations(simulAssembly.get(j).getAssemblyprocess()).contains(assemblyLine.selectWorkstationById(j))){
-					if(j== 1 && !orderList.isEmpty()){
-						simulAssembly.removeFirst();
-						simulAssembly.addFirst(orderList.remove(0));
-						j+=2;
-					}else
+				if(j== 0 && simulAssembly.get(0) == null && !orderList.isEmpty()){
+					simulAssembly.removeFirst();
+					simulAssembly.addFirst(orderList.remove(0));
+					j+=2;
+				}else
+				if(simulAssembly.get(j) != null && !assemblyLine.filterWorkstations(simulAssembly.get(j).getAssemblyprocess()).contains(assemblyLine.selectWorkstationById(j+1))){
 					if(j==assemblyLine.getNumberOfWorkstations()-1){
 						result.add(simulAssembly.removeLast());
 						simulAssembly.addLast(null);
@@ -382,12 +361,11 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * @param result
 	 * 		The list where the new Orders and their completion estimate will be added.
 	 */
+	@SuppressWarnings("unchecked")
 	private void timeOfBeltWithAssembly(ArrayList<Order> ordersToComplete,
 			AssemblyLine assemblyLine, ArrayList<ScheduledOrder> result) {
-		@SuppressWarnings("unchecked")
 		LinkedList<Order> simulator = (LinkedList<Order>) assemblyLine.stateWhenAcceptingOrders().clone();
 		int timespent = 0;
-		int j= 0;
 		// places  the orders one by one and remove the last one which will be added to result
 		ArrayList<Order> orderList = (ArrayList<Order>) ordersToComplete.clone();
 		while(!orderList.isEmpty() || !allNull(simulator)){
@@ -395,7 +373,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			ArrayList<Order> completed = advanceReturnOfBelt(simulator, orderList, assemblyLine);
 			for(Order order:completed){
 				if(order != null && !assemblyLine.stateWhenAcceptingOrders().contains(order)){
-					GregorianCalendar clone = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
+					GregorianCalendar clone = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 					clone.add(GregorianCalendar.MINUTE, timespent);
 					result.add(new ScheduledOrder(clone, order));
 				}
@@ -413,9 +391,9 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * 		The AssemblyLineScheduler that contains the AssemblyLine.
 	 * @return The time necessary to finish the schedule given the current state of the assemblyLine in minutes.
 	 */
+	@SuppressWarnings("unchecked")
 	private int timeToFinishWithFilled(ArrayList<Order> ordersToComplete,
 			AssemblyLine assemblyLine) {
-		@SuppressWarnings("unchecked")
 		LinkedList<Order> simulator = (LinkedList<Order>) assemblyLine.stateWhenAcceptingOrders().clone();
 		int time = 0;
 		ArrayList<Order> orderList = (ArrayList<Order>) ordersToComplete.clone();
@@ -547,6 +525,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * 		The AssemblyLineScheduler that contains the orders
 	 * @return A list of ScheduledOrder objects conform to the given order objects.
 	 */
+	@SuppressWarnings("unchecked")
 	private ArrayList<ScheduledOrder> transformToScheduledOrder(
 			ArrayList<Order> orders, GregorianCalendar time,
 			AssemblyLineScheduler assemblyLineScheduler) {
@@ -574,18 +553,20 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	private ArrayList<Order> advanceReturnOnBelt(LinkedList<Order> simulator,
 			ArrayList<Order> orderList, AssemblyLine assemblyLine) {
 		ArrayList<Order> result = new ArrayList<Order>();
-		LinkedList<Order> simulAssembly = (LinkedList<Order>) simulator.clone();
+		LinkedList<Order> simulAssembly = simulator;
 		simulAssembly.removeLast();
-		simulAssembly.addFirst(null);
+			simulAssembly.addFirst(null);
+		
 		for(int j= assemblyLine.getNumberOfWorkstations()-1; j>=0;j--){
 			try {
-				if(simulAssembly.get(j) != null && !assemblyLine.filterWorkstations(simulAssembly.get(j).getAssemblyprocess()).contains(assemblyLine.selectWorkstationById(j))){
-					if(j== 1 && !orderList.isEmpty()){
-						simulAssembly.removeFirst();
-						result.add(orderList.get(0));
-						simulAssembly.addFirst(orderList.remove(0));
-						j+=2;
-					}else
+				if(j== 0 && simulAssembly.get(0) == null &&  !orderList.isEmpty()){
+					simulAssembly.removeFirst();
+					if(orderList.get(0) != null)j+=2;
+					result.add(orderList.get(0));
+					simulAssembly.addFirst(orderList.remove(0));
+					
+				}
+				if(simulAssembly.get(j) != null && !assemblyLine.filterWorkstations(simulAssembly.get(j).getAssemblyprocess()).contains(assemblyLine.selectWorkstationById(j+1))){
 					if(j==assemblyLine.getNumberOfWorkstations()-1){
 						simulAssembly.removeLast();
 						simulAssembly.addLast(null);
@@ -618,6 +599,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * 		The AssemblyLineScheduler that contains the orders and the current AssemblyLine.
 	 * @return A list of scheduledOrders.
 	 */
+	@SuppressWarnings("unchecked")
 	private ArrayList<ScheduledOrder> transformToScheduledOrderWithAssembly(
 			ArrayList<Order> orders, AssemblyLine assemblyLine) {
 		LinkedList<Order> simulator = assemblyLine.getAllOrders();
@@ -628,7 +610,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		while(!orderList.isEmpty() || !allNull(simulator)){
 			ArrayList<Order> placedOrders = this.advanceReturnOnBelt(simulator, orderList, assemblyLine);
 			for(Order order:placedOrders){
-			GregorianCalendar clone = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
+			GregorianCalendar clone = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 			clone.add(GregorianCalendar.MINUTE, timespent);
 			scheduledOrders.add(new ScheduledOrder(clone, order));
 			}

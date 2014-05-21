@@ -5,19 +5,16 @@ import static org.junit.Assert.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.LinkedList;
 
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.assembly.AssemblyLineCreator;
 import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.AssemblyLineStatus;
-import domain.assembly.OperationalStatus;
 import domain.assembly.ScheduledOrder;
-import domain.assembly.SchedulerCreator;
+import domain.assembly.StatusCreator;
 import domain.assembly.Workstation;
-import domain.assembly.WorkstationType;
+import domain.assembly.WorkstationTypeCreator;
+import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 import domain.configuration.Configuration;
@@ -47,28 +44,27 @@ public class EfficiencySchedulingAlgorithmTest {
 	public void testCreate() throws IOException, VehicleModelCatalogException {
 		this.algorithm = new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+		WorkstationTypeCreator workstationTypeCreator= new WorkstationTypeCreator();
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.customShopManager = new CustomShopManager(0);
-		this.cmc = new VehicleModelCatalog();
+		this.cmc = new VehicleModelCatalog(workstationTypeCreator);
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
-		ArrayList<AssemblyLineStatus> possibleStates = new ArrayList<AssemblyLineStatus>();
-		possibleStates.add(new OperationalStatus());
-		this.AssemblyLine = new dummyAssemblyLine(als, 3, possibleStates);
+		ArrayList<VehicleModel> modelList = new ArrayList<VehicleModel>(this.cmc.getAllModels());
+		StatusCreator statusCreator = new StatusCreator();
+		this.AssemblyLine = new dummyAssemblyLine(als, 3,statusCreator.getOperationalStatus(),modelList, new GregorianCalendar(2000,0,1,6,0,0));
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
-		AssemblyLineCreator alsc = new AssemblyLineCreator(new SchedulerCreator());
-		workstations.add(new Workstation("Body Post", alsc.getWorkstationType("Body Post")));
-		workstations.add(new Workstation("DriveTrain Post", alsc.getWorkstationType("DriveTrain Post")));
-		workstations.add(new Workstation("Accessories Post", alsc.getWorkstationType("Accessories Post")));
+		workstations.add(new Workstation("Body Post", workstationTypeCreator.getWorkstationType("Body Post")));
+		workstations.add(new Workstation("DriveTrain Post", workstationTypeCreator.getWorkstationType("DriveTrain Post")));
+		workstations.add(new Workstation("Accessories Post", workstationTypeCreator.getWorkstationType("Accessories Post")));
 		this.AssemblyLine.addWorkstations(workstations);
 		this.alsT = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
-		this.AssemblyLineT = new dummyAssemblyLine(alsT, 4, possibleStates);
+		this.AssemblyLineT = new dummyAssemblyLine(alsT, 4,statusCreator.getOperationalStatus(), modelList,new GregorianCalendar(2000,0,1,6,0,0));
 		ArrayList<Workstation> workstationsT = new ArrayList<Workstation>();
-		AssemblyLineCreator alscT = new AssemblyLineCreator(new SchedulerCreator());
-		workstationsT.add(new Workstation("Body Post", alscT.getWorkstationType("Body Post")));
-		workstationsT.add(new Workstation("Cargo Post",  alscT.getWorkstationType("Cargo Post")));
-		workstationsT.add(new Workstation("DriveTrain Post", alscT.getWorkstationType("DriveTrain Post")));
-		workstationsT.add(new Workstation("Accessories Post", alscT.getWorkstationType("Accessories Post")));
+		workstationsT.add(new Workstation("Body Post", workstationTypeCreator.getWorkstationType("Body Post")));
+		workstationsT.add(new Workstation("Cargo Post",  workstationTypeCreator.getWorkstationType("Cargo Post")));
+		workstationsT.add(new Workstation("DriveTrain Post", workstationTypeCreator.getWorkstationType("DriveTrain Post")));
+		workstationsT.add(new Workstation("Accessories Post", workstationTypeCreator.getWorkstationType("Accessories Post")));
 		this.AssemblyLineT.addWorkstations(workstationsT);
 	}
 	
@@ -104,96 +100,96 @@ public class EfficiencySchedulingAlgorithmTest {
 		config2.complete();
 		orderList.add(new SingleTaskOrder(18, customShopManager, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,0)));
 		orderList.add(new SingleTaskOrder(19, customShopManager, config2,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(2002,0,1,12,0,1)));
-		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList, this.AssemblyLine);
 		//6u00
-		assertEquals(1,scheduleList.get(0).getOrderID());
+		assertEquals(1,scheduleList.get(0).getScheduledOrder().getOrderID());
 		//6u50
-		assertEquals(2,scheduleList.get(1).getOrderID());
+		assertEquals(2,scheduleList.get(1).getScheduledOrder().getOrderID());
 		//7u40
-		assertEquals(3,scheduleList.get(2).getOrderID());
+		assertEquals(3,scheduleList.get(2).getScheduledOrder().getOrderID());
 		//8u30
-		assertEquals(4,scheduleList.get(3).getOrderID());
+		assertEquals(4,scheduleList.get(3).getScheduledOrder().getOrderID());
 		//9u20
-		assertEquals(5,scheduleList.get(4).getOrderID());
+		assertEquals(5,scheduleList.get(4).getScheduledOrder().getOrderID());
 		//10u10
-		assertEquals(6,scheduleList.get(5).getOrderID());
+		assertEquals(6,scheduleList.get(5).getScheduledOrder().getOrderID());
 		//11u00
-		assertEquals(7,scheduleList.get(6).getOrderID());
+		assertEquals(7,scheduleList.get(6).getScheduledOrder().getOrderID());
 		//11u50
-		assertEquals(8,scheduleList.get(7).getOrderID());
+		assertEquals(8,scheduleList.get(7).getScheduledOrder().getOrderID());
 		//12u40
-		assertEquals(9,scheduleList.get(8).getOrderID());
+		assertEquals(9,scheduleList.get(8).getScheduledOrder().getOrderID());
 		//13u30
-		assertEquals(10,scheduleList.get(9).getOrderID());
+		assertEquals(10,scheduleList.get(9).getScheduledOrder().getOrderID());
 		//14u20
-		assertEquals(11,scheduleList.get(10).getOrderID());
+		assertEquals(11,scheduleList.get(10).getScheduledOrder().getOrderID());
 		//15u10
-		assertEquals(12,scheduleList.get(11).getOrderID());
+		assertEquals(12,scheduleList.get(11).getScheduledOrder().getOrderID());
 		//16u00
-		assertEquals(13,scheduleList.get(12).getOrderID());
+		assertEquals(13,scheduleList.get(12).getScheduledOrder().getOrderID());
 		//16u50
-		assertEquals(14,scheduleList.get(13).getOrderID());
+		assertEquals(14,scheduleList.get(13).getScheduledOrder().getOrderID());
 		//17u40
-		assertEquals(15,scheduleList.get(14).getOrderID());
+		assertEquals(15,scheduleList.get(14).getScheduledOrder().getOrderID());
 		//18u30
-		assertEquals(16,scheduleList.get(15).getOrderID());
+		assertEquals(16,scheduleList.get(15).getScheduledOrder().getOrderID());
 		//19u20
-		assertEquals(18,scheduleList.get(16).getOrderID());
+		assertEquals(18,scheduleList.get(16).getScheduledOrder().getOrderID());
 		//20u20
-		assertEquals(19,scheduleList.get(17).getOrderID());
+		assertEquals(19,scheduleList.get(17).getScheduledOrder().getOrderID());
 		//21u20
-		assertEquals(null,scheduleList.get(18));
+		assertEquals(null,scheduleList.get(18).getScheduledOrder());
 		//21u20
-		assertEquals(null,scheduleList.get(19));
+		assertEquals(null,scheduleList.get(19).getScheduledOrder());
 		//21u20
-		assertEquals(null,scheduleList.get(20));
+		assertEquals(null,scheduleList.get(20).getScheduledOrder());
 
 	}
 	@Test
 	public void testScheduleToList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
-		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList, this.AssemblyLine);
 
-		assertEquals(10,scheduleList.get(0).getOrderID());
-		assertEquals(11,scheduleList.get(1).getOrderID());
-		assertEquals(9,scheduleList.get(2).getOrderID());
-		assertEquals(8,scheduleList.get(3).getOrderID());
-		assertEquals(7,scheduleList.get(4).getOrderID());
-		assertEquals(6,scheduleList.get(5).getOrderID());
-		assertEquals(5,scheduleList.get(6).getOrderID());
-		assertEquals(4,scheduleList.get(7).getOrderID());
-		assertEquals(3,scheduleList.get(8).getOrderID());
-		assertEquals(2,scheduleList.get(9).getOrderID());
-		assertEquals(1,scheduleList.get(10).getOrderID());
-		assertEquals(0,scheduleList.get(11).getOrderID());
-		assertEquals(null,scheduleList.get(12));
-		assertEquals(null,scheduleList.get(13));
-		assertEquals(null,scheduleList.get(14));
+		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());
+		assertEquals(11,scheduleList.get(1).getScheduledOrder().getOrderID());
+		assertEquals(9,scheduleList.get(2).getScheduledOrder().getOrderID());
+		assertEquals(8,scheduleList.get(3).getScheduledOrder().getOrderID());
+		assertEquals(7,scheduleList.get(4).getScheduledOrder().getOrderID());
+		assertEquals(6,scheduleList.get(5).getScheduledOrder().getOrderID());
+		assertEquals(5,scheduleList.get(6).getScheduledOrder().getOrderID());
+		assertEquals(4,scheduleList.get(7).getScheduledOrder().getOrderID());
+		assertEquals(3,scheduleList.get(8).getScheduledOrder().getOrderID());
+		assertEquals(2,scheduleList.get(9).getScheduledOrder().getOrderID());
+		assertEquals(1,scheduleList.get(10).getScheduledOrder().getOrderID());
+		assertEquals(0,scheduleList.get(11).getScheduledOrder().getOrderID());
+		assertEquals(null,scheduleList.get(12).getScheduledOrder());
+		assertEquals(null,scheduleList.get(13).getScheduledOrder());
+		assertEquals(null,scheduleList.get(14).getScheduledOrder());
 		assertEquals(15,scheduleList.size());
 	}
 	@Test
 	public void testScheduleToListForTruckLineNoSTOrders() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
-		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, alsT);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList, this.AssemblyLineT);
 
-		assertEquals(10,scheduleList.get(0).getOrderID());
-		assertEquals(11,scheduleList.get(1).getOrderID());
-		assertEquals(9,scheduleList.get(2).getOrderID());
-		assertEquals(8,scheduleList.get(3).getOrderID());
-		assertEquals(7,scheduleList.get(4).getOrderID());
-		assertEquals(6,scheduleList.get(5).getOrderID());
-		assertEquals(5,scheduleList.get(6).getOrderID());
-		assertEquals(4,scheduleList.get(7).getOrderID());
-		assertEquals(3,scheduleList.get(8).getOrderID());
-		assertEquals(2,scheduleList.get(9).getOrderID());
-		assertEquals(1,scheduleList.get(10).getOrderID());
-		assertEquals(0,scheduleList.get(11).getOrderID());
-		assertEquals(null,scheduleList.get(12));
-		assertEquals(null,scheduleList.get(13));
-		assertEquals(null,scheduleList.get(14));
-		assertEquals(null,scheduleList.get(15));
+		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());
+		assertEquals(11,scheduleList.get(1).getScheduledOrder().getOrderID());
+		assertEquals(9,scheduleList.get(2).getScheduledOrder().getOrderID());
+		assertEquals(8,scheduleList.get(3).getScheduledOrder().getOrderID());
+		assertEquals(7,scheduleList.get(4).getScheduledOrder().getOrderID());
+		assertEquals(6,scheduleList.get(5).getScheduledOrder().getOrderID());
+		assertEquals(5,scheduleList.get(6).getScheduledOrder().getOrderID());
+		assertEquals(4,scheduleList.get(7).getScheduledOrder().getOrderID());
+		assertEquals(3,scheduleList.get(8).getScheduledOrder().getOrderID());
+		assertEquals(2,scheduleList.get(9).getScheduledOrder().getOrderID());
+		assertEquals(1,scheduleList.get(10).getScheduledOrder().getOrderID());
+		assertEquals(0,scheduleList.get(11).getScheduledOrder().getOrderID());
+		assertEquals(null,scheduleList.get(12).getScheduledOrder());
+		assertEquals(null,scheduleList.get(13).getScheduledOrder());
+		assertEquals(null,scheduleList.get(14).getScheduledOrder());
+		assertEquals(null,scheduleList.get(15).getScheduledOrder());
 		assertEquals(16,scheduleList.size());
 	}
 	
@@ -201,35 +197,34 @@ public class EfficiencySchedulingAlgorithmTest {
 	public void testScheduleToListForTruckLineSTOrdersNoFailure() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = this.makeOrderListWithSingleTaskOrderWithNoFailure();
 
-		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, alsT);
-		assertEquals(12,scheduleList.get(0).getOrderID());
-		assertEquals(13,scheduleList.get(1).getOrderID());
-		assertEquals(null,scheduleList.get(2));
-		assertEquals(10,scheduleList.get(3).getOrderID());
-		assertEquals(11,scheduleList.get(4).getOrderID());
-		assertEquals(9,scheduleList.get(5).getOrderID());
-		assertEquals(8,scheduleList.get(6).getOrderID());
-		assertEquals(7,scheduleList.get(7).getOrderID());
-		assertEquals(6,scheduleList.get(8).getOrderID());
-		assertEquals(5,scheduleList.get(9).getOrderID());
-		assertEquals(4,scheduleList.get(10).getOrderID());
-		assertEquals(3,scheduleList.get(11).getOrderID());
-		assertEquals(2,scheduleList.get(12).getOrderID());
-		assertEquals(1,scheduleList.get(13).getOrderID());
-		assertEquals(0,scheduleList.get(14).getOrderID());
-		assertEquals(14,scheduleList.get(15).getOrderID());
-		assertEquals(15,scheduleList.get(16).getOrderID());
-		assertEquals(null,scheduleList.get(17));
-		assertEquals(null,scheduleList.get(18));
-		assertEquals(null,scheduleList.get(19));
-		assertEquals(null,scheduleList.get(20));
-		assertEquals(21,scheduleList.size());
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList, this.AssemblyLineT);
+		assertEquals(12,scheduleList.get(0).getScheduledOrder().getOrderID());
+		assertEquals(13,scheduleList.get(1).getScheduledOrder().getOrderID());
+		assertEquals(10,scheduleList.get(2).getScheduledOrder().getOrderID());
+		assertEquals(11,scheduleList.get(3).getScheduledOrder().getOrderID());
+		assertEquals(9,scheduleList.get(4).getScheduledOrder().getOrderID());
+		assertEquals(8,scheduleList.get(5).getScheduledOrder().getOrderID());
+		assertEquals(7,scheduleList.get(6).getScheduledOrder().getOrderID());
+		assertEquals(6,scheduleList.get(7).getScheduledOrder().getOrderID());
+		assertEquals(5,scheduleList.get(8).getScheduledOrder().getOrderID());
+		assertEquals(4,scheduleList.get(9).getScheduledOrder().getOrderID());
+		assertEquals(3,scheduleList.get(10).getScheduledOrder().getOrderID());
+		assertEquals(2,scheduleList.get(11).getScheduledOrder().getOrderID());
+		assertEquals(1,scheduleList.get(12).getScheduledOrder().getOrderID());
+		assertEquals(0,scheduleList.get(13).getScheduledOrder().getOrderID());
+		assertEquals(14,scheduleList.get(14).getScheduledOrder().getOrderID());
+		assertEquals(15,scheduleList.get(15).getScheduledOrder().getOrderID());
+		assertEquals(null,scheduleList.get(16).getScheduledOrder());
+		assertEquals(null,scheduleList.get(17).getScheduledOrder());
+		assertEquals(null,scheduleList.get(18).getScheduledOrder());
+		assertEquals(null,scheduleList.get(19).getScheduledOrder());
+		assertEquals(20,scheduleList.size());
 	}
 	@Test
 	public void testScheduleToScheduledOrderListNoSingleTaskOrder() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.AssemblyLine);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -281,7 +276,7 @@ public class EfficiencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListSingleTaskOrderNoDeadLineFailure() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithNoFailure();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.AssemblyLine);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(12,scheduleList.get(0).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -343,7 +338,7 @@ public class EfficiencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListSingleTaskOrderDeadLineFailure() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithFailure();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.AssemblyLine);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(12,scheduleList.get(0).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
@@ -419,10 +414,10 @@ public class EfficiencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListOneAdvance() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithSingleTaskOrderWithFailure();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.AssemblyLine);
 		orderList.remove(scheduleList.get(0).getScheduledOrder());
-		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
-		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
+		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder(),0);
+		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,this.AssemblyLine);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		assertEquals(13,scheduleList2.get(0).getScheduledOrder().getOrderID());
 		assertEquals(time,scheduleList2.get(0).getScheduledTime());
@@ -495,12 +490,13 @@ public class EfficiencySchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderListOneAdvanceNr2() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderListWithNoSingleTaskOrder();
 
-		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.als.getCurrentTime(),this.als.getAssemblyLine().stateWhenAcceptingOrders(),als);
+		ArrayList<ScheduledOrder> scheduleList = algorithm.scheduleToScheduledOrderList(orderList,this.AssemblyLine);
 		orderList.remove(scheduleList.get(0).getScheduledOrder());
-		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder());
+		((dummyAssemblyLine) this.als.getAssemblyLine()).add(scheduleList.get(0).getScheduledOrder(),70);
 		GregorianCalendar time = (GregorianCalendar) this.als.getCurrentTime().clone();//6u00
 		time.add(GregorianCalendar.MINUTE, 70);//7u10
-		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,(GregorianCalendar) time.clone(),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
+		
+		ArrayList<ScheduledOrder> scheduleList2 = algorithm.scheduleToScheduledOrderList(orderList,this.AssemblyLine);
 		assertEquals(11,scheduleList2.get(0).getScheduledOrder().getOrderID());//50
 		assertEquals(time,scheduleList2.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//8u20
@@ -555,7 +551,7 @@ public class EfficiencySchedulingAlgorithmTest {
 			}
 		}
 		config1.complete();
-		orderList.add(new SingleTaskOrder(16, customShopManager, config1,new GregorianCalendar(2000,0,1,12,0,0), new GregorianCalendar(1998,0,1,12,0,0)));
+		orderList.add(new SingleTaskOrder(16, customShopManager, config1,new GregorianCalendar(2000,0,1,6,0,0), new GregorianCalendar(2000,0,1,6,1,0)));
 		return orderList;
 	}
 	private ArrayList<Order> makeOrderListWithSingleTaskOrderWithNoFailure()

@@ -36,7 +36,7 @@ public abstract class AbstractAssemblyLineSchedulingAlgorithm implements
 	 */
 	protected GregorianCalendar nextDay(GregorianCalendar currentTime) {
 		GregorianCalendar nextDay = (GregorianCalendar) currentTime.clone();
-		if (currentTime.get(GregorianCalendar.HOUR_OF_DAY) > 6)
+		if (currentTime.get(GregorianCalendar.HOUR_OF_DAY) >= 6)
 			nextDay.add(GregorianCalendar.DAY_OF_MONTH, 1);
 		nextDay.set(GregorianCalendar.HOUR_OF_DAY, AssemblyLineScheduler.BEGIN_OF_DAY);
 		nextDay.set(GregorianCalendar.MINUTE, 0);

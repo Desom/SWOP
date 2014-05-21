@@ -30,6 +30,7 @@ public class Workstation {
 	 * 		The task types that can be handled at this workstation.
 	 */
 	public Workstation(String name, WorkstationType workstationType) {
+		this.observers = new ArrayList<WorkstationObserver>();
 		this.name = name;
 		this.workstationType = workstationType;
 		this.allTasks = new ArrayList<AssemblyTask>();

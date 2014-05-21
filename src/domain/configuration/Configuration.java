@@ -83,7 +83,9 @@ public class Configuration {
 	public ArrayList<Taskable> getAllTaskables(){
 		ArrayList<Taskable> taskables = new ArrayList<Taskable>();
 		taskables.addAll(getAllOptions());
+		if(model != null){
 		taskables.addAll(model.getParts());
+		}
 		return taskables;
 	}
 	

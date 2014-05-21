@@ -262,7 +262,7 @@ public class AssemblyLine implements WorkstationObserver{
 		return this.currentStatus.stateWhenAcceptingOrders(this);
 	}
 
-	public GregorianCalendar timeWhenAcceptingOrders(AssemblyLine assemblyLine) {
+	public GregorianCalendar timeWhenAcceptingOrders() {
 		return this.currentStatus.timeWhenAcceptingOrders(this);
 	}
 	

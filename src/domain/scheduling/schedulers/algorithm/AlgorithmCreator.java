@@ -1,4 +1,4 @@
-package domain.assembly.algorithm;
+package domain.scheduling.schedulers.algorithm;
 
 public class AlgorithmCreator implements AlgorithmCreatorInterface {
 	//TODO alle algoritme constructors protected?

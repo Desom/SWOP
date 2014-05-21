@@ -3,9 +3,9 @@ package domain.scheduling.schedulers;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
-import domain.assembly.algorithm.AlgorithmCreatorInterface;
-import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
-import domain.assembly.algorithm.FactorySchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.AlgorithmCreatorInterface;
+import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.FactorySchedulingAlgorithm;
 
 public class SchedulerCreator implements SchedulerCreatorInterface {
 	

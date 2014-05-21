@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.assembly.algorithm.BasicSchedulingAlgorithm;
-import domain.assembly.algorithm.FactorySchedulingAlgorithm;
-import domain.assembly.algorithm.SchedulingAlgorithm;
-import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.configuration.Configuration;
 import domain.scheduling.schedulers.FactoryScheduler;
+import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.FactorySchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.user.Manager;
 
 public class AdaptSchedulingAlgorithmHandler {

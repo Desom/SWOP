@@ -12,11 +12,6 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
-import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
-import domain.assembly.algorithm.BasicSchedulingAlgorithm;
-import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
-import domain.assembly.algorithm.SchedulingAlgorithm;
-import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.workstations.WorkstationTypeCreator;
 import domain.configuration.VehicleCatalog;
@@ -31,6 +26,11 @@ import domain.scheduling.order.Order;
 import domain.scheduling.order.OrderManager;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.Scheduler;
+import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.user.GarageHolder;
 
 

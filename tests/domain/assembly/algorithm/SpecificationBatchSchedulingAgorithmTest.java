@@ -27,6 +27,10 @@ import domain.scheduling.order.OrderManager;
 import domain.scheduling.order.VehicleOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.ScheduledOrder;
+import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.user.GarageHolder;
 
 public class SpecificationBatchSchedulingAgorithmTest {

@@ -12,6 +12,7 @@ import domain.scheduling.order.Order;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.ScheduledOrder;
+import domain.scheduling.schedulers.algorithm.SchedulingAlgorithm;
 
 public class NewEfficiency implements SchedulingAlgorithm{
 

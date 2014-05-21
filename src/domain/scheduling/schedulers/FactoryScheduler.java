@@ -9,9 +9,10 @@ import java.util.LinkedList;
 
 
 
-import domain.assembly.algorithm.FactorySchedulingAlgorithm;
+
 import domain.scheduling.order.Order;
 import domain.scheduling.order.SingleTaskOrder;
+import domain.scheduling.schedulers.algorithm.FactorySchedulingAlgorithm;
 
 public class FactoryScheduler implements Scheduler,OrderHandler {
 

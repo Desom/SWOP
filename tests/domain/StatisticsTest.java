@@ -12,10 +12,6 @@ import org.junit.Test;
 
 import domain.InternalFailureException;
 import domain.Statistics;
-import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
-import domain.assembly.algorithm.BasicSchedulingAlgorithm;
-import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
-import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.assembly.assemblyline.DoesNotExistException;
@@ -29,6 +25,10 @@ import domain.configuration.models.VehicleModel;
 import domain.policies.InvalidConfigurationException;
 import domain.scheduling.order.OrderManager;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.user.Mechanic;
 
 public class StatisticsTest {

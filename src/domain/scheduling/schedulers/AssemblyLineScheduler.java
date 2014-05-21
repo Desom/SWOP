@@ -5,12 +5,12 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
 import domain.InternalFailureException;
-import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.scheduling.NoOrdersToBeScheduledException;
 import domain.scheduling.order.Order;
 import domain.scheduling.order.SingleTaskOrder;
+import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
 
 public class AssemblyLineScheduler implements Scheduler{
 

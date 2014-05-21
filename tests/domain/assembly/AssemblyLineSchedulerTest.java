@@ -12,11 +12,6 @@ import org.junit.Test;
 
 import domain.InternalFailureException;
 import domain.Statistics;
-import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
-import domain.assembly.algorithm.BasicSchedulingAlgorithm;
-import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
-import domain.assembly.algorithm.SchedulingAlgorithm;
-import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.BrokenStatus;
 import domain.assembly.assemblyline.CannotAdvanceException;
@@ -40,6 +35,11 @@ import domain.scheduling.order.Order;
 import domain.scheduling.order.OrderManager;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 

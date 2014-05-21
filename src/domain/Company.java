@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import domain.assembly.algorithm.AlgorithmCreator;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.AssemblyLineCreator;
 import domain.assembly.assemblyline.AssemblyLineCreatorInterface;
@@ -20,6 +19,7 @@ import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.FactoryScheduler;
 import domain.scheduling.schedulers.SchedulerCreator;
 import domain.scheduling.schedulers.SchedulerCreatorInterface;
+import domain.scheduling.schedulers.algorithm.AlgorithmCreator;
 import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;

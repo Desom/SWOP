@@ -1,4 +1,4 @@
-package domain.assembly.algorithm;
+package domain.scheduling.schedulers.algorithm;
 
 import java.util.GregorianCalendar;
 import java.util.LinkedList;

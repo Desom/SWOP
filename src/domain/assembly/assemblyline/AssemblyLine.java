@@ -8,6 +8,7 @@ import java.util.List;
 import domain.InternalFailureException;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
 import domain.assembly.assemblyline.status.AssemblyStatusView;
+import domain.assembly.workstations.AssemblyTask;
 import domain.assembly.workstations.VehicleAssemblyProcess;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationObserver;
@@ -323,13 +324,31 @@ public class AssemblyLine implements WorkstationObserver{
 	 * 
 	 * @param order
 	 * 		The order for which will be checked.
-	 * @return True if the model of order is in the list of possibleModels or if the model or the order is null. Otherwise false.
+	 * @return True if the order is null or if the model of order is in the list of possibleModels
+	 * 			and all tasks in this model can be handled on the workstations this assemblyline possesses.
+	 * 			 Otherwise false.
 	 */
 	public boolean canDoOrder(Order order){
-		if (order == null)
-			return true;
+		if (order == null){
+			return true;			
+		}
 		VehicleModel model = order.getConfiguration().getModel();
-		return model == null || this.getPossibleModels().contains(model);
+		if(!this.getPossibleModels().contains(model)){
+			return false;			
+		}
+		if(model == null || this.getPossibleModels().contains(model)){
+			for(AssemblyTask task : order.getAssemblyprocess().getAssemblyTasks()){
+				boolean found = false;
+				for(Workstation w : getAllWorkstations()){
+					if(w.getTaskTypes().contains(task.getType())){
+						found = true;
+					}
+				}
+				if(!found)
+					return false;
+			}
+		}
+		return true;
 	}
 
 	/**

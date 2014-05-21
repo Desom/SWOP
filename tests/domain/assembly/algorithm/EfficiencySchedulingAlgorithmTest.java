@@ -28,6 +28,9 @@ import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.order.VehicleOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.ScheduledOrder;
+import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.EfficiencySchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 

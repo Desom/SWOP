@@ -1,4 +1,4 @@
-package domain.scheduling;
+package domain.order;
 
 import static org.junit.Assert.*;
 

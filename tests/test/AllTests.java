@@ -16,10 +16,10 @@ import domain.assembly.workstations.WorkstationTest;
 import domain.configuration.VehicleCatalogTest;
 import domain.configuration.models.VehicleModelTest;
 import domain.configuration.taskables.OptionTest;
+import domain.order.CarTest;
+import domain.order.OrderManagerTest;
+import domain.order.VehicleOrderTest;
 import domain.policies.PolicyTest;
-import domain.scheduling.CarTest;
-import domain.scheduling.OrderManagerTest;
-import domain.scheduling.VehicleOrderTest;
 import domain.user.UserTest;
 
 @RunWith(Suite.class)

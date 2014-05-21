@@ -1,6 +1,6 @@
 package domain.scheduling.schedulers;
 
-import domain.scheduling.*;
+import domain.order.*;
 import domain.scheduling.order.Order;
 
 import java.util.GregorianCalendar;

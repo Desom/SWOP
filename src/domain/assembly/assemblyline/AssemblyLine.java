@@ -331,4 +331,11 @@ public class AssemblyLine implements WorkstationObserver{
 		VehicleModel model = order.getConfiguration().getModel();
 		return model == null || this.getPossibleModels().contains(model);
 	}
+	/**
+	 * returns all the possible statuses that are made available 
+	 * @return the possible statuses that are made available
+	 */
+	public ArrayList<AssemblyLineStatus> getPossibleStatuses() {
+		return this.currentStatus.getPossibleStatuses();
+	}
 }

@@ -12,6 +12,8 @@ public interface OrderHandler {
 	 * @param scheduler
 	 * 		The Scheduler that will schedule the returned Orders.
 	 * @return The Orders which have to be scheduled by the given scheduler.
+	 * @throws IllegalArgumentException
+	 * 		If the given scheduler isn't in the list of controlled Schedulers.
 	 */
 	//TODO wat als scheduler niet hoort bij deze orderhandler? null,exception,lege lijst??? Zie OrderManager,FactoryScheduler
 	public ArrayList<Order> getOrdersFor(Scheduler scheduler);

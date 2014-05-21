@@ -6,10 +6,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 
-
-
-
-
 import domain.scheduling.order.Order;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.algorithm.FactorySchedulingAlgorithm;
@@ -154,11 +150,12 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	@Override
 	public boolean canFinishOrderBeforeDeadline(
 			SingleTaskOrder orderWithDeadline) {
-		ArrayList<Order> orders = this.orderHandler.getOrdersFor(this);
-		orders.add(orderWithDeadline);
-		@SuppressWarnings("unused")
-		HashMap<AssemblyLineScheduler, ArrayList<Order>> assigned = this.currentAlgorithm.assignOrders(orders, this);
-		//TODO
+		
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			if(scheduler.canFinishOrderBeforeDeadline(orderWithDeadline)){
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -185,6 +182,8 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	 * @param scheduler
 	 * 		The Scheduler that will schedule the returned Orders.
 	 * @return The Orders which have to be scheduled by the given scheduler.
+	 * @throws IllegalArgumentException
+	 * 		If the given scheduler isn't in the list of controlled AssemblyLineSchedulers.
 	 */
 	//TODO wat als scheduler niet hoort bij deze orderhandler? null,exception,lege lijst??? Zie OrderManager,FactoryScheduler
 	@Override
@@ -195,7 +194,7 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 			}
 		}
 		
-		return null; //TODO goed? IllegalArgumentException
+		throw new IllegalArgumentException("The factory scheduler isn't connected with the given scheduler.");
 	}
 
 	

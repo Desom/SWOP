@@ -7,7 +7,10 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import domain.assembly.assemblyline.AssemblyLine;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.taskables.OptionType;
 import domain.scheduling.order.Order;
+import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.FactoryScheduler;
 import domain.scheduling.schedulers.ScheduledOrder;
@@ -44,13 +47,16 @@ public class BasicSchedulingAlgorithm
 
 		ArrayList<Order> orderedOrders = this.innerAlgorithm.scheduleToList(orders, factoryScheduler);
 
-		HashMap<AssemblyLineScheduler, ArrayList<ScheduledOrder>> scheduleMapping = new HashMap<AssemblyLineScheduler, ArrayList<ScheduledOrder>>();
+		HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping = new HashMap<AssemblyLineScheduler, ArrayList<Order>>();
 
 		ArrayList<AssemblyLineScheduler> schedulers = factoryScheduler.getSchedulerList();
 		for(AssemblyLineScheduler scheduler : schedulers){
-			scheduleMapping.put(scheduler, new ArrayList<ScheduledOrder>());
+			scheduleMapping.put(scheduler, new ArrayList<Order>());
 		}
 		
+		ArrayList<SingleTaskOrder> singleTasks = combSingleTaskOrders(orderedOrders);
+		ArrayList<SingleTaskOrder> beginST = combSingleTaskOrdersByType(singleTasks, VehicleCatalog.taskTypeCreator.Color);
+		ArrayList<SingleTaskOrder> endST = combSingleTaskOrdersByType(singleTasks, VehicleCatalog.taskTypeCreator.Seats);
 		
 		
 		for(Order order: orderedOrders){
@@ -62,7 +68,9 @@ public class BasicSchedulingAlgorithm
 					continue;
 				}
 				//addToSchedule voegt dan order toe aan het huidige schedule, mss niet de beste methode?
-				ArrayList<ScheduledOrder> newSchedule = scheduler.addToSchedule(scheduleMapping.get(scheduler),order);
+				ArrayList<Order> newList = new ArrayList<Order>(scheduleMapping.get(scheduler));
+				newList.add(order);
+				ArrayList<ScheduledOrder> newSchedule = scheduler.getCurrentAlgorithm().scheduleToScheduledOrderList(newList, scheduler.getAssemblyLine());
 				GregorianCalendar time = this.findTimeOf(order, newSchedule);
 				if(chosenScheduler == null || time.before(timeWithChosen))
 					chosenScheduler = scheduler;
@@ -70,16 +78,74 @@ public class BasicSchedulingAlgorithm
 					newScheduleOfChosen = newSchedule;
 			}
 			if(chosenScheduler != null){
-				scheduleMapping.put(chosenScheduler, newScheduleOfChosen);
+				scheduleMapping.get(chosenScheduler).add(order);
 			}
 			else{
+				if(schedulers.isEmpty()){
+					throw new IllegalStateException("BasicScedulingAlgorithm can't order if there are no AssemblyLineSchedulers.");
+				}
+				throw new IllegalArgumentException("BasicSchedulingAlgorithm can't order an order which can't be done by any AssembyLineScheduler.");
 				//TODO iets doen? Ja, 2 exceptions voor de 2 situaties
 			}
 		}
 
-		return convertToMapping(scheduleMapping);
+		scheduleSingleTasks(scheduleMapping, schedulers, beginST);
+		scheduleSingleTasks(scheduleMapping, schedulers, endST);
+		
+
+		return scheduleMapping;
 	}
 
+	/**
+	 * @param scheduleMapping
+	 * @param schedulers
+	 * @param stoList
+	 */
+	private void scheduleSingleTasks(
+			HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping,
+			ArrayList<AssemblyLineScheduler> schedulers,
+			ArrayList<SingleTaskOrder> stoList) {
+		int count = 0;
+		SingleTaskOrder sto = null;
+		while(!stoList.isEmpty() || count >= schedulers.size()){
+			if(sto == null){
+				sto = stoList.remove(0); 
+			}
+			for(AssemblyLineScheduler scheduler : schedulers){
+				
+				if(!canDoSingleTask(sto, scheduler, scheduleMapping)){
+					count++;
+					if(count >= schedulers.size()){
+						stoList.add(0,sto);
+						break;
+					}
+				}
+				else{
+					count = 0;
+					if(!stoList.isEmpty()){
+						sto = stoList.remove(0);
+					}
+					else{
+						break;
+					}
+				}
+			}
+		}
+		
+		for(int i = 0; i < stoList.size(); i++){
+			int a = i % schedulers.size();
+			scheduleMapping.get(schedulers.get(a)).add(stoList.get(i));
+		}
+	}
+
+
+	private boolean canDoSingleTask(SingleTaskOrder sto,
+			AssemblyLineScheduler scheduler,
+			HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping) {
+		ArrayList<ScheduledOrder> newSchedule = scheduler.getCurrentAlgorithm().scheduleToScheduledOrderList(scheduleMapping.get(scheduler), scheduler.getAssemblyLine());
+		GregorianCalendar time = this.findTimeOf(sto, newSchedule);
+		
+	}
 
 	/**
 	 * Finds the time order will put on the assemblyLine according to schedule.
@@ -97,7 +163,8 @@ public class BasicSchedulingAlgorithm
 				return schedule.get(i).getScheduledTime();
 			}
 		}
-		return null; //TODO goed?
+		//TODO docs
+		throw new IllegalArgumentException("Can't find an order that isn't in the list.");
 	}
 
 	/**
@@ -195,6 +262,45 @@ public class BasicSchedulingAlgorithm
 		}
 
 		return scheduledList;
+	}
+	
+	/**
+	 * Filters all single task orders out of the given list of orders and returns these single tasks orders.
+	 * 
+	 * @param orders
+	 *		The list where SingleTaskOrders will be extracted from.
+	 * @return A list with all the SingleTaskOrders out of orderList.
+	 * 		OrderList does not contain any SingleTaskOrders anymore.
+	 */
+	private ArrayList<SingleTaskOrder> combSingleTaskOrders(
+			ArrayList<Order> orders) {
+		ArrayList<SingleTaskOrder> result = new ArrayList<SingleTaskOrder>();
+		for(int i = 0; i< orders.size(); i++){
+			if(orders.get(i) instanceof SingleTaskOrder){
+				result.add((SingleTaskOrder) orders.remove(i));
+				i--;
+			}
+		}
+		return result;
+	}
+
+	/**
+	 * Returns all SingleTaskOrders with a specific type in the given list.
+	 * @param singleTaskOrders
+	 *		The list where SingleTaskOrders with a specific type will be retrieved from.
+	 * @param type
+	 * 		The type of the SingleTaskOrders that will be extracted.
+	 * @return A list with all the SingleTaskOrders out of orderList.
+	 */
+	private ArrayList<SingleTaskOrder> combSingleTaskOrdersByType(
+			ArrayList<SingleTaskOrder> singleTaskOrders, OptionType type) {
+		ArrayList<SingleTaskOrder> result = new ArrayList<SingleTaskOrder>();
+		for(SingleTaskOrder i:singleTaskOrders){
+			if(i.getType() == type){
+				result.add(i);
+			}
+		}
+		return result;
 	}
 	
 	/**

@@ -3,8 +3,8 @@ package domain.policies;
 import java.util.ArrayList;
 
 import domain.configuration.Configuration;
-import domain.configuration.Taskables.Option;
 import domain.configuration.models.VehicleModel;
+import domain.configuration.taskables.Option;
 
 /**
  * This policy class checks if the options of a configuration are compatible with its model.

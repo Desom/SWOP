@@ -2,8 +2,8 @@ package domain.assembly.workstations;
 
 import java.util.ArrayList;
 
-import domain.configuration.Taskables.TaskType;
-import domain.configuration.Taskables.Taskable;
+import domain.configuration.taskables.TaskType;
+import domain.configuration.taskables.Taskable;
 
 /**
  * In this class can't exist any methods with public visibility which can harm the integrity of its objects.

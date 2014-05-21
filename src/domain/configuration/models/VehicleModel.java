@@ -5,9 +5,9 @@ import java.util.HashMap;
 import domain.assembly.workstations.WorkstationType;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.VehicleCatalogException;
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.OptionType;
-import domain.configuration.Taskables.Part;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.OptionType;
+import domain.configuration.taskables.Part;
 
 
 public class VehicleModel {

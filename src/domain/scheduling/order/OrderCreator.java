@@ -10,8 +10,8 @@ import java.util.GregorianCalendar;
 
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.Taskables.Option;
 import domain.configuration.models.VehicleModel;
+import domain.configuration.taskables.Option;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 import domain.user.CustomShopManager;

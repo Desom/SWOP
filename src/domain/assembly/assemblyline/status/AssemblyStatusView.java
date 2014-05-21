@@ -7,7 +7,7 @@ import domain.assembly.assemblyline.DoesNotExistException;
 import domain.assembly.workstations.AssemblyTask;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationType;
-import domain.configuration.Taskables.TaskType;
+import domain.configuration.taskables.TaskType;
 
 public class AssemblyStatusView {
 

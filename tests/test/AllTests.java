@@ -4,7 +4,8 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import domain.StatisticsTest;
+import domai.StatisticsTest;
+import domai.scheduling.CarTest;
 import domain.assembly.AssemblyLineSchedulerTest;
 import domain.assembly.algorithm.EfficiencySchedulingAlgorithmTest;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithmTest;
@@ -17,7 +18,6 @@ import domain.configuration.VehicleCatalogTest;
 import domain.configuration.models.VehicleModelTest;
 import domain.configuration.taskables.OptionTest;
 import domain.policies.PolicyTest;
-import domain.scheduling.CarTest;
 import domain.scheduling.OrderManagerTest;
 import domain.scheduling.VehicleOrderTest;
 import domain.user.UserTest;

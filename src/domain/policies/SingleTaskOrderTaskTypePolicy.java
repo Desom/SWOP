@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.OptionType;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.OptionType;
 
 /**
  * This policy checks if the configuration of a single task order has valid options.

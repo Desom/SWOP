@@ -11,8 +11,8 @@ import java.util.List;
 import domain.assembly.workstations.WorkstationType;
 import domain.assembly.workstations.WorkstationTypeCreatorInterface;
 import domain.configuration.VehicleCatalogException;
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.Part;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.Part;
 
 public class ModelCreator implements ModelCreatorInterface {
 	

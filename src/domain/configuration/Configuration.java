@@ -4,10 +4,10 @@ import java.util.ArrayList;
 
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationType;
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.OptionType;
-import domain.configuration.Taskables.Taskable;
 import domain.configuration.models.VehicleModel;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.OptionType;
+import domain.configuration.taskables.Taskable;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 

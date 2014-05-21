@@ -3,9 +3,9 @@ package controller;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.OptionType;
 import domain.configuration.models.VehicleModel;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.OptionType;
 import domain.policies.Policy;
 
 public class VehicleOrderForm extends OrderForm {

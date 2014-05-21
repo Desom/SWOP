@@ -1,4 +1,4 @@
-package domain;
+package domai;
 
 import static org.junit.Assert.*;
 
@@ -10,6 +10,8 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.InternalFailureException;
+import domain.Statistics;
 import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.assembly.algorithm.BasicSchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;

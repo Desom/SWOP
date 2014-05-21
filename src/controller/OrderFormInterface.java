@@ -3,8 +3,8 @@ package controller;
 import java.util.List;
 
 import domain.configuration.Configuration;
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.OptionType;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.OptionType;
 import domain.policies.InvalidConfigurationException;
 
 

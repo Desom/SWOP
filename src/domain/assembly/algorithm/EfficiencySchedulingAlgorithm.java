@@ -9,7 +9,7 @@ import java.util.LinkedList;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.DoesNotExistException;
 import domain.configuration.VehicleCatalog;
-import domain.configuration.Taskables.OptionType;
+import domain.configuration.taskables.OptionType;
 import domain.scheduling.order.Order;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;

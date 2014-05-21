@@ -3,8 +3,8 @@ package domain.assembly.algorithm;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-import domain.assembly.AssemblyLineScheduler;
-import domain.order.Order;
+import domain.scheduling.order.Order;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
 
 
 public abstract class AbstractAssemblyLineSchedulingAlgorithm implements

@@ -4,10 +4,10 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.ScheduledOrder;
-import domain.assembly.Scheduler;
-import domain.order.Order;
+import domain.scheduling.order.Order;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.ScheduledOrder;
+import domain.scheduling.schedulers.Scheduler;
 
 public interface SchedulingAlgorithm {
 

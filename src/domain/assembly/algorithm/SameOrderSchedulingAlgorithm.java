@@ -2,8 +2,8 @@ package domain.assembly.algorithm;
 
 import java.util.ArrayList;
 
-import domain.assembly.Scheduler;
-import domain.order.Order;
+import domain.scheduling.order.Order;
+import domain.scheduling.schedulers.Scheduler;
 
 public class SameOrderSchedulingAlgorithm implements SchedulingAlgorithm {
 

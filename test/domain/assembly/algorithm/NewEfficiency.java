@@ -6,12 +6,12 @@ import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.ScheduledOrder;
-import domain.configuration.OptionType;
-import domain.order.Order;
-import domain.order.SingleTaskOrder;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.configuration.Taskables.OptionType;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.SingleTaskOrder;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.ScheduledOrder;
 
 public class NewEfficiency implements SchedulingAlgorithm{
 

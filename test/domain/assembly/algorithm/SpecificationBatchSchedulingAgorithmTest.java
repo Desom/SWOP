@@ -10,23 +10,23 @@ import org.junit.Before;
 import org.junit.Test;
 
 import domain.Statistics;
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.AssemblyLineStatus;
-import domain.assembly.BrokenStatus;
-import domain.assembly.MaintenanceStatus;
-import domain.assembly.OperationalStatus;
-import domain.assembly.ScheduledOrder;
-import domain.configuration.VehicleModelCatalog;
-import domain.configuration.VehicleModelCatalogException;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.BrokenStatus;
+import domain.assembly.assemblyline.status.AssemblyLineStatus;
+import domain.assembly.assemblyline.status.MaintenanceStatus;
+import domain.assembly.assemblyline.status.OperationalStatus;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.VehicleCatalogException;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
-import domain.order.VehicleOrder;
-import domain.order.Order;
-import domain.order.OrderManager;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
 import domain.policies.CompletionPolicy;
 import domain.policies.InvalidConfigurationException;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.OrderManager;
+import domain.scheduling.order.VehicleOrder;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.ScheduledOrder;
 import domain.user.GarageHolder;
 
 public class SpecificationBatchSchedulingAgorithmTest {
@@ -34,15 +34,15 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	SpecificationBatchSchedulingAlgorithm algorithm;
 	AssemblyLineSchedulingAlgorithm basicAlgorithm;
 	GarageHolder garageHolder;
-	VehicleModelCatalog cmc;
+	VehicleCatalog cmc;
 	AssemblyLineScheduler als;
 	AssemblyLine line;
 	Configuration specified = null;
 	ArrayList<AssemblyLineStatus> statuses;
 	
 	@Before
-	public void testCreate() throws IOException, VehicleModelCatalogException, InvalidConfigurationException {
-		this.cmc = new VehicleModelCatalog();
+	public void testCreate() throws IOException, VehicleCatalogException, InvalidConfigurationException {
+		this.cmc = new VehicleCatalog();
 		makeConfiguration();
 		this.algorithm = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		this.algorithm.setConfiguration(specified);
@@ -196,14 +196,14 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	}
 	
 	@Test
-	public void testSearchConfiguration() throws IOException, VehicleModelCatalogException, InvalidConfigurationException{
+	public void testSearchConfiguration() throws IOException, VehicleCatalogException, InvalidConfigurationException{
 		ArrayList<	AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		SpecificationBatchSchedulingAlgorithm algo = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		BasicSchedulingAlgorithm basicSpec = new BasicSchedulingAlgorithm(algo);
 		possibleAlgorithms.add(basicSpec);
 		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
-		VehicleModelCatalog catalog = new VehicleModelCatalog();
+		VehicleCatalog catalog = new VehicleCatalog();
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		scheduler.setSchedulingAlgorithm(basicSpec);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);

@@ -8,10 +8,10 @@ import java.util.List;
 import controller.VehicleOrderForm;
 import controller.UIInterface;
 import domain.Company;
-import domain.configuration.VehicleModel;
-import domain.configuration.VehicleModelCatalog;
-import domain.order.Order;
-import domain.order.OrderManager;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.models.VehicleModel;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.OrderManager;
 import domain.user.GarageHolder;
 
 public class OrderNewVehicleHandler{
@@ -48,7 +48,7 @@ public class OrderNewVehicleHandler{
 		//3. The system shows a list of available vehicle models
 		//4. The user indicates the vehicle model he wishes to order.
 		if(antwoord.equals("Place a new order")){
-			VehicleModelCatalog catalog = company.getCatalog();
+			VehicleCatalog catalog = company.getCatalog();
 			VehicleModel model = null;
 			while(model == null ){
 				List<VehicleModel> modelList = catalog.getAllModels();

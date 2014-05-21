@@ -2,9 +2,9 @@ package domain.policies;
 
 import java.util.ArrayList;
 
-import domain.configuration.VehicleModel;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
+import domain.configuration.Taskables.Option;
+import domain.configuration.models.VehicleModel;
 
 /**
  * This policy class checks if the options of a configuration are compatible with its model.

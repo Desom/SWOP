@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 import domain.configuration.Configuration;
-import domain.configuration.Option;
+import domain.configuration.Taskables.Option;
 
 /**
  * This policy class checks if the configuration has no conflicting options.

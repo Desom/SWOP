@@ -7,8 +7,8 @@ import java.util.GregorianCalendar;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 
-import domain.order.Order;
-import domain.order.OrderManager;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.OrderManager;
 
 public class Statistics {
 

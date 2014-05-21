@@ -5,8 +5,8 @@ import java.util.Calendar;
 import java.util.List;
 
 import domain.Statistics;
-import domain.assembly.AssemblyStatusView;
-import domain.order.Order;
+import domain.assembly.assemblyline.status.AssemblyStatusView;
+import domain.scheduling.order.Order;
 
 public interface UIInterface {
 

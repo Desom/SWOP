@@ -4,22 +4,22 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineCreator;
-import domain.assembly.AssemblyLineCreatorInterface;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.FactoryScheduler;
-import domain.assembly.SchedulerCreator;
-import domain.assembly.SchedulerCreatorInterface;
-import domain.assembly.StatusCreator;
-import domain.assembly.StatusCreatorInterface;
-import domain.assembly.Workstation;
-import domain.assembly.WorkstationTypeCreator;
-import domain.assembly.WorkstationTypeCreatorInterface;
 import domain.assembly.algorithm.AlgorithmCreator;
-import domain.configuration.VehicleModelCatalog;
-import domain.configuration.VehicleModelCatalogException;
-import domain.order.OrderManager;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.AssemblyLineCreator;
+import domain.assembly.assemblyline.AssemblyLineCreatorInterface;
+import domain.assembly.assemblyline.status.StatusCreator;
+import domain.assembly.assemblyline.status.StatusCreatorInterface;
+import domain.assembly.workstations.Workstation;
+import domain.assembly.workstations.WorkstationTypeCreator;
+import domain.assembly.workstations.WorkstationTypeCreatorInterface;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.VehicleCatalogException;
+import domain.scheduling.order.OrderManager;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.FactoryScheduler;
+import domain.scheduling.schedulers.SchedulerCreator;
+import domain.scheduling.schedulers.SchedulerCreatorInterface;
 import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
@@ -29,7 +29,7 @@ import domain.user.User;
 public class Company {
 
 	private ArrayList<AssemblyLine> assemblyLines;
-	private final VehicleModelCatalog catalog;
+	private final VehicleCatalog catalog;
 	private final OrderManager orderManager;
 	private final Statistics statistics;
 	private final FactoryScheduler factoryScheduler;
@@ -52,7 +52,7 @@ public class Company {
 	public Company() {
 		try {
 			WorkstationTypeCreatorInterface workstationTypeCreator = new WorkstationTypeCreator();
-			this.catalog = new VehicleModelCatalog(workstationTypeCreator);
+			this.catalog = new VehicleCatalog(workstationTypeCreator);
 			SchedulerCreatorInterface schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
 			StatusCreatorInterface statusCreator = new StatusCreator();
 			AssemblyLineCreatorInterface assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, statusCreator, catalog);
@@ -72,7 +72,7 @@ public class Company {
 			//TODO kunnen we niet beter de IOException door laten? nu vangen we die en geven we een vage verklaring, terwijl IOException kan uitleggen waaraan het ligt.
 		} catch (IOException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
-		} catch (VehicleModelCatalogException e) {
+		} catch (VehicleCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an VehicleModelCatalog exception");
 		}
 	}
@@ -97,7 +97,7 @@ public class Company {
 	 * 
 	 * @return The company's vehicle model catalog.
 	 */
-	public VehicleModelCatalog getCatalog()  {
+	public VehicleCatalog getCatalog()  {
 		return catalog;
 	}
 

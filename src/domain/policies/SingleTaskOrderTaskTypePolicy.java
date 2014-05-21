@@ -2,10 +2,10 @@ package domain.policies;
 
 import java.util.ArrayList;
 
-import domain.configuration.VehicleModelCatalog;
+import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
 
 /**
  * This policy checks if the configuration of a single task order has valid options.
@@ -23,7 +23,7 @@ public class SingleTaskOrderTaskTypePolicy extends AlwaysPolicy {
 	 */
 	public SingleTaskOrderTaskTypePolicy(Policy successor) {
 		super(successor);
-		this.validOptionTypes = VehicleModelCatalog.taskTypeCreator.getAllSingleTaskPossibleTypes();
+		this.validOptionTypes = VehicleCatalog.taskTypeCreator.getAllSingleTaskPossibleTypes();
 	}
 	
 	/**

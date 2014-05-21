@@ -7,17 +7,17 @@ import java.util.List;
 import java.util.Scanner;
 
 import domain.Statistics;
-import domain.assembly.AssemblyStatusView;
-import domain.assembly.DoesNotExistException;
-import domain.assembly.WorkstationType;
-import domain.configuration.TaskType;
-import domain.configuration.VehicleModelCatalog;
+import domain.assembly.assemblyline.DoesNotExistException;
+import domain.assembly.assemblyline.status.AssemblyStatusView;
+import domain.assembly.workstations.WorkstationType;
+import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
-import domain.order.Order;
-import domain.order.SingleTaskOrder;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
+import domain.configuration.Taskables.TaskType;
 import domain.policies.InvalidConfigurationException;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.SingleTaskOrder;
 
 public class UI implements UIInterface{
 	Scanner scan;
@@ -217,7 +217,7 @@ public class UI implements UIInterface{
 	public void fillIn(VehicleOrderForm orderForm) {
 		ArrayList<OptionType> mandatoryList = new ArrayList<OptionType>();
 		ArrayList<OptionType> nonMandatoryList = new ArrayList<OptionType>();
-		for(OptionType oType:VehicleModelCatalog.taskTypeCreator.getAllOptionTypes()){
+		for(OptionType oType:VehicleCatalog.taskTypeCreator.getAllOptionTypes()){
 			if(oType.isMandatory()){
 				mandatoryList.add(oType);
 			}
@@ -262,7 +262,7 @@ public class UI implements UIInterface{
 	
 	public void fillIn(SingleTaskOrderForm orderForm){
 		ArrayList<OptionType> possibleTypes = new ArrayList<OptionType>();
-		for (OptionType type : VehicleModelCatalog.taskTypeCreator.getAllOptionTypes())
+		for (OptionType type : VehicleCatalog.taskTypeCreator.getAllOptionTypes())
 			if (type.isSingleTaskPossible())
 				possibleTypes.add(type);
 		int answer1 = this.askWithPossibilities("What do you want to order?", possibleTypes.toArray());

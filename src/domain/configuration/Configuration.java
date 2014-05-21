@@ -2,8 +2,12 @@ package domain.configuration;
 
 import java.util.ArrayList;
 
-import domain.assembly.Workstation;
-import domain.assembly.WorkstationType;
+import domain.assembly.workstations.Workstation;
+import domain.assembly.workstations.WorkstationType;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
+import domain.configuration.Taskables.Taskable;
+import domain.configuration.models.VehicleModel;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 

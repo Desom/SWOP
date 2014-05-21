@@ -3,8 +3,8 @@ package domain.policies;
 import java.util.ArrayList;
 
 import domain.configuration.Configuration;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
 
 /**
  * This policy class checks if a configuration is complete (if it has all required option types).

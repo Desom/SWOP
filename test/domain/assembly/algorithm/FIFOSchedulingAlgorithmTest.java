@@ -9,22 +9,22 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.AssemblyLineStatus;
-import domain.assembly.BrokenStatus;
-import domain.assembly.MaintenanceStatus;
-import domain.assembly.OperationalStatus;
-import domain.assembly.ScheduledOrder;
-import domain.configuration.VehicleModelCatalog;
-import domain.configuration.VehicleModelCatalogException;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.BrokenStatus;
+import domain.assembly.assemblyline.status.AssemblyLineStatus;
+import domain.assembly.assemblyline.status.MaintenanceStatus;
+import domain.assembly.assemblyline.status.OperationalStatus;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.VehicleCatalogException;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
-import domain.order.VehicleOrder;
-import domain.order.Order;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
 import domain.policies.CompletionPolicy;
 import domain.policies.InvalidConfigurationException;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.VehicleOrder;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.ScheduledOrder;
 import domain.user.GarageHolder;
 
 public class FIFOSchedulingAlgorithmTest {
@@ -32,18 +32,18 @@ public class FIFOSchedulingAlgorithmTest {
 	FIFOSchedulingAlgorithm algorithm;
 	AssemblyLineSchedulingAlgorithm basicAlgorithm;
 	GarageHolder garageHolder;
-	VehicleModelCatalog cmc;
+	VehicleCatalog cmc;
 	AssemblyLineScheduler als;
 	ArrayList<AssemblyLineStatus> statuses;
 	
 	@Before
-	public void testCreate() throws IOException, VehicleModelCatalogException {
+	public void testCreate() throws IOException, VehicleCatalogException {
 		this.algorithm = new FIFOSchedulingAlgorithm();
 		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		basicAlgorithm = new BasicSchedulingAlgorithm(algorithm);
 		list.add(basicAlgorithm);
 		this.garageHolder = new GarageHolder(0);
-		this.cmc = new VehicleModelCatalog();
+		this.cmc = new VehicleCatalog();
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		statuses = new ArrayList<AssemblyLineStatus>();
 		statuses.add(new OperationalStatus());

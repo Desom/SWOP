@@ -5,13 +5,13 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.AssemblyLineStatus;
-import domain.assembly.CannotAdvanceException;
-import domain.assembly.Workstation;
-import domain.configuration.VehicleModel;
-import domain.order.Order;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.CannotAdvanceException;
+import domain.assembly.assemblyline.status.AssemblyLineStatus;
+import domain.assembly.workstations.Workstation;
+import domain.configuration.models.VehicleModel;
+import domain.scheduling.order.Order;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
 
 public class dummyAssemblyLine extends AssemblyLine {
 	LinkedList<Order> orders;

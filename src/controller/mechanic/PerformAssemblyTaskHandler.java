@@ -5,9 +5,9 @@ import java.util.LinkedList;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyTask;
-import domain.assembly.Workstation;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.workstations.AssemblyTask;
+import domain.assembly.workstations.Workstation;
 import domain.user.Mechanic;
 
 public class PerformAssemblyTaskHandler {

@@ -6,9 +6,9 @@ import java.util.GregorianCalendar;
 import controller.SingleTaskOrderForm;
 import controller.UIInterface;
 import domain.Company;
-import domain.order.CannotMeetDeadlineException;
-import domain.order.OrderManager;
-import domain.order.SingleTaskOrder;
+import domain.scheduling.CannotMeetDeadlineException;
+import domain.scheduling.order.OrderManager;
+import domain.scheduling.order.SingleTaskOrder;
 import domain.user.CustomShopManager;
 
 public class OrderSingleTaskHandler {

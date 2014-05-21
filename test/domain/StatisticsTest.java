@@ -10,23 +10,23 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.AssemblyLineStatus;
-import domain.assembly.CannotAdvanceException;
-import domain.assembly.DoesNotExistException;
-import domain.assembly.OperationalStatus;
-import domain.assembly.Workstation;
-import domain.assembly.WorkstationTypeCreator;
 import domain.assembly.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.assembly.algorithm.BasicSchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.VehicleModel;
-import domain.configuration.VehicleModelCatalog;
-import domain.configuration.VehicleModelCatalogException;
-import domain.order.OrderManager;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.CannotAdvanceException;
+import domain.assembly.assemblyline.DoesNotExistException;
+import domain.assembly.assemblyline.status.AssemblyLineStatus;
+import domain.assembly.assemblyline.status.OperationalStatus;
+import domain.assembly.workstations.Workstation;
+import domain.assembly.workstations.WorkstationTypeCreator;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.VehicleCatalogException;
+import domain.configuration.models.VehicleModel;
 import domain.policies.InvalidConfigurationException;
+import domain.scheduling.order.OrderManager;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.user.Mechanic;
 
 public class StatisticsTest {
@@ -34,12 +34,12 @@ public class StatisticsTest {
 	AssemblyLine line = null;
 	Statistics stat = null;
 	@Before
-	public void testCreate() throws DoesNotExistException, IOException, VehicleModelCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
+	public void testCreate() throws DoesNotExistException, IOException, VehicleCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
 		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
-		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
+		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
 		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		stat = new Statistics(orderManager);

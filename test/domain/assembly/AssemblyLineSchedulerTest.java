@@ -17,18 +17,29 @@ import domain.assembly.algorithm.BasicSchedulingAlgorithm;
 import domain.assembly.algorithm.FIFOSchedulingAlgorithm;
 import domain.assembly.algorithm.SchedulingAlgorithm;
 import domain.assembly.algorithm.SpecificationBatchSchedulingAlgorithm;
-import domain.configuration.TaskTypeCreator;
-import domain.configuration.VehicleModelCatalog;
-import domain.configuration.VehicleModelCatalogException;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.BrokenStatus;
+import domain.assembly.assemblyline.CannotAdvanceException;
+import domain.assembly.assemblyline.DoesNotExistException;
+import domain.assembly.assemblyline.status.AssemblyLineStatus;
+import domain.assembly.assemblyline.status.MaintenanceStatus;
+import domain.assembly.assemblyline.status.OperationalStatus;
+import domain.assembly.workstations.Workstation;
+import domain.assembly.workstations.WorkstationTypeCreator;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.VehicleCatalogException;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
-import domain.order.Order;
-import domain.order.OrderManager;
-import domain.order.SingleTaskOrder;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
+import domain.configuration.Taskables.TaskTypeCreator;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
+import domain.scheduling.NoOrdersToBeScheduledException;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.OrderManager;
+import domain.scheduling.order.SingleTaskOrder;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 
@@ -48,12 +59,12 @@ public class AssemblyLineSchedulerTest {
 	private Mechanic m3;
 	
 	@Before
-	public void create() throws InvalidConfigurationException, IOException, VehicleModelCatalogException, DoesNotExistException{
+	public void create() throws InvalidConfigurationException, IOException, VehicleCatalogException, DoesNotExistException{
 		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		VehicleModelCatalog catalog = new VehicleModelCatalog(new WorkstationTypeCreator());
+		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics statistics = new Statistics(orderManager);
@@ -120,7 +131,7 @@ public class AssemblyLineSchedulerTest {
 	}
 
 	@Test
-	public void testCanFinishOrderBeforeDeadline() throws InvalidConfigurationException, VehicleModelCatalogException {
+	public void testCanFinishOrderBeforeDeadline() throws InvalidConfigurationException, VehicleCatalogException {
 		SingleTaskOrder singleTask1 = this.createSingleTask(new GregorianCalendar(2014, 2, 1, 12, 0, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask1));
 		SingleTaskOrder singleTask2 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 3, 0, 0));
@@ -265,7 +276,7 @@ public class AssemblyLineSchedulerTest {
 	}
 	
 
-	private SingleTaskOrder createSingleTask(GregorianCalendar now) throws InvalidConfigurationException, VehicleModelCatalogException{
+	private SingleTaskOrder createSingleTask(GregorianCalendar now) throws InvalidConfigurationException, VehicleCatalogException{
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);

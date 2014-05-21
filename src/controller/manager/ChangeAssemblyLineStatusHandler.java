@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineStatus;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.status.AssemblyLineStatus;
 
 public class ChangeAssemblyLineStatusHandler {
 

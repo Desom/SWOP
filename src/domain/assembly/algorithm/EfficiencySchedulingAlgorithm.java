@@ -6,14 +6,14 @@ import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.DoesNotExistException;
-import domain.assembly.ScheduledOrder;
-import domain.configuration.VehicleModelCatalog;
-import domain.configuration.OptionType;
-import domain.order.Order;
-import domain.order.SingleTaskOrder;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.DoesNotExistException;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.Taskables.OptionType;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.SingleTaskOrder;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.ScheduledOrder;
 
 public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulingAlgorithm {
 
@@ -50,8 +50,8 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		ArrayList<Order> orderList2 = (ArrayList<Order>) orderList.clone();
 		ArrayList<SingleTaskOrder> STOrderList = combSingleTaskOrders(orderList2);
 		orderList2 = innerAlgorithm.scheduleToList(orderList2, assemblyLine.getAssemblyLineScheduler());
-		ArrayList<SingleTaskOrder> STOrderListWorkStation3 = combSingleTaskOrdersByType( STOrderList,VehicleModelCatalog.taskTypeCreator.Seats);
-		ArrayList<SingleTaskOrder> STOrderListWorkStation1 = combSingleTaskOrdersByType( STOrderList,VehicleModelCatalog.taskTypeCreator.Color);
+		ArrayList<SingleTaskOrder> STOrderListWorkStation3 = combSingleTaskOrdersByType( STOrderList,VehicleCatalog.taskTypeCreator.Seats);
+		ArrayList<SingleTaskOrder> STOrderListWorkStation1 = combSingleTaskOrdersByType( STOrderList,VehicleCatalog.taskTypeCreator.Color);
 		deadlineSort(STOrderListWorkStation1);
 		deadlineSort(STOrderListWorkStation3); 
 		//combine the three lists into one schedule 
@@ -258,15 +258,15 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	private int canPlaceAtbeginning(AssemblyLine assemblyLine) {
 		int k =0;
 		LinkedList<Order> stateOfAssemblyLine = assemblyLine.stateWhenAcceptingOrders();
-		while(!assemblyLine.getAllWorkstations().get(k).getTaskTypes().contains(VehicleModelCatalog.taskTypeCreator.Seats)){
+		while(!assemblyLine.getAllWorkstations().get(k).getTaskTypes().contains(VehicleCatalog.taskTypeCreator.Seats)){
 			k++;
 		}
 		for(Order order:stateOfAssemblyLine){
-			if(order != null && (!(order instanceof SingleTaskOrder) ||  ((SingleTaskOrder) order).getType() != VehicleModelCatalog.taskTypeCreator.Seats)) return 0;
+			if(order != null && (!(order instanceof SingleTaskOrder) ||  ((SingleTaskOrder) order).getType() != VehicleCatalog.taskTypeCreator.Seats)) return 0;
 		}
 		int i =0;
 		for(Order order :stateOfAssemblyLine){
-			if(order != null && (order instanceof SingleTaskOrder) && ((SingleTaskOrder) order).getType() == VehicleModelCatalog.taskTypeCreator.Seats) i++;
+			if(order != null && (order instanceof SingleTaskOrder) && ((SingleTaskOrder) order).getType() == VehicleCatalog.taskTypeCreator.Seats) i++;
 		}
 		return k-i;
 	}
@@ -430,7 +430,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			ArrayList<Order> orderList2, GregorianCalendar time, AssemblyLineScheduler assemblyLineScheduler, ArrayList<ScheduledOrder> scheduledOrdersWithCompletionTime) {
 		ArrayList<Order> temp = new ArrayList<Order>();
 		int k =0;
-		while(!assemblyLineScheduler.getAssemblyLine().getAllWorkstations().get(k).getTaskTypes().contains(VehicleModelCatalog.taskTypeCreator.Seats)){
+		while(!assemblyLineScheduler.getAssemblyLine().getAllWorkstations().get(k).getTaskTypes().contains(VehicleCatalog.taskTypeCreator.Seats)){
 			k++;
 		}
 		for(int i=0;i<k;i++){

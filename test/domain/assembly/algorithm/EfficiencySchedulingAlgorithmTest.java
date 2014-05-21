@@ -9,25 +9,25 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.ScheduledOrder;
-import domain.assembly.StatusCreator;
-import domain.assembly.StatusCreatorInterface;
-import domain.assembly.Workstation;
-import domain.assembly.WorkstationTypeCreator;
-import domain.assembly.WorkstationTypeCreatorInterface;
-import domain.configuration.VehicleModel;
-import domain.configuration.VehicleModelCatalog;
-import domain.configuration.VehicleModelCatalogException;
+import domain.assembly.assemblyline.status.StatusCreator;
+import domain.assembly.assemblyline.status.StatusCreatorInterface;
+import domain.assembly.workstations.Workstation;
+import domain.assembly.workstations.WorkstationTypeCreator;
+import domain.assembly.workstations.WorkstationTypeCreatorInterface;
+import domain.configuration.VehicleCatalog;
+import domain.configuration.VehicleCatalogException;
 import domain.configuration.Configuration;
-import domain.configuration.Option;
-import domain.configuration.OptionType;
-import domain.order.VehicleOrder;
-import domain.order.Order;
-import domain.order.SingleTaskOrder;
+import domain.configuration.Taskables.Option;
+import domain.configuration.Taskables.OptionType;
+import domain.configuration.models.VehicleModel;
 import domain.policies.CompletionPolicy;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.SingleTaskOrder;
+import domain.scheduling.order.VehicleOrder;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.ScheduledOrder;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
@@ -35,7 +35,7 @@ public class EfficiencySchedulingAlgorithmTest {
 
 	AssemblyLineSchedulingAlgorithm algorithm;
 	GarageHolder garageHolder;
-	VehicleModelCatalog cmc;
+	VehicleCatalog cmc;
 	AssemblyLineScheduler als;
 	dummyAssemblyLine AssemblyLine;
 	AssemblyLineScheduler alsT;
@@ -43,14 +43,14 @@ public class EfficiencySchedulingAlgorithmTest {
 	CustomShopManager customShopManager;
 	
 	@Before
-	public void testCreate() throws IOException, VehicleModelCatalogException {
+	public void testCreate() throws IOException, VehicleCatalogException {
 		this.algorithm = new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		WorkstationTypeCreatorInterface workstationTypeCreator= new WorkstationTypeCreator();
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.customShopManager = new CustomShopManager(0);
-		this.cmc = new VehicleModelCatalog(workstationTypeCreator);
+		this.cmc = new VehicleCatalog(workstationTypeCreator);
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		ArrayList<VehicleModel> modelList = new ArrayList<VehicleModel>(this.cmc.getAllModels());
 		StatusCreatorInterface statusCreator = new StatusCreator();

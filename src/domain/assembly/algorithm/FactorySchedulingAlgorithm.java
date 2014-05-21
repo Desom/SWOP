@@ -3,9 +3,9 @@ package domain.assembly.algorithm;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.FactoryScheduler;
-import domain.order.Order;
+import domain.scheduling.order.Order;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.FactoryScheduler;
 
 public interface FactorySchedulingAlgorithm {
 

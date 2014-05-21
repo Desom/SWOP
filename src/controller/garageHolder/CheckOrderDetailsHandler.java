@@ -7,8 +7,8 @@ import java.util.Collections;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.order.Order;
-import domain.order.OrderManager;
+import domain.scheduling.order.Order;
+import domain.scheduling.order.OrderManager;
 import domain.user.GarageHolder;
 
 public class CheckOrderDetailsHandler {

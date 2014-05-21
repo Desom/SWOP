@@ -6,11 +6,11 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
-import domain.assembly.AssemblyLine;
-import domain.assembly.AssemblyLineScheduler;
-import domain.assembly.FactoryScheduler;
-import domain.assembly.ScheduledOrder;
-import domain.order.Order;
+import domain.assembly.assemblyline.AssemblyLine;
+import domain.scheduling.order.Order;
+import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.FactoryScheduler;
+import domain.scheduling.schedulers.ScheduledOrder;
 
 public class BasicSchedulingAlgorithm
 	extends AbstractAssemblyLineSchedulingAlgorithm  

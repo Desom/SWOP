@@ -2,7 +2,7 @@ package controller.mechanic;
 
 import controller.UIInterface;
 import domain.Company;
-import domain.assembly.AssemblyLine;
+import domain.assembly.assemblyline.AssemblyLine;
 
 public class CheckAssemblyLineStatusHandler {
 

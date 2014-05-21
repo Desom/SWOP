@@ -48,7 +48,6 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	 */
 	@Override
 	public GregorianCalendar getCurrentTime() {
-		//TODO goede currentTime of moet die anders?
 		GregorianCalendar time = null;
 		for(AssemblyLineScheduler als: schedulerList){
 			if(time == null || als.getCurrentTime().before(time)){
@@ -193,7 +192,7 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 			}
 		}
 		
-		return null; //TODO goed?
+		return null; //TODO goed? IllegalArgumentException
 	}
 
 	
@@ -239,7 +238,7 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 		if(this.orderHandler != null){
 			ArrayList<Order> orders = this.orderHandler.getOrdersFor(this);
 			for(AssemblyLineScheduler assemblyLineScheduler : this.getSchedulerList()){
-				//ok of moet dit aan alscheduer worden gevraagd en die vraagt dat dan aan assemblyLine?
+				//ok of moet dit aan alscheduer worden gevraagd en die vraagt dat dan aan assemblyLine? Ja, chainen
 				LinkedList<Order> onAssembly = assemblyLineScheduler.getAssemblyLine().getAllOrders();
 				orders.removeAll(onAssembly);
 			}

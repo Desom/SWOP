@@ -73,7 +73,7 @@ public class BasicSchedulingAlgorithm
 				scheduleMapping.put(chosenScheduler, newScheduleOfChosen);
 			}
 			else{
-				//TODO iets doen?
+				//TODO iets doen? Ja, 2 exceptions voor de 2 situaties
 			}
 		}
 

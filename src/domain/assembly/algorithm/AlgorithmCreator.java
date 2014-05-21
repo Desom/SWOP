@@ -16,12 +16,12 @@ public class AlgorithmCreator {
 	}
 	
 	public FIFOSchedulingAlgorithm makeFIFO(){
-		//TODO deze opslaan zodat we die kunnen flightweigten?
+		//TODO deze opslaan zodat we die kunnen flightweigten? JA
 		return new FIFOSchedulingAlgorithm();
 	}
 	
 	public SameOrderSchedulingAlgorithm makeSameOrder(){
-		//TODO deze opslaan zodat we die kunnen flightweigten?
+		//TODO deze opslaan zodat we die kunnen flightweigten? JA
 		return new SameOrderSchedulingAlgorithm();
 	}
 }

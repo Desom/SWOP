@@ -9,15 +9,15 @@ import java.util.HashMap;
 import java.util.List;
 
 import domain.assembly.WorkstationType;
-import domain.assembly.WorkstationTypeCreator;
+import domain.assembly.WorkstationTypeCreatorInterface;
 
-public class ModelCreator {
+public class ModelCreator implements ModelCreatorInterface {
 	
 	private String path;
 	private List<Option> options;
 	private List<Part> parts;
 	private HashMap<String, VehicleModel> allModels;
-	private final WorkstationTypeCreator workstationTypeCreator;
+	private final WorkstationTypeCreatorInterface workstationTypeCreator;
 	
 	/**
 	 * Constructor of ModelCreator.
@@ -31,7 +31,7 @@ public class ModelCreator {
 	 * @param path
 	 * 		The path to the file containing the vehicle models.
 	 */
-	public ModelCreator(WorkstationTypeCreator creator, List<Option> options, List<Part> parts, String path){
+	public ModelCreator(WorkstationTypeCreatorInterface creator, List<Option> options, List<Part> parts, String path){
 		this.options = options;
 		this.parts = parts;
 		this.path = path;
@@ -49,18 +49,14 @@ public class ModelCreator {
 	 * @param parts
 	 * 		All possible parts that can be associated with a vehicle model.
 	 */
-	public ModelCreator(WorkstationTypeCreator creator, List<Option> options, List<Part> parts){
+	public ModelCreator(WorkstationTypeCreatorInterface creator, List<Option> options, List<Part> parts){
 		this(creator, options, parts, "data/models.txt");
 	}
 
-	/**
-	 * Creates the models from the file of the path of this model creator.
-	 * 
-	 * @return a list with all possible vehicle models
-	 * @throws IOException
-	 * @throws VehicleModelCatalogException
-	 * 		If a model line is not in the right format.
+	/* (non-Javadoc)
+	 * @see domain.configuration.ModelCreatorInterface#createModels()
 	 */
+	@Override
 	public ArrayList<VehicleModel> createModels() throws IOException, VehicleModelCatalogException{
 		this.allModels = new HashMap<String,VehicleModel>();
 		BufferedReader input = new BufferedReader(new FileReader(path));

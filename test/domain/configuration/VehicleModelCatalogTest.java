@@ -9,13 +9,14 @@ import org.junit.Before;
 import org.junit.Test;
 
 import domain.assembly.WorkstationTypeCreator;
+import domain.assembly.WorkstationTypeCreatorInterface;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
 
 
 public class VehicleModelCatalogTest {
 
-	WorkstationTypeCreator creator;
+	WorkstationTypeCreatorInterface creator;
 	
 	@Before
 	public void setUp() throws Exception {

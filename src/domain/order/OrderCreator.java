@@ -19,7 +19,7 @@ import domain.user.GarageHolder;
 
 //TODO interface
 //TODO mss beide create..Order methodes wat refactoren? (want veel overlappende code)
-public class OrderCreator {
+public class OrderCreator implements OrderCreatorInterface {
 
 	private String path;
 	private VehicleModelCatalog catalog;
@@ -43,15 +43,10 @@ public class OrderCreator {
 		this.policyChains = policyChains;
 	}
 
-	/**
-	 * Creates all placed Orders.
-	 * 
-	 * @return a list of all placed Orders.
-	 * @throws InvalidConfigurationException
-	 * 		If the configuration is invalid.
-	 * @throws IOException
-	 * 		If a model can't be found.
+	/* (non-Javadoc)
+	 * @see domain.order.OrderCreatorInterface#createOrderList()
 	 */
+	@Override
 	public ArrayList<Order> createOrderList() throws IOException{
 		ArrayList<Order> allOrders = new ArrayList<Order>();
 		ArrayList<String> allOrderInfo = new ArrayList<String>();

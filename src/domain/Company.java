@@ -6,12 +6,16 @@ import java.util.LinkedList;
 
 import domain.assembly.AssemblyLine;
 import domain.assembly.AssemblyLineCreator;
+import domain.assembly.AssemblyLineCreatorInterface;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.FactoryScheduler;
 import domain.assembly.SchedulerCreator;
+import domain.assembly.SchedulerCreatorInterface;
 import domain.assembly.StatusCreator;
+import domain.assembly.StatusCreatorInterface;
 import domain.assembly.Workstation;
 import domain.assembly.WorkstationTypeCreator;
+import domain.assembly.WorkstationTypeCreatorInterface;
 import domain.assembly.algorithm.AlgorithmCreator;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
@@ -47,11 +51,11 @@ public class Company {
 	 */
 	public Company() {
 		try {
-			WorkstationTypeCreator workstationTypeCreator = new WorkstationTypeCreator();
+			WorkstationTypeCreatorInterface workstationTypeCreator = new WorkstationTypeCreator();
 			this.catalog = new VehicleModelCatalog(workstationTypeCreator);
-			SchedulerCreator schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
-			StatusCreator statusCreator = new StatusCreator();
-			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, statusCreator, catalog);
+			SchedulerCreatorInterface schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
+			StatusCreatorInterface statusCreator = new StatusCreator();
+			AssemblyLineCreatorInterface assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, statusCreator, catalog);
 
 			this.assemblyLines = assemblyLineCreator.create();
 			ArrayList<AssemblyLineScheduler> alsList = new ArrayList<AssemblyLineScheduler>();

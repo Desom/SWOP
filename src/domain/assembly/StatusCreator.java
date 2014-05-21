@@ -1,6 +1,6 @@
 package domain.assembly;
 
-public class StatusCreator {
+public class StatusCreator implements StatusCreatorInterface {
 
 	private OperationalStatus operational;
 	private MaintenanceStatus maintenance;
@@ -16,29 +16,26 @@ public class StatusCreator {
 		this.broken = new BrokenStatus(this);
 	}
 	
-	/**
-	 * Returns the operational status object.
-	 * 
-	 * @return The operational status object.
+	/* (non-Javadoc)
+	 * @see domain.assembly.StatusCreatorInterface#getOperationalStatus()
 	 */
+	@Override
 	public OperationalStatus getOperationalStatus() {
 		return this.operational;
 	}
 	
-	/**
-	 * Returns the maintenance status object.
-	 * 
-	 * @return The maintenance status object.
+	/* (non-Javadoc)
+	 * @see domain.assembly.StatusCreatorInterface#getMaintenanceStatus()
 	 */
+	@Override
 	public MaintenanceStatus getMaintenanceStatus() {
 		return this.maintenance;
 	}
 	
-	/**
-	 * Returns the broken status object.
-	 * 
-	 * @return The broken status object.
+	/* (non-Javadoc)
+	 * @see domain.assembly.StatusCreatorInterface#getBrokenStatus()
 	 */
+	@Override
 	public BrokenStatus getBrokenStatus() {
 		return this.broken;
 	}

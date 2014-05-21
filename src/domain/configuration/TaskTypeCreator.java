@@ -46,10 +46,8 @@ public class TaskTypeCreator {
 		partTypes.add(Certification);
 	}
 	
-	/**
-	 * Return all TaskTypes.
-	 * 
-	 * @return a LinkedList of containing all TaskTypes.
+	/* (non-Javadoc)
+	 * @see domain.configuration.TaskTypeCreatorInterface#getAllTypes()
 	 */
 	public LinkedList<TaskType> getAllTypes(){
 		LinkedList<TaskType> taskTypes = new LinkedList<TaskType>(this.optionTypes);
@@ -57,30 +55,24 @@ public class TaskTypeCreator {
 		return taskTypes;
 	}
 	
-	/**
-	 * Return all OptionTypes.
-	 * 
-	 * @return a LinkedList of containing all OptionTypes.
+	/* (non-Javadoc)
+	 * @see domain.configuration.TaskTypeCreatorInterface#getAllOptionTypes()
 	 */
 	public LinkedList<OptionType> getAllOptionTypes(){
 		LinkedList<OptionType> optionTypes = new LinkedList<OptionType>(this.optionTypes);
 		return optionTypes;
 	}
 	
-	/**
-	 * Return all PartTypes.
-	 * 
-	 * @return a LinkedList of containing all PartTypes.
+	/* (non-Javadoc)
+	 * @see domain.configuration.TaskTypeCreatorInterface#getAllPartTypes()
 	 */
 	public LinkedList<PartType> getAllPartTypes(){
 		LinkedList<PartType> partTypes = new LinkedList<PartType>(this.partTypes);
 		return partTypes;
 	}
 	
-	/**
-	 * Returns all option types that are available for single task orders.
-	 * 
-	 * @return all option types that are available for single task orders.
+	/* (non-Javadoc)
+	 * @see domain.configuration.TaskTypeCreatorInterface#getAllSingleTaskPossibleTypes()
 	 */
 	public ArrayList<OptionType> getAllSingleTaskPossibleTypes() {
 		ArrayList<OptionType> singleTaskPossibleTypes = new ArrayList<OptionType>();
@@ -90,10 +82,8 @@ public class TaskTypeCreator {
 		return singleTaskPossibleTypes;
 	}
 	
-	/**
-	 * Returns all option types that are mandatory for vehicle orders.
-	 * 
-	 * @return all option types that are mandatory for vehicle orders.
+	/* (non-Javadoc)
+	 * @see domain.configuration.TaskTypeCreatorInterface#getAllMandatoryTypes()
 	 */
 	public ArrayList<OptionType> getAllMandatoryTypes(){
 		ArrayList<OptionType> mandatoryTypes = new ArrayList<OptionType>();

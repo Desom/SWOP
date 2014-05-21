@@ -5,20 +5,24 @@ import java.util.GregorianCalendar;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 
-public class AssemblyLineCreator {
+public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 	
-	private final SchedulerCreator schedulerCreator;
+	private final SchedulerCreatorInterface schedulerCreator;
 	private final VehicleModelCatalog catalog;
-	private final StatusCreator statusCreator;
-	private final WorkstationTypeCreator workstationCreator;
+	private final StatusCreatorInterface statusCreator;
+	private final WorkstationTypeCreatorInterface workstationCreator;
 	
-	public AssemblyLineCreator(WorkstationTypeCreator workstationCreator, SchedulerCreator schedulerCreator, StatusCreator statusCreator, VehicleModelCatalog catalog) {
+	public AssemblyLineCreator(WorkstationTypeCreatorInterface workstationCreator, SchedulerCreatorInterface schedulerCreator, StatusCreatorInterface statusCreator, VehicleModelCatalog catalog) {
 		this.schedulerCreator = schedulerCreator;
 		this.catalog = catalog;
 		this.statusCreator = statusCreator;
 		this.workstationCreator = workstationCreator;
 	}
 	
+	/* (non-Javadoc)
+	 * @see domain.assembly.AssemblyLineCreatorInterface#create()
+	 */
+	@Override
 	public ArrayList<AssemblyLine> create() {
 		ArrayList<AssemblyLine> assemblyLines = new ArrayList<AssemblyLine>();
 		

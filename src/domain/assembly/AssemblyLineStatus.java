@@ -7,7 +7,7 @@ import domain.order.Order;
 
 public abstract class AssemblyLineStatus {
 
-	protected StatusCreator creator;
+	protected StatusCreatorInterface creator;
 	
 	/**
 	 * Constructor of AssemblyLineStatus
@@ -15,7 +15,7 @@ public abstract class AssemblyLineStatus {
 	 * @param creator
 	 * 		The assembly line status creator used to get other statuses.
 	 */
-	public AssemblyLineStatus(StatusCreator creator) {
+	public AssemblyLineStatus(StatusCreatorInterface creator) {
 		this.creator = creator;
 	}
 	

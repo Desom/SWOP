@@ -50,7 +50,7 @@ public class OrderManager implements OrderHandler{
 		ArrayList<Policy> policies = new ArrayList<Policy>();
 		policies.add(vehicleOrderPolicy);
 		policies.add(singleTaskPolicy);
-		OrderCreator orderCreator = new OrderCreator(dataFilePath, catalog, policies);
+		OrderCreatorInterface orderCreator = new OrderCreator(dataFilePath, catalog, policies);
 		ArrayList<Order> allOrders = orderCreator.createOrderList();
 		
 		this.ordersPerUser = new HashMap<User,ArrayList<Order>>();

@@ -6,7 +6,7 @@ import domain.order.Order;
 
 public class OperationalStatus extends AbstractAdvancingStatus {
 
-	public OperationalStatus(StatusCreator creator) {
+	public OperationalStatus(StatusCreatorInterface creator) {
 		super(creator);
 	}
 

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 
-public class OptionCreator {
+public class OptionCreator implements OptionCreatorInterface {
 
 	private HashMap<String,Option> allOptions;
 	private HashMap<String,Part> allParts;
@@ -35,14 +35,10 @@ public class OptionCreator {
 		this.dependancypath = dependancyPath;
 	}
 
-	/**
-	 * Creates the options from the file.
-	 * 
-	 * @return all options contained in the file.
-	 * @throws IOException
-	 * @throws VehicleModelCatalogException
-	 * 		If an option line is not in the right format.
+	/* (non-Javadoc)
+	 * @see domain.configuration.OptionCreatorInterface#createOptions()
 	 */
+	@Override
 	public ArrayList<Option> createOptions() throws IOException, VehicleModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(optionpath));
 		this.allOptions = new HashMap<String,Option>();
@@ -67,14 +63,10 @@ public class OptionCreator {
 	}
 	
 	
-	/**
-	 * Creates the parts from the file.
-	 * 
-	 * @return all parts contained in the file.
-	 * @throws IOException
-	 * @throws VehicleModelCatalogException
-	 * 		If a part line is not in the right format.
+	/* (non-Javadoc)
+	 * @see domain.configuration.OptionCreatorInterface#createParts()
 	 */
+	@Override
 	public ArrayList<Part> createParts() throws IOException, VehicleModelCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(optionpath));
 		this.allOptions = new HashMap<String,Option>();

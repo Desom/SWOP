@@ -90,9 +90,9 @@ public class Configuration {
 	}
 	
 	/**
-	 * Get the expected working time spent on a task for this model on the specified workstationType.
+	 * Get the expected working time spent for this model on the specified workstationType.
 	 * 
-	 * @return returns the expected time it takes to complete a task on the specified workstationType.
+	 * @return returns the expected time it takes for this model to complete on the specified workstationType.
 	 */
 	public int getExpectedWorkingTime(WorkstationType type){
 		if(this.model == null){

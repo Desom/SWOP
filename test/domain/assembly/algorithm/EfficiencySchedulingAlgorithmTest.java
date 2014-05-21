@@ -12,8 +12,10 @@ import org.junit.Test;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.ScheduledOrder;
 import domain.assembly.StatusCreator;
+import domain.assembly.StatusCreatorInterface;
 import domain.assembly.Workstation;
 import domain.assembly.WorkstationTypeCreator;
+import domain.assembly.WorkstationTypeCreatorInterface;
 import domain.configuration.VehicleModel;
 import domain.configuration.VehicleModelCatalog;
 import domain.configuration.VehicleModelCatalogException;
@@ -44,14 +46,14 @@ public class EfficiencySchedulingAlgorithmTest {
 	public void testCreate() throws IOException, VehicleModelCatalogException {
 		this.algorithm = new EfficiencySchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
-		WorkstationTypeCreator workstationTypeCreator= new WorkstationTypeCreator();
+		WorkstationTypeCreatorInterface workstationTypeCreator= new WorkstationTypeCreator();
 		list.add(algorithm);
 		this.garageHolder = new GarageHolder(0);
 		this.customShopManager = new CustomShopManager(0);
 		this.cmc = new VehicleModelCatalog(workstationTypeCreator);
 		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
 		ArrayList<VehicleModel> modelList = new ArrayList<VehicleModel>(this.cmc.getAllModels());
-		StatusCreator statusCreator = new StatusCreator();
+		StatusCreatorInterface statusCreator = new StatusCreator();
 		this.AssemblyLine = new dummyAssemblyLine(als, 3,statusCreator.getOperationalStatus(),modelList, new GregorianCalendar(2000,0,1,6,0,0));
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		workstations.add(new Workstation("Body Post", workstationTypeCreator.getWorkstationType("Body Post")));

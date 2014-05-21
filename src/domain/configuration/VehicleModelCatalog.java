@@ -4,14 +4,14 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import domain.assembly.WorkstationTypeCreator;
+import domain.assembly.WorkstationTypeCreatorInterface;
 
 public class VehicleModelCatalog {
 	
 	private ArrayList<Option> allOptions;
 	private ArrayList<Part> allParts;
 	private ArrayList<VehicleModel> allModels;
-	private final WorkstationTypeCreator workstationTypeCreator;
+	private final WorkstationTypeCreatorInterface workstationTypeCreator;
 	public static TaskTypeCreator taskTypeCreator = new TaskTypeCreator();
 
 	/**
@@ -20,8 +20,8 @@ public class VehicleModelCatalog {
 	 * @throws IOException
 	 * @throws VehicleModelCatalogException
 	 */
-	public VehicleModelCatalog(WorkstationTypeCreator workstationTypeCreator) throws IOException, VehicleModelCatalogException{
-		OptionCreator creator = new OptionCreator();
+	public VehicleModelCatalog(WorkstationTypeCreatorInterface workstationTypeCreator) throws IOException, VehicleModelCatalogException{
+		OptionCreatorInterface creator = new OptionCreator();
 		this.workstationTypeCreator = workstationTypeCreator;
 		allOptions = creator.createOptions();
 		allParts = creator.createParts();
@@ -40,9 +40,9 @@ public class VehicleModelCatalog {
 	 * @throws IOException
 	 * @throws VehicleModelCatalogException
 	 */
-	public VehicleModelCatalog(WorkstationTypeCreator workstationTypeCreator, String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleModelCatalogException{
+	public VehicleModelCatalog(WorkstationTypeCreatorInterface workstationTypeCreator, String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleModelCatalogException{
 		this.workstationTypeCreator = workstationTypeCreator;
-		OptionCreator oCreator = new OptionCreator(optionPath,dependancyPath);
+		OptionCreatorInterface oCreator = new OptionCreator(optionPath,dependancyPath);
 		allParts = oCreator.createParts();
 		allOptions = oCreator.createOptions();
 		allModels= (new ModelCreator(this.workstationTypeCreator, this.getAllOptions(), this.getAllParts(), modelPath)).createModels();

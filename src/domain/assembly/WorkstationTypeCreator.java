@@ -5,7 +5,7 @@ import java.util.LinkedList;
 import domain.configuration.TaskType;
 import domain.configuration.VehicleModelCatalog;
 
-public class WorkstationTypeCreator {
+public class WorkstationTypeCreator implements WorkstationTypeCreatorInterface {
 	
 	private LinkedList<WorkstationType> workstationTypes;
 	
@@ -38,21 +38,18 @@ public class WorkstationTypeCreator {
 		workstationTypes.add(new WorkstationType("Certification Post", CertificationPost));
 	}
 	
-	/**
-	 * Return all WorkstationTypes.
-	 * 
-	 * @return a LinkedList of containing all WorkstationTypes.
+	/* (non-Javadoc)
+	 * @see domain.assembly.WorkstationTypeCreatorInterface#getAllWorkstationTypes()
 	 */
+	@Override
 	public LinkedList<WorkstationType> getAllWorkstationTypes(){
 		return workstationTypes;
 	}
 	
-	/**
-	 * Returns the workstationtype that has the specified name
-	 * 
-	 * @param name the name of the desired workstationType
-	 * @return the requested workstationtype, or null if it does not exist
+	/* (non-Javadoc)
+	 * @see domain.assembly.WorkstationTypeCreatorInterface#getWorkstationType(java.lang.String)
 	 */
+	@Override
 	public WorkstationType getWorkstationType(String name){
 		for (WorkstationType workstationType : workstationTypes){
 			if(workstationType.getName().equals(name)){

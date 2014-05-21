@@ -13,7 +13,7 @@ public class MaintenanceStatus extends AbstractAdvancingStatus{
 	 * @param creator
 	 * 		The assembly line status creator used to get other statuses.
 	 */
-	public MaintenanceStatus(StatusCreator creator) {
+	public MaintenanceStatus(StatusCreatorInterface creator) {
 		super(creator);
 	}
 

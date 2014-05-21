@@ -10,7 +10,7 @@ import domain.order.Order;
 
 public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 	
-	public AbstractAdvancingStatus(StatusCreator creator) {
+	public AbstractAdvancingStatus(StatusCreatorInterface creator) {
 		super(creator);
 	}
 

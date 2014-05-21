@@ -7,7 +7,7 @@ import domain.order.Order;
 
 public class BrokenStatus extends AssemblyLineStatus {
 	
-	public BrokenStatus(StatusCreator creator) {
+	public BrokenStatus(StatusCreatorInterface creator) {
 		super(creator);
 	}
 

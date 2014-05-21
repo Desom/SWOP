@@ -9,6 +9,7 @@ import domain.assembly.AssemblyLineCreator;
 import domain.assembly.AssemblyLineScheduler;
 import domain.assembly.FactoryScheduler;
 import domain.assembly.SchedulerCreator;
+import domain.assembly.StatusCreator;
 import domain.assembly.Workstation;
 import domain.assembly.WorkstationTypeCreator;
 import domain.assembly.algorithm.AlgorithmCreator;
@@ -49,7 +50,8 @@ public class Company {
 			WorkstationTypeCreator workstationTypeCreator = new WorkstationTypeCreator();
 			this.catalog = new VehicleModelCatalog(workstationTypeCreator);
 			SchedulerCreator schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
-			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, catalog);
+			StatusCreator statusCreator = new StatusCreator();
+			AssemblyLineCreator assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, statusCreator, catalog);
 
 			this.assemblyLines = assemblyLineCreator.create();
 			ArrayList<AssemblyLineScheduler> alsList = new ArrayList<AssemblyLineScheduler>();

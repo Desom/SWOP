@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.OptionType;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.OptionType;
 import domain.configuration.models.VehicleModel;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;

@@ -10,8 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import domain.configuration.VehicleCatalogException;
-import domain.configuration.Taskables.Option;
-import domain.configuration.Taskables.TaskTypeCreator;
+import domain.configuration.taskables.Option;
+import domain.configuration.taskables.TaskTypeCreator;
 import domain.configuration.models.VehicleModel;
 
 

@@ -70,8 +70,19 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			temp = completeSchedule(STOrderListWorkStation1,STOrderListWorkStation3,append(endangeredOrders, orderList2),assemblyLine, deadlines);
 			endangeredOrder = retrieveFirstDeadlineFailure(deadlines,endangeredOrders);
 		}
-
+		fuse(temp,deadlines);
 		return temp;
+	}
+
+	private void fuse(ArrayList<ScheduledOrder> temp,
+			ArrayList<ScheduledOrder> deadlines) {
+		for(ScheduledOrder i:deadlines){
+			for(ScheduledOrder j: temp){
+				if(i.getScheduledOrder() == j.getScheduledOrder()){
+					j.setCompletedTime(i.getCompletedTime());
+				}
+			}
+		}
 	}
 
 	/**
@@ -108,7 +119,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			ArrayList<SingleTaskOrder> endangeredOrders) {
 		for(ScheduledOrder i:timeOfBelt){
 			if(i.getScheduledOrder() != null && i.getScheduledOrder() instanceof SingleTaskOrder
-					&& i.getScheduledTime().after(((SingleTaskOrder) i.getScheduledOrder()).getDeadLine())
+					&& i.getCompletedTime().after(((SingleTaskOrder) i.getScheduledOrder()).getDeadLine())
 					&& !endangeredOrders.contains(i.getScheduledOrder()) ) return ((SingleTaskOrder) i.getScheduledOrder());
 		}
 		return null;
@@ -300,7 +311,9 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 				if(order != null){
 					GregorianCalendar clone = (GregorianCalendar) time.clone();
 					clone.add(GregorianCalendar.MINUTE, timespent);
-					result.add(new ScheduledOrder(clone, order));
+					ScheduledOrder scheduledOrder = new ScheduledOrder(null, order);
+					scheduledOrder.setCompletedTime(clone);
+					result.add(scheduledOrder);
 				}
 			}
 		}
@@ -375,7 +388,9 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 				if(order != null && !assemblyLine.stateWhenAcceptingOrders().contains(order)){
 					GregorianCalendar clone = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 					clone.add(GregorianCalendar.MINUTE, timespent);
-					result.add(new ScheduledOrder(clone, order));
+					ScheduledOrder scheduledOrder = new ScheduledOrder(null, order);
+					scheduledOrder.setCompletedTime(clone);
+					result.add(scheduledOrder);
 				}
 			}
 		}
@@ -729,4 +744,5 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	public String toString(){
 		return "Efficiency algorithm using " + this.getInnerAlgorithm().toString();
 	}
+	
 }

@@ -18,9 +18,9 @@ public class ChangeAssemblyLineStatusHandler {
 			if (answer1 == -1)
 				return;
 			AssemblyLine assemblyLine = company.getAssemblyLines().get(answer1);
-			int answer2 = ui.askWithPossibilitiesWithCancel("Which state do you want to choose?", assemblyLine.getPossibleStatuses().toArray());
+			int answer2 = ui.askWithPossibilitiesWithCancel("Which state do you want to choose?", assemblyLine.getAllStatusses().toArray());
 			if (answer2 != -1) {
-				assemblyLine.setCurrentStatus(assemblyLine.getPossibleStatuses().get(answer2));
+				assemblyLine.setCurrentStatus(assemblyLine.getAllStatusses().get(answer2));
 				break;
 			}
 		}

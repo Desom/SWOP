@@ -1,5 +1,7 @@
 package domain.assembly.assemblyline.status;
 
+import java.util.ArrayList;
+
 import domain.assembly.assemblyline.BrokenStatus;
 
 public class StatusCreator implements StatusCreatorInterface {
@@ -7,6 +9,7 @@ public class StatusCreator implements StatusCreatorInterface {
 	private OperationalStatus operational;
 	private MaintenanceStatus maintenance;
 	private BrokenStatus broken;
+	private ArrayList<AssemblyLineStatus> statusList = new ArrayList<AssemblyLineStatus>();
 	
 	/**
 	 * Constructor of StatusCreator.
@@ -14,8 +17,11 @@ public class StatusCreator implements StatusCreatorInterface {
 	 */
 	public StatusCreator() {
 		this.operational = new OperationalStatus(this);
+		this.statusList.add(this.operational);
 		this.maintenance = new MaintenanceStatus(this);
+		this.statusList.add(this.maintenance);
 		this.broken = new BrokenStatus(this);
+		this.statusList.add(this.broken);
 	}
 	
 	/* (non-Javadoc)
@@ -40,5 +46,18 @@ public class StatusCreator implements StatusCreatorInterface {
 	@Override
 	public BrokenStatus getBrokenStatus() {
 		return this.broken;
+	}
+	
+
+	@SuppressWarnings("unchecked")
+	@Override
+	
+	/**
+	 * Get a list containing every status.
+	 * 
+	 * @return a list containing all stati.
+	 */
+	public ArrayList<AssemblyLineStatus> getStatusList(){
+		return (ArrayList<AssemblyLineStatus>) this.statusList.clone();
 	}
 }

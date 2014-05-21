@@ -1,5 +1,7 @@
 package domain.assembly.assemblyline.status;
 
+import java.util.ArrayList;
+
 import domain.assembly.assemblyline.BrokenStatus;
 
 public interface StatusCreatorInterface {
@@ -24,5 +26,13 @@ public interface StatusCreatorInterface {
 	 * @return The broken status object.
 	 */
 	public abstract BrokenStatus getBrokenStatus();
+
+	
+	/**
+	 * Get a list containing every status.
+	 * 
+	 * @return a list containing all stati.
+	 */
+	public abstract ArrayList<AssemblyLineStatus> getStatusList();
 
 }

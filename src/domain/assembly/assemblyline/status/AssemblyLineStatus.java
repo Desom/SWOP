@@ -74,4 +74,13 @@ public abstract class AssemblyLineStatus {
 	 * @return The time when the assembly line will be empty.
 	 */
 	public abstract int calculateTimeTillEmptyFor(AssemblyLine assemblyLine, LinkedList<Order> assembly);
+	
+	/**
+	 * Returns the StatusCreator used to make this assemblyline status.
+	 * 
+	 * @return the StatusCreator used to make this assemblyline status.
+	 */
+	public StatusCreatorInterface getStatusCreator(){
+		return this.creator;
+	}
 }

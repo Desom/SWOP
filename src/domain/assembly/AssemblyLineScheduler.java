@@ -228,7 +228,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 */
 	protected Order getNextOrder(int minutes) throws NoOrdersToBeScheduledException{
 		this.addCurrentTime(minutes);
-		GregorianCalendar now = this.assemblyLine.timeWhenAcceptingOrders(this.assemblyLine);
+		GregorianCalendar now = this.assemblyLine.timeWhenAcceptingOrders();
 		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(now,this.assemblyLine.stateWhenAcceptingOrders());
 		int i = 0;
 		while(this.getAssemblyLine() != null 

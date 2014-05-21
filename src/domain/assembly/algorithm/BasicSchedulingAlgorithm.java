@@ -145,7 +145,7 @@ public class BasicSchedulingAlgorithm
 		@SuppressWarnings("unchecked")
 		LinkedList<Order> assembly = (LinkedList<Order>) assemblyLine.stateWhenAcceptingOrders().clone();
 		ArrayList<Order> sList = this.innerAlgorithm.scheduleToList(orderList, assemblyLine.getAssemblyLineScheduler());
-		GregorianCalendar movingTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders(assemblyLine).clone();
+		GregorianCalendar movingTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 
 		ArrayList<ScheduledOrder> scheduledList = new ArrayList<ScheduledOrder>();
 

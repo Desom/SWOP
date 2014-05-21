@@ -50,14 +50,14 @@ public class StatusCreator implements StatusCreatorInterface {
 	
 
 	@SuppressWarnings("unchecked")
-	@Override
+	
 	
 	/**
 	 * Get a list containing every status.
 	 * 
 	 * @return a list containing all stati.
 	 */
-	public ArrayList<AssemblyLineStatus> getStatusList(){
+	public ArrayList<AssemblyLineStatus> getAllStatuses(){
 		return (ArrayList<AssemblyLineStatus>) this.statusList.clone();
 	}
 }

@@ -1,5 +1,6 @@
 package domain.assembly.assemblyline.status;
 
+import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 
@@ -20,6 +21,7 @@ public abstract class AssemblyLineStatus {
 	public AssemblyLineStatus(StatusCreatorInterface creator) {
 		this.creator = creator;
 	}
+	
 	
 	/**
 	 * Advances the assembly depending on its status.
@@ -76,11 +78,10 @@ public abstract class AssemblyLineStatus {
 	public abstract int calculateTimeTillEmptyFor(AssemblyLine assemblyLine, LinkedList<Order> assembly);
 	
 	/**
-	 * Returns the StatusCreator used to make this assemblyline status.
-	 * 
-	 * @return the StatusCreator used to make this assemblyline status.
+	 * returns all the possible statuses that are made available by the creator
+	 * @return the possible statuses that are made available by the creator
 	 */
-	public StatusCreatorInterface getStatusCreator(){
-		return this.creator;
+	public ArrayList<AssemblyLineStatus> getPossibleStatuses() {
+		return this.creator.getAllStatuses();
 	}
 }

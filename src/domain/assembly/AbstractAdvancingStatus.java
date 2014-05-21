@@ -29,6 +29,11 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 		assemblyLine.getAssemblyLineScheduler().addCurrentTime(timeSpendForTasks);
 		// Vraag nieuwe order op.
 		Order newOrder = notifyOrderAsked(assemblyLine);
+		
+		// Controleer of deze order wel op deze assembly line voltooid kan worden
+		if (assemblyLine.canDoOrder(newOrder)) // TODO IllegalStateException goed?
+			throw new IllegalStateException("The assembly line can't complete the order received from its scheduler.");
+		
 		try{		
 
 			// move huidige vehicles 1 plek
@@ -86,8 +91,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 			}
 
 			for (Order finishedOrder : finishedOrders){
-				finishedOrder.getAssemblyprocess().setDeliveredTime(assemblyLine.getAssemblyLineScheduler().getCurrentTime());
-				finishedOrder.getAssemblyprocess().registerDelay(assemblyLine);
+				finishedOrder.getAssemblyprocess().finish(assemblyLine);;
 			}
 		}
 		catch(DoesNotExistException e){

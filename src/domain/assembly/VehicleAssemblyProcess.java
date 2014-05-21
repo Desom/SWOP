@@ -166,4 +166,14 @@ public class VehicleAssemblyProcess {
 			throw new IllegalStateException("This order hasn't been delivered yet");
 		return (GregorianCalendar) deliveredTime.clone();
 	}
+	
+	/**
+	 * Finishes this vehicle assembly process.
+	 * @param assemblyLine
+	 * 		The assembly line that completed this vehicle assembly process.
+	 */
+	protected void finish(AssemblyLine assemblyLine) {
+		this.setDeliveredTime(assemblyLine.getAssemblyLineScheduler().getCurrentTime());
+		this.registerDelay(assemblyLine);
+	}
 }

@@ -317,9 +317,11 @@ public class AssemblyLine implements WorkstationObserver{
 	 * 
 	 * @param order
 	 * 		The order for which will be checked.
-	 * @return True if the model of order is in the list of possibleModels or if the model is null. Otherwise false.
+	 * @return True if the model of order is in the list of possibleModels or if the model or the order is null. Otherwise false.
 	 */
 	public boolean canDoOrder(Order order){
+		if (order == null)
+			return true;
 		VehicleModel model = order.getConfiguration().getModel();
 		return model == null || this.getPossibleModels().contains(model);
 	}

@@ -102,23 +102,23 @@ public class BasicSchedulingAlgorithmTest {
 		
 		AssemblyLineScheduler als0 = assemblyLines.get(0).getAssemblyLineScheduler();
 
-		assertEquals(10,mapping.get(als0).get(0).getOrderID());
-		assertEquals(8,mapping.get(als0).get(1).getOrderID());
-		assertEquals(5,mapping.get(als0).get(2).getOrderID());
-		assertEquals(2,mapping.get(als0).get(3).getOrderID());
+		assertEquals(10,mapping.get(als0).get(0).getOrderID());//70
+		assertEquals(5,mapping.get(als0).get(1).getOrderID());//50
+		assertEquals(2,mapping.get(als0).get(2).getOrderID());//70
 		
 		AssemblyLineScheduler als1 = assemblyLines.get(1).getAssemblyLineScheduler();
-		assertEquals(11,mapping.get(als0).get(4).getOrderID());		
-		assertEquals(7,mapping.get(als0).get(5).getOrderID());
-		assertEquals(4,mapping.get(als0).get(6).getOrderID());
-		assertEquals(1,mapping.get(als0).get(7).getOrderID());
+		assertEquals(11,mapping.get(als1).get(0).getOrderID());//50
+		assertEquals(8,mapping.get(als1).get(1).getOrderID());//50
+		assertEquals(6,mapping.get(als1).get(2).getOrderID());//60
+		assertEquals(3,mapping.get(als1).get(3).getOrderID());//70
+		assertEquals(0,mapping.get(als1).get(4).getOrderID());//70
 		
 
 		AssemblyLineScheduler als2 = assemblyLines.get(2).getAssemblyLineScheduler();
-		assertEquals(9,mapping.get(als0).get(8).getOrderID());
-		assertEquals(6,mapping.get(als0).get(9).getOrderID());
-		assertEquals(3,mapping.get(als0).get(10).getOrderID());
-		assertEquals(0,mapping.get(als0).get(11).getOrderID());
+		assertEquals(9,mapping.get(als2).get(0).getOrderID());//60
+		assertEquals(7,mapping.get(als2).get(1).getOrderID());//70
+		assertEquals(4,mapping.get(als2).get(2).getOrderID());//60
+		assertEquals(1,mapping.get(als2).get(3).getOrderID());//60
 	}
 	
 	private ArrayList<Order> makeOrderListWithSingleTaskOrderWithNoFailure()
@@ -148,9 +148,9 @@ public class BasicSchedulingAlgorithmTest {
 	private ArrayList<Order> makeOrderListWithNoSingleTaskOrder()
 			throws InvalidConfigurationException {
 		ArrayList<Order> orderList = new ArrayList<Order>();
-		Configuration config1 = new Configuration(cmc.getAllModels().get(0), new CompletionPolicy(null,new ArrayList<OptionType>()));
-		Configuration config2 = new Configuration(cmc.getAllModels().get(1), new CompletionPolicy(null,new ArrayList<OptionType>()));
-		Configuration config3 = new Configuration(cmc.getAllModels().get(2), new CompletionPolicy(null,new ArrayList<OptionType>()));
+		Configuration config1 = new Configuration(cmc.getAllModels().get(1), new CompletionPolicy(null,new ArrayList<OptionType>()));
+		Configuration config2 = new Configuration(cmc.getAllModels().get(3), new CompletionPolicy(null,new ArrayList<OptionType>()));
+		Configuration config3 = new Configuration(cmc.getAllModels().get(4), new CompletionPolicy(null,new ArrayList<OptionType>()));
 		for(Option option : cmc.getAllOptions()){
 			if(option.getDescription().equals("sedan")
 					||option.getDescription().equals("blue")

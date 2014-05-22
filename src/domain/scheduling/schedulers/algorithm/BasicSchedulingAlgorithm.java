@@ -81,10 +81,11 @@ public class BasicSchedulingAlgorithm
 				newList.add(order);
 				ArrayList<ScheduledOrder> newSchedule = scheduler.getCurrentAlgorithm().scheduleToScheduledOrderList(newList, scheduler.getAssemblyLine());
 				GregorianCalendar time = this.findScheduledOrderOf(order, newSchedule).getCompletedTime();
-				if(chosenScheduler == null || time.before(timeWithChosen))
+				if(chosenScheduler == null || time.before(timeWithChosen)){
 					chosenScheduler = scheduler;
 					timeWithChosen = time;
 					newScheduleOfChosen = newSchedule;
+				}
 			}
 			if(chosenScheduler != null){
 				scheduleMapping.get(chosenScheduler).add(order);

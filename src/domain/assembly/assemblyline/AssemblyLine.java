@@ -38,6 +38,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	public AssemblyLine(AssemblyLineScheduler assemblyLineScheduler, AssemblyLineStatus currentStatus, ArrayList<VehicleModel> possibleModels){
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
+		this.assemblyLineScheduler.addObserver(this);
 		this.possibleModels = new ArrayList<VehicleModel>(possibleModels);
 		this.currentStatus = currentStatus;
 		try {
@@ -254,7 +255,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * @param newStatus
 	 * 		The new current status.
 	 */
-	public void setCurrentStatus(AssemblyLineStatus newStatus) throws IllegalArgumentException {
+	public void setCurrentStatus(AssemblyLineStatus newStatus) {
 		this.currentStatus = newStatus;
 	}
 	

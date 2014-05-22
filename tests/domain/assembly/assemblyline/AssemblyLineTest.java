@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.Company;
 import domain.InternalFailureException;
 import domain.Statistics;
 import domain.assembly.assemblyline.AssemblyLine;
@@ -17,7 +18,7 @@ import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.assembly.assemblyline.DoesNotExistException;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
 import domain.assembly.assemblyline.status.AssemblyStatusView;
-import domain.assembly.assemblyline.status.OperationalStatus;
+import domain.assembly.assemblyline.status.StatusCreator;
 import domain.assembly.workstations.VehicleAssemblyProcess;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationTypeCreator;
@@ -25,7 +26,6 @@ import domain.configuration.VehicleCatalog;
 import domain.configuration.VehicleCatalogException;
 import domain.configuration.Configuration;
 import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionType;
 import domain.configuration.taskables.TaskType;
 import domain.configuration.taskables.TaskTypeCreator;
 import domain.configuration.models.VehicleModel;
@@ -45,7 +45,6 @@ import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
-import domain.scheduling.schedulers.algorithm.SchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.user.Mechanic;
 import domain.user.CustomShopManager;
@@ -65,8 +64,9 @@ public class AssemblyLineTest {
 		m1 = new Mechanic(2);
 		m2 = new Mechanic(3);
 		m3 = new Mechanic(4);
-
-		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+		Company comp = new Company("testData/testData_OrderManager.txt");
+		line = comp.getAssemblyLines().get(0);
+		/*ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
@@ -74,9 +74,12 @@ public class AssemblyLineTest {
 		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
 		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
 		Statistics statistics = new Statistics(orderManager);
-		ArrayList<AssemblyLineStatus> possibleStates = new ArrayList<AssemblyLineStatus>();
-		possibleStates.add(new OperationalStatus());
-		line = new AssemblyLine(scheduler, possibleStates);
+		ArrayList<VehicleModel> models = new ArrayList<VehicleModel>();
+		models.add(catalog.getAllModels().get(1));
+		models.add(catalog.getAllModels().get(3));
+		models.add(catalog.getAllModels().get(4));
+		AssemblyLineStatus status = new StatusCreator().getOperationalStatus();
+		line = new AssemblyLine(scheduler, status,models);*/
 
 		line.selectWorkstationById(1).addMechanic(m1);
 		assertEquals(line.selectWorkstationById(1).getMechanic(), m1);

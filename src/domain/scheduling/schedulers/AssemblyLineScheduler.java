@@ -321,7 +321,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * @throws NoOrdersToBeScheduledException
 	 * 		If there are no orders to be scheduled.
 	 */
-	protected Order seeNextOrder(int minutes) throws NoOrdersToBeScheduledException{
+	public Order seeNextOrder(int minutes) throws NoOrdersToBeScheduledException{
 		GregorianCalendar futureTime = this.getCurrentTime();
 		futureTime.add(GregorianCalendar.MINUTE, minutes);
 		ArrayList<ScheduledOrder> scheduledOrders = this.getSchedule(futureTime);

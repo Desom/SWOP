@@ -33,6 +33,8 @@ public class Company {
 	private final OrderManager orderManager;
 	private final Statistics statistics;
 	private final FactoryScheduler factoryScheduler;
+	private final WorkstationTypeCreatorInterface workstationTypeCreator;
+	private final AssemblyLineCreatorInterface assemblyLineCreator;
 
 	/**
 	 * TODO docs
@@ -55,25 +57,25 @@ public class Company {
 	 */
 	public Company(String orderFilePath) throws IOException {
 		try {
-			WorkstationTypeCreatorInterface workstationTypeCreator = new WorkstationTypeCreator();
+			workstationTypeCreator = new WorkstationTypeCreator();
 			this.catalog = new VehicleCatalog(workstationTypeCreator);
 			SchedulerCreatorInterface schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
 			StatusCreatorInterface statusCreator = new StatusCreator();
-			AssemblyLineCreatorInterface assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, statusCreator, catalog);
+			assemblyLineCreator = new AssemblyLineCreator(workstationTypeCreator, schedulerCreator, statusCreator, catalog);
 
 			this.assemblyLines = assemblyLineCreator.create();
 			ArrayList<AssemblyLineScheduler> alsList = new ArrayList<AssemblyLineScheduler>();
-			
+
 			//TODO goed zo of is er een beter manier?
 			for(AssemblyLine assembly : this.assemblyLines){
 				alsList.add(assembly.getAssemblyLineScheduler());
 			}
 			this.factoryScheduler = schedulerCreator.createFactoryScheduler(alsList);
-			
+
 			//TODO mss orderCreator niet door orderManager laten aanmaken?
 			this.orderManager = new OrderManager(this.factoryScheduler, orderFilePath, catalog);
 			this.statistics = new Statistics(this.orderManager);
-			
+
 			//TODO kunnen we niet beter de IOException door laten? nu vangen we die en geven we een vage verklaring, terwijl IOException kan uitleggen waaraan het ligt.
 		} catch (VehicleCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an VehicleModelCatalog exception");
@@ -112,7 +114,7 @@ public class Company {
 	public OrderManager getOrderManager(){
 		return orderManager;
 	}
-	
+
 	/**
 	 * Returns the assembly lines of this company.
 	 * 
@@ -130,6 +132,24 @@ public class Company {
 	 */
 	public FactoryScheduler getFactoryScheduler() {
 		return factoryScheduler;
+	}
+
+	/**
+	 * Returns the workstationTypeCreator of this company.
+	 * 
+	 * @return The workstationTypeCreator of this company.
+	 */
+	public  WorkstationTypeCreatorInterface getworkstationTypeCreator() {
+		return workstationTypeCreator;
+	}
+
+	/**
+	 * Returns the assemblyLineCreator of this company.
+	 * 
+	 * @return The assemblyLineCreator of this company.
+	 */
+	public  AssemblyLineCreatorInterface getAssemblyLineCreator() {
+		return assemblyLineCreator;
 	}
 
 	/**
@@ -151,7 +171,7 @@ public class Company {
 	public User createManager(int id){
 		return new Manager(id);
 	}
-	
+
 	/**
 	 * Creates and returns a mechanic with the given id.
 	 * 
@@ -162,7 +182,7 @@ public class Company {
 	public User createMechanic(int id){
 		return new Mechanic(id);
 	}
-	
+
 	/**
 	 * Creates and returns a garage holder with the given id.
 	 * 
@@ -173,7 +193,7 @@ public class Company {
 	public User createGarageHolder(int id){
 		return new GarageHolder(id);
 	}
-	
+
 	/**
 	 * Creates and returns a custom shop manager with the given id.
 	 * 

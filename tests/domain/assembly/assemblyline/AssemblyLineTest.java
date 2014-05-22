@@ -57,7 +57,7 @@ public class AssemblyLineTest {
 		m2 = new Mechanic(3);
 		m3 = new Mechanic(4);
 		company = new Company("testData/testData_OrderManager.txt");
-		line = company.getAssemblyLines().get(0);
+		line = company.getAssemblyLines().get(1);
 		scheduler = line.getAssemblyLineScheduler();
 		/*ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));

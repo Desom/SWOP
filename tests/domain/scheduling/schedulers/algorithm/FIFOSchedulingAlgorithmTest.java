@@ -57,7 +57,7 @@ public class FIFOSchedulingAlgorithmTest {
 //		@SuppressWarnings("unused")
 //		AssemblyLine assembly = new AssemblyLine(als, statuses);
 		
-		company = new Company();
+		company = new Company("testData/noOrders.txt");
 	}
 	
 	@Test

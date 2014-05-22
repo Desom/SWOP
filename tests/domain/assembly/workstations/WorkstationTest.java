@@ -45,7 +45,7 @@ public class WorkstationTest {
 	@Before
 	public void testCreate() throws InvalidConfigurationException, IOException, VehicleCatalogException, InternalFailureException {
 		carMechanic = new Mechanic(1);
-		Company comp = new Company();
+		Company comp = new Company("testData/testData_OrderManager.txt");
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
 
 		taskTypes.add(new TaskTypeCreator().Seats);

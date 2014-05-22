@@ -42,6 +42,11 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 			scheduler.setOrderHandler(this);
 		}
 		
+		this.ordersForSchedulers = new HashMap<AssemblyLineScheduler,ArrayList<Order>>();
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			this.ordersForSchedulers.put(scheduler, new ArrayList<Order>());
+		}
+		
 	}
 	
 	/**

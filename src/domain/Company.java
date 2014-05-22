@@ -46,10 +46,14 @@ public class Company {
 	 * 			the vehicle model catalog,
 	 *  		the statistics object.
 	 * 
+	 * @param orderFilePath
+	 * 		The path of the text file that contains the orders that need to be loaded in.
+	 * @throws IOException 
+	 * 		If there is a problem with one of the input files.
 	 * @throws InternalFailureException
 	 * 		If an exception occurred and the system couldn't recover from it.
 	 */
-	public Company() {
+	public Company(String orderFilePath) throws IOException {
 		try {
 			WorkstationTypeCreatorInterface workstationTypeCreator = new WorkstationTypeCreator();
 			this.catalog = new VehicleCatalog(workstationTypeCreator);
@@ -66,12 +70,11 @@ public class Company {
 			}
 			this.factoryScheduler = schedulerCreator.createFactoryScheduler(alsList);
 			
-			this.orderManager = new OrderManager(this.factoryScheduler);
+			//TODO mss orderCreator niet door orderManager laten aanmaken?
+			this.orderManager = new OrderManager(this.factoryScheduler, orderFilePath, catalog);
 			this.statistics = new Statistics(this.orderManager);
 			
 			//TODO kunnen we niet beter de IOException door laten? nu vangen we die en geven we een vage verklaring, terwijl IOException kan uitleggen waaraan het ligt.
-		} catch (IOException e) {
-			throw new InternalFailureException("Failed to initialise Company due to an IO exception");
 		} catch (VehicleCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an VehicleModelCatalog exception");
 		}

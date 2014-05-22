@@ -53,7 +53,7 @@ public class BasicSchedulingAlgorithmTest {
 	
 	@Before
 	public void testCreate() throws IOException, VehicleCatalogException {
-		company = new Company();
+		company = new Company("testData/noOrders.txt");
 		factoryAlgorithm = company.getFactoryScheduler().getCurrentAlgorithm();
 	}
 

@@ -2,6 +2,8 @@ package tests.usecase;
 
 import static org.junit.Assert.*;
 
+import java.io.IOException;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,8 +20,8 @@ public class CarMechanicUseCaseTest {
 	private Company company;
 
 	@Before
-	public void test() {
-		this.company = new Company();
+	public void test() throws IOException {
+		this.company = new Company("data/orderData.txt");
 	}
 
 	@Test

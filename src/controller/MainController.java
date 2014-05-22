@@ -38,7 +38,7 @@ public class MainController {
 	public void run(){
 		Company company = null;
 		try {
-			company = new Company();
+			company = new Company("data/orderData.txt");
 		
 
 		Mechanic mechanic = new Mechanic(1);

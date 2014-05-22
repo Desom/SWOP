@@ -56,7 +56,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		makeConfiguration();
 		this.algorithm = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
 		this.algorithm.setConfiguration(specified);
-		
+		this.basicAlgorithm = new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 
 //		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 //		basicAlgorithm = new BasicSchedulingAlgorithm(algorithm);
@@ -69,7 +69,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 //		possibleModels = new ArrayList<VehicleModel>(cmc.getAllModels());
 //		@SuppressWarnings("unused")
 //		AssemblyLine assembly = new AssemblyLine(als, status, possibleModels);
-		company = new Company();
+		company = new Company("testData/noOrders.txt");
 	}
 	
 	@Test
@@ -207,21 +207,24 @@ public class SpecificationBatchSchedulingAgorithmTest {
 	
 	@Test
 	public void testSearchConfiguration() throws IOException, VehicleCatalogException, InvalidConfigurationException{
-		ArrayList<	AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+//		ArrayList<	AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+//		SpecificationBatchSchedulingAlgorithm algo = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
+//		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+//		BasicSchedulingAlgorithm basicSpec = new BasicSchedulingAlgorithm(algo);
+//		possibleAlgorithms.add(basicSpec);
+//		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
+//		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
+//		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+//		scheduler.setSchedulingAlgorithm(basicSpec);
+//		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
+//		Statistics stat = new Statistics(orderManager);
+//		@SuppressWarnings("unused")
+//		AssemblyLine line = new AssemblyLine(scheduler, status, possibleModels);
+
 		SpecificationBatchSchedulingAlgorithm algo = new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
-		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
-		BasicSchedulingAlgorithm basicSpec = new BasicSchedulingAlgorithm(algo);
-		possibleAlgorithms.add(basicSpec);
-		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
-		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
-		AssemblyLineScheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-		scheduler.setSchedulingAlgorithm(basicSpec);
-		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
-		Statistics stat = new Statistics(orderManager);
-		@SuppressWarnings("unused")
-		AssemblyLine line = new AssemblyLine(scheduler, status, possibleModels);
+
 		
-		assertEquals(algo.searchForBatchConfiguration(scheduler).size(), 1);
+		assertEquals(algo.searchForBatchConfiguration(company.getFactoryScheduler()).size(), 1);
 	}
 	
 	public void makeConfiguration() throws InvalidConfigurationException{

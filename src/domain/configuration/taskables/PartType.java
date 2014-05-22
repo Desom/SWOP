@@ -24,6 +24,10 @@ public class PartType implements TaskType{
 		return this.name;
 	}
 	
+	public String toString(){
+		return getName();
+	}
+	
 	
 
 

@@ -9,4 +9,6 @@ public interface TaskType {
 	 * @return the name of this tasktype.
 	 */
 	public String getName();
+	
+	public String toString();
 }

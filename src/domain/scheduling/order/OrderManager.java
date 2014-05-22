@@ -53,10 +53,16 @@ public class OrderManager implements OrderHandler{
 		policies.add(singleTaskPolicy);
 		OrderCreatorInterface orderCreator = new OrderCreator(dataFilePath, catalog, policies);
 		ArrayList<Order> allOrders = orderCreator.createOrderList();
+
+		scheduler.setOrderHandler(this);
 		
 		this.ordersPerUser = new HashMap<User,ArrayList<Order>>();
 		for(Order order : allOrders) {
-			this.addOrder(order);
+			if(!this.getAllOrdersFromUser().containsKey(order.getUser()))
+			{
+				this.getAllOrdersFromUser().put(order.getUser(), new ArrayList<Order>());
+			}
+			this.getAllOrdersFromUser().get(order.getUser()).add(order);
 		}
 
 		ArrayList<Order> allUnfinishedOrders = new ArrayList<Order>();
@@ -68,7 +74,8 @@ public class OrderManager implements OrderHandler{
 				allUnfinishedOrders.add(order);
 			}
 		}
-		scheduler.setOrderHandler(this);
+		
+		this.scheduler.updateSchedule();
 	}
 	
 	/**

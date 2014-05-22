@@ -371,7 +371,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	@Override
 	public void updateSchedule(){
 		this.outDated = true;
-		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty()){
+		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty() && !this.getOrdersToBeScheduled().isEmpty()){
 			this.notifyObservers();
 		}
 	}

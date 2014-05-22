@@ -37,8 +37,8 @@ public class AssemblyTaskTest {
 	public static void testCreate() throws IOException, VehicleCatalogException, InvalidConfigurationException {
 		VehicleOrder o = buildCar();
 		LinkedList<TaskType> bodyPost = new LinkedList<TaskType>();
-		bodyPost.add(new TaskTypeCreator().Body);
-		bodyPost.add(new TaskTypeCreator().Color);
+		bodyPost.add(VehicleCatalog.taskTypeCreator.Body);
+		bodyPost.add(VehicleCatalog.taskTypeCreator.Color);
 		Workstation w = new Workstation("name", new WorkstationType("Body Post", bodyPost));
 		task = w.compatibleWith(o.getAssemblyprocess()).get(0);;
 	}

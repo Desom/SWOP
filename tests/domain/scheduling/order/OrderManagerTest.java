@@ -12,6 +12,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 
+import domain.Company;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.workstations.WorkstationTypeCreator;
 import domain.configuration.VehicleCatalog;
@@ -55,15 +56,19 @@ public class OrderManagerTest {
 	
 	@Before
 	public void setUp() throws Exception {
-		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
-		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
-		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
-		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
-		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-		@SuppressWarnings("unused")
-		AssemblyLine als = new AssemblyLine((AssemblyLineScheduler) scheduler, null);
-		orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
+//		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+//		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
+//		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
+//		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
+//		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
+//		Scheduler scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
+//		@SuppressWarnings("unused")
+//		AssemblyLine als = new AssemblyLine((AssemblyLineScheduler) scheduler, null);
+//		orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
+		
+		Company company = new Company("testData/testData_OrderManager.txt");
+		catalog = company.getCatalog();
+		orderManager = company.getOrderManager();
 	}
 
 

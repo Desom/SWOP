@@ -546,9 +546,9 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			AssemblyLineScheduler assemblyLineScheduler) {
 		LinkedList<Order> simulator = new LinkedList<Order>();
 		ArrayList<ScheduledOrder> scheduledOrders = new ArrayList<ScheduledOrder>();
-		simulator.add(null);
-		simulator.add(null);
-		simulator.add(null);
+		for(int i = 0; i < assemblyLineScheduler.getAssemblyLine().getNumberOfWorkstations(); i++){
+			simulator.add(null);
+		}
 		int timespent = 0;
 		// places  the orders one by one and remove the last one which will be added to result
 		ArrayList<Order> orderList = (ArrayList<Order>) orders.clone();
@@ -645,9 +645,9 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 */
 	private int calculatefulltimeAtstart(ArrayList<Order> orders, AssemblyLineScheduler assemblyLineScheduler) {
 		LinkedList<Order> simulator = new LinkedList<Order>();
-		simulator.add(null);
-		simulator.add(null);
-		simulator.add(null);
+		for(int i = 0; i < assemblyLineScheduler.getAssemblyLine().getNumberOfWorkstations(); i++){
+			simulator.add(null);
+		}
 		int time = 0;
 		// places  the orders one by one 
 		for(Order i : orders){

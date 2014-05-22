@@ -27,7 +27,8 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	/**
 	 * Constructor of AssemblyLine.
 	 * 
-	 * TODO
+	 * @param workstations
+	 * 		The workstations of this assembly line.
 	 * @param assemblyLineScheduler
 	 * 		The scheduler of this assembly line.
 	 * @param currentStatus
@@ -36,6 +37,8 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 		Only these VehicleModels will be able to be built on this assembly line.
 	 */
 	public AssemblyLine(ArrayList<Workstation> workstations, AssemblyLineScheduler assemblyLineScheduler, AssemblyLineStatus currentStatus, ArrayList<VehicleModel> possibleModels){
+		if (workstations.isEmpty() || workstations == null)
+			throw new IllegalArgumentException("Assembly line has been given no workstations.");
 		this.addWorkstations(workstations);
 		this.assemblyLineScheduler = assemblyLineScheduler;
 		this.assemblyLineScheduler.setAssemblyLine(this);
@@ -271,7 +274,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 
 	 * @param workstation
 	 * 		The workstations to be added.
-	 * TODO private liefst
+	 * TODO private liefst, maar wordt nog gebruikt in andere klassen
 	 */
 	protected void addWorkstations(ArrayList<Workstation> workstations){
 		this.workstations = new ArrayList<Workstation>();

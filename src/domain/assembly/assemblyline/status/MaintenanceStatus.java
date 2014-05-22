@@ -5,6 +5,7 @@ import java.util.LinkedList;
 
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.CannotAdvanceException;
+import domain.scheduling.NoOrdersToBeScheduledException;
 import domain.scheduling.order.Order;
 
 public class MaintenanceStatus extends AbstractAdvancingStatus{
@@ -56,6 +57,11 @@ public class MaintenanceStatus extends AbstractAdvancingStatus{
 
 	@Override
 	protected Order notifyOrderAsked(AssemblyLine assemblyLine) {
+		return null;
+	}
+	
+	@Override
+	protected Order notifyOrderAskedSkip(AssemblyLine assemblyLine) {
 		return null;
 	}
 

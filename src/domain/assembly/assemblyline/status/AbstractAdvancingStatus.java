@@ -80,7 +80,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 						}
 					}
 					// Er wordt gecheckt welke workstation geen taken uit te voeren heeft.
-					if (assemblyLine.selectWorkstationById(id).getAllPendingTasks().isEmpty()) {					
+					if (assemblyLine.selectWorkstationById(id).getAllPendingTasks().isEmpty() && assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess() != null) {					
 
 						// Als dit niet de laatste workstation is en de volgende is vrij, dan wordt het proces verschoven naar de volgende.
 						if (id < assemblyLine.getAllWorkstations().size() && assemblyLine.selectWorkstationById(id + 1).getVehicleAssemblyProcess() == null) {

@@ -1,5 +1,6 @@
 package controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import controller.customShop.CustomShopController;
@@ -67,8 +68,8 @@ public class MainController {
 			}
 		}
 		
-		} catch (InternalFailureException e2) {
-			ui.printException(e2);
+		} catch (InternalFailureException | IOException e) {
+			ui.printException(e);
 		}
 	}
 

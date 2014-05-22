@@ -69,7 +69,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 //		possibleModels = new ArrayList<VehicleModel>(cmc.getAllModels());
 //		@SuppressWarnings("unused")
 //		AssemblyLine assembly = new AssemblyLine(als, status, possibleModels);
-		company = new Company("testData/noOrders.txt");
+		company = new Company("testData/testData_OrderManager.txt");
 	}
 	
 	@Test

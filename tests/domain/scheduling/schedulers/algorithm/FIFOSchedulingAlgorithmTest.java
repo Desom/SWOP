@@ -58,6 +58,9 @@ public class FIFOSchedulingAlgorithmTest {
 //		AssemblyLine assembly = new AssemblyLine(als, statuses);
 		
 		company = new Company("testData/noOrders.txt");
+		cmc = company.getCatalog();
+		this.basicAlgorithm = new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm());
+
 	}
 	
 	@Test
@@ -85,7 +88,7 @@ public class FIFOSchedulingAlgorithmTest {
 		ArrayList<Order> orderList = makeOrderList();
 		
 		ArrayList<ScheduledOrder> scheduleList = basicAlgorithm.scheduleToScheduledOrderList(orderList, company.getAssemblyLines().get(0));
-		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
+		GregorianCalendar time = company.getOrderManager().getScheduler().getCurrentTime();//12h
 		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 70);//13h10
@@ -156,9 +159,9 @@ public class FIFOSchedulingAlgorithmTest {
 	private ArrayList<Order> makeOrderList()
 			throws InvalidConfigurationException {
 		ArrayList<Order> orderList = new ArrayList<Order>();
-		Configuration config1 = new Configuration(cmc.getAllModels().get(0), new CompletionPolicy(null,new ArrayList<OptionType>()));
-		Configuration config2 = new Configuration(cmc.getAllModels().get(1), new CompletionPolicy(null,new ArrayList<OptionType>()));
-		Configuration config3 = new Configuration(cmc.getAllModels().get(2), new CompletionPolicy(null,new ArrayList<OptionType>()));
+		Configuration config1 = new Configuration(cmc.getAllModels().get(1), new CompletionPolicy(null,new ArrayList<OptionType>()));
+		Configuration config2 = new Configuration(cmc.getAllModels().get(3), new CompletionPolicy(null,new ArrayList<OptionType>()));
+		Configuration config3 = new Configuration(cmc.getAllModels().get(4), new CompletionPolicy(null,new ArrayList<OptionType>()));
 		for(Option option : cmc.getAllOptions()){
 			if(option.getDescription().equals("sedan")
 					||option.getDescription().equals("blue")

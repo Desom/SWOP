@@ -171,7 +171,7 @@ public class BasicSchedulingAlgorithm
 	private ScheduledOrder findScheduledOrderOf(Order order,
 			ArrayList<ScheduledOrder> schedule) {
 		for(int i = schedule.size() - 1; i >= 0; i--){
-			if (schedule.get(i).getScheduledOrder().equals(order)){
+			if (order.equals(schedule.get(i).getScheduledOrder())){
 				return schedule.get(i);
 			}
 		}

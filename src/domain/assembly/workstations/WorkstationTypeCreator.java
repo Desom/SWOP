@@ -34,7 +34,7 @@ public class WorkstationTypeCreator implements WorkstationTypeCreatorInterface {
 		workstationTypes.add(new WorkstationType("Cargo Post", cargoPost));
 		
 		LinkedList<TaskType> CertificationPost = new LinkedList<TaskType>(); 
-		cargoPost.add(VehicleCatalog.taskTypeCreator.Certification);
+		CertificationPost.add(VehicleCatalog.taskTypeCreator.Certification);
 		workstationTypes.add(new WorkstationType("Certification Post", CertificationPost));
 	}
 	

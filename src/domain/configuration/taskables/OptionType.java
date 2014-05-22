@@ -62,4 +62,8 @@ public class OptionType implements TaskType{
 	public String getName(){
 		return this.name;
 	}
+	
+	public String toString(){
+		return getName();
+	}
 }

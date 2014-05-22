@@ -12,12 +12,9 @@ import org.junit.Test;
 
 import domain.Company;
 import domain.InternalFailureException;
-import domain.Statistics;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.assembly.assemblyline.DoesNotExistException;
-import domain.assembly.assemblyline.status.AssemblyLineStatus;
-import domain.assembly.assemblyline.status.StatusCreator;
 import domain.assembly.workstations.VehicleAssemblyProcess;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationTypeCreator;
@@ -37,14 +34,9 @@ import domain.policies.Policy;
 import domain.policies.SingleTaskOrderNumbersOfTasksPolicy;
 import domain.scheduling.NoOrdersToBeScheduledException;
 import domain.scheduling.order.Order;
-import domain.scheduling.order.OrderManager;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.order.VehicleOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
-import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
-import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
-import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
-import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
 import domain.user.Mechanic;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
@@ -54,6 +46,7 @@ public class AssemblyLineTest {
 
 	private AssemblyLine line;
 	private AssemblyLineScheduler scheduler;
+	private Company company;
 	private Mechanic m1;
 	private Mechanic m2;
 	private Mechanic m3;
@@ -63,8 +56,9 @@ public class AssemblyLineTest {
 		m1 = new Mechanic(2);
 		m2 = new Mechanic(3);
 		m3 = new Mechanic(4);
-		Company comp = new Company("testData/testData_OrderManager.txt");
-		line = comp.getAssemblyLines().get(0);
+		company = new Company("testData/testData_OrderManager.txt");
+		line = company.getAssemblyLines().get(0);
+		scheduler = line.getAssemblyLineScheduler();
 		/*ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
@@ -125,6 +119,7 @@ public class AssemblyLineTest {
 		Order order = null;
 		try{
 			order = scheduler.seeNextOrder(60);
+			assertNotNull(order);
 		}
 		catch(NoOrdersToBeScheduledException e){}
 
@@ -172,7 +167,7 @@ public class AssemblyLineTest {
 		try {
 			AssemblyStatusView current = line.getAssemblyLineView();
 
-			for(int i =0;i< line.getNumberOfWorkstations();i++){
+			for(int i =1;i< line.getNumberOfWorkstations()+1;i++){
 				LinkedList<TaskType> list = new LinkedList<TaskType>();
 				for(int j = 0; j<line.selectWorkstationById(i).getAllTasks().size() ; j++ ){
 					list.add(line.selectWorkstationById(i).getAllTasks().get(j).getType());
@@ -314,7 +309,7 @@ public class AssemblyLineTest {
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);
-		config.addOption(new Option("test", new TaskTypeCreator().Color));
+		config.addOption(new Option("Red", company.getCatalog().taskTypeCreator.Color));
 		config.complete();
 		CustomShopManager customShop = new CustomShopManager(1);
 		

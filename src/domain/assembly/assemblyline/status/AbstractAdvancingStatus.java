@@ -36,7 +36,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 		Order newOrder = notifyOrderAsked(assemblyLine);
 		
 		// Controleer of deze order wel op deze assembly line voltooid kan worden
-		if (assemblyLine.canDoOrder(newOrder)) // TODO IllegalStateException goed?
+		if (!assemblyLine.canDoOrder(newOrder)) // TODO IllegalStateException goed?
 			throw new IllegalStateException("The assembly line can't complete the order received from its scheduler.");
 		
 		try{		
@@ -88,7 +88,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 							assemblyLine.selectWorkstationById(id).clear();
 						}
 						// Als dit de laatste workstation is, wordt het assembly process van de band gehaald.
-						else if (assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess() == null) {
+						else if (assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess() != null) {
 							finishedOrders.add(assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess().getOrder());
 						}
 					}

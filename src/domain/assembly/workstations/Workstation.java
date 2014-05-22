@@ -332,11 +332,4 @@ public class Workstation {
 	public void addObserver(WorkstationObserver observer){
 		this.observers.add(observer);
 	}
-	
-	/**
-	 * TODO weg?
-	 */
-	public void removeObserver(WorkstationObserver observer){
-		this.observers.remove(observer);
-	}
 }

@@ -52,7 +52,7 @@ public class dummyAssemblyLine extends AssemblyLine {
 		LinkedList<Order> temp = (LinkedList<Order>) this.orders.clone();
 		return temp;
 	}
-	public void addWorkstations(List<Workstation> list){
-		this.addAllWorkstation(list);
+	private void addWorkstations(List<Workstation> list){
+		this.addWorkstations(list);
 	}
 }

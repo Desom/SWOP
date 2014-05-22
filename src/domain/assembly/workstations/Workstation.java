@@ -15,7 +15,7 @@ public class Workstation {
 	private ArrayList<AssemblyTask> allTasks;
 	private AssemblyTask activeTask;
 	private ArrayList<WorkstationObserver> observers;
-	private int timeSpend;
+	private int timeSpent;
 	private VehicleAssemblyProcess assemblyProcess;
 
 	/**
@@ -35,7 +35,7 @@ public class Workstation {
 		this.workstationType = workstationType;
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
-		this.resetTimeSpend();
+		this.resetTimeSpent();
 	}
 
 
@@ -45,7 +45,7 @@ public class Workstation {
 	public void clear() {
 		this.allTasks = new ArrayList<AssemblyTask>();
 		this.activeTask = null;
-		this.resetTimeSpend();
+		this.resetTimeSpent();
 		setVehicleAssemblyProcess(null);
 	}
 
@@ -159,7 +159,6 @@ public class Workstation {
 	 * 		If there is no active task to complete in this workstation.
 	 * 		If there is no mechanic to complete the active task.
 	 */
-	//TODO moet je nog steeds deze mechanic meegeven?
 	public void completeTask(Mechanic mechanic, int timeSpent) throws IllegalStateException {
 		if (this.getMechanic().getId() != mechanic.getId())
 			throw new IllegalArgumentException("This user is not assigned to this workstation");
@@ -175,7 +174,7 @@ public class Workstation {
 		else {
 			throw new IllegalStateException("There is no active task in this workstation");
 		}
-		this.addTimeSpend(timeSpent);
+		this.addTimeSpent(timeSpent);
 		this.notifyObservers();
 	}
 
@@ -185,33 +184,31 @@ public class Workstation {
 		}
 	}
 
-
 	/**
 	 * Gets the time already spent on the current assembly process.
 	 * 
 	 * @return the time already spent on the current assembly process
 	 */
-	public int getTimeSpend() {
-		return timeSpend;
+	public int getTimeSpent() {
+		return timeSpent;
 	}
-
 
 	/**
 	 * Adds time to the time already spent on the current assembly process.
 	 * 
-	 * @param timeSpend
+	 * @param timeSpent
 	 * 		The time to be added to the time already spent on the current assembly process.
 	 */
-	private void addTimeSpend(int timeSpend) {
-		this.timeSpend += timeSpend;
+	private void addTimeSpent(int timeSpent) {
+		this.timeSpent += timeSpent;
 		
 	}
 	
 	/**
 	 * Resets the time already spent on the current assembly process.
 	 */
-	private void resetTimeSpend() {
-		this.timeSpend = 0;	
+	private void resetTimeSpent() {
+		this.timeSpent = 0;	
 	}
 	
 	/**
@@ -277,7 +274,6 @@ public class Workstation {
 		return this.activeTask.getTaskInformation();
 	}
 
-
 	/**
 	 * Returns the string which represents this workstation.
 	 */
@@ -291,7 +287,7 @@ public class Workstation {
 	 * Also sets all tasks in the vehicle assembly process compatible with the workstation.
 	 * 
 	 * @param process
-	 * 		the specified vehicle assembly process
+	 * 		The vehicle assembly process to be set.
 	 */
 	public void setVehicleAssemblyProcess(VehicleAssemblyProcess process){
 		if (process != null)
@@ -303,7 +299,7 @@ public class Workstation {
 	/**
 	 * Gets the vehicle assembly process this workstation is currently working on.
 	 * 
-	 * @return the vehicle assembly process this workstation is currently working on.
+	 * @return The vehicle assembly process this workstation is currently working on.
 	 */
 	public VehicleAssemblyProcess getVehicleAssemblyProcess(){
 		return this.assemblyProcess;
@@ -327,10 +323,19 @@ public class Workstation {
 		return compatibleTasks;
 	}
 	
+	/**
+	 * Adds an observer for this workstation.
+	 * 
+	 * @param observer
+	 * 		The new observer for this workstation.
+	 */
 	public void addObserver(WorkstationObserver observer){
 		this.observers.add(observer);
 	}
 	
+	/**
+	 * TODO weg?
+	 */
 	public void removeObserver(WorkstationObserver observer){
 		this.observers.remove(observer);
 	}

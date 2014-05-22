@@ -28,8 +28,8 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 		// Zoek de tijd die nodig was om alle tasks uit te voeren.
 		int timeSpendForTasks = 0;
 		for(Workstation workstation : assemblyLine.getAllWorkstations()){
-			if(workstation.getTimeSpend() > timeSpendForTasks)
-				timeSpendForTasks = workstation.getTimeSpend();
+			if(workstation.getTimeSpent() > timeSpendForTasks)
+				timeSpendForTasks = workstation.getTimeSpent();
 		}
 		assemblyLine.getAssemblyLineScheduler().addCurrentTime(timeSpendForTasks);
 		// Vraag nieuwe order op.

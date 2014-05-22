@@ -30,9 +30,8 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 
 	 * @param assemblyLineScheduler
 	 * 		The scheduler of this assembly line.
-	 * @param possibleStatuses
-	 * 		The possible statuses of this assemblyLine.
-	 * 		The first status in this lists will be the current status upon creation of this assembly line.
+	 * @param currentStatus
+	 * 		The current status of this assembly line.
 	 * @param possibleModels
 	 * 		Only these VehicleModels will be able to be built on this assembly line.
 	 */
@@ -51,6 +50,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	}
 
 	/**
+	 * Returns all workstations on this assembly line.
 	 * 
 	 * @return A linked list containing all the workStations.
 	 */
@@ -58,6 +58,11 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 		return new LinkedList<Workstation>(workstations);
 	}
 
+	/**
+	 * Returns the scheduler of this assembly line.
+	 * 
+	 * @return The scheduler of this assembly line.
+	 */
 	public AssemblyLineScheduler getAssemblyLineScheduler() {
 		return assemblyLineScheduler;
 	}
@@ -71,6 +76,11 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 		return this.currentStatus.canAdvanceLine(this);
 	}
 
+	/**
+	 * Returns all workstations that block the advance of the assembly line.
+	 * 
+	 * @return all workstations that block the advance of the assembly line.
+	 */
 	public ArrayList<Workstation> getBlockingWorkstations() {
 		ArrayList<Workstation> blockingWorkstations = new ArrayList<Workstation>();
 		for (Workstation workstation : this.getAllWorkstations())
@@ -83,7 +93,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * Advances the assembly line.
 	 * 
 	 * @throws CannotAdvanceException 
-	 * 		If there are workstations that are blocking the assembly line.
+	 * 		If the assembly line cannot advance.
 	 */
 	public void advanceLine() throws CannotAdvanceException {
 		this.currentStatus.advanceLine(this);
@@ -104,37 +114,6 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 		throw new DoesNotExistException("No workstation exists with ID: " + id);
 	}
 
-	
-	// OUTDATED TODO
-	/*
-	 * This method creates 3 workstations, specifies their ID's and the respective assembly task types those workstations can perform.
-	 * 
-	 * @return A list of the created workstations.
-	private ArrayList<Workstation> createWorkstations(){
-		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
-		ArrayList<OptionType> taskTypes1 = new ArrayList<OptionType>();
-		taskTypes1.add(OptionType.Body);
-		taskTypes1.add(OptionType.Color);
-		Workstation workStation1 = new Workstation(this, "W1", taskTypes1);
-
-		ArrayList<OptionType> taskTypes2 = new ArrayList<OptionType>();
-		taskTypes2.add(OptionType.Engine);
-		taskTypes2.add(OptionType.Gearbox);
-		Workstation workStation2 = new Workstation(this, "W2", taskTypes2);
-
-		ArrayList<OptionType> taskTypes3 = new ArrayList<OptionType>();
-		taskTypes3.add(OptionType.Seats);
-		taskTypes3.add(OptionType.Airco);
-		taskTypes3.add(OptionType.Wheels);
-		taskTypes3.add(OptionType.Spoiler);
-		Workstation workStation3 = new Workstation(this, "W3", taskTypes3);
-
-		workstations.add(workStation1);
-		workstations.add(workStation2);
-		workstations.add(workStation3);
-		return workstations;
-	}*/
-
 	/**
 	 * Creates a view of the current status of the assembly line.
 	 * 
@@ -146,23 +125,9 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	}
 
 	/**
-	 * Returns all workstation id's on this assembly line.
-	 * 
-	 * @return All workstation id's.
-	 */
-	// TODO
-	//	public LinkedList<Integer> getWorkstationIDs(){
-	//		LinkedList<Integer> ids= new LinkedList<Integer>();
-	//		for(Workstation w: workstations){
-	//			ids.add(w.getId());
-	//		}
-	//		return ids;
-	//	}
-
-	/**
 	 * Returns the number of workstation on this assembly line.
 	 * 
-	 * @return The number of workstations on the assembly line
+	 * @return The number of workstations on the assembly line.
 	 */
 	public int getNumberOfWorkstations(){
 		return workstations.size();
@@ -221,7 +186,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	}
 
 	/**
-	 * Returns whether the assembly line is empty or not.
+	 * Checks if the assembly line is empty or not.
 	 * 
 	 * @return True if the assembly line is empty, otherwise false.
 	 */
@@ -262,27 +227,48 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 		this.notifyObservers();
 	}
 	
+	/**
+	 * Returns the current status of this assembly line.
+	 * 
+	 * @return the current status of this assembly line.
+	 */
 	public AssemblyLineStatus getCurrentStatus() {
 		return this.currentStatus;
 	}
 	
+	/**
+	 * Checks if this assembly line can accept new orders.
+	 * 
+	 * @return True if this assembly line can accept new orders, otherwise false.
+	 */
 	public Boolean canAcceptNewOrders() {
 		return this.currentStatus.canAcceptNewOrders();
 	}
 	
+	/**
+	 * Returns the list of orders representing the assembly line state at the time the assembly line will accept new orders again.
+	 * 
+	 * @return The list of orders representing the assembly line state at the time the assembly line will accept new orders again.
+	 */
 	public LinkedList<Order> stateWhenAcceptingOrders() {
 		return this.currentStatus.stateWhenAcceptingOrders(this);
 	}
 
+	/**
+	 * Returns the time when the assembly line is accepting new orders again.
+	 * 
+	 * @return The time when the assembly line is accepting new orders again.
+	 */
 	public GregorianCalendar timeWhenAcceptingOrders() {
 		return this.currentStatus.timeWhenAcceptingOrders(this);
 	}
 	
 	/**
-	 * Adds the given workstation to the end of the assemblyLine.
-	 * If the workstation does not yet have an assemblyLine.
+	 * Adds the given workstation to the end of the assembly line.
+	 * The given workstation can't belong to another assembly line. 
 	 * 
-	 * @param workstation the specified workstation
+	 * @param workstation
+	 * 		The workstations to be added.
 	 */
 	protected void addWorkstation(Workstation workstation){
 		workstations.add(workstation);
@@ -290,19 +276,20 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	}
 	
 	/**
-	 * Add all the given workstations to the end of the assemblyLine.
-	 * If the workstations do not yet have an assemblyLine.
+	 * Add all the given workstations to the end of the assembly line.
+	 * The given workstation can't belong to other assembly lines. 
 	 * 
-	 * @param list a list of the specified workstations
+	 * @param workstations
+	 * 		The workstations to be added.
 	 */
-	protected void addAllWorkstation(List<Workstation> list){
-		for(Workstation w:list){
+	protected void addAllWorkstation(List<Workstation> workstations){
+		for(Workstation w:workstations){
 			addWorkstation(w);
 		}
 	}
 
 	/**
-	 * React to a change in a workstation.
+	 * Notifies the assembly line that something it observes has changed.
 	 */
 	@Override
 	public void update() {
@@ -328,7 +315,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * Checks if order can be completed on this assembly line.
 	 * 
 	 * @param order
-	 * 		The order for which will be checked.
+	 * 		The order which will be checked.
 	 * @return True if the order is null or if the model of order is in the list of possibleModels
 	 * 			and all tasks in this model can be handled on the workstations this assemblyline possesses.
 	 * 			 Otherwise false.
@@ -357,8 +344,9 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	}
 
 	/**
-	 * returns all the possible statuses that are made available 
-	 * @return the possible statuses that are made available
+	 * Returns all possible status of this assembly line.
+	 * 
+	 * @return All possible status of this assembly line.
 	 */
 	public ArrayList<AssemblyLineStatus> getPossibleStatuses() {
 		return this.currentStatus.getPossibleStatuses();
@@ -374,6 +362,9 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 		this.observers.add(observer);
 	}
 	
+	/**
+	 * Notifies its observers that it has changed.
+	 */
 	private void notifyObservers() {
 		for (AssemblyLineObserver observer : this.observers)
 			observer.update();

@@ -24,6 +24,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	private OrderHandler orderHandler;
 	private ArrayList<ScheduledOrder> schedule;
 	private boolean outDated;
+	private ArrayList<AssemblyLineSchedulerObserver> observers;
 
 	/**
 	 * Constructor of AssemblyLineScheduler.
@@ -40,6 +41,7 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.possibleAlgorithms = (ArrayList<AssemblyLineSchedulingAlgorithm>) possibleAlgorithms.clone();
 		this.currentAlgorithm = this.possibleAlgorithms.get(0);
 		this.outDated = true;
+		this.observers = new ArrayList<AssemblyLineSchedulerObserver>();
 	}
 	
 	/**
@@ -316,13 +318,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	public void updateSchedule(){
 		this.outDated = true;
 		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty()){
-			//TODO dit zal ook niet mogen waarschijnlijk (zoals bij workstation). weer een notify ofzoiets maken ...
-			try{
-				this.getAssemblyLine().advanceLine();
-			}
-			catch(CannotAdvanceException e){
-				throw new InternalFailureException("The AssemblyLine couldn't advance even though it was empty.");
-			}
+			this.notifyObservers();
 		}
 	}
 
@@ -534,5 +530,20 @@ public class AssemblyLineScheduler implements Scheduler{
 	@Override
 	public boolean canScheduleOrder(Order order) {
 		return this.getAssemblyLine().canAcceptNewOrders() && this.getAssemblyLine().canDoOrder(order);
+	}
+	
+	/**
+	 * Adds a new observer to this object.
+	 * 
+	 * @param observer
+	 * 		The new observer for this object.
+	 */
+	public void addObserver(AssemblyLineSchedulerObserver observer) {
+		this.observers.add(observer);
+	}
+	
+	private void notifyObservers() {
+		for (AssemblyLineSchedulerObserver observer : this.observers)
+			observer.update();
 	}
 }

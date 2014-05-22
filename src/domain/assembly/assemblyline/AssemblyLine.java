@@ -15,8 +15,9 @@ import domain.assembly.workstations.WorkstationObserver;
 import domain.configuration.models.VehicleModel;
 import domain.scheduling.order.Order;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.AssemblyLineSchedulerObserver;
 
-public class AssemblyLine implements WorkstationObserver{
+public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerObserver {
 
 	private ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 	private final AssemblyLineScheduler assemblyLineScheduler;

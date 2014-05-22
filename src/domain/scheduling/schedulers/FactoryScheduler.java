@@ -32,15 +32,16 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	 */
 	public FactoryScheduler(ArrayList<AssemblyLineScheduler> schedulerList, ArrayList<FactorySchedulingAlgorithm> possibleAlgorithms){
 		this.schedulerList = new ArrayList<AssemblyLineScheduler>(schedulerList);
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			scheduler.setOrderHandler(this);
+		}
 		for (AssemblyLineScheduler als : this.schedulerList)
 			als.getAssemblyLine().addObserver(this);
 		this.possibleAlgorithms = new ArrayList<FactorySchedulingAlgorithm>(possibleAlgorithms);
 		this.currentAlgorithm = this.possibleAlgorithms.get(0);
 		outDated = true;
 
-		for(AssemblyLineScheduler scheduler : this.schedulerList){
-			scheduler.setOrderHandler(this);
-		}
+		
 		
 		this.ordersForSchedulers = new HashMap<AssemblyLineScheduler,ArrayList<Order>>();
 		for(AssemblyLineScheduler scheduler : this.schedulerList){

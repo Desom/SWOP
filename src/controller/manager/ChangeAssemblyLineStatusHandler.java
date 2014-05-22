@@ -12,9 +12,9 @@ public class ChangeAssemblyLineStatusHandler {
 	public void run(UIInterface ui, Company company) {
 		ArrayList<AssemblyLineStatus> statuses = new ArrayList<AssemblyLineStatus>();
 		for (AssemblyLine line : company.getAssemblyLines())
-			statuses.add(line.getAssemblyView());
+			statuses.add(line.getCurrentStatus());
 		while(true) {
-			int answer1 = ui.askWithPossibilitiesWithCancel("Which assembly line do you want to change the status of?", statuses.toArray());
+			int answer1 = ui.askWithPossibilitiesWithCancel("Which assembly line do you want to change the status of?", company.getAssemblyLines().toArray());
 			if (answer1 == -1)
 				return;
 			AssemblyLine assemblyLine = company.getAssemblyLines().get(answer1);

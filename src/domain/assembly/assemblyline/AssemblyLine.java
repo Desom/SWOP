@@ -118,7 +118,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 
 	 * @return An AssemblyStatusView representing the current status.
 	 */
-	public AssemblyStatusView currentStatus(){
+	public AssemblyStatusView getAssemblyLineView(){
 		AssemblyStatusView view = new AssemblyStatusView(workstations, "Current Status");
 		return view;
 	}
@@ -231,7 +231,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 
 	 * @return the current status of this assembly line.
 	 */
-	public AssemblyLineStatus getAssemblyView() {
+	public AssemblyLineStatus getCurrentStatus() {
 		return this.currentStatus;
 	}
 	

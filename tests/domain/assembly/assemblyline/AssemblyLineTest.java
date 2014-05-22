@@ -170,7 +170,7 @@ public class AssemblyLineTest {
 	@Test
 	public void testCurrentStatus() throws InternalFailureException {
 		try {
-			AssemblyStatusView current = line.currentStatus();
+			AssemblyStatusView current = line.getAssemblyLineView();
 
 			for(int i =0;i< line.getNumberOfWorkstations();i++){
 				LinkedList<TaskType> list = new LinkedList<TaskType>();

@@ -1,4 +1,4 @@
-package domai;
+package domain;
 
 import static org.junit.Assert.*;
 
@@ -33,11 +33,11 @@ import domain.user.Mechanic;
 
 public class StatisticsTest {
 
-	AssemblyLine line = null;
+	//AssemblyLine line = null;
 	Statistics stat = null;
 	@Before
 	public void testCreate() throws DoesNotExistException, IOException, VehicleCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
-		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+		/*ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
 		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
 		GregorianCalendar time = new GregorianCalendar(2014, 9, 1, 6, 0, 0);
@@ -48,27 +48,37 @@ public class StatisticsTest {
 		ArrayList<AssemblyLineStatus> possibleStates = new ArrayList<AssemblyLineStatus>();
 		possibleStates.add(new OperationalStatus());
 		ArrayList<VehicleModel> models = new ArrayList<VehicleModel>(catalog.getAllModels());
-		line = new AssemblyLine(scheduler, possibleStates,models);
+		line = new AssemblyLine(scheduler, possibleStates,models);*/
 		
 		Mechanic m1 = new Mechanic(2);
 		Mechanic m2 = new Mechanic(3);
 		Mechanic m3 = new Mechanic(4);
+		Company company = new Company("testData/testData_OrderManager.txt");
 		
-		line.selectWorkstationById(1).addMechanic(m1);
+		/*line.selectWorkstationById(1).addMechanic(m1);
 		assertEquals(line.selectWorkstationById(1).getMechanic(), m1);
 
 		line.selectWorkstationById(2).addMechanic(m2);
 		assertEquals(line.selectWorkstationById(2).getMechanic(), m2);
 
 		line.selectWorkstationById(3).addMechanic(m3);
-		assertEquals(line.selectWorkstationById(3).getMechanic(), m3);
+		assertEquals(line.selectWorkstationById(3).getMechanic(), m3);*/
 		
 		// advance alle behalve laatste order
-		while(orderManager.getAllUnfinishedOrders().size() != 1){
-			fullDefaultAdvance();
+		int index = 0;
+		while(company.getOrderManager().getAllUnfinishedOrders().size() != 1){
+			fullDefaultAdvance(company.getAssemblyLines().get(index));
+			index = (index + 1)%3;
 		}
 		
 		//advance laatste order met delay
+		
+		AssemblyLine line = null;
+		for(AssemblyLine l : company.getAssemblyLines()){
+			if(!l.isEmpty()){
+				line = l;
+			}
+		}
 		
 		LinkedList<Workstation> wList = line.getAllWorkstations();
 		LinkedList<Workstation> remove = new LinkedList<Workstation>();
@@ -94,9 +104,9 @@ public class StatisticsTest {
 				w.completeTask(mechanic,500);
 			}
 		}
-		fullDefaultAdvance();
-		fullDefaultAdvance();
-		fullDefaultAdvance();
+		fullDefaultAdvance(line);
+		fullDefaultAdvance(line);
+		fullDefaultAdvance(line);
 	}
 	
 	@Test
@@ -145,7 +155,7 @@ public class StatisticsTest {
 	 * @throws IllegalStateException 
 	 * @throws CannotAdvanceException 
 	 */
-	private void fullDefaultAdvance() throws IllegalStateException, InternalFailureException, CannotAdvanceException{
+	private void fullDefaultAdvance(AssemblyLine line) throws IllegalStateException, InternalFailureException, CannotAdvanceException{
 		LinkedList<Workstation> wList = line.getAllWorkstations();
 		LinkedList<Workstation> remove = new LinkedList<Workstation>();
 		for(Workstation w: wList){ // filter the already completed workstations so the line won't accidentally advance twice.
@@ -158,9 +168,13 @@ public class StatisticsTest {
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){
-			Mechanic mechanic = w.getMechanic();
-			if(mechanic == null)
-				mechanic = new Mechanic(w.getName().hashCode()); // randomize ID een beetje
+			Mechanic mechanic;
+			try{
+				mechanic = w.getMechanic();
+			}catch(IllegalStateException e){
+				mechanic = new Mechanic(w.getName().hashCode());// randomize ID een beetje
+				w.addMechanic(mechanic);
+			}
 			while(w.getAllPendingTasks().size() > 1){
 				w.selectTask(w.getAllPendingTasks().get(0));
 				w.completeTask(mechanic,0);

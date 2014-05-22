@@ -3,7 +3,6 @@ package domain.assembly.assemblyline;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
-import java.util.List;
 
 import domain.InternalFailureException;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
@@ -225,10 +224,19 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 
 	 * @param newStatus
 	 * 		The new current status.
+	 * @throws CannotAdvanceException TODO
 	 */
 	public void setCurrentStatus(AssemblyLineStatus newStatus) {
 		this.currentStatus = newStatus;
 		this.notifyObservers();
+		if(this.canAdvanceLine()) {
+			try {
+				this.advanceLine();
+			}
+			catch(CannotAdvanceException e) {
+				// TODO InternalFailureException gooien?
+			}
+		}
 	}
 
 	/**

@@ -92,6 +92,9 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 			if(ordersForSchedulers.get(scheduler).contains(order)){
 				return scheduler;
 			}
+			if(scheduler.getAssemblyLine().getAllOrders().contains(order)){
+				return scheduler;
+			}
 		}
 		throw new IllegalArgumentException("The FactoryScheduler:" + this + " doesn't schedule the given Order:" + order);
 
@@ -108,18 +111,32 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 		ArrayList<Order> orders = this.getOrdersToBeScheduled();
 		for(ArrayList<Order> orderList : this.ordersForSchedulers.values()){
 			if(!orders.containsAll(orderList)){
-				this.updateSchedule();
+				outDated = true;
 				break;
 			}
 		}
 		
 		//als outDated schedule, maak nieuw.
 		if(outDated){
-			this.ordersForSchedulers = this.currentAlgorithm.assignOrders(orders,this);
-			outDated = false;
+			reSchedule();
 		}
 		
 		return this.ordersForSchedulers;
+	}
+
+	/**
+	 * @param orders
+	 */
+	private void reSchedule() {
+		this.ordersForSchedulers = this.currentAlgorithm.assignOrders(this.getOrdersToBeScheduled(),this);
+		this.outDated = false;
+		this.signalNewSchedule();
+	}
+
+	private void signalNewSchedule() {
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			scheduler.updateSchedule();
+		}
 	}
 
 	/**
@@ -142,6 +159,7 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 			throw new IllegalArgumentException("The given OrderHandler isn't coupled with this FactoryScheduler.");
 		}
 		this.orderHandler = orderHandler;
+		//this.updateSchedule();
 	}
 
 	/**
@@ -149,10 +167,7 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	 */
 	@Override
 	public void updateSchedule() {
-		this.outDated = true;
-		for(AssemblyLineScheduler scheduler : this.schedulerList){
-			scheduler.updateSchedule();
-		}
+		this.reSchedule();
 	}
 	
 	//TODO hoe doen we dit best? (huidige code mag  veranderd worden.)
@@ -284,7 +299,7 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 
 	@Override
 	public void update() {
-		this.updateSchedule();
+		this.reSchedule();
 	}
 
 }

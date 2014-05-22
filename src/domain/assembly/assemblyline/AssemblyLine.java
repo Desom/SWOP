@@ -7,7 +7,6 @@ import java.util.List;
 
 import domain.InternalFailureException;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
-import domain.assembly.assemblyline.status.AssemblyStatusView;
 import domain.assembly.workstations.AssemblyTask;
 import domain.assembly.workstations.VehicleAssemblyProcess;
 import domain.assembly.workstations.Workstation;
@@ -232,7 +231,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 
 	 * @return the current status of this assembly line.
 	 */
-	public AssemblyLineStatus getCurrentStatus() {
+	public AssemblyLineStatus getAssemblyView() {
 		return this.currentStatus;
 	}
 	

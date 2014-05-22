@@ -7,8 +7,8 @@ import java.util.List;
 import java.util.Scanner;
 
 import domain.Statistics;
+import domain.assembly.assemblyline.AssemblyStatusView;
 import domain.assembly.assemblyline.DoesNotExistException;
-import domain.assembly.assemblyline.status.AssemblyStatusView;
 import domain.assembly.workstations.WorkstationType;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;

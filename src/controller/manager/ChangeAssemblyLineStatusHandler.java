@@ -12,7 +12,7 @@ public class ChangeAssemblyLineStatusHandler {
 	public void run(UIInterface ui, Company company) {
 		ArrayList<AssemblyLineStatus> statuses = new ArrayList<AssemblyLineStatus>();
 		for (AssemblyLine line : company.getAssemblyLines())
-			statuses.add(line.getCurrentStatus());
+			statuses.add(line.getAssemblyView());
 		while(true) {
 			int answer1 = ui.askWithPossibilitiesWithCancel("Which assembly line do you want to change the status of?", statuses.toArray());
 			if (answer1 == -1)

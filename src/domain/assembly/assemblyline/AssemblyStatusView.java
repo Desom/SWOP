@@ -1,9 +1,8 @@
-package domain.assembly.assemblyline.status;
+package domain.assembly.assemblyline;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import domain.assembly.assemblyline.DoesNotExistException;
 import domain.assembly.workstations.AssemblyTask;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationType;

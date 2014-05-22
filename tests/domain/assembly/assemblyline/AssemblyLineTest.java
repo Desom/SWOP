@@ -17,7 +17,6 @@ import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.assembly.assemblyline.DoesNotExistException;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
-import domain.assembly.assemblyline.status.AssemblyStatusView;
 import domain.assembly.assemblyline.status.StatusCreator;
 import domain.assembly.workstations.VehicleAssemblyProcess;
 import domain.assembly.workstations.Workstation;

@@ -48,13 +48,13 @@ public class WorkstationTest {
 		Company comp = new Company("testData/testData_OrderManager.txt");
 		ArrayList<OptionType> taskTypes = new ArrayList<OptionType>();
 
-		taskTypes.add(new TaskTypeCreator().Seats);
-		taskTypes.add(new TaskTypeCreator().Airco);
-		taskTypes.add(new TaskTypeCreator().Wheels);
-		taskTypes.add(new TaskTypeCreator().Spoiler);
+		taskTypes.add(comp.getCatalog().taskTypeCreator.Seats);
+		taskTypes.add(comp.getCatalog().taskTypeCreator.Airco);
+		taskTypes.add(comp.getCatalog().taskTypeCreator.Wheels);
+		taskTypes.add(comp.getCatalog().taskTypeCreator.Spoiler);
 
 		workstation = comp.getAllWorkstations(comp.getAssemblyLines().get(0)).get(2);//TODO juiste assemblyLine?
-		assertEquals("3", workstation.getName());
+		assertEquals("Accessories Post", workstation.getName());
 		assertEquals(taskTypes, workstation.getTaskTypes());
 		assertTrue(workstation.getAllCompletedTasks().isEmpty());
 		assertTrue(workstation.getAllPendingTasks().isEmpty());
@@ -65,9 +65,9 @@ public class WorkstationTest {
 		validTask2 = workstation.compatibleWith(order.getAssemblyprocess()).get(1);
 		
 		LinkedList<TaskType> driveTrainPost = new LinkedList<TaskType>();
-		driveTrainPost.add(new TaskTypeCreator().Gearbox);
+		driveTrainPost.add(comp.getCatalog().taskTypeCreator.Gearbox);
 
-		Workstation workstation2 = new Workstation("W1", new WorkstationType("DriveTrain Post", driveTrainPost));
+		Workstation workstation2 = comp.getAllWorkstations(comp.getAssemblyLines().get(0)).get(1);
 
 		invalidTask = workstation2.compatibleWith(order.getAssemblyprocess()).get(0);
 		

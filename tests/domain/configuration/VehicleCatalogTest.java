@@ -39,7 +39,13 @@ public class VehicleCatalogTest {
 		write.write("automatic climate control;Airco;,\n");
 		write.write("comfort;Wheels;,\n");
 		write.write("sports (low profle);Wheels;,\n");
-		write.write("no spoiler;Spoiler;,");
+		write.write("no spoiler;Spoiler;,\n");
+		write.write("!\n");
+		write.write("ToolStorage;ToolStorage\n");
+		write.write("CargoProtection;CargoProtection\n");
+		write.write("Certification;Certification");
+		
+		
 		write.close();
 		BufferedWriter write2 = new BufferedWriter(new FileWriter("testData/init_model.txt"));
 		write2.write("Ford;manual,sedan,red,performance 2.5l 6 cilinders,6 speed manual,leather black,comfort,black,blue,no spoiler");

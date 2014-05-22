@@ -59,7 +59,7 @@ public class PolicyTest {
 
 	@Test
 	public void testSucces() {
-		Configuration validConfiguration = new Configuration(cmc.getAllModels().get(0),policyChainCarOrders);
+		Configuration validConfiguration = new Configuration(cmc.getAllModels().get(1),policyChainCarOrders);
 		// Model C
 		for(Option option : cmc.getAllOptions()){
 			if(option.getDescription().equals("sport")
@@ -207,7 +207,7 @@ public class PolicyTest {
 	
 	@Test
 	public void testmultipleFaults(){
-		Configuration configuration = new Configuration(cmc.getAllModels().get(0),policyChainCarOrders);
+		Configuration configuration = new Configuration(cmc.getAllModels().get(1),policyChainCarOrders);
 		// Model C
 		for(Option option : cmc.getAllOptions()){
 			if(option.getDescription().equals("sport")
@@ -229,6 +229,7 @@ public class PolicyTest {
 		try {
 			configuration.complete();
 		} catch (InvalidConfigurationException e) {
+			System.out.println();
 			assertTrue(e.getMessages().size() == 2);
 		}
 	}

@@ -6,11 +6,13 @@ import java.util.HashMap;
 import java.util.LinkedList;
 
 
+
+import domain.assembly.assemblyline.AssemblyLineObserver;
 import domain.scheduling.order.Order;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.algorithm.FactorySchedulingAlgorithm;
 
-public class FactoryScheduler implements Scheduler,OrderHandler {
+public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineObserver {
 
 	private ArrayList<AssemblyLineScheduler> schedulerList;
 	private FactorySchedulingAlgorithm currentAlgorithm;
@@ -30,6 +32,8 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	 */
 	public FactoryScheduler(ArrayList<AssemblyLineScheduler> schedulerList, ArrayList<FactorySchedulingAlgorithm> possibleAlgorithms){
 		this.schedulerList = new ArrayList<AssemblyLineScheduler>(schedulerList);
+		for (AssemblyLineScheduler als : this.schedulerList)
+			als.getAssemblyLine().addObserver(this);
 		this.possibleAlgorithms = new ArrayList<FactorySchedulingAlgorithm>(possibleAlgorithms);
 		this.currentAlgorithm = this.possibleAlgorithms.get(0);
 		outDated = true;
@@ -270,6 +274,11 @@ public class FactoryScheduler implements Scheduler,OrderHandler {
 	 */
 	public void setSchedulingAlgorithmToDefault(){
 		this.setSchedulingAlgorithm(this.getPossibleAlgorithms().get(0));
+		this.updateSchedule();
+	}
+
+	@Override
+	public void update() {
 		this.updateSchedule();
 	}
 

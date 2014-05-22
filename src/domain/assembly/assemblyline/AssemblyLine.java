@@ -23,6 +23,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	private final AssemblyLineScheduler assemblyLineScheduler;
 	private AssemblyLineStatus currentStatus;
 	private ArrayList<VehicleModel> possibleModels;
+	private ArrayList<AssemblyLineObserver> observers;
 
 	/**
 	 * Constructor of AssemblyLine.
@@ -41,6 +42,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 		this.assemblyLineScheduler.addObserver(this);
 		this.possibleModels = new ArrayList<VehicleModel>(possibleModels);
 		this.currentStatus = currentStatus;
+		this.observers = new ArrayList<AssemblyLineObserver>();
 		try {
 			this.advanceLine();
 		} catch (CannotAdvanceException e) {
@@ -257,6 +259,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 */
 	public void setCurrentStatus(AssemblyLineStatus newStatus) {
 		this.currentStatus = newStatus;
+		this.notifyObservers();
 	}
 	
 	public AssemblyLineStatus getCurrentStatus() {
@@ -359,5 +362,20 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 */
 	public ArrayList<AssemblyLineStatus> getPossibleStatuses() {
 		return this.currentStatus.getPossibleStatuses();
+	}
+	
+	/**
+	 * Adds an observer for this assembly line.
+	 * 
+	 * @param observer
+	 * 		The new observer for this assembly line.
+	 */
+	public void addObserver(AssemblyLineObserver observer) {
+		this.observers.add(observer);
+	}
+	
+	private void notifyObservers() {
+		for (AssemblyLineObserver observer : this.observers)
+			observer.update();
 	}
 }

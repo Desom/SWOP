@@ -2,8 +2,6 @@ package domain.assembly.assemblyline.status;
 
 import java.util.ArrayList;
 
-import domain.assembly.assemblyline.BrokenStatus;
-
 public class StatusCreator implements StatusCreatorInterface {
 
 	private OperationalStatus operational;

@@ -11,8 +11,8 @@ import org.junit.Test;
 
 import domain.Company;
 import domain.assembly.assemblyline.AssemblyLine;
-import domain.assembly.assemblyline.BrokenStatus;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
+import domain.assembly.assemblyline.status.BrokenStatus;
 import domain.assembly.assemblyline.status.MaintenanceStatus;
 import domain.assembly.assemblyline.status.OperationalStatus;
 import domain.configuration.VehicleCatalog;

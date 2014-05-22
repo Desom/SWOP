@@ -47,6 +47,7 @@ public class OrderManager implements OrderHandler{
 	 */
 	public OrderManager(Scheduler scheduler, String dataFilePath, VehicleCatalog catalog) throws IOException {
 		this.scheduler = scheduler;
+		scheduler.setOrderHandler(this);
 		this.createPolicies();
 		ArrayList<Policy> policies = new ArrayList<Policy>();
 		policies.add(vehicleOrderPolicy);
@@ -68,7 +69,7 @@ public class OrderManager implements OrderHandler{
 				allUnfinishedOrders.add(order);
 			}
 		}
-		scheduler.setOrderHandler(this);
+		
 	}
 	
 	/**

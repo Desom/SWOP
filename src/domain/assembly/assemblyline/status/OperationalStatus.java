@@ -50,5 +50,10 @@ public class OperationalStatus extends AbstractAdvancingStatus {
 			return null;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		return "Operational";
+	}
 
 }

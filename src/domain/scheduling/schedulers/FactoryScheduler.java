@@ -86,6 +86,9 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	 * @param order
 	 * 		The Order whose AssemblyLineScheduler we want to find.
 	 * @return The AssemblyLineScheduler that has to schedule order.
+	 * 
+	 *		TODO docs
+	 *		TODO toStrings voor FactoryScheduler en Order.
 	 */
 	private AssemblyLineScheduler findScheduler(Order order) {
 		HashMap<AssemblyLineScheduler, ArrayList<Order>> ordersForSchedulers = this.getOrdersForSchedulers();

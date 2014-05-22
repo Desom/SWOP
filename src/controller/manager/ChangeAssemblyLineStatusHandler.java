@@ -1,11 +1,10 @@
 package controller.manager;
 
-import java.util.ArrayList;
+
 
 import controller.UIInterface;
 import domain.Company;
 import domain.assembly.assemblyline.AssemblyLine;
-import domain.assembly.assemblyline.status.AssemblyLineStatus;
 
 public class ChangeAssemblyLineStatusHandler {
 
@@ -15,7 +14,8 @@ public class ChangeAssemblyLineStatusHandler {
 			if (answer1 == -1)
 				return;
 			AssemblyLine assemblyLine = company.getAssemblyLines().get(answer1);
-			int answer2 = ui.askWithPossibilitiesWithCancel("Which state do you want to choose?", assemblyLine.getPossibleStatuses().toArray());
+			ui.display("Current status: " + assemblyLine.getCurrentStatus());
+			int answer2 = ui.askWithPossibilitiesWithCancel("Which status do you want to choose?", assemblyLine.getPossibleStatuses().toArray());
 			if (answer2 != -1) {
 				assemblyLine.setCurrentStatus(assemblyLine.getPossibleStatuses().get(answer2));
 				break;

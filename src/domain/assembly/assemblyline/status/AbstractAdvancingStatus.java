@@ -19,7 +19,19 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 		super(creator);
 	}
 
-	protected void standardAdvanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException{
+	/**
+	 * Advances the assembly line.
+	 * 
+	 * @param assemblyLine
+	 * 		The assembly line to be advanced.
+	 * @throws CannotAdvanceException
+	 * 		If the assembly line cannot advance.
+	 * @throws IllegalStateException
+	 * 		If the assembly line can't complete the next order to be placed on the assembly line.
+	 * @throws InternalFailureException
+	 * 		If a workstation of the assembly line disappeared.
+	 */
+	protected void standardAdvanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException, IllegalStateException, InternalFailureException {
 		// Check of alle tasks klaar zijn, zoniet laat aan de user weten welke nog niet klaar zijn (zie exception message).
 		if (!this.canAdvanceLine(assemblyLine))
 			throw new CannotAdvanceException(assemblyLine.getBlockingWorkstations());

@@ -1,6 +1,8 @@
 package domain.scheduling.schedulers.algorithm;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,7 +22,13 @@ public class BasicSchedulingAlgorithm
 	implements FactorySchedulingAlgorithm {
 
 	private SchedulingAlgorithm innerAlgorithm;
-
+	private Comparator<SingleTaskOrder> deadlineComparator = new Comparator<SingleTaskOrder>(){
+		@Override
+		public int compare(SingleTaskOrder order1, SingleTaskOrder order2){
+			return order1.getDeadLine().compareTo(order2.getDeadLine());
+		}
+	};
+	
 	/**
 	 * Constructor of BasicFactorySchedulingAlgorithm.
 	 * 
@@ -57,7 +65,8 @@ public class BasicSchedulingAlgorithm
 		ArrayList<SingleTaskOrder> singleTasks = combSingleTaskOrders(orderedOrders);
 		ArrayList<SingleTaskOrder> beginST = combSingleTaskOrdersByType(singleTasks, VehicleCatalog.taskTypeCreator.Color);
 		ArrayList<SingleTaskOrder> endST = combSingleTaskOrdersByType(singleTasks, VehicleCatalog.taskTypeCreator.Seats);
-		
+		Collections.sort(beginST, deadlineComparator);
+		Collections.sort(endST, deadlineComparator);
 		
 		for(Order order: orderedOrders){
 			AssemblyLineScheduler chosenScheduler = null;
@@ -71,7 +80,7 @@ public class BasicSchedulingAlgorithm
 				ArrayList<Order> newList = new ArrayList<Order>(scheduleMapping.get(scheduler));
 				newList.add(order);
 				ArrayList<ScheduledOrder> newSchedule = scheduler.getCurrentAlgorithm().scheduleToScheduledOrderList(newList, scheduler.getAssemblyLine());
-				GregorianCalendar time = this.findTimeOf(order, newSchedule);
+				GregorianCalendar time = this.findScheduledOrderOf(order, newSchedule).getCompletedTime();
 				if(chosenScheduler == null || time.before(timeWithChosen))
 					chosenScheduler = scheduler;
 					timeWithChosen = time;
@@ -142,9 +151,12 @@ public class BasicSchedulingAlgorithm
 	private boolean canDoSingleTask(SingleTaskOrder sto,
 			AssemblyLineScheduler scheduler,
 			HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping) {
-		ArrayList<ScheduledOrder> newSchedule = scheduler.getCurrentAlgorithm().scheduleToScheduledOrderList(scheduleMapping.get(scheduler), scheduler.getAssemblyLine());
-		GregorianCalendar time = this.findTimeOf(sto, newSchedule);
-		
+		ArrayList<Order> newList = new ArrayList<Order>(scheduleMapping.get(scheduler));
+		newList.add(sto);
+		ArrayList<ScheduledOrder> newSchedule = scheduler.getCurrentAlgorithm().scheduleToScheduledOrderList(newList, scheduler.getAssemblyLine());
+		GregorianCalendar time = this.findScheduledOrderOf(sto, newSchedule).getCompletedTime();
+
+		return time.after(sto.getDeadLine());
 	}
 
 	/**
@@ -156,11 +168,11 @@ public class BasicSchedulingAlgorithm
 	 * 		The schedule which contains a ScheduledOrder with order.
 	 * @return The time order will be put on the assemblyLine according to schedule. Null if order not in schedule.
 	 */
-	private GregorianCalendar findTimeOf(Order order,
+	private ScheduledOrder findScheduledOrderOf(Order order,
 			ArrayList<ScheduledOrder> schedule) {
 		for(int i = schedule.size() - 1; i >= 0; i--){
 			if (schedule.get(i).getScheduledOrder().equals(order)){
-				return schedule.get(i).getScheduledTime();
+				return schedule.get(i);
 			}
 		}
 		//TODO docs

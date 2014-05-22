@@ -1,4 +1,4 @@
-package domain.assembly;
+package domain.scheduling.schedulers;
 
 import static org.junit.Assert.*;
 

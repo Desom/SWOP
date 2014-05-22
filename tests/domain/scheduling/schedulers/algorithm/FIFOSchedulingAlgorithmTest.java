@@ -1,4 +1,4 @@
-package domain.assembly.algorithm;
+package domain.scheduling.schedulers.algorithm;
 
 import static org.junit.Assert.*;
 
@@ -9,6 +9,7 @@ import java.util.GregorianCalendar;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.Company;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.BrokenStatus;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
@@ -38,29 +39,32 @@ public class FIFOSchedulingAlgorithmTest {
 	VehicleCatalog cmc;
 	AssemblyLineScheduler als;
 	ArrayList<AssemblyLineStatus> statuses;
+	private Company company;
 	
 	@Before
 	public void testCreate() throws IOException, VehicleCatalogException {
 		this.algorithm = new FIFOSchedulingAlgorithm();
-		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
-		basicAlgorithm = new BasicSchedulingAlgorithm(algorithm);
-		list.add(basicAlgorithm);
-		this.garageHolder = new GarageHolder(0);
-		this.cmc = new VehicleCatalog();
-		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
-		statuses = new ArrayList<AssemblyLineStatus>();
-		statuses.add(new OperationalStatus());
-		statuses.add(new MaintenanceStatus());
-		statuses.add(new BrokenStatus());
-		@SuppressWarnings("unused")
-		AssemblyLine assembly = new AssemblyLine(als, statuses);
+//		ArrayList<AssemblyLineSchedulingAlgorithm> list = new ArrayList<AssemblyLineSchedulingAlgorithm>();
+//		basicAlgorithm = new BasicSchedulingAlgorithm(algorithm);
+//		list.add(basicAlgorithm);
+//		this.garageHolder = new GarageHolder(0);
+//		this.cmc = new VehicleCatalog();
+//		this.als = new AssemblyLineScheduler(new GregorianCalendar(2000,0,1,6,0,0), list);
+//		statuses = new ArrayList<AssemblyLineStatus>();
+//		statuses.add(new OperationalStatus());
+//		statuses.add(new MaintenanceStatus());
+//		statuses.add(new BrokenStatus());
+//		@SuppressWarnings("unused")
+//		AssemblyLine assembly = new AssemblyLine(als, statuses);
+		
+		company = new Company();
 	}
 	
 	@Test
 	public void testScheduleToList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderList();
 		
-		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, als);
+		ArrayList<Order> scheduleList = algorithm.scheduleToList(orderList, company.getAssemblyLines().get(0).getAssemblyLineScheduler());
 
 		assertEquals(10,scheduleList.get(0).getOrderID());
 		assertEquals(11,scheduleList.get(1).getOrderID());
@@ -80,7 +84,7 @@ public class FIFOSchedulingAlgorithmTest {
 	public void testScheduleToScheduledOrderList() throws InvalidConfigurationException{
 		ArrayList<Order> orderList = makeOrderList();
 		
-		ArrayList<ScheduledOrder> scheduleList = basicAlgorithm.scheduleToScheduledOrderList(orderList,new GregorianCalendar(2000,0,1,12,0,0),this.als.getAssemblyLine().stateWhenAcceptingOrders(), als);
+		ArrayList<ScheduledOrder> scheduleList = basicAlgorithm.scheduleToScheduledOrderList(orderList, company.getAssemblyLines().get(0));
 		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
 		assertEquals(10,scheduleList.get(0).getScheduledOrder().getOrderID());//70
 		assertEquals(time,scheduleList.get(0).getScheduledTime());

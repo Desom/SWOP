@@ -41,5 +41,14 @@ public class OperationalStatus extends AbstractAdvancingStatus {
 			return null;
 		}
 	}
+	
+	@Override
+	protected Order notifyOrderAskedSkip(AssemblyLine assemblyLine) {
+		try {
+			return assemblyLine.getAssemblyLineScheduler().getNextOrderSkip();
+		} catch (NoOrdersToBeScheduledException e) {
+			return null;
+		}
+	}
 
 }

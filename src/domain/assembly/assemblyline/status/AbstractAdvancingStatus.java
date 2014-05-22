@@ -72,7 +72,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 				for (int id = i; id <= assemblyLine.getAllWorkstations().size(); id++) {
 					// als de eerste plaats van de workstation leeg is plaats nieuw order
 					if(id ==1 && assemblyLine.getAllOrders().get(0) ==null){
-						Order nextOrder = this.notifyOrderAsked(assemblyLine);
+						Order nextOrder = this.notifyOrderAskedSkip(assemblyLine);
 						if(nextOrder != null){
 							VehicleAssemblyProcess nextAssemblyProcess = newOrder.getAssemblyprocess();
 							workstation1.setVehicleAssemblyProcess(nextAssemblyProcess);
@@ -105,6 +105,8 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 	}
 
 	protected abstract Order notifyOrderAsked(AssemblyLine assemblyLine);
+	
+	protected abstract Order notifyOrderAskedSkip(AssemblyLine assemblyLine);
 	
 	@Override
 	public abstract void advanceLine(AssemblyLine assemblyLine) throws CannotAdvanceException;

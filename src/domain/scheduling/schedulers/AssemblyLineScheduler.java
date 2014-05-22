@@ -309,6 +309,22 @@ public class AssemblyLineScheduler implements Scheduler{
 		throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
 
 	}
+	
+	public Order getNextOrderSkip() throws NoOrdersToBeScheduledException {
+		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(this.getCurrentTime());
+		int i = 0;
+		while(this.getAssemblyLine() != null
+				&& scheduledOrders.get(i).getScheduledOrder() == null){
+			i++;
+			if(i >= scheduledOrders.size()){
+				throw new NoOrdersToBeScheduledException();
+			}
+		}
+		if(scheduledOrders.get(i).getScheduledTime().equals(this.getCurrentTime()))
+			return scheduledOrders.get(i).getScheduledOrder();
+			
+		throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
+	}
 
 	/**
 	 * Returns the Order that will be put on the assembly after the given amount

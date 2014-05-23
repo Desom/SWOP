@@ -3,9 +3,9 @@ package controller;
 import java.util.List;
 
 import domain.configuration.Configuration;
-import domain.configuration.models.VehicleModel;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionType;
+import domain.configuration.Option;
+import domain.configuration.OptionType;
+import domain.configuration.VehicleModel;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 

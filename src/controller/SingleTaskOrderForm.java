@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import domain.configuration.Option;
+import domain.configuration.OptionType;
 import domain.configuration.VehicleCatalog;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionType;
 import domain.policies.Policy;
 
 public class SingleTaskOrderForm extends OrderForm{

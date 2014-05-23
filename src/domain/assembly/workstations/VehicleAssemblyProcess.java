@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
 import domain.assembly.assemblyline.AssemblyLine;
-import domain.configuration.taskables.Taskable;
+import domain.configuration.Taskable;
 import domain.scheduling.order.Order;
 
 public class VehicleAssemblyProcess {

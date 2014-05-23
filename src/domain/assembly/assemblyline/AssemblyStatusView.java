@@ -6,7 +6,7 @@ import java.util.LinkedList;
 import domain.assembly.workstations.AssemblyTask;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationType;
-import domain.configuration.taskables.TaskType;
+import domain.configuration.TaskType;
 
 public class AssemblyStatusView {
 

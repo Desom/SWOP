@@ -1,4 +1,4 @@
-package domain.configuration.models;
+package domain.configuration;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 
+import domain.configuration.Option;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleCatalogException;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.TaskTypeCreator;
-import domain.configuration.models.VehicleModel;
+import domain.configuration.VehicleModel;
 
 
 public class VehicleModelTest {

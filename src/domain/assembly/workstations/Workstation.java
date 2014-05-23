@@ -3,8 +3,8 @@ package domain.assembly.workstations;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
-import domain.configuration.taskables.OptionType;
-import domain.configuration.taskables.TaskType;
+import domain.configuration.OptionType;
+import domain.configuration.TaskType;
 import domain.user.Mechanic;
 
 public class Workstation {

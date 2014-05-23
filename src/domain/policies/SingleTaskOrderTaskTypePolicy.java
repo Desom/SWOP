@@ -2,10 +2,10 @@ package domain.policies;
 
 import java.util.ArrayList;
 
+import domain.configuration.Option;
+import domain.configuration.OptionType;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionType;
 
 /**
  * This policy checks if the configuration of a single task order has valid options.

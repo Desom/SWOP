@@ -10,7 +10,7 @@ import domain.assembly.workstations.AssemblyTask;
 import domain.assembly.workstations.VehicleAssemblyProcess;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationObserver;
-import domain.configuration.models.VehicleModel;
+import domain.configuration.VehicleModel;
 import domain.scheduling.order.Order;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.AssemblyLineSchedulerObserver;

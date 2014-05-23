@@ -2,7 +2,7 @@ package domain.assembly.workstations;
 
 import java.util.LinkedList;
 
-import domain.configuration.taskables.TaskType;
+import domain.configuration.TaskType;
 
 public class WorkstationType {
 	

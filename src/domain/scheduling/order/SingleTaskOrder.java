@@ -3,7 +3,7 @@ package domain.scheduling.order;
 import java.util.GregorianCalendar;
 
 import domain.configuration.Configuration;
-import domain.configuration.taskables.OptionType;
+import domain.configuration.OptionType;
 import domain.user.CustomShopManager;
 
 public class SingleTaskOrder extends Order {

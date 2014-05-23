@@ -1,8 +1,6 @@
-package domain.configuration.taskables;
+package domain.configuration;
 
 import java.util.ArrayList;
-
-import domain.configuration.VehicleCatalogException;
 
 public class Option implements Taskable{
 	

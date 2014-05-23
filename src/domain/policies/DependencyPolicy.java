@@ -3,7 +3,7 @@ package domain.policies;
 import java.util.ArrayList;
 
 import domain.configuration.Configuration;
-import domain.configuration.taskables.Option;
+import domain.configuration.Option;
 
 /**
  * This policy class checks if certain options in a configuration need other options and if the configuration has these options.

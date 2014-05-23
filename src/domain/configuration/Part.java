@@ -1,6 +1,5 @@
-package domain.configuration.taskables;
+package domain.configuration;
 
-import domain.configuration.VehicleCatalogException;
 
 
 public class Part implements Taskable {

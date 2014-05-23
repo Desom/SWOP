@@ -2,8 +2,8 @@ package domain.assembly.workstations;
 
 import java.util.LinkedList;
 
+import domain.configuration.TaskType;
 import domain.configuration.VehicleCatalog;
-import domain.configuration.taskables.TaskType;
 
 public class WorkstationTypeCreator implements WorkstationTypeCreatorInterface {
 	

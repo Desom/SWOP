@@ -10,12 +10,12 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import domain.assembly.workstations.WorkstationTypeCreator;
+import domain.configuration.Option;
+import domain.configuration.OptionType;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionType;
-import domain.configuration.taskables.TaskTypeCreator;
-import domain.configuration.models.VehicleModel;
+import domain.configuration.VehicleModel;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;

@@ -1,4 +1,4 @@
-package domain.configuration.taskables;
+package domain.configuration;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

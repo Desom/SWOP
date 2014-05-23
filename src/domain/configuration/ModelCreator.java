@@ -1,4 +1,4 @@
-package domain.configuration.models;
+package domain.configuration;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
@@ -10,9 +10,6 @@ import java.util.List;
 
 import domain.assembly.workstations.WorkstationType;
 import domain.assembly.workstations.WorkstationTypeCreatorInterface;
-import domain.configuration.VehicleCatalogException;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.Part;
 
 public class ModelCreator implements ModelCreatorInterface {
 	

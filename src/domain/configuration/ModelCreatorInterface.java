@@ -1,9 +1,7 @@
-package domain.configuration.models;
+package domain.configuration;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import domain.configuration.VehicleCatalogException;
 
 public interface ModelCreatorInterface {
 

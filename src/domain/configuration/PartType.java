@@ -1,4 +1,4 @@
-package domain.configuration.taskables;
+package domain.configuration;
 
 
 public class PartType implements TaskType{

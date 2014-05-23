@@ -21,7 +21,7 @@ import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationTypeCreator;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.VehicleCatalogException;
-import domain.configuration.models.VehicleModel;
+import domain.configuration.VehicleModel;
 import domain.policies.InvalidConfigurationException;
 import domain.scheduling.order.OrderManager;
 import domain.scheduling.schedulers.AssemblyLineScheduler;

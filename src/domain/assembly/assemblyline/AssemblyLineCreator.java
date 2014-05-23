@@ -7,7 +7,7 @@ import domain.assembly.assemblyline.status.StatusCreatorInterface;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationTypeCreatorInterface;
 import domain.configuration.VehicleCatalog;
-import domain.configuration.models.VehicleModel;
+import domain.configuration.VehicleModel;
 import domain.scheduling.schedulers.SchedulerCreatorInterface;
 
 public class AssemblyLineCreator implements AssemblyLineCreatorInterface {

@@ -5,14 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import domain.assembly.workstations.WorkstationTypeCreatorInterface;
-import domain.configuration.models.ModelCreator;
-import domain.configuration.models.VehicleModel;
-import domain.configuration.taskables.AbstractTaskTypeCreator;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionCreator;
-import domain.configuration.taskables.OptionCreatorInterface;
-import domain.configuration.taskables.Part;
-import domain.configuration.taskables.TaskTypeCreator;
 
 public class VehicleCatalog {
 	

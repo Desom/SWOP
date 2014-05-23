@@ -8,10 +8,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
 
+import domain.configuration.Option;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
-import domain.configuration.models.VehicleModel;
-import domain.configuration.taskables.Option;
+import domain.configuration.VehicleModel;
 import domain.policies.InvalidConfigurationException;
 import domain.policies.Policy;
 import domain.user.CustomShopManager;

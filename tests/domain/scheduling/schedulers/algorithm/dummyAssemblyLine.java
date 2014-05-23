@@ -9,7 +9,7 @@ import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
 import domain.assembly.workstations.Workstation;
-import domain.configuration.models.VehicleModel;
+import domain.configuration.VehicleModel;
 import domain.scheduling.order.Order;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
 

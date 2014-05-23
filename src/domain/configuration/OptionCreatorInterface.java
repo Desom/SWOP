@@ -1,9 +1,7 @@
-package domain.configuration.taskables;
+package domain.configuration;
 
 import java.io.IOException;
 import java.util.ArrayList;
-
-import domain.configuration.VehicleCatalogException;
 
 public interface OptionCreatorInterface {
 

@@ -1,13 +1,8 @@
-package domain.configuration.models;
+package domain.configuration;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import domain.assembly.workstations.WorkstationType;
-import domain.configuration.VehicleCatalog;
-import domain.configuration.VehicleCatalogException;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionType;
-import domain.configuration.taskables.Part;
 
 
 public class VehicleModel {

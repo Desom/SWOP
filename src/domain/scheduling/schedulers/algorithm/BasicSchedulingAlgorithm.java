@@ -9,8 +9,8 @@ import java.util.LinkedList;
 import java.util.Map.Entry;
 
 import domain.assembly.assemblyline.AssemblyLine;
+import domain.configuration.OptionType;
 import domain.configuration.VehicleCatalog;
-import domain.configuration.taskables.OptionType;
 import domain.scheduling.order.Order;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;

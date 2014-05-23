@@ -1,11 +1,11 @@
-package domain.configuration.taskables;
+package domain.configuration;
 import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+import domain.configuration.Option;
+import domain.configuration.TaskTypeCreator;
 import domain.configuration.VehicleCatalogException;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.TaskTypeCreator;
 
 
 public class OptionTest {

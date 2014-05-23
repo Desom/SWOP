@@ -9,7 +9,7 @@ import controller.VehicleOrderForm;
 import controller.UIInterface;
 import domain.Company;
 import domain.configuration.VehicleCatalog;
-import domain.configuration.models.VehicleModel;
+import domain.configuration.VehicleModel;
 import domain.scheduling.order.Order;
 import domain.scheduling.order.OrderManager;
 import domain.user.GarageHolder;

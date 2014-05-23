@@ -10,10 +10,10 @@ import org.junit.Test;
 
 import domain.assembly.workstations.WorkstationTypeCreator;
 import domain.configuration.Configuration;
+import domain.configuration.Option;
+import domain.configuration.OptionType;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.VehicleCatalogException;
-import domain.configuration.taskables.Option;
-import domain.configuration.taskables.OptionType;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
 import domain.policies.DependencyPolicy;

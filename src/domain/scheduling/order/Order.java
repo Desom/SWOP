@@ -25,7 +25,7 @@ public abstract class Order {
 	 * @param configuration
 	 * 		The configuration of this order.
 	 * @param orderedTime
-	 * 		The time when it was ordered
+	 * 		The time when it was ordered.
 	 */
 	public Order(int orderId, User user, Configuration configuration, GregorianCalendar orderedTime) {
 		this(orderId, user, configuration, orderedTime, null, false);

@@ -12,6 +12,7 @@ public class SingleTaskOrder extends Order {
 
 	/**
 	 * Constructor of SingleTaskOrder.
+	 * Constructs a single task order which is not completed.
 	 * 
 	 * @param singleTaskOrderId
 	 * 		The id of the order.

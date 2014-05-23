@@ -16,3 +16,7 @@ automatic climate control;Airco;,
 comfort;Wheels;,
 sports (low profle);Wheels;,
 no spoiler;Spoiler;,
+!
+ToolStorage;ToolStorage
+CargoProtection;CargoProtection
+Certification;Certification

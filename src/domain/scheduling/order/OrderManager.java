@@ -360,7 +360,7 @@ public class OrderManager implements OrderHandler{
 	@Override
 	public ArrayList<Order> getOrdersFor(Scheduler scheduler) {
 		if(!scheduler.equals(this.getScheduler())){
-			//TODO wat moet er gebeuren?
+			//TODO wat moet er gebeuren? zie factory
 		}
 		
 		ArrayList<Order> orderList = new ArrayList<Order>();

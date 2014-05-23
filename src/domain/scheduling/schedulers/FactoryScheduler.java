@@ -93,6 +93,7 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	 */
 	@Override
 	public GregorianCalendar completionEstimate(Order order) {
+
 		AssemblyLineScheduler scheduler = this.findScheduler(order);
 		return scheduler.completionEstimate(order);
 	}
@@ -117,6 +118,13 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 				return scheduler;
 			}
 		}
+		
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			if(scheduler.getAssemblyLine().getAllOrders().contains(order)){
+				return scheduler;
+			}
+		}
+		
 		throw new IllegalArgumentException("The FactoryScheduler:" + this + " doesn't schedule the given Order:" + order);
 
 	}

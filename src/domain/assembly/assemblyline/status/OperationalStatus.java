@@ -10,6 +10,12 @@ import domain.scheduling.order.Order;
 
 public class OperationalStatus extends AbstractAdvancingStatus {
 
+	/**
+	 * Constructor of OperationalStatus.
+	 * 
+	 * @param creator
+	 * 		The creator of statuses.
+	 */
 	public OperationalStatus(StatusCreatorInterface creator) {
 		super(creator);
 	}

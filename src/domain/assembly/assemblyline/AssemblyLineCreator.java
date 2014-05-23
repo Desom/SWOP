@@ -17,6 +17,18 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 	private final StatusCreatorInterface statusCreator;
 	private final WorkstationTypeCreatorInterface workstationCreator;
 	
+	/**
+	 * Constructor of AssemblyLineCreator.
+	 * 
+	 * @param workstationCreator
+	 * 		The creator of Workstation objects.
+	 * @param schedulerCreator
+	 * 		The creator of Scheduler objects.
+	 * @param statusCreator
+	 * 		The creator of Status objects.
+	 * @param catalog
+	 * 		The vehicle catalog.
+	 */
 	public AssemblyLineCreator(WorkstationTypeCreatorInterface workstationCreator, SchedulerCreatorInterface schedulerCreator, StatusCreatorInterface statusCreator, VehicleCatalog catalog) {
 		this.schedulerCreator = schedulerCreator;
 		this.catalog = catalog;
@@ -24,9 +36,6 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 		this.workstationCreator = workstationCreator;
 	}
 	
-	/* (non-Javadoc)
-	 * @see domain.assembly.AssemblyLineCreatorInterface#create()
-	 */
 	@Override
 	public ArrayList<AssemblyLine> create() {
 		ArrayList<AssemblyLine> assemblyLines = new ArrayList<AssemblyLine>();
@@ -62,7 +71,11 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 		return assemblyLines;
 	}
 	
-	
+	/**
+	 * Creates all workstations for cars.
+	 * 
+	 * @return All workstations for cars.
+	 */
 	private ArrayList<Workstation> createCarWorkstations() {
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		
@@ -73,7 +86,11 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 		return workstations;
 	}
 	
-	
+	/**
+	 * Creates all workstations for trucks.
+	 * 
+	 * @return All workstations for trucks.
+	 */
 	private ArrayList<Workstation> createTruckWorkstations() {
 		ArrayList<Workstation> workstations = new ArrayList<Workstation>();
 		

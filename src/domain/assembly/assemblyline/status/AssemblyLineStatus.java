@@ -22,7 +22,6 @@ public abstract class AssemblyLineStatus {
 		this.creator = creator;
 	}
 	
-	
 	/**
 	 * Advances the assembly depending on its status.
 	 * @param assemblyLine

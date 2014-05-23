@@ -25,8 +25,9 @@ public interface StatusCreatorInterface {
 	 */
 	public abstract BrokenStatus getBrokenStatus();
 	/**
-	 * returns all the possible statuses
-	 * @return the possible statuses
+	 * Returns all possible statuses.
+	 * 
+	 * @return All possible statuses.
 	 */
 	public abstract ArrayList<AssemblyLineStatus> getAllStatuses();
 

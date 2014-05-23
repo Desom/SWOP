@@ -5,7 +5,6 @@ import java.util.LinkedList;
 
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.assembly.assemblyline.CannotAdvanceException;
-import domain.scheduling.NoOrdersToBeScheduledException;
 import domain.scheduling.order.Order;
 
 public class MaintenanceStatus extends AbstractAdvancingStatus{

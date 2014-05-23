@@ -8,6 +8,12 @@ import domain.scheduling.order.Order;
 
 public class BrokenStatus extends AssemblyLineStatus {
 	
+	/**
+	 * Constructor of BrokenStatus.
+	 * 
+	 * @param creator
+	 * 		The creator of statuses.
+	 */
 	public BrokenStatus(StatusCreatorInterface creator) {
 		super(creator);
 	}

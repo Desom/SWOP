@@ -11,10 +11,14 @@ import domain.assembly.workstations.VehicleAssemblyProcess;
 import domain.assembly.workstations.Workstation;
 import domain.scheduling.order.Order;
 
-
-
 public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 	
+	/**
+	 * Constructor of AbstractAdvancingStatus.
+	 * 
+	 * @param creator
+	 * 		The creator of statuses.
+	 */
 	public AbstractAdvancingStatus(StatusCreatorInterface creator) {
 		super(creator);
 	}
@@ -116,8 +120,22 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 		}
 	}
 
+	/**
+	 * Notifies that there is room for a new order on the assembly line due to an advance line operation.
+	 * 
+	 * @param assemblyLine
+	 * 		The assemblyLine which has room for a new order.
+	 * @return The new order.
+	 */
 	protected abstract Order notifyOrderAsked(AssemblyLine assemblyLine);
 	
+	/**
+	 * Notifies that there is room for a new order on the assembly line due to a skip workstation operation.
+	 * 
+	 * @param assemblyLine
+	 * 		The assemblyLine which has room for a new order.
+	 * @return The new order.
+	 */
 	protected abstract Order notifyOrderAskedSkip(AssemblyLine assemblyLine);
 	
 	@Override

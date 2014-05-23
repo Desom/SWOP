@@ -164,7 +164,7 @@ public class StatisticsTest {
 			}
 		}
 		wList.removeAll(remove);
-		
+			
 		if(wList.isEmpty())
 			line.advanceLine();
 		for(Workstation w : wList){

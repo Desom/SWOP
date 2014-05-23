@@ -69,4 +69,11 @@ public interface Scheduler {
 	 * Updates the schedule afterwards.
 	 */
 	public void setSchedulingAlgorithmToDefault();
+
+	/**
+	 * Returns the latest time of the scheduler. The youngest time out of all the current times of the AssemblyLines below this scheduler.
+	 * 
+	 * @return The latest time of the scheduler.
+	 */
+	public GregorianCalendar getLatestTime();
 }

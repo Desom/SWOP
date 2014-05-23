@@ -66,6 +66,23 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 		
 		return time;
 	}
+	
+	/**
+	 * Returns the latest time of the system. The youngest time out of all the current times of the AssemblyLineSchedulers.
+	 * 
+	 * @return The latest time of the system.
+	 */
+	@Override
+	public GregorianCalendar getLatestTime() {
+		GregorianCalendar time = null;
+		for(AssemblyLineScheduler als: schedulerList){
+			if(time == null || als.getCurrentTime().after(time)){
+				time = als.getCurrentTime();
+			}
+		}
+		
+		return time;
+	}
 
 	/**
 	 * Returns the estimated time on which the given order will be completed.
@@ -76,6 +93,7 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	 */
 	@Override
 	public GregorianCalendar completionEstimate(Order order) {
+
 		AssemblyLineScheduler scheduler = this.findScheduler(order);
 		return scheduler.completionEstimate(order);
 	}
@@ -100,6 +118,13 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 				return scheduler;
 			}
 		}
+		
+		for(AssemblyLineScheduler scheduler : this.schedulerList){
+			if(scheduler.getAssemblyLine().getAllOrders().contains(order)){
+				return scheduler;
+			}
+		}
+		
 		throw new IllegalArgumentException("The FactoryScheduler:" + this + " doesn't schedule the given Order:" + order);
 
 	}

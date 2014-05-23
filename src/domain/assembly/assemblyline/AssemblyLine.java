@@ -343,7 +343,8 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 			return true;			
 		}
 		VehicleModel model = order.getConfiguration().getModel();
-		if(!this.getPossibleModels().contains(model)){
+		
+		if(!this.getPossibleModels().contains(model) && model != null){
 			return false;			
 		}
 		if(model == null || this.getPossibleModels().contains(model)){

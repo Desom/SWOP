@@ -115,6 +115,9 @@ public class BasicSchedulingAlgorithm
 			HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping,
 			ArrayList<AssemblyLineScheduler> schedulers,
 			ArrayList<SingleTaskOrder> stoList) {
+		
+		ArrayList<SingleTaskOrder> deadlineFailure = new ArrayList<SingleTaskOrder>();
+		
 		int count = 0;
 		SingleTaskOrder sto = null;
 		while(!stoList.isEmpty() || count >= schedulers.size()){
@@ -126,11 +129,18 @@ public class BasicSchedulingAlgorithm
 				if(!canDoSingleTask(sto, scheduler, scheduleMapping)){
 					count++;
 					if(count >= schedulers.size()){
-						stoList.add(0,sto);
-						break;
+						deadlineFailure.add(sto);
+						count = 0;
+						if(!stoList.isEmpty()){
+							sto = stoList.remove(0);
+						}
+						else{
+							break;
+						}
 					}
 				}
 				else{
+					scheduleMapping.get(scheduler).add(sto);
 					count = 0;
 					if(!stoList.isEmpty()){
 						sto = stoList.remove(0);
@@ -142,9 +152,9 @@ public class BasicSchedulingAlgorithm
 			}
 		}
 		
-		for(int i = 0; i < stoList.size(); i++){
+		for(int i = 0; i < deadlineFailure.size(); i++){
 			int a = i % schedulers.size();
-			scheduleMapping.get(schedulers.get(a)).add(stoList.get(i));
+			scheduleMapping.get(schedulers.get(a)).add(deadlineFailure.get(i));
 		}
 	}
 
@@ -157,7 +167,7 @@ public class BasicSchedulingAlgorithm
 		ArrayList<ScheduledOrder> newSchedule = scheduler.getCurrentAlgorithm().scheduleToScheduledOrderList(newList, scheduler.getAssemblyLine());
 		GregorianCalendar time = this.findScheduledOrderOf(sto, newSchedule).getCompletedTime();
 
-		return time.after(sto.getDeadLine());
+		return !time.after(sto.getDeadLine());
 	}
 
 	/**

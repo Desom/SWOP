@@ -112,18 +112,18 @@ public class StatisticsTest {
 	
 	@Test
 	public void testAverageCars(){
-		assertEquals(11, stat.getAverageVehiclesPerDay());
+		assertEquals(20, stat.getAverageVehiclesPerDay());
 	}
 	
 	@Test
 	public void testMedianCars(){
-		assertEquals(14, stat.getMedianVehiclesPerDay());
+		assertEquals(28, stat.getMedianVehiclesPerDay());
 	}
 	
 	@Test
 	public void amountOfCarsLastDays(){
-		assertEquals(12, stat.getAmountOfVehicles1DayAgo());
-		assertEquals(14, stat.getAmountOfVehicles2DaysAgo());
+		assertEquals(25, stat.getAmountOfVehicles1DayAgo());
+		assertEquals(28, stat.getAmountOfVehicles2DaysAgo());
 	}
 	
 	@Test

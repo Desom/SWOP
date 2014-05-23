@@ -40,6 +40,7 @@ import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.algorithm.AlgorithmCreator;
 import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
+import domain.scheduling.schedulers.algorithm.EfficiencySchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.SchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.SpecificationBatchSchedulingAlgorithm;
@@ -145,46 +146,6 @@ public class AssemblyLineSchedulerTest {
 	}
 
 	@Test
-	public void getNextCar() throws NoOrdersToBeScheduledException, IllegalStateException, InternalFailureException, CannotAdvanceException {
-		Order next = scheduler.seeNextOrder(50);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(70);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(70);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(70);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(60);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(60);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(60);
-		assertEquals(null, next);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(60);
-		assertEquals(null, next);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(60);
-		assertEquals(null, next);
-		this.fullDefaultAdvance();
-		assertEquals(unFinishedOrdered.get(7), scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(60);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-		next = scheduler.seeNextOrder(60);
-		this.fullDefaultAdvance();
-		assertEquals(next, scheduler.getAssemblyLine().getAllOrders().get(0));
-	}
-
-	@Test
 	public void testOverTime() throws IllegalStateException, InternalFailureException, CannotAdvanceException {
 
 		assertEquals(new GregorianCalendar(2014,0,1,22,0,0), scheduler.getRealEndOfDay());
@@ -197,19 +158,6 @@ public class AssemblyLineSchedulerTest {
 		fullDefaultAdvance(25);
 		fullDefaultAdvance(52);
 		assertEquals(new GregorianCalendar(2014,0,3,21,13,0), scheduler.getRealEndOfDay());
-	}
-
-	@Test
-	public void testSetSchedulingAlgorithm() throws NoOrdersToBeScheduledException {
-		BasicSchedulingAlgorithm basicSchedulingAlgorithm = (BasicSchedulingAlgorithm) scheduler.getPossibleAlgorithms().get(1);
-		SpecificationBatchSchedulingAlgorithm specBatch = (SpecificationBatchSchedulingAlgorithm) basicSchedulingAlgorithm.getInnerAlgorithm();
-		ArrayList<Configuration> batchable = specBatch.searchForBatchConfiguration(scheduler);
-		specBatch.setConfiguration(batchable.get(0));
-		scheduler.setSchedulingAlgorithm(scheduler.getPossibleAlgorithms().get(1));
-		
-		assertEquals(basicSchedulingAlgorithm, scheduler.getCurrentAlgorithm());
-		
-		assertEquals(order3, scheduler.seeNextOrder(10));
 	}
 	
 	/**

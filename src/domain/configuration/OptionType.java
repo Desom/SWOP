@@ -26,7 +26,10 @@ public class OptionType implements TaskType{
 
 	/**
 	 * Constructor of OptionType.
-	 * The option type won't be available for single task orders and won't be mandatory for vehicle orders.
+	 * The option type will be available for single task orders and woill be mandatory for vehicle orders.
+	 * 
+	 * @param name
+	 * 		The name of this option type.
 	 */
 	OptionType(String name){
 		this.name = name;
@@ -35,18 +38,18 @@ public class OptionType implements TaskType{
 	}
 	
 	/**
-	 * Returns whether the optiontype is available for single task orders.
+	 * Returns whether the option type is available for single task orders.
 	 * 
-	 * @return true if the optiontype is available for single task orders, otherwise false.
+	 * @return True if the option type is available for single task orders, otherwise false.
 	 */
 	public boolean isSingleTaskPossible() {
 		return singleTaskPossible;
 	}
 	
 	/**
-	 * Returns whether the optionstype is mandatory for vehicle orders.
+	 * Returns whether the option type is mandatory for vehicle orders.
 	 * 
-	 * @return true if the optiontype is mandatory for vehicle orders, otherwise false.
+	 * @return True if the option type is mandatory for vehicle orders, otherwise false.
 	 */
 	public boolean isMandatory() {
 		return mandatory;

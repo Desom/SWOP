@@ -78,6 +78,4 @@ public class VehicleCatalog {
 	public List<Part> getAllParts() {
 		return (List<Part>) (allParts.clone());
 	}
-
-
 }

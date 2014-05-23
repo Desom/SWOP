@@ -53,10 +53,11 @@ public abstract class AbstractTaskTypeCreator {
 	public abstract ArrayList<OptionType> getAllMandatoryTypes();
 
 	/**
-	 * Returns the tasktype that has the specified name
+	 * Returns the tasktype that has the specified name.
 	 * 
-	 * @param name the name of the desired taskType
-	 * @return the requested tasktype, or null if it does not exist
+	 * @param name 
+	 * 		The name of the desired taskType.
+	 * @return The requested tasktype, or null if it does not exist.
 	 */
 	public abstract TaskType getTaskType(String name);
 

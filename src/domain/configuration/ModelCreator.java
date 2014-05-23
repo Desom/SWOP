@@ -196,7 +196,13 @@ public class ModelCreator implements ModelCreatorInterface {
 		return null;
 	}
 	
-	
+	/**
+	 * Reads the workstation type and time from input lines.
+	 * 
+	 * @param times
+	 * 		Input lines indicating the workstation types and time in a certain format.
+	 * @return A hashmap where times are mapped to workstation types.
+	 */
 	private HashMap<WorkstationType, Integer> parseTimes(String times){
 		HashMap<WorkstationType, Integer> timeMap = new HashMap<WorkstationType, Integer>();
 		String[] workstations = times.split(",");

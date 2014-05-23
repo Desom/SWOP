@@ -24,6 +24,7 @@ public interface StatusCreatorInterface {
 	 * @return The broken status object.
 	 */
 	public abstract BrokenStatus getBrokenStatus();
+	
 	/**
 	 * Returns all possible statuses.
 	 * 

@@ -1,4 +1,4 @@
-package tests.usecase;
+package domain.assembly.workstations;
 
 import static org.junit.Assert.*;
 

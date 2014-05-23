@@ -4,10 +4,10 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Suite;
 import org.junit.runners.Suite.SuiteClasses;
 
-import tests.usecase.CarMechanicUseCaseTest;
 import domain.StatisticsTest;
 import domain.assembly.assemblyline.AssemblyLineTest;
 import domain.assembly.workstations.AssemblyTaskTest;
+import domain.assembly.workstations.CarMechanicUseCaseTest;
 import domain.assembly.workstations.VehicleAssemblyProcessTest;
 import domain.assembly.workstations.WorkstationTest;
 import domain.configuration.VehicleCatalogTest;

@@ -35,6 +35,7 @@ public class StatisticsTest {
 
 	//AssemblyLine line = null;
 	Statistics stat = null;
+	private int count;
 	@Before
 	public void testCreate() throws DoesNotExistException, IOException, VehicleCatalogException, CannotAdvanceException, IllegalStateException, InternalFailureException, InvalidConfigurationException {
 		/*ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
@@ -54,7 +55,7 @@ public class StatisticsTest {
 		Mechanic m2 = new Mechanic(3);
 		Mechanic m3 = new Mechanic(4);
 		Company company = new Company("testData/testData_OrderManager.txt");
-		
+		stat = company.viewStatistics();
 		/*line.selectWorkstationById(1).addMechanic(m1);
 		assertEquals(line.selectWorkstationById(1).getMechanic(), m1);
 

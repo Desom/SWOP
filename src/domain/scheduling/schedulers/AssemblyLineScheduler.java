@@ -305,7 +305,6 @@ public class AssemblyLineScheduler implements Scheduler{
 			this.startNewDay();
 			return scheduledOrders.get(i).getScheduledOrder();
 		}
-
 		throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
 
 	}
@@ -323,7 +322,9 @@ public class AssemblyLineScheduler implements Scheduler{
 		if(scheduledOrders.get(i).getScheduledTime().equals(this.getCurrentTime()))
 			return scheduledOrders.get(i).getScheduledOrder();
 			
-		throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
+
+		return null;
+		//throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
 	}
 
 	/**
@@ -387,7 +388,18 @@ public class AssemblyLineScheduler implements Scheduler{
 	@Override
 	public void updateSchedule(){
 		this.outDated = true;
-		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty() && !this.getOrdersToBeScheduled().isEmpty()){
+		
+		boolean hasOrder = false;
+		if(this.schedule != null){
+			for(ScheduledOrder schOrder : this.schedule){
+				if(schOrder.getScheduledOrder() != null){
+					hasOrder = true;
+					break;
+				}
+			}
+		}
+		
+		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty() && !hasOrder && !this.getOrdersToBeScheduled().isEmpty()){
 			this.notifyObservers();
 		}
 	}

@@ -34,7 +34,7 @@ public class OrderNewVehicleHandler{
 		//of completed orders, sorted most recent first.
 		ArrayList<Order> orders = getSortedCompletedOrder(garageHolder, ordermanager);
 		for(Order order:orders){
-			tempIdList.add(order.getUserId());
+			tempIdList.add(order.getOrderID());
 			tempCalendarList.add(order.getDeliveredTime());
 		}
 		ui.displayCompletedOrders(tempIdList, tempCalendarList);

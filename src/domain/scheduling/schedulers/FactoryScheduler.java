@@ -66,6 +66,23 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 		
 		return time;
 	}
+	
+	/**
+	 * Returns the latest time of the system. The youngest time out of all the current times of the AssemblyLineSchedulers.
+	 * 
+	 * @return The latest time of the system.
+	 */
+	@Override
+	public GregorianCalendar getLatestTime() {
+		GregorianCalendar time = null;
+		for(AssemblyLineScheduler als: schedulerList){
+			if(time == null || als.getCurrentTime().after(time)){
+				time = als.getCurrentTime();
+			}
+		}
+		
+		return time;
+	}
 
 	/**
 	 * Returns the estimated time on which the given order will be completed.

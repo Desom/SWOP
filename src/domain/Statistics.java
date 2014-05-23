@@ -97,7 +97,7 @@ public class Statistics {
 	 */
 	public int getAmountOfVehicles1DayAgo(){
 		update();
-		int yesterday = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -1;
+		int yesterday = orderManager.getScheduler().getLatestTime().get(GregorianCalendar.DAY_OF_YEAR) -1;
 		if(dailyMapping.get(yesterday) == null){
 			return 0;
 		}
@@ -111,7 +111,7 @@ public class Statistics {
 	 */
 	public int getAmountOfVehicles2DaysAgo(){
 		update();
-		int day = orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR) -2;
+		int day = orderManager.getScheduler().getLatestTime().get(GregorianCalendar.DAY_OF_YEAR) -2;
 		if(dailyMapping.get(day) == null){
 			return 0;
 		}
@@ -216,7 +216,7 @@ public class Statistics {
 		for(LinkedList<Order> list : this.dailyMapping.values()){
 				l.add(list);
 		}
-		l.remove(this.dailyMapping.get(this.orderManager.getScheduler().getCurrentTime().get(GregorianCalendar.DAY_OF_YEAR)));
+		l.remove(this.dailyMapping.get(this.orderManager.getScheduler().getLatestTime().get(GregorianCalendar.DAY_OF_YEAR)));
 		for(LinkedList<Order> list : l){
 			vehiclesPerDay.add(list.size());
 		}

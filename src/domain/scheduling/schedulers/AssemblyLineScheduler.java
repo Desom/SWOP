@@ -628,4 +628,9 @@ public class AssemblyLineScheduler implements Scheduler{
 		for (AssemblyLineSchedulerObserver observer : this.observers)
 			observer.update();
 	}
+
+	@Override
+	public GregorianCalendar getLatestTime() {
+		return this.getCurrentTime();
+	}
 }

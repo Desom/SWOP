@@ -321,7 +321,10 @@ public class AssemblyLineScheduler implements Scheduler{
 		}
 		if(scheduledOrders.get(i).getScheduledTime().equals(this.getCurrentTime()))
 			return scheduledOrders.get(i).getScheduledOrder();
-
+		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty() && scheduledOrders.get(i).getScheduledTime().get(GregorianCalendar.HOUR_OF_DAY) == AssemblyLineScheduler.BEGIN_OF_DAY){
+			this.startNewDay();
+			return scheduledOrders.get(i).getScheduledOrder();
+		}
 
 		return null;
 		//throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
@@ -478,7 +481,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	 * 		The minutes to be added to the current time.
 	 */
 	public void addCurrentTime(int minutes){
-		this.currentTime.add(GregorianCalendar.MINUTE, minutes);
+		this.currentTime.add(GregorianCalendar.MINUTE, minutes);	
 	}
 
 	/**

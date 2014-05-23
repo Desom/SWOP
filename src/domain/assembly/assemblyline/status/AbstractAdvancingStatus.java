@@ -90,7 +90,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 					if(id ==1 && assemblyLine.getAllOrders().get(0) ==null){
 						Order nextOrder = this.notifyOrderAskedSkip(assemblyLine);
 						if(nextOrder != null){
-							VehicleAssemblyProcess nextAssemblyProcess = newOrder.getAssemblyprocess();
+							VehicleAssemblyProcess nextAssemblyProcess = nextOrder.getAssemblyprocess();
 							workstation1.setVehicleAssemblyProcess(nextAssemblyProcess);
 							i++;
 						}

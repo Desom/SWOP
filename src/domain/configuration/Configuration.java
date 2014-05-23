@@ -151,7 +151,11 @@ public class Configuration {
 			return false;
 		}
 		final Configuration other = (Configuration) obj;
-		if(!this.getModel().equals(other.getModel())){
+		
+		if(this.getModel() == null && other.getModel() != null){
+			return false;
+		}
+		if(this.getModel() != null && !this.getModel().equals(other.getModel())){
 			return false;
 		}
 		if(this.getAllOptions().size() != other.getAllOptions().size()){

@@ -17,6 +17,7 @@ import domain.scheduling.schedulers.AssemblyLineSchedulerObserver;
 
 public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerObserver {
 
+	private String name;
 	private ArrayList<Workstation> workstations;
 	private final AssemblyLineScheduler assemblyLineScheduler;
 	private AssemblyLineStatus currentStatus;
@@ -26,6 +27,8 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	/**
 	 * Constructor of AssemblyLine.
 	 * 
+	 * @param name
+	 * 		The name of this assembly line.
 	 * @param workstations
 	 * 		The workstations of this assembly line.
 	 * @param assemblyLineScheduler
@@ -35,7 +38,8 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * @param possibleModels
 	 * 		Only these VehicleModels will be able to be built on this assembly line.
 	 */
-	public AssemblyLine(ArrayList<Workstation> workstations, AssemblyLineScheduler assemblyLineScheduler, AssemblyLineStatus currentStatus, ArrayList<VehicleModel> possibleModels){
+	public AssemblyLine(String name, ArrayList<Workstation> workstations, AssemblyLineScheduler assemblyLineScheduler, AssemblyLineStatus currentStatus, ArrayList<VehicleModel> possibleModels){
+		this.name = name;
 		if (workstations.isEmpty() || workstations == null)
 			throw new IllegalArgumentException("Assembly line has been given no workstations.");
 		this.addWorkstations(workstations);
@@ -387,5 +391,10 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	private void notifyObservers() {
 		for (AssemblyLineObserver observer : this.observers)
 			observer.update();
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }

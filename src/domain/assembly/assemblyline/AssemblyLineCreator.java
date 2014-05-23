@@ -48,7 +48,7 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 				models.add(model);
 			}
 		}
-		AssemblyLine assemblyLine1 = new AssemblyLine(this.createCarWorkstations(), this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), this.statusCreator.getOperationalStatus(), models);
+		AssemblyLine assemblyLine1 = new AssemblyLine("Assembly line 1", this.createCarWorkstations(), this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), this.statusCreator.getOperationalStatus(), models);
 		assemblyLines.add(assemblyLine1);
 
 		for(VehicleModel model : this.catalog.getAllModels()){
@@ -56,7 +56,7 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 				models.add(model);
 			}
 		}
-		AssemblyLine assemblyLine2 = new AssemblyLine(this.createCarWorkstations(), this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), this.statusCreator.getOperationalStatus(), models);
+		AssemblyLine assemblyLine2 = new AssemblyLine("Assembly line 2", this.createCarWorkstations(), this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), this.statusCreator.getOperationalStatus(), models);
 		assemblyLines.add(assemblyLine2);
 		
 
@@ -65,7 +65,7 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 				models.add(model);
 			}
 		}
-		AssemblyLine assemblyLine3 = new AssemblyLine(this.createTruckWorkstations(), this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), this.statusCreator.getOperationalStatus(), models);
+		AssemblyLine assemblyLine3 = new AssemblyLine("Assembly line 3", this.createTruckWorkstations(), this.schedulerCreator.createAssemblyLineScheduler((GregorianCalendar) startTime.clone()), this.statusCreator.getOperationalStatus(), models);
 		assemblyLines.add(assemblyLine3);
 		
 		return assemblyLines;

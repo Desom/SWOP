@@ -56,9 +56,6 @@ public class ModelCreator implements ModelCreatorInterface {
 		this(creator, options, parts, "data/models.txt");
 	}
 
-	/* (non-Javadoc)
-	 * @see domain.configuration.ModelCreatorInterface#createModels()
-	 */
 	@Override
 	public ArrayList<VehicleModel> createModels() throws IOException, VehicleCatalogException{
 		this.allModels = new HashMap<String,VehicleModel>();

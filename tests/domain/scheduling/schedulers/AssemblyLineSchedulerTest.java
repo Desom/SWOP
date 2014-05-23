@@ -67,7 +67,8 @@ public class AssemblyLineSchedulerTest {
 		WorkstationTypeCreator workstationTypeCreator = new WorkstationTypeCreator();
 		catalog = new VehicleCatalog(workstationTypeCreator);
 		StatusCreator statusCreator = new StatusCreator();
-		SchedulerCreator schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
+		AlgorithmCreator algorithmCreator = new AlgorithmCreator();
+		SchedulerCreator schedulerCreator = new SchedulerCreator(algorithmCreator);
 		line =new AssemblyLineCreator(workstationTypeCreator,schedulerCreator,statusCreator,catalog).create().get(1);
 		ArrayList<AssemblyLineScheduler>	list = new ArrayList<AssemblyLineScheduler>();
 		list.add(line.getAssemblyLineScheduler());
@@ -76,7 +77,7 @@ public class AssemblyLineSchedulerTest {
 		this.scheduler.addCurrentTime(360);
 		OrderManager orderManager = new OrderManager(schedulerCreator.createFactoryScheduler(list), "testData/testData_OrderManager.txt", catalog);
 		ArrayList<Order> unfinished = orderManager.getAllUnfinishedOrders();
-		FIFOSchedulingAlgorithm fifo = new FIFOSchedulingAlgorithm();
+		FIFOSchedulingAlgorithm fifo = algorithmCreator.makeFIFO();
 		unFinishedOrdered = fifo.scheduleToList(unfinished, null);
 		order1 = unFinishedOrdered.get(0);
 		assertEquals(2,order1.getOrderID());

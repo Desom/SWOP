@@ -17,11 +17,11 @@ public abstract class AbstractAssemblyLineSchedulingAlgorithm implements
 	}
 
 	/**
-	 * Checks if the given list of Orders only contains null.
+	 * Checks if there are no orders on the given assembly line.
 	 * 
 	 * @param assembly
-	 * 		The list that needs to be checked.
-	 * @return True if assembly only contains null, false otherwise.
+	 * 		The assembly line that needs to be checked.
+	 * @return True if the assembly line is empty, otherwise false.
 	 */
 	protected boolean isEmptyAssembly(LinkedList<Order> assembly) {
 		for(Order order : assembly){
@@ -32,13 +32,12 @@ public abstract class AbstractAssemblyLineSchedulingAlgorithm implements
 		return true;
 	}
 
-
 	/**
-	 * Makes a GregorianCalendar which represents the beginning of the first workday after the given calendar.
+	 * Makes a GregorianCalendar which represents the beginning of the first work day after the given calendar.
 	 * 
 	 * @param currentTime
 	 * 		The current time and date.
-	 * @return The GregorianCalendar representing the beginning of the first workday after the day in currentTime. 
+	 * @return The GregorianCalendar representing the beginning of the first work day after the day in currentTime. 
 	 */
 	protected GregorianCalendar nextDay(GregorianCalendar currentTime) {
 		GregorianCalendar nextDay = (GregorianCalendar) currentTime.clone();
@@ -51,7 +50,7 @@ public abstract class AbstractAssemblyLineSchedulingAlgorithm implements
 	}
 
 	/**
-	 * Checks if there is enough minutes left in the workday after the given calendar before the workday ends.
+	 * Checks if there is enough minutes left in the work day after the given calendar before the workday ends.
 	 * 
 	 * @param currentTime
 	 * 		The time it currently is.

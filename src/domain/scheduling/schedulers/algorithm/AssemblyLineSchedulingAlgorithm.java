@@ -1,12 +1,9 @@
 package domain.scheduling.schedulers.algorithm;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
 
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.scheduling.order.Order;
-import domain.scheduling.schedulers.AssemblyLineScheduler;
 import domain.scheduling.schedulers.ScheduledOrder;
 
 public interface AssemblyLineSchedulingAlgorithm {

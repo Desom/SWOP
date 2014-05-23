@@ -1,14 +1,9 @@
 package domain.scheduling.schedulers.algorithm;
 
 import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
 
-import domain.assembly.assemblyline.AssemblyLine;
 import domain.configuration.Configuration;
 import domain.scheduling.order.Order;
-import domain.scheduling.schedulers.AssemblyLineScheduler;
-import domain.scheduling.schedulers.ScheduledOrder;
 import domain.scheduling.schedulers.Scheduler;
 
 public class SpecificationBatchSchedulingAlgorithm implements
@@ -105,7 +100,6 @@ public class SpecificationBatchSchedulingAlgorithm implements
 		
 		return batchList;
 	}
-
 	
 	@Override
 	public String toString(){

@@ -110,6 +110,8 @@ public class BasicSchedulingAlgorithm
 	}
 
 	/**
+	 * Schedules the single task orders.
+	 * 
 	 * @param scheduleMapping
 	 * @param schedulers
 	 * @param stoList
@@ -161,7 +163,7 @@ public class BasicSchedulingAlgorithm
 		}
 	}
 
-
+	
 	private boolean canDoSingleTask(SingleTaskOrder sto,
 			AssemblyLineScheduler scheduler,
 			HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping) {

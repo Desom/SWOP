@@ -40,7 +40,7 @@ public class AssemblyLineCreator implements AssemblyLineCreatorInterface {
 	public ArrayList<AssemblyLine> create() {
 		ArrayList<AssemblyLine> assemblyLines = new ArrayList<AssemblyLine>();
 		
-		GregorianCalendar startTime = new GregorianCalendar(2014, 0, 1, 6, 0, 0);
+		GregorianCalendar startTime = new GregorianCalendar(2014, 1, 1, 6, 0, 0);
 		
 		ArrayList<VehicleModel> models = new ArrayList<VehicleModel>();
 		for(VehicleModel model : this.catalog.getAllModels()){

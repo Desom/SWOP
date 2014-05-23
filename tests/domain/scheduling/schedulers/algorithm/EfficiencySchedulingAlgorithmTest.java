@@ -465,7 +465,7 @@ public class EfficiencySchedulingAlgorithmTest {
 		assertEquals(null,scheduleList.get(18).getScheduledOrder());//0
 		assertEquals(time,scheduleList.get(18).getScheduledTime());
 		// new day
-		time = new GregorianCalendar(2014,0,2,6,0,0);//6u
+		time = new GregorianCalendar(2014,1,2,6,0,0);//6u
 		assertEquals(0,scheduleList.get(19).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(19).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//7u

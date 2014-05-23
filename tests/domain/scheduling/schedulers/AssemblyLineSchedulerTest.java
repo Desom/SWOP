@@ -103,62 +103,62 @@ public class AssemblyLineSchedulerTest {
 	}
 	@Test
 	public void testCompletionEstimate() {
-		assertEquals(new GregorianCalendar(2014, 0, 1, 15, 10, 0), scheduler.completionEstimate(order1));
-		assertEquals(new GregorianCalendar(2014, 0, 1, 16, 20, 0), scheduler.completionEstimate(order2));
-		assertEquals(new GregorianCalendar(2014, 0, 1, 17, 20, 0), scheduler.completionEstimate(order3));
-		assertEquals(new GregorianCalendar(2014, 0, 1, 18, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(3)));
-		assertEquals(new GregorianCalendar(2014, 0, 1, 19, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(4)));
-		assertEquals(new GregorianCalendar(2014, 0, 1, 20, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(5)));
-		assertEquals(new GregorianCalendar(2014, 0, 1, 21, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(6)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(7)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(8)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(9)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(10)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(11)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 14, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(12)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 15, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(13)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 16, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(14)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 17, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(15)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 18, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(16)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 19, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(17)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 20, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(18)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 21, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(19)));
-		assertEquals(new GregorianCalendar(2014, 0, 2, 22, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(20)));
-		assertEquals(new GregorianCalendar(2014, 0, 3, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(21)));
-		assertEquals(new GregorianCalendar(2014, 0, 3, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(22)));
-		assertEquals(new GregorianCalendar(2014, 0, 3, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(23)));
-		assertEquals(new GregorianCalendar(2014, 0, 3, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(24)));
-		assertEquals(new GregorianCalendar(2014, 0, 3, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(25)));
-		
+		assertEquals(new GregorianCalendar(2014, 1, 1, 15, 10, 0), scheduler.completionEstimate(order1));
+		assertEquals(new GregorianCalendar(2014, 1, 1, 16, 20, 0), scheduler.completionEstimate(order2));
+		assertEquals(new GregorianCalendar(2014, 1, 1, 17, 20, 0), scheduler.completionEstimate(order3));
+		assertEquals(new GregorianCalendar(2014, 1, 1, 18, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(3)));
+		assertEquals(new GregorianCalendar(2014, 1, 1, 19, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(4)));
+		assertEquals(new GregorianCalendar(2014, 1, 1, 20, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(5)));
+		assertEquals(new GregorianCalendar(2014, 1, 1, 21, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(6)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(7)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(8)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(9)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(10)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(11)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 14, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(12)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 15, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(13)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 16, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(14)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 17, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(15)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 18, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(16)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 19, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(17)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 20, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(18)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 21, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(19)));
+		assertEquals(new GregorianCalendar(2014, 1, 2, 22, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(20)));
+		assertEquals(new GregorianCalendar(2014, 1, 3, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(21)));
+		assertEquals(new GregorianCalendar(2014, 1, 3, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(22)));
+		assertEquals(new GregorianCalendar(2014, 1, 3, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(23)));
+		assertEquals(new GregorianCalendar(2014, 1, 3, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(24)));
+		assertEquals(new GregorianCalendar(2014, 1, 3, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(25)));
+
 	}
 
 	@Test
 	public void testCanFinishOrderBeforeDeadline() throws InvalidConfigurationException, VehicleCatalogException {
-		SingleTaskOrder singleTask1 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 12, 0, 0));
+		SingleTaskOrder singleTask1 = this.createSingleTask(new GregorianCalendar(2014, 2, 1, 12, 0, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask1));
-		SingleTaskOrder singleTask2 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 3, 0, 0));
+		SingleTaskOrder singleTask2 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 3, 0, 0));
 		assertFalse(scheduler.canFinishOrderBeforeDeadline(singleTask2));
-		SingleTaskOrder singleTask3 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 16, 10, 0));
+		SingleTaskOrder singleTask3 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 16, 10, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask3));
-		SingleTaskOrder singleTask4 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 16, 0, 0));
+		SingleTaskOrder singleTask4 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 16, 0, 0));
 		assertFalse(scheduler.canFinishOrderBeforeDeadline(singleTask4));
-		SingleTaskOrder singleTask5 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 16, 20, 0));
+		SingleTaskOrder singleTask5 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 16, 20, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask5));
 	}
 
 	@Test
 	public void testOverTime() throws IllegalStateException, InternalFailureException, CannotAdvanceException {
 
-		assertEquals(new GregorianCalendar(2014,0,1,22,0,0), scheduler.getRealEndOfDay());
+		assertEquals(new GregorianCalendar(2014,1,1,22,0,0), scheduler.getRealEndOfDay());
 		fullDefaultAdvance(600);
-		assertEquals(new GregorianCalendar(2014,0,1,22,0,0), scheduler.getCurrentTime());
+		assertEquals(new GregorianCalendar(2014,1,1,22,0,0), scheduler.getCurrentTime());
 		fullDefaultAdvance(60);
 		fullDefaultAdvance(30);
-		assertEquals(new GregorianCalendar(2014,0,2,20,30,0), scheduler.getRealEndOfDay());
+		assertEquals(new GregorianCalendar(2014,1,2,20,30,0), scheduler.getRealEndOfDay());
 		fullDefaultAdvance(840);
 		fullDefaultAdvance(25);
 		fullDefaultAdvance(52);
-		assertEquals(new GregorianCalendar(2014,0,3,21,13,0), scheduler.getRealEndOfDay());
+		assertEquals(new GregorianCalendar(2014,1,3,21,13,0), scheduler.getRealEndOfDay());
 	}
 	
 	/**

@@ -97,7 +97,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		ArrayList<Order> orderList = makeOrderList();
 		
 		ArrayList<ScheduledOrder> scheduleList = basicAlgorithm.scheduleToScheduledOrderList(orderList,company.getAssemblyLines().get(0));
-		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);//12h
+		GregorianCalendar time = new GregorianCalendar(2014,1,1,6,0,0);//12h
 		assertEquals(9,scheduleList.get(0).getScheduledOrder().getOrderID());//60
 		assertEquals(time,scheduleList.get(0).getScheduledTime());
 		time.add(GregorianCalendar.MINUTE, 60);//13h00
@@ -131,7 +131,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		time.add(GregorianCalendar.MINUTE, 0);
 		
 		//nieuwe dag
-		time = new GregorianCalendar(2000,0,2,6,0,0);//06h00
+		time = new GregorianCalendar(2014,1,2,6,0,0);//06h00
 		
 		
 		assertEquals(7,scheduleList.get(10).getScheduledOrder().getOrderID());//70
@@ -176,7 +176,7 @@ public class SpecificationBatchSchedulingAgorithmTest {
 		config1.complete();
 		config2.complete();
 		config3.complete();
-		GregorianCalendar time = new GregorianCalendar(2000,0,1,12,0,0);
+		GregorianCalendar time = new GregorianCalendar(2000,1,1,6,0,0);
 		
 		orderList.add(new VehicleOrder(0, garageHolder, config1, time));
 		time.add(GregorianCalendar.MINUTE, -1);

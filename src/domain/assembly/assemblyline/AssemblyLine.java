@@ -281,35 +281,19 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	}
 
 	/**
-	 * TODO
 	 * Adds the given workstation to the end of the assembly line.
 	 * The given workstation can't belong to another assembly line. 
 	 * 
 	 * @param workstation
 	 * 		The workstations to be added.
-	 * TODO private liefst, maar wordt nog gebruikt in andere klassen
 	 */
-	protected void addWorkstations(ArrayList<Workstation> workstations){
+	private void addWorkstations(ArrayList<Workstation> workstations){
 		this.workstations = new ArrayList<Workstation>();
 		for (Workstation workstation : workstations) {
 			this.workstations.add(workstation);
 			workstation.addObserver(this);
 		}
 	}
-
-	/**
-	 * Add all the given workstations to the end of the assembly line.
-	 * The given workstation can't belong to other assembly lines. 
-	 * 
-	 * @param workstations
-	 * 		The workstations to be added.
-	 * TODO
-	 */
-//	protected void addAllWorkstation(List<Workstation> workstations){
-//		for(Workstation w:workstations){
-//			addWorkstation(w);
-//		}
-//	}
 
 	/**
 	 * Notifies the assembly line that something it observes has changed.

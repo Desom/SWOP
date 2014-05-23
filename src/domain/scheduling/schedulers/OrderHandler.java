@@ -24,6 +24,5 @@ public interface OrderHandler {
 	 * 		The scheduler that will be checked.
 	 * @return True the given scheduler is used by the order handler, otherwise false.
 	 */
-	//TODO betere doc nodig. (ook bij implementing classes)
 	public boolean hasScheduler(Scheduler scheduler);
 }

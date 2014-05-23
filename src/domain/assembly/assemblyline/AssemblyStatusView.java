@@ -55,17 +55,17 @@ public class AssemblyStatusView {
 	}
 
 	/**
-	 * Returns all tasks at the workstation associated with the given id.
+	 * Returns all tasks at the workstation associated with the given workstation type.
 	 * 
-	 * @param workstationId
-	 * 		The id of the workstation which has to desired tasks.
-	 * @return All tasks at the workstation associated with the given id.
+	 * @param workstationType
+	 * 		The type of the workstation which has the desired tasks.
+	 * @return All tasks at the workstation associated with the given workstation type.
 	 * @throws DoesNotExistException
-	 * 		If the given id isn't associated with a workstation.
+	 * 		If the given type isn't associated with a workstation.
 	 */
-	public LinkedList<TaskType> getAllTasksAt(WorkstationType type) throws DoesNotExistException{
+	public LinkedList<TaskType> getAllTasksAt(WorkstationType workstationType) throws DoesNotExistException{
 		LinkedList<TaskType> tasks = new LinkedList<TaskType>();
-		Workstation workstation = getWorkstation(type);
+		Workstation workstation = getWorkstation(workstationType);
 		for(AssemblyTask t : workstation.getAllTasks()){
 			tasks.add(t.getType());
 		}
@@ -73,25 +73,25 @@ public class AssemblyStatusView {
 	}
 
 	/**
-	 * Returns true if the task corresponding to the option type is completed in the indicated workstation, otherwise false.
+	 * Returns true if the task corresponding to the option type is completed with the indicated workstation type, otherwise false.
 	 * 
-	 * @param optionType
-	 * 		The type of option.
-	 * @param workstationId
+	 * @param taskType
+	 * 		The type of task.
+	 * @param workstationType
 	 * 		The id that indicates the workstation.
 	 * @return True if the task corresponding to the option type is completed in the indicated workstation, otherwise false.
 	 * @throws DoesNotExistException
-	 * 		If the workstation with the given id doesn't exist.
-	 * 		If the option type has no corresponding task in the workstation. 
+	 * 		If the workstation with the given type doesn't exist.
+	 * 		If the task type has no corresponding task in the workstation. 
 	 */
-	public boolean taskIsDoneAt(TaskType taskType, WorkstationType type) throws DoesNotExistException{
-		Workstation workstation = getWorkstation(type);
+	public boolean taskIsDoneAt(TaskType taskType, WorkstationType workstationType) throws DoesNotExistException{
+		Workstation workstation = getWorkstation(workstationType);
 		for(AssemblyTask task : workstation.getAllTasks()){
 			if(task.getType() == taskType){
 				return task.isCompleted();
 			}
 		}
-		throw new DoesNotExistException("The workstation with ID " + type + " does not have a task with type " + taskType);
+		throw new DoesNotExistException("The workstation with ID " + workstationType + " does not have a task with type " + taskType);
 	}
 
 	/**
@@ -106,8 +106,8 @@ public class AssemblyStatusView {
 	/**
 	 * Returns the workstation at the specified position (starting at 0) in the assemblyLine
 	 * @param position
-	 * 		The index of the workstation in the assemblyline.
-	 * @return The workstation associated with the given id.
+	 * 		The index of the workstation in the assembly line.
+	 * @return The workstation associated with the given position.
 	 * @throws DoesNotExistException
 	 * 		If the desired workstation does not exist.
 	 */
@@ -128,7 +128,7 @@ public class AssemblyStatusView {
 	 * @throws DoesNotExistException
 	 * 		If the desired workstation does not exist.
 	 */
-	private Workstation getWorkstation(WorkstationType workstationType) throws DoesNotExistException{
+	private Workstation getWorkstation(WorkstationType workstationType) throws DoesNotExistException {
 		for(Workstation w : workstations){
 			if(w.getWorkstationType() == workstationType){
 				return w;

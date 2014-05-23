@@ -37,8 +37,8 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 *  	The orders to be sorted.
 	 *  @param allTasksCompletedTime
 	 *  	The time when all task on assemblyLine will be done.
-	 *  @param assemblyLineScheduler
-	 *  	The assymblylineScheduler to which the orders belong.
+	 *  @param assemblyLine
+	 *  	The assymblyline to which the orders belong.
 	 *  @return The sorted Orders.
 	 */
 	@SuppressWarnings("unchecked")
@@ -73,7 +73,11 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		fuse(temp,deadlines);
 		return temp;
 	}
-
+	/**
+	 * adds the the completed times of the scheduledOrders in a list to the scheduledOrders in an other list 
+	 * @param temp the list to which the completed times will be added
+	 * @param deadlines the list to which the completed times will be retreived
+	 */
 	private void fuse(ArrayList<ScheduledOrder> temp,
 			ArrayList<ScheduledOrder> deadlines) {
 		for(ScheduledOrder i:deadlines){
@@ -135,13 +139,8 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day.
 	 * @param orderList
 	 * 		A List of Orders.
-	 * @param allTasksCompletedTime
-	 * 		The time when all tasks on assemblyLine will be done.
-	 * @param stateOfAssemblyLine 
-	 * @param assemblyLineScheduler 
-	 * 		The assymblylineScheduler to which the orders belong.
-	 * @param scheduledOrdersWithDeadline 
-	 * 		The list which will contain the scheduled Orders and their estimated completion time
+	 * @param assemblyLine
+	 * 		The assymblyline to which the orders belong.
 	 * @return An array of ScheduledOrders with if possible 
 	 * 		2 SingleTaskOrders at the beginning of the day and 2 at the end of the day
 	 */
@@ -175,11 +174,8 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * 		A List of SingleTaskOrders that if possible needs to be placed at the beginning of the day.
 	 * @param orderList2
 	 * 		A List of Orders.
-	 * @param time
-	 * 		The time when all tasks on assemblyLine will be done.
-	 * @param assemblyLineScheduler
-	 * 		The assymblylineScheduler to which the orders belong.
-	 * @param stateOfAssemblyLine 
+	 * @param assemblyLine
+	 * 		The assymblyline to which the orders belong.
 	 * @param scheduledOrdersWithCompletionTime 
 	 * 		The list which will contain the scheduled Orders and their estimated completion time
 	 * @return An array of ScheduledOrders so that the end of day proceeds correctly.
@@ -202,7 +198,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			GregorianCalendar temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 			temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLine));
 			if(assemblyLine.getAssemblyLineScheduler().getRealEndOfDay().before(temporayTime)){
-				//finishes the day with three empty orders
+				//finishes the day with empty orders
 				for(int j =0; j< assemblyLine.getNumberOfWorkstations();j++){
 					temp.add(null);
 				}
@@ -258,14 +254,18 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			temporayTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
 			temporayTime.add(GregorianCalendar.MINUTE, timeToFinishWithFilled(temp2,assemblyLine));
 		}
-		//finishes the day with three empty orders
+		//finishes the day with  empty orders
 		for(int j =0; j< assemblyLine.getNumberOfWorkstations();j++){
 			temp.add(null);
 		}
 		timeOfBeltWithAssembly(temp, assemblyLine,scheduledOrdersWithCompletionTime);
 		return this.transformToScheduledOrderWithAssembly(temp, assemblyLine);
 	}
-
+	/**
+	 * Checks how many SingleTaskOrders can be placed at the beginning of a day given an assemblyline.
+	 * @param assemblyLine the assemblyLine where will be checked how many SingleTaskOrders can be placed at the beginning of a day given an assemblyline.
+	 * @return the amount of SingleTaskOrders can be placed at the beginning of a day.
+	 */
 	private int canPlaceAtbeginning(AssemblyLine assemblyLine) {
 		int k =0;
 		LinkedList<Order> stateOfAssemblyLine = assemblyLine.stateWhenAcceptingOrders();
@@ -318,7 +318,16 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 		}
 	}
-
+	/**
+	 * Simulate the advance of an assemblyLine and return the orders that were pushed of the belt
+	 * @param simulator
+	 * 			The state of the assemblyLine
+	 * @param orderList	
+	 * 			the list where new orders can be retrieved
+	 * @param assemblyLine
+	 * 			the assemblyLine to which the orders belong
+	 * @return  the orders that were pushed of the belt
+	 */
 	private ArrayList<Order> advanceReturnOfBelt(LinkedList<Order> simulator,
 			ArrayList<Order> orderList, AssemblyLine assemblyLine) {
 		ArrayList<Order> result = new ArrayList<Order>();
@@ -353,7 +362,12 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		}
 		return result;
 	}
-
+	/**
+	 * returns if a list has only null elements
+	 * @param simulator
+	 * 			The list to be checked
+	 * @return false if the list contains a non null element else true
+	 */
 	private boolean allNull(LinkedList<Order> simulator) {
 		for(Order order: simulator){
 			if(order!=null) return false;
@@ -366,11 +380,8 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * 
 	 * @param ordersToComplete
 	 * 		All orders to complete.
-	 * @param time
-	 * 		The start time of the AssemblyLine.
-	 * @param stateOfAssemblyLine 
-	 * @param assemblyLineScheduler
-	 * 		The AssemblyLineScheduler that contains the AssemblyLine.
+	 * @param assemblyLine
+	 * 		The AssemblyLine tow which the orders belong.
 	 * @param result
 	 * 		The list where the new Orders and their completion estimate will be added.
 	 */
@@ -403,8 +414,8 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * @param ordersToComplete
 	 * 		All orders to complete.
 	 * @param stateOfAssemblyLine 
-	 * @param assemblyLineScheduler
-	 * 		The AssemblyLineScheduler that contains the AssemblyLine.
+	 * @param assemblyLine
+	 * 		The AssemblyLine to which the orders belong.
 	 * @return The time necessary to finish the schedule given the current state of the assemblyLine in minutes.
 	 */
 	@SuppressWarnings("unchecked")
@@ -481,10 +492,10 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			//prepares a test dummy for an extra Order
 			temp2.add(temp2.size()-corectionfactor, orderList2.get(0));
 		}
-		//finishes the day with three empty orders
-		temp.add(null);
-		temp.add(null);
-		temp.add(null);
+		//finishes the day with empty orders
+		for(int j =0; j< assemblyLineScheduler.getAssemblyLine().getNumberOfWorkstations();j++){
+			temp.add(null);
+		}
 		timeOfBelt(temp,time,assemblyLineScheduler,scheduledOrdersWithCompletionTime);
 		scheduledOrders.addAll(transformToScheduledOrder(temp,time,assemblyLineScheduler));
 	}
@@ -551,7 +562,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 			simulator.add(null);
 		}
 		int timespent = 0;
-		// places  the orders one by one and remove the last one which will be added to result
+		// simulate advances and check which orders are placed on the belt.
 		ArrayList<Order> orderList = (ArrayList<Order>) orders.clone();
 		while(!orderList.isEmpty() || !allNull(simulator)){
 			ArrayList<Order> placedOrders = this.advanceReturnOnBelt(simulator, orderList, assemblyLineScheduler.getAssemblyLine());
@@ -565,7 +576,16 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		return scheduledOrders;
 
 	}
-
+	/**
+	 * Simulate the advance of an assemblyLine and return the orders that were pushed on the belt
+	 * @param simulator
+	 * 			The state of the assemblyLine
+	 * @param orderList	
+	 * 			the list where new orders can be retrieved
+	 * @param assemblyLine
+	 * 			the assemblyLine to which the orders belong
+	 * @return  the orders that were pushed on the belt
+	 */
 	private ArrayList<Order> advanceReturnOnBelt(LinkedList<Order> simulator,
 			ArrayList<Order> orderList, AssemblyLine assemblyLine) {
 		ArrayList<Order> result = new ArrayList<Order>();
@@ -621,7 +641,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		LinkedList<Order> simulator = assemblyLine.getAllOrders();
 		ArrayList<ScheduledOrder> scheduledOrders = new ArrayList<ScheduledOrder>();
 		int timespent = 0;
-		// places  the orders one by one and remove the last one which will be added to result
+		// simulate advances and check which orders are placed on the belt.
 		ArrayList<Order> orderList = (ArrayList<Order>) orders.clone();
 		while(!orderList.isEmpty() || !allNull(simulator)){
 			ArrayList<Order> placedOrders = this.advanceReturnOnBelt(simulator, orderList, assemblyLine);
@@ -636,7 +656,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	}
 
 	/**
-	 * Calculates the time necessary to finish the schedule given the current state of the AssemblyLine.
+	 * Calculates the time necessary to finish the schedule starting from an empty assemblyLine.
 	 * 
 	 * @param orders
 	 * 		The schedule to finish
@@ -646,21 +666,17 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 */
 	private int calculatefulltimeAtstart(ArrayList<Order> orders, AssemblyLineScheduler assemblyLineScheduler) {
 		LinkedList<Order> simulator = new LinkedList<Order>();
-		for(int i = 0; i < assemblyLineScheduler.getAssemblyLine().getNumberOfWorkstations(); i++){
+		for(int j =0; j< assemblyLineScheduler.getAssemblyLine().getNumberOfWorkstations();j++){
 			simulator.add(null);
 		}
-		int time = 0;
-		// places  the orders one by one 
-		for(Order i : orders){
-			simulator.addFirst(i);
-			simulator.removeLast();
-			time += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
+		int timespent = 0;
+		// simulate the advancing
+		ArrayList<Order> orderList = (ArrayList<Order>) orders.clone();
+		while(!orderList.isEmpty() || !allNull(simulator)){
+			advanceReturnOfBelt(simulator, orderList, assemblyLineScheduler.getAssemblyLine());
+			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 		}
-		// finishes the last orders
-		simulator.addFirst(null);
-		simulator.removeLast();
-		time += assemblyLineScheduler.getAssemblyLine().calculateTimeTillEmptyFor(simulator);
-		return time;
+		return timespent;
 	}
 
 	/**

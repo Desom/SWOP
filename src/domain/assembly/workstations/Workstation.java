@@ -121,7 +121,7 @@ public class Workstation {
 	 * @throws IllegalArgumentException
 	 * 		If task does not match with the task types list.
 	 */
-	private void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
+	protected void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
 		if (this.workstationType.getacceptedTaskTypes().contains(task.getType()))
 			this.allTasks.add(task);
 		else

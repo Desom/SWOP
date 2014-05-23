@@ -13,12 +13,14 @@ import org.junit.Test;
 import domain.InternalFailureException;
 import domain.Statistics;
 import domain.assembly.assemblyline.AssemblyLine;
+import domain.assembly.assemblyline.AssemblyLineCreator;
 import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.assembly.assemblyline.DoesNotExistException;
 import domain.assembly.assemblyline.status.AssemblyLineStatus;
 import domain.assembly.assemblyline.status.BrokenStatus;
 import domain.assembly.assemblyline.status.MaintenanceStatus;
 import domain.assembly.assemblyline.status.OperationalStatus;
+import domain.assembly.assemblyline.status.StatusCreator;
 import domain.assembly.workstations.Workstation;
 import domain.assembly.workstations.WorkstationTypeCreator;
 import domain.configuration.VehicleCatalog;
@@ -35,6 +37,7 @@ import domain.scheduling.order.Order;
 import domain.scheduling.order.OrderManager;
 import domain.scheduling.order.SingleTaskOrder;
 import domain.scheduling.schedulers.AssemblyLineScheduler;
+import domain.scheduling.schedulers.algorithm.AlgorithmCreator;
 import domain.scheduling.schedulers.algorithm.AssemblyLineSchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.BasicSchedulingAlgorithm;
 import domain.scheduling.schedulers.algorithm.FIFOSchedulingAlgorithm;
@@ -53,27 +56,24 @@ public class AssemblyLineSchedulerTest {
 	private Order order50;
 	private ArrayList<Order> unFinishedOrdered;
 	private ArrayList<AssemblyLineStatus> statuses;
-
+	private VehicleCatalog catalog;
 	private Mechanic m1;
 	private Mechanic m2;
 	private Mechanic m3;
 	
 	@Before
 	public void create() throws InvalidConfigurationException, IOException, VehicleCatalogException, DoesNotExistException{
-		ArrayList<AssemblyLineSchedulingAlgorithm> possibleAlgorithms = new ArrayList<AssemblyLineSchedulingAlgorithm>();
-		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new FIFOSchedulingAlgorithm()));
-		possibleAlgorithms.add(new BasicSchedulingAlgorithm(new SpecificationBatchSchedulingAlgorithm(new FIFOSchedulingAlgorithm())));
-		GregorianCalendar time = new GregorianCalendar(2014, 1, 1, 12, 0, 0);
-		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
-		this.scheduler = new AssemblyLineScheduler(time, possibleAlgorithms);
-		OrderManager orderManager = new OrderManager(scheduler, "testData/testData_OrderManager.txt", catalog);
-		Statistics statistics = new Statistics(orderManager);
-		statuses = new ArrayList<AssemblyLineStatus>();
-		statuses.add(new OperationalStatus());
-		statuses.add(new MaintenanceStatus());
-		statuses.add(new BrokenStatus());
-		line = new AssemblyLine(scheduler, statuses);
-
+		WorkstationTypeCreator workstationTypeCreator = new WorkstationTypeCreator();
+		catalog = new VehicleCatalog(workstationTypeCreator);
+		StatusCreator statusCreator = new StatusCreator();
+		SchedulerCreator schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
+		line =new AssemblyLineCreator(workstationTypeCreator,schedulerCreator,statusCreator,catalog).create().get(0);
+		ArrayList<AssemblyLineScheduler>	list = new ArrayList<AssemblyLineScheduler>();
+		list.add(line.getAssemblyLineScheduler());
+		
+		this.scheduler = line.getAssemblyLineScheduler();
+		this.scheduler.addCurrentTime(360);
+		OrderManager orderManager = new OrderManager(schedulerCreator.createFactoryScheduler(list), "testData/testData_OrderManager.txt", catalog);
 		ArrayList<Order> unfinished = orderManager.getAllUnfinishedOrders();
 		FIFOSchedulingAlgorithm fifo = new FIFOSchedulingAlgorithm();
 		unFinishedOrdered = fifo.scheduleToList(unfinished, null);
@@ -101,32 +101,32 @@ public class AssemblyLineSchedulerTest {
 	}
 	@Test
 	public void testCompletionEstimate() {
-		assertEquals(new GregorianCalendar(2014, 1, 1, 15, 10, 0), scheduler.completionEstimate(order1));
-		assertEquals(new GregorianCalendar(2014, 1, 1, 16, 20, 0), scheduler.completionEstimate(order2));
-		assertEquals(new GregorianCalendar(2014, 1, 1, 17, 20, 0), scheduler.completionEstimate(order3));
-		assertEquals(new GregorianCalendar(2014, 1, 1, 18, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(3)));
-		assertEquals(new GregorianCalendar(2014, 1, 1, 19, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(4)));
-		assertEquals(new GregorianCalendar(2014, 1, 1, 20, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(5)));
-		assertEquals(new GregorianCalendar(2014, 1, 1, 21, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(6)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(7)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(8)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(9)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(10)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(11)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 14, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(12)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 15, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(13)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 16, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(14)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 17, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(15)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 18, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(16)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 19, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(17)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 20, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(18)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 21, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(19)));
-		assertEquals(new GregorianCalendar(2014, 1, 2, 22, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(20)));
-		assertEquals(new GregorianCalendar(2014, 1, 3, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(21)));
-		assertEquals(new GregorianCalendar(2014, 1, 3, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(22)));
-		assertEquals(new GregorianCalendar(2014, 1, 3, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(23)));
-		assertEquals(new GregorianCalendar(2014, 1, 3, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(24)));
-		assertEquals(new GregorianCalendar(2014, 1, 3, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(25)));
+		assertEquals(new GregorianCalendar(2014, 0, 1, 15, 10, 0), scheduler.completionEstimate(order1));
+		assertEquals(new GregorianCalendar(2014, 0, 1, 16, 20, 0), scheduler.completionEstimate(order2));
+		assertEquals(new GregorianCalendar(2014, 0, 1, 17, 20, 0), scheduler.completionEstimate(order3));
+		assertEquals(new GregorianCalendar(2014, 0, 1, 18, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(3)));
+		assertEquals(new GregorianCalendar(2014, 0, 1, 19, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(4)));
+		assertEquals(new GregorianCalendar(2014, 0, 1, 20, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(5)));
+		assertEquals(new GregorianCalendar(2014, 0, 1, 21, 20, 0), scheduler.completionEstimate(unFinishedOrdered.get(6)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(7)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(8)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(9)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(10)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(11)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 14, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(12)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 15, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(13)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 16, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(14)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 17, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(15)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 18, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(16)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 19, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(17)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 20, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(18)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 21, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(19)));
+		assertEquals(new GregorianCalendar(2014, 0, 2, 22, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(20)));
+		assertEquals(new GregorianCalendar(2014, 0, 3, 9, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(21)));
+		assertEquals(new GregorianCalendar(2014, 0, 3, 10, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(22)));
+		assertEquals(new GregorianCalendar(2014, 0, 3, 11, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(23)));
+		assertEquals(new GregorianCalendar(2014, 0, 3, 12, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(24)));
+		assertEquals(new GregorianCalendar(2014, 0, 3, 13, 0, 0), scheduler.completionEstimate(unFinishedOrdered.get(25)));
 		
 	}
 
@@ -134,13 +134,13 @@ public class AssemblyLineSchedulerTest {
 	public void testCanFinishOrderBeforeDeadline() throws InvalidConfigurationException, VehicleCatalogException {
 		SingleTaskOrder singleTask1 = this.createSingleTask(new GregorianCalendar(2014, 2, 1, 12, 0, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask1));
-		SingleTaskOrder singleTask2 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 3, 0, 0));
+		SingleTaskOrder singleTask2 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 3, 0, 0));
 		assertFalse(scheduler.canFinishOrderBeforeDeadline(singleTask2));
-		SingleTaskOrder singleTask3 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 16, 10, 0));
+		SingleTaskOrder singleTask3 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 16, 10, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask3));
-		SingleTaskOrder singleTask4 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 16, 0, 0));
+		SingleTaskOrder singleTask4 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 16, 0, 0));
 		assertFalse(scheduler.canFinishOrderBeforeDeadline(singleTask4));
-		SingleTaskOrder singleTask5 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 16, 20, 0));
+		SingleTaskOrder singleTask5 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 16, 20, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask5));
 	}
 
@@ -187,16 +187,16 @@ public class AssemblyLineSchedulerTest {
 	@Test
 	public void testOverTime() throws IllegalStateException, InternalFailureException, CannotAdvanceException {
 
-		assertEquals(new GregorianCalendar(2014,1,1,22,0,0), scheduler.getRealEndOfDay());
+		assertEquals(new GregorianCalendar(2014,0,1,22,0,0), scheduler.getRealEndOfDay());
 		fullDefaultAdvance(600);
-		assertEquals(new GregorianCalendar(2014,1,1,22,0,0), scheduler.getCurrentTime());
+		assertEquals(new GregorianCalendar(2014,0,1,22,0,0), scheduler.getCurrentTime());
 		fullDefaultAdvance(60);
 		fullDefaultAdvance(30);
-		assertEquals(new GregorianCalendar(2014,1,2,20,30,0), scheduler.getRealEndOfDay());
+		assertEquals(new GregorianCalendar(2014,0,2,20,30,0), scheduler.getRealEndOfDay());
 		fullDefaultAdvance(840);
 		fullDefaultAdvance(25);
 		fullDefaultAdvance(52);
-		assertEquals(new GregorianCalendar(2014,1,3,21,13,0), scheduler.getRealEndOfDay());
+		assertEquals(new GregorianCalendar(2014,0,3,21,13,0), scheduler.getRealEndOfDay());
 	}
 
 	@Test
@@ -280,7 +280,7 @@ public class AssemblyLineSchedulerTest {
 		
 		Policy singleTaskPolicy = new SingleTaskOrderNumbersOfTasksPolicy(null);
 		Configuration config = new Configuration(null, singleTaskPolicy);
-		config.addOption(new Option("test",new TaskTypeCreator().Color));
+		config.addOption(new Option("test",catalog.taskTypeCreator.Color));
 		config.complete();
 		CustomShopManager customShop = new CustomShopManager(1);
 		

@@ -305,7 +305,6 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		// places  the orders one by one and remove the last one which will be added to result
 		ArrayList<Order> orderList = (ArrayList<Order>) ordersToComplete.clone();
 		while(!orderList.isEmpty() || !allNull(simulator)){
-			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 			ArrayList<Order> completed = advanceReturnOfBelt(simulator, orderList, assemblyLineScheduler.getAssemblyLine());
 			for(Order order:completed){
 				if(order != null){
@@ -316,6 +315,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 					result.add(scheduledOrder);
 				}
 			}
+			timespent += assemblyLineScheduler.getAssemblyLine().calculateTimeTillAdvanceFor(simulator);
 		}
 	}
 
@@ -382,7 +382,6 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		// places  the orders one by one and remove the last one which will be added to result
 		ArrayList<Order> orderList = (ArrayList<Order>) ordersToComplete.clone();
 		while(!orderList.isEmpty() || !allNull(simulator)){
-			timespent += assemblyLine.calculateTimeTillAdvanceFor(simulator);
 			ArrayList<Order> completed = advanceReturnOfBelt(simulator, orderList, assemblyLine);
 			for(Order order:completed){
 				if(order != null && !assemblyLine.stateWhenAcceptingOrders().contains(order)){
@@ -393,7 +392,9 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 					result.add(scheduledOrder);
 				}
 			}
+			timespent += assemblyLine.calculateTimeTillAdvanceFor(simulator);
 		}
+		
 	}
 
 	/**
@@ -466,7 +467,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 		ArrayList<Order> temp2 = (ArrayList<Order>) temp.clone();
 		if(!orderList2.isEmpty()) temp2.add(temp2.size()-corectionfactor, orderList2.get(0));
 		//checks if the test dummy exceeds the end of the day
-		while(calculatefulltimeAtstart(temp2,assemblyLineScheduler )< (AssemblyLineScheduler.END_OF_DAY-AssemblyLineScheduler.BEGIN_OF_DAY)*60){
+		while(calculatefulltimeAtstart(temp2,assemblyLineScheduler )<= (AssemblyLineScheduler.END_OF_DAY-AssemblyLineScheduler.BEGIN_OF_DAY)*60){
 			if(!orderList2.isEmpty())orderList2.remove(0);
 			// checks if there are still 'normal' orders to be placed
 			if(orderList2.isEmpty()){

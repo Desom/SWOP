@@ -67,7 +67,7 @@ public class AssemblyLineSchedulerTest {
 		catalog = new VehicleCatalog(workstationTypeCreator);
 		StatusCreator statusCreator = new StatusCreator();
 		SchedulerCreator schedulerCreator = new SchedulerCreator(new AlgorithmCreator());
-		line =new AssemblyLineCreator(workstationTypeCreator,schedulerCreator,statusCreator,catalog).create().get(0);
+		line =new AssemblyLineCreator(workstationTypeCreator,schedulerCreator,statusCreator,catalog).create().get(1);
 		ArrayList<AssemblyLineScheduler>	list = new ArrayList<AssemblyLineScheduler>();
 		list.add(line.getAssemblyLineScheduler());
 		
@@ -132,7 +132,7 @@ public class AssemblyLineSchedulerTest {
 
 	@Test
 	public void testCanFinishOrderBeforeDeadline() throws InvalidConfigurationException, VehicleCatalogException {
-		SingleTaskOrder singleTask1 = this.createSingleTask(new GregorianCalendar(2014, 2, 1, 12, 0, 0));
+		SingleTaskOrder singleTask1 = this.createSingleTask(new GregorianCalendar(2014, 1, 1, 12, 0, 0));
 		assertTrue(scheduler.canFinishOrderBeforeDeadline(singleTask1));
 		SingleTaskOrder singleTask2 = this.createSingleTask(new GregorianCalendar(2014, 0, 1, 3, 0, 0));
 		assertFalse(scheduler.canFinishOrderBeforeDeadline(singleTask2));

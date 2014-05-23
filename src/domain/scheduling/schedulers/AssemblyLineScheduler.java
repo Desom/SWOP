@@ -177,20 +177,20 @@ public class AssemblyLineScheduler implements Scheduler{
 			// places  the orders one by one and remove the last one which will be added to result
 			ArrayList<ScheduledOrder> orderList = (ArrayList<ScheduledOrder>) scheduledOrders.clone();
 			while(true){
-				timespent += assemblyLine.calculateTimeTillAdvanceFor(simulator);
 				ArrayList<Order> completed = advanceReturnOfBelt(simulator, orderList, assemblyLine);
-				for(Order candidate:completed){
-					if(candidate == order){
-						GregorianCalendar time = (GregorianCalendar) this.assemblyLine.timeWhenAcceptingOrders();
-						time.add(GregorianCalendar.MINUTE, timespent);
-						return time;
-					}
+				if(completed.contains(order))
+				{
+					GregorianCalendar time = (GregorianCalendar) this.assemblyLine.timeWhenAcceptingOrders();
+					time.add(GregorianCalendar.MINUTE, timespent);
+					return time;
+
 				}
+				timespent += assemblyLine.calculateTimeTillAdvanceFor(simulator);
 			}
 		}
 		throw new IllegalArgumentException("The AssemblyLineScheduler:" + this + " doesn't schedule the given Order:" + order);
 	}
-	
+
 	private ArrayList<Order> advanceReturnOfBelt(LinkedList<Order> simulator,
 			ArrayList<ScheduledOrder> orderList, AssemblyLine assemblyLine) {
 		ArrayList<Order> result = new ArrayList<Order>();
@@ -204,21 +204,21 @@ public class AssemblyLineScheduler implements Scheduler{
 					simulAssembly.addFirst(orderList.remove(0).getScheduledOrder());
 					j+=2;
 				}else
-				if(simulAssembly.get(j) != null && !assemblyLine.filterWorkstations(simulAssembly.get(j).getAssemblyprocess()).contains(assemblyLine.selectWorkstationById(j+1))){
-					if(j==assemblyLine.getNumberOfWorkstations()-1){
-						result.add(simulAssembly.removeLast());
-						simulAssembly.addLast(null);
-					}
-					else{
-						if(simulAssembly.get(j+1)==null){
-							simulAssembly.remove(j+1);
-							simulAssembly.add(j+1, simulAssembly.get(j));
-							simulAssembly.remove(j);
-							simulAssembly.add(j, null);
-							j+=2;
+					if(simulAssembly.get(j) != null && !assemblyLine.filterWorkstations(simulAssembly.get(j).getAssemblyprocess()).contains(assemblyLine.selectWorkstationById(j+1))){
+						if(j==assemblyLine.getNumberOfWorkstations()-1){
+							result.add(simulAssembly.removeLast());
+							simulAssembly.addLast(null);
+						}
+						else{
+							if(simulAssembly.get(j+1)==null){
+								simulAssembly.remove(j+1);
+								simulAssembly.add(j+1, simulAssembly.get(j));
+								simulAssembly.remove(j);
+								simulAssembly.add(j, null);
+								j+=2;
+							}
 						}
 					}
-				}
 			} catch (DoesNotExistException e) {
 				// onmogelijk
 			}
@@ -308,7 +308,7 @@ public class AssemblyLineScheduler implements Scheduler{
 		throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
 
 	}
-	
+
 	public Order getNextOrderSkip() throws NoOrdersToBeScheduledException {
 		ArrayList<ScheduledOrder> scheduledOrders = getSchedule(this.getCurrentTime());
 		int i = 0;
@@ -321,7 +321,7 @@ public class AssemblyLineScheduler implements Scheduler{
 		}
 		if(scheduledOrders.get(i).getScheduledTime().equals(this.getCurrentTime()))
 			return scheduledOrders.get(i).getScheduledOrder();
-			
+
 
 		return null;
 		//throw new InternalFailureException("The currentAlgorithm didn't schedule an order for now even though he should have.");
@@ -388,7 +388,7 @@ public class AssemblyLineScheduler implements Scheduler{
 	@Override
 	public void updateSchedule(){
 		this.outDated = true;
-		
+
 		boolean hasOrder = false;
 		if(this.schedule != null){
 			for(ScheduledOrder schOrder : this.schedule){
@@ -398,7 +398,7 @@ public class AssemblyLineScheduler implements Scheduler{
 				}
 			}
 		}
-		
+
 		if(this.getAssemblyLine() != null && this.getAssemblyLine().isEmpty() && !hasOrder && !this.getOrdersToBeScheduled().isEmpty()){
 			this.notifyObservers();
 		}

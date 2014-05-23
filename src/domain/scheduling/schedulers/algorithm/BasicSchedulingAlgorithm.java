@@ -63,6 +63,13 @@ public class BasicSchedulingAlgorithm
 		HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping = new HashMap<AssemblyLineScheduler, ArrayList<Order>>();
 
 		ArrayList<AssemblyLineScheduler> schedulers = factoryScheduler.getSchedulerList();
+		for(int i=0; i<schedulers.size();i++){
+			if(!schedulers.get(i).canScheduleOrder()){
+				scheduleMapping.put(schedulers.get(i), new ArrayList<Order>());
+				schedulers.remove(i);
+				i--;
+			}
+		}
 		for(AssemblyLineScheduler scheduler : schedulers){
 			scheduleMapping.put(scheduler, new ArrayList<Order>());
 		}

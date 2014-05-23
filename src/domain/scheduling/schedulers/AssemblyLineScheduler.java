@@ -638,4 +638,8 @@ public class AssemblyLineScheduler implements Scheduler{
 	public GregorianCalendar getLatestTime() {
 		return this.getCurrentTime();
 	}
+
+	public boolean canScheduleOrder() {
+		return this.assemblyLine.canAcceptNewOrders();
+	}
 }

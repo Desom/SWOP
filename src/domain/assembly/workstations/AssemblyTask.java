@@ -18,34 +18,36 @@ public class AssemblyTask {
 
 	/**
 	 * Constructor of AssemblyTask.
-	 * Creates an assembly task with a list of actions that are needed to complete this assembly task and the type of this assembly task.
 	 * The created assembly task is not completed by default.
 	 * 
-	 * @param	actions
-	 * 			A list of actions that is needed to complete this AssemblyTask
-	 * @param	type
-	 * 			An enum object that indicates the type of this AssemblyTask
+	 * @param actions
+	 * 		A list of actions that is needed to complete this AssemblyTask
+	 * @param taskable
+	 * 		The taskable object of this assembly task.
+	 * @param assemblyProcess
+	 * 		The assembly process to which this assembly task belongs.
 	 */
-	public AssemblyTask(ArrayList<String> actions, Taskable taskable, VehicleAssemblyProcess process) {
-		this(actions, taskable, false, process);
+	public AssemblyTask(ArrayList<String> actions, Taskable taskable, VehicleAssemblyProcess assemblyProcess) {
+		this(actions, taskable, false, assemblyProcess);
 	}
 	
 	/**
 	 * Constructor of AssemblyTask.
-	 * Creates an assembly task with a list of actions that are needed to complete this assembly task, the type of this assembly task and a boolean indicating if it is already completed or not.
 	 * 
-	 * @param	actions
-	 * 			A list of actions that is needed to complete this AssemblyTask.
-	 * @param	type
-	 * 			An enum object that indicates the type of this AssemblyTask.
-	 * @param	isCompleted
-	 * 			A boolean telling if this assembly task is already completed or not
+	 * @param actions
+	 * 		A list of actions that is needed to complete this AssemblyTask.
+	 * @param taskable
+	 * 		The taskable object of this assembly task.
+	 * @param isCompleted
+	 * 		Indicates whether this assembly task is completed or not.
+	 * @param assemblyProcess
+	 * 		The assembly process to which this assembly task belongs.
 	 */
-	public AssemblyTask(ArrayList<String> actions, Taskable taskable, boolean isCompleted, VehicleAssemblyProcess process) {
+	public AssemblyTask(ArrayList<String> actions, Taskable taskable, boolean isCompleted, VehicleAssemblyProcess assemblyProcess) {
 		this.setActions(actions);
 		this.taskable = taskable;
 		this.isCompleted = isCompleted;
-		this.assemblyProcess = process;
+		this.assemblyProcess = assemblyProcess;
 	}
 	
 	/**
@@ -57,21 +59,19 @@ public class AssemblyTask {
 		return taskable.getType();
 	}
 	
-	
 	/**
 	 * Gives the Option or Part (Taskable) corresponding to this type.
 	 * 
-	 * @return	the Option or Part (Taskable) corresponding to this type.
+	 * @return The Option or Part (Taskable) corresponding to this type.
 	 */
 	public Taskable getTaskable() {
 		return taskable;
 	}
 	
-	
 	/**
-	 * Gives a list of the actions needed to complete this assembly task.
+	 * Returns a list of the actions needed to complete this assembly task.
 	 * 
-	 * @return	A copy of the list of all actions needed to complete this AssemblyTask.
+	 * @return A copy of the list of all actions needed to complete this AssemblyTask.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<String> getActions() {
@@ -81,8 +81,8 @@ public class AssemblyTask {
 	/**
 	 * Sets the needed actions to complete this assembly task. Only used in constructor.
 	 * 
-	 * @param	actions
-	 * 			The list of actions needed to complete this AssemblyTask.
+	 * @param actions
+	 * 		The list of actions needed to complete this AssemblyTask.
 	 */
 	private void setActions(ArrayList<String> actions) {
 		this.actions = actions;
@@ -91,7 +91,7 @@ public class AssemblyTask {
 	/**
 	 * Returns true if this assembly task is completed, otherwise false.
 	 * 
-	 * @return	True if this AssemblyTask is completed, otherwise false.
+	 * @return True if this AssemblyTask is completed, otherwise false.
 	 */
 	public boolean isCompleted() {
 		return this.isCompleted;

@@ -20,9 +20,9 @@ public class VehicleAssemblyProcess {
 	 * Is by default not completed.
 	 * 
 	 * @param order 
-	 * 			The order related to this assembly process.
+	 * 		The order related to this assembly process.
 	 * @param tasks
-	 * 			The taskables that are to be converted into assembly tasks.
+	 * 		The taskables that are to be converted into assembly tasks.
 	 */
 	public VehicleAssemblyProcess(Order order, ArrayList<Taskable> tasks){
 		this(order, tasks, false);
@@ -32,11 +32,11 @@ public class VehicleAssemblyProcess {
 	 * The constructor for the VehicleAssemblyProcess class
 	 * 
 	 * @param order 
-	 * 			The order related to this assembly process.
+	 * 		The order related to this assembly process.
 	 * @param tasks
-	 * 			The taskables that are to be converted into assembly tasks.
+	 * 		The taskables that are to be converted into assembly tasks.
 	 * @param isCompleted 
-	 * 			Indicates if the vehicle assembly process is already completed.
+	 * 		Indicates if the vehicle assembly process is already completed.
 	 */
 	public VehicleAssemblyProcess(Order order, ArrayList<Taskable> tasks, boolean isCompleted){
 		ArrayList<AssemblyTask> assemblyTasks = new ArrayList<AssemblyTask>();
@@ -52,13 +52,13 @@ public class VehicleAssemblyProcess {
 	 * The constructor for the VehicleAssemblyProcess class
 	 * 
 	 * @param order 
-	 * 			The order related to this assembly process.
+	 * 		The order related to this assembly process.
 	 * @param tasks 
-	 * 			The taskables that are to be converted into assembly tasks.
+	 * 		The taskables that are to be converted into assembly tasks.
 	 * @param isCompleted 
-	 * 			Indicates if the vehicle assembly process is already completed.
+	 * 		Indicates if the vehicle assembly process is already completed.
 	 * @param deliveredTime
-	 * 			The time this VehicleAssemblyProcess was completed
+	 * 		The time this VehicleAssemblyProcess was completed
 	 */
 	public VehicleAssemblyProcess(Order order, ArrayList<Taskable> tasks,
 			boolean isCompleted, GregorianCalendar deliveredTime) {
@@ -69,16 +69,16 @@ public class VehicleAssemblyProcess {
 	}
 
 	/**
-	 * Test if this AssemblyProcess is completed.
+	 * Tests if this AssemblyProcess is completed.
 	 * 
-	 * @return true if all tasks are completed and the delivered time is set, otherwise false.
+	 * @return True if all tasks are completed and the delivered time is set, otherwise false.
 	 */
 	public Boolean isCompleted() {
-		boolean status = allPartsDone();
-		return status && this.deliveredTime != null;
+		return allPartsDone() && this.deliveredTime != null;
 	}
 	/**
-	 * Test if this AssemblyProcess's tasks are completed.
+	 * Tests if this AssemblyProcess's tasks are completed.
+	 * 
 	 * @return true if all tasks are completed, otherwise false.
 	 */
 	private boolean allPartsDone() {
@@ -93,7 +93,7 @@ public class VehicleAssemblyProcess {
 	 * Add an amount of time spent working on this assemblyProcess (in minutes).
 	 * 
 	 * @param minutes
-	 * 			The amount of time in minutes that has to be added to the total amount of time spent on this configuration.
+	 * 		The amount of time in minutes that has to be added to the total amount of time spent on this configuration.
 	 */
 	public void addTimeWorked(int minutes){
 		this.minutesWorked += minutes;
@@ -127,6 +127,11 @@ public class VehicleAssemblyProcess {
 		this.delay = this.getTotalTimeSpend() - this.order.getConfiguration().getExpectedWorkingTimes(assemblyLine.filterWorkstations(this));
 	}
 
+	/**
+	 * Returns the delay of this assembly process.
+	 * 
+	 * @return The delay of this assembly process.
+	 */
 	public int getDelay() {
 		return this.delay;
 	}
@@ -144,10 +149,13 @@ public class VehicleAssemblyProcess {
 	/**
 	 * Sets the time the vehicle of this order was delivered.
 	 * 
-	 * @param 	deliveredTime
-	 * 			The time the vehicle of this order was delivered.
+	 * @param deliveredTime
+	 * 		The time the vehicle of this order was delivered.
+	 * @throws IllegalStateException
+	 * 		If the order isn't completed yet.
+	 * 		If the delivered time is already set.
 	 */
-	void setDeliveredTime(GregorianCalendar deliveredTime) {
+	void setDeliveredTime(GregorianCalendar deliveredTime) throws IllegalStateException {
 			if(!this.allPartsDone())
 				throw new IllegalStateException("Can't set deliveredTime because this Order is not completed yet.");
 			if(this.deliveredTime!=null)
@@ -158,9 +166,9 @@ public class VehicleAssemblyProcess {
 	/**
 	 * Returns the time this order was delivered.
 	 * 
-	 * @return	the time this order was delivered
-	 * @throws	IllegalStateException
-	 * 			If this order hasn't been delivered yet.
+	 * @return The time this order was delivered
+	 * @throws IllegalStateException
+	 * 		If this order hasn't been delivered yet.
 	 */
 	public GregorianCalendar getDeliveredTime() throws IllegalStateException{
 		if (deliveredTime == null)
@@ -170,6 +178,7 @@ public class VehicleAssemblyProcess {
 	
 	/**
 	 * Finishes this vehicle assembly process.
+	 * 
 	 * @param assemblyLine
 	 * 		The assembly line that completed this vehicle assembly process.
 	 */

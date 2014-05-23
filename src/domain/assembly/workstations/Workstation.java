@@ -20,14 +20,11 @@ public class Workstation {
 
 	/**
 	 * Constructor of Workstation.
-	 * Creates a new workstation with an assembly line, specific id and a list of taskTypes.
 	 * 
-	 * @param assemblyLine
-	 * 		The assembly line of which this workstation is a part of.
 	 * @param name
-	 * 		The name of this workstation
-	 * @param taskTypes
-	 * 		The task types that can be handled at this workstation.
+	 * 		The name of this workstation.
+	 * @param workstationType
+	 * 		The type of this workstation.
 	 */
 	public Workstation(String name, WorkstationType workstationType) {
 		this.observers = new ArrayList<WorkstationObserver>();
@@ -37,7 +34,6 @@ public class Workstation {
 		this.activeTask = null;
 		this.resetTimeSpent();
 	}
-
 
 	/**
 	 * Clears this workstation of tasks and the active task and resets the time spend for the current vehicle.
@@ -50,18 +46,18 @@ public class Workstation {
 	}
 
 	/**
-	 * Getter for the name of this workstation.
+	 * Returns the name of this workstation.
 	 * 
-	 * @return The name of this Workstation.
+	 * @return The name of this workstation.
 	 */
 	public String getName() {
 		return this.name;
 	}
 
 	/**
-	 * Gives a list of all task types this workstation can perform.
+	 * Returns a list of all task types this workstation can perform.
 	 * 
-	 * @return A copy of all possible types of the tasks this Workstation can perform.
+	 * @return A copy of all possible types of the tasks this workstation can perform.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<TaskType> getTaskTypes() {
@@ -69,18 +65,18 @@ public class Workstation {
 	}
 	
 	/**
-	 * Gives the type of this workstation.
+	 * Returns the type of this workstation.
 	 * 
-	 * @return The WorkstationType of this workstation.
+	 * @return The type of this workstation.
 	 */
 	public WorkstationType getWorkstationType() {
 		return workstationType;
 	}
 
 	/**
-	 * Gives the mechanic that is operating at this workstation.
+	 * Returns the mechanic that is operating at this workstation.
 	 * 
-	 * @return The Mechanic operating at this Workstation.
+	 * @return The mechanic operating at this Workstation.
 	 * @throws IllegalStateException
 	 * 		If there is no mechanic at this workstation.
 	 */
@@ -119,7 +115,7 @@ public class Workstation {
 	 * @param task
 	 * 		The AssemblyTask that will be added.
 	 * @throws IllegalArgumentException
-	 * 		If task does not match with the task types list.
+	 * 		If this workstation can't handle the given task.
 	 */
 	private void addAssemblyTask(AssemblyTask task) throws IllegalArgumentException {
 		if (this.workstationType.getacceptedTaskTypes().contains(task.getType()))
@@ -178,6 +174,9 @@ public class Workstation {
 		this.notifyObservers();
 	}
 
+	/**
+	 * Notifies all observers.
+	 */
 	private void notifyObservers() {
 		for(WorkstationObserver observer : this.observers){
 			observer.update();
@@ -185,9 +184,9 @@ public class Workstation {
 	}
 
 	/**
-	 * Gets the time already spent on the current assembly process.
+	 * Returns the time already spent on the current assembly process.
 	 * 
-	 * @return the time already spent on the current assembly process
+	 * @return The time already spent on the current assembly process
 	 */
 	public int getTimeSpent() {
 		return timeSpent;
@@ -212,7 +211,7 @@ public class Workstation {
 	}
 	
 	/**
-	 * Gives a list of all pending assembly tasks.
+	 * Returns a list of all pending assembly tasks.
 	 * 
 	 * @return A copy of the list of all pending assembly tasks.
 	 */
@@ -226,7 +225,7 @@ public class Workstation {
 	}
 
 	/**
-	 * Gives a list of all completed assembly tasks.
+	 * Returns a list of all completed assembly tasks.
 	 * 
 	 * @return A copy of the list of all completed assembly tasks.
 	 */
@@ -240,7 +239,7 @@ public class Workstation {
 	}
 
 	/**
-	 * Gives a list of all assembly tasks.
+	 * Returns a list of all assembly tasks.
 	 * 
 	 * @return A copy of the list of all assembly tasks.
 	 */
@@ -250,7 +249,7 @@ public class Workstation {
 	}
 
 	/**
-	 * Returns true if all assembly tasks of this workstation are completed, otherwise false.
+	 * Checks if all assembly tasks of this workstation are completed.
 	 * 
 	 * @return True if all assembly tasks are completed, otherwise false.
 	 */

@@ -12,10 +12,11 @@ public interface WorkstationTypeCreatorInterface {
 	public abstract LinkedList<WorkstationType> getAllWorkstationTypes();
 
 	/**
-	 * Returns the workstationtype that has the specified name
+	 * Returns the workstation type that has the specified name.
 	 * 
-	 * @param name the name of the desired workstationType
-	 * @return the requested workstationtype, or null if it does not exist
+	 * @param name
+	 * 		The name of the desired workstation type.
+	 * @return The requested workstation type, or null if it does not exist.
 	 */
 	public abstract WorkstationType getWorkstationType(String name);
 

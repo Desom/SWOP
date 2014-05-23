@@ -9,6 +9,9 @@ public class WorkstationTypeCreator implements WorkstationTypeCreatorInterface {
 	
 	private LinkedList<WorkstationType> workstationTypes;
 	
+	/**
+	 * Constructor of WorkstationTypeCreator.
+	 */
 	public WorkstationTypeCreator(){
 		workstationTypes = new LinkedList<WorkstationType>();
 		LinkedList<TaskType> bodyPost = new LinkedList<TaskType>();
@@ -38,17 +41,11 @@ public class WorkstationTypeCreator implements WorkstationTypeCreatorInterface {
 		workstationTypes.add(new WorkstationType("Certification Post", CertificationPost));
 	}
 	
-	/* (non-Javadoc)
-	 * @see domain.assembly.WorkstationTypeCreatorInterface#getAllWorkstationTypes()
-	 */
 	@Override
 	public LinkedList<WorkstationType> getAllWorkstationTypes(){
 		return workstationTypes;
 	}
 	
-	/* (non-Javadoc)
-	 * @see domain.assembly.WorkstationTypeCreatorInterface#getWorkstationType(java.lang.String)
-	 */
 	@Override
 	public WorkstationType getWorkstationType(String name){
 		for (WorkstationType workstationType : workstationTypes){

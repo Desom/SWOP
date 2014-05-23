@@ -25,16 +25,16 @@ public class WorkstationType {
 	/**
 	 * Returns a LinkedList of all task types that can be processed on this type of workstation.
 	 * 
-	 * @return a LinkedList of all task types that can be processed on this type of workstation.
+	 * @return A LinkedList of all task types that can be processed on this type of workstation.
 	 */
 	public LinkedList<TaskType> getacceptedTaskTypes(){
 		return new LinkedList<TaskType>(acceptedTaskTypes);
 	}
 	
 	/**
-	 * Return the name of this workstationType
+	 * Returns the name of this workstationType.
 	 * 
-	 * @return the name of this workstationType
+	 * @return The name of this workstationType.
 	 */
 	public String getName(){
 		return name;

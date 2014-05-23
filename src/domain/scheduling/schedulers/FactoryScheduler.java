@@ -238,7 +238,6 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	 * @throws IllegalArgumentException
 	 * 		If the given scheduler isn't in the list of controlled AssemblyLineSchedulers.
 	 */
-	//TODO wat als scheduler niet hoort bij deze orderhandler? null,exception,lege lijst??? Zie OrderManager,FactoryScheduler
 	@Override
 	public ArrayList<Order> getOrdersFor(Scheduler scheduler) {
 		for(AssemblyLineScheduler als : this.schedulerList){

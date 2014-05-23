@@ -48,12 +48,16 @@ public class BasicSchedulingAlgorithm
 	 * 		The FactoryScheduler who wants to assign these orders to the 
 	 * @return
 	 * 		A mapping of AssemblyLineSchedulers and their assigned orders.
+	 * @throws IllegalStateException
+	 * 		If there are no assembly line schedulers.
+	 * @throws IllegalArgumentException
+	 * 		If there are no assembly lines which can complete an order in the given list of orders.
 	 */
 	@Override
 	public HashMap<AssemblyLineScheduler, ArrayList<Order>> assignOrders(
-			ArrayList<Order> orders, FactoryScheduler factoryScheduler) {
+			ArrayList<Order> orders, FactoryScheduler factoryScheduler) throws IllegalStateException, IllegalArgumentException {
 
-		ArrayList<Order> orderedOrders = this.innerAlgorithm.scheduleToList(orders, factoryScheduler);
+		ArrayList<Order> sortedOrders = this.innerAlgorithm.scheduleToList(orders, factoryScheduler);
 
 		HashMap<AssemblyLineScheduler, ArrayList<Order>> scheduleMapping = new HashMap<AssemblyLineScheduler, ArrayList<Order>>();
 
@@ -62,13 +66,13 @@ public class BasicSchedulingAlgorithm
 			scheduleMapping.put(scheduler, new ArrayList<Order>());
 		}
 		
-		ArrayList<SingleTaskOrder> singleTasks = combSingleTaskOrders(orderedOrders);
+		ArrayList<SingleTaskOrder> singleTasks = combSingleTaskOrders(sortedOrders);
 		ArrayList<SingleTaskOrder> beginST = combSingleTaskOrdersByType(singleTasks, VehicleCatalog.taskTypeCreator.Color);
 		ArrayList<SingleTaskOrder> endST = combSingleTaskOrdersByType(singleTasks, VehicleCatalog.taskTypeCreator.Seats);
 		Collections.sort(beginST, deadlineComparator);
 		Collections.sort(endST, deadlineComparator);
 		
-		for(Order order: orderedOrders){
+		for(Order order: sortedOrders){
 			AssemblyLineScheduler chosenScheduler = null;
 			GregorianCalendar timeWithChosen = null;
 			ArrayList<ScheduledOrder> newScheduleOfChosen = null;
@@ -95,7 +99,6 @@ public class BasicSchedulingAlgorithm
 					throw new IllegalStateException("BasicScedulingAlgorithm can't order if there are no AssemblyLineSchedulers.");
 				}
 				throw new IllegalArgumentException("BasicSchedulingAlgorithm can't order an order which can't be done by any AssembyLineScheduler.");
-				//TODO iets doen? Ja, 2 exceptions voor de 2 situaties
 			}
 		}
 
@@ -177,17 +180,17 @@ public class BasicSchedulingAlgorithm
 	 * 		The order whose time is wanted.
 	 * @param schedule
 	 * 		The schedule which contains a ScheduledOrder with order.
-	 * @return The time order will be put on the assemblyLine according to schedule. Null if order not in schedule.
+	 * @return The time order will be put on the assemblyLine according to schedule.
+	 * @throws IllegalArgumentException
+	 * 		If the given order cannot be found in the given schedule list. 
 	 */
-	private ScheduledOrder findScheduledOrderOf(Order order,
-			ArrayList<ScheduledOrder> schedule) {
+	private ScheduledOrder findScheduledOrderOf(Order order, ArrayList<ScheduledOrder> schedule) {
 		for(int i = schedule.size() - 1; i >= 0; i--){
 			if (order.equals(schedule.get(i).getScheduledOrder())){
 				return schedule.get(i);
 			}
 		}
-		//TODO docs
-		throw new IllegalArgumentException("Can't find an order that isn't in the list.");
+		throw new IllegalArgumentException("Can't find the given order in the given list.");
 	}
 
 	/**

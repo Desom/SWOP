@@ -356,16 +356,14 @@ public class OrderManager implements OrderHandler{
 	 * 		The Scheduler that will schedule the returned Orders.
 	 * @return The Orders which have to be scheduled by the given scheduler.
 	 */
-	//TODO wat als scheduler niet hoort bij deze orderhandler? null,exception,lege lijst??? Zie OrderManager,FactoryScheduler
 	@Override
 	public ArrayList<Order> getOrdersFor(Scheduler scheduler) {
 		if(!scheduler.equals(this.getScheduler())){
-			//TODO wat moet er gebeuren? zie factory
+			throw new IllegalArgumentException("The order manager isn't connected with the given scheduler.");
 		}
 		
 		ArrayList<Order> orderList = new ArrayList<Order>();
 		
-		//TODO is deze controle goed? of moet gewoon alles aan de scheduler worden gegeven?
 		for(Order order: this.getAllUnfinishedOrders()){
 			if(this.getScheduler().canScheduleOrder(order)){
 				orderList.add(order);

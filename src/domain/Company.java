@@ -37,8 +37,6 @@ public class Company {
 	private final AssemblyLineCreatorInterface assemblyLineCreator;
 
 	/**
-	 * TODO docs
-	 * 
 	 * Constructor of Company.
 	 * 
 	 * This constructor is also responsible for the creation of:
@@ -66,18 +64,15 @@ public class Company {
 			this.assemblyLines = assemblyLineCreator.create();
 			ArrayList<AssemblyLineScheduler> alsList = new ArrayList<AssemblyLineScheduler>();
 
-			//TODO goed zo of is er een beter manier?
 			for(AssemblyLine assembly : this.assemblyLines){
 				alsList.add(assembly.getAssemblyLineScheduler());
 			}
 			this.factoryScheduler = schedulerCreator.createFactoryScheduler(alsList);
 
-			//TODO mss orderCreator niet door orderManager laten aanmaken?
 			this.orderManager = new OrderManager(this.factoryScheduler, orderFilePath, catalog);
 			this.statistics = new Statistics(this.orderManager);
-
-			//TODO kunnen we niet beter de IOException door laten? nu vangen we die en geven we een vage verklaring, terwijl IOException kan uitleggen waaraan het ligt.
-		} catch (VehicleCatalogException e) {
+		}
+		catch (VehicleCatalogException e) {
 			throw new InternalFailureException("Failed to initialise Company due to an VehicleModelCatalog exception");
 		}
 	}

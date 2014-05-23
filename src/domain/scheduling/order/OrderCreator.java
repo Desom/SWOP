@@ -17,7 +17,6 @@ import domain.policies.Policy;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
-//TODO mss beide create..Order methodes wat refactoren? (want veel overlappende code)
 public class OrderCreator implements OrderCreatorInterface {
 
 	private String path;

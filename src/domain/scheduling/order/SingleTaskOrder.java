@@ -76,7 +76,6 @@ public class SingleTaskOrder extends Order {
 		return (GregorianCalendar) this.deadline.clone();
 	}
 
-	//TODO taskType van maken later?
 	/**
 	 * Returns the OptionType of the task that is ordered.
 	 * 

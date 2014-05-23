@@ -105,7 +105,9 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 						}
 						// Als dit de laatste workstation is, wordt het assembly process van de band gehaald.
 						else if (assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess() != null) {
-							finishedOrders.add(assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess().getOrder());
+							if(!finishedOrders.contains(assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess().getOrder())){
+								finishedOrders.add(assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess().getOrder());								
+							}
 						}
 					}
 				}

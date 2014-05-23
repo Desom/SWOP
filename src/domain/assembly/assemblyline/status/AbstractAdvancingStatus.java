@@ -115,7 +115,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 			}
 
 			for (Order finishedOrder : finishedOrders){
-				finishedOrder.getAssemblyprocess().finish(assemblyLine);;
+				finishedOrder.getAssemblyprocess().finish(assemblyLine);
 			}
 		}
 		catch(DoesNotExistException e){

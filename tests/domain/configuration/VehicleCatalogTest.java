@@ -108,7 +108,7 @@ public class VehicleCatalogTest {
 			new VehicleCatalog(creator,"testData/test_options.txt","testData/testDependancies.txt","testData/test_models.txt");
 			fail();
 		} catch (VehicleCatalogException e) {
-			assertEquals("no valid type: fake",e.getMessage());
+			assertEquals("null in non null value of Option",e.getMessage());
 		}
 	}
 	@Test

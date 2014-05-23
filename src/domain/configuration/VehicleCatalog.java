@@ -51,8 +51,8 @@ public class VehicleCatalog {
 	public VehicleCatalog(WorkstationTypeCreatorInterface workstationTypeCreator, String optionPath, String dependancyPath, String modelPath) throws IOException, VehicleCatalogException{
 		this.workstationTypeCreator = workstationTypeCreator;
 		OptionCreatorInterface oCreator = new OptionCreator(optionPath,dependancyPath);
-		allParts = oCreator.createParts();
 		allOptions = oCreator.createOptions();
+		allParts = oCreator.createParts();
 		allModels= (new ModelCreator(this.workstationTypeCreator, this.getAllOptions(), this.getAllParts(), modelPath)).createModels();
 	}
 

@@ -192,17 +192,15 @@ public class OptionCreator implements OptionCreatorInterface {
 	 * 		If the option type is not supported.
 	 */
 	private Option createOption(String description, String typeName, ArrayList<String> incompatibles) throws VehicleCatalogException {
-		try{
-			OptionType type = (OptionType) VehicleCatalog.taskTypeCreator.getTaskType(typeName);
-			Option result = new Option(description, type);
-			for(Option option : collectOption(incompatibles)){
-				result.addIncompatible(option);
-				option.addIncompatible(result);
-			}
-			return result;
-		}catch(IllegalArgumentException e){
-			throw new VehicleCatalogException("no valid type: " + typeName);
+		
+		OptionType type = (OptionType) VehicleCatalog.taskTypeCreator.getTaskType(typeName);
+		Option result = new Option(description, type);
+		for(Option option : collectOption(incompatibles)){
+			result.addIncompatible(option);
+			option.addIncompatible(result);
 		}
+		return result;
+		
 
 	}
 	

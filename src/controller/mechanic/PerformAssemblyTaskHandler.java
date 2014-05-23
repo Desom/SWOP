@@ -41,7 +41,7 @@ public class PerformAssemblyTaskHandler {
 			// 6. The user performs the assembly tasks and indicates when the assembly
 			// task is finished together with the time it took him to finish
 			// the job.
-			int minutes = ui.askForInteger("How long did it took you to complete this task? (in minutes)", 0);
+			int minutes = ui.askForInteger("How long did it take you to complete this task? (in minutes)", 0);
 			workstation.completeTask(mechanic, minutes);
 			// 7. If all the assembly tasks at the assembly line are finished, the assembly
 			// line is shifted automatically and the production schedule is updated.

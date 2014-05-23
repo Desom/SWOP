@@ -1,6 +1,5 @@
 package domain.scheduling.schedulers;
 
-import domain.scheduling.*;
 import domain.scheduling.order.Order;
 
 import java.util.GregorianCalendar;
@@ -9,7 +8,7 @@ public class ScheduledOrder {
 
 	private GregorianCalendar scheduledTime;
 	private Order scheduledOrder;
-	private GregorianCalendar completedTime=null;
+	private GregorianCalendar completedTime = null;
 
 	/**
 	 * Constructor of ScheduledTask.
@@ -30,7 +29,7 @@ public class ScheduledOrder {
 	/**
 	 * Returns the time on which the order will be placed on an assembly line.
 	 * 
-	 * @return the time on which the order will be placed on an assembly line
+	 * @return The time on which the order will be placed on an assembly line.
 	 */
 	public GregorianCalendar getScheduledTime() {
 		return (GregorianCalendar) scheduledTime.clone();
@@ -54,7 +53,7 @@ public class ScheduledOrder {
 	/**
 	 * Returns the time on which the order is expected to be completed.
 	 * 
-	 * @return the time on which the order is expected to be completed.
+	 * @return The time on which the order is expected to be completed.
 	 */
 	public GregorianCalendar getCompletedTime() {
 		if(completedTime == null) return null;

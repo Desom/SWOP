@@ -154,7 +154,7 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	}
 
 	/**
-	 * @param orders
+	 * Reschedules the orders.
 	 */
 	private void reSchedule() {
 		this.ordersForSchedulers = this.currentAlgorithm.assignOrders(this.getOrdersToBeScheduled(),this);
@@ -162,6 +162,9 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 		this.signalNewSchedule();
 	}
 
+	/**
+	 * Signals its schedulers so that they reschedule.
+	 */
 	private void signalNewSchedule() {
 		for(AssemblyLineScheduler scheduler : this.schedulerList){
 			scheduler.updateSchedule();

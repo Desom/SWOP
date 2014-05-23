@@ -12,6 +12,12 @@ public class SchedulerCreator implements SchedulerCreatorInterface {
 	private ArrayList<AssemblyLineSchedulingAlgorithm> possibleAssemblyAlgorithms;
 	private AlgorithmCreatorInterface algorithmCreator;
 	
+	/**
+	 * Constructor of SchedulerCreator.
+	 * 
+	 * @param algorithmCreator
+	 * 		The creator for algorithms.
+	 */
 	public SchedulerCreator(AlgorithmCreatorInterface algorithmCreator) {
 		this.algorithmCreator = algorithmCreator;
 		
@@ -21,17 +27,11 @@ public class SchedulerCreator implements SchedulerCreatorInterface {
 
 	}
 	
-	/* (non-Javadoc)
-	 * @see domain.assembly.SchedulerCreatorInterface#createAssemblyLineScheduler(java.util.GregorianCalendar)
-	 */
 	@Override
 	public AssemblyLineScheduler createAssemblyLineScheduler(GregorianCalendar startTime) {
 		return new AssemblyLineScheduler(startTime, this.possibleAssemblyAlgorithms);
 	}
 	
-	/* (non-Javadoc)
-	 * @see domain.assembly.SchedulerCreatorInterface#createFactoryScheduler(java.util.ArrayList)
-	 */
 	@Override
 	public FactoryScheduler createFactoryScheduler(ArrayList<AssemblyLineScheduler> alsList) {
 		ArrayList<FactorySchedulingAlgorithm> possibleFactoryAlgorithms = new ArrayList<FactorySchedulingAlgorithm>();

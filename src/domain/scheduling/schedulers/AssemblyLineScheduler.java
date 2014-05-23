@@ -6,7 +6,6 @@ import java.util.LinkedList;
 
 import domain.InternalFailureException;
 import domain.assembly.assemblyline.AssemblyLine;
-import domain.assembly.assemblyline.CannotAdvanceException;
 import domain.assembly.assemblyline.DoesNotExistException;
 import domain.scheduling.NoOrdersToBeScheduledException;
 import domain.scheduling.order.Order;
@@ -627,6 +626,9 @@ public class AssemblyLineScheduler implements Scheduler{
 		this.observers.add(observer);
 	}
 
+	/**
+	 * Notifies all observers.
+	 */
 	private void notifyObservers() {
 		for (AssemblyLineSchedulerObserver observer : this.observers)
 			observer.update();

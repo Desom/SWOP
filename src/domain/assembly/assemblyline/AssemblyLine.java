@@ -228,9 +228,10 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 	 * 
 	 * @param newStatus
 	 * 		The new current status.
-	 * @throws CannotAdvanceException TODO
+	 * @throws InternalFailureException
+	 * 		If the assembly line cound't advance, even though he should have.
 	 */
-	public void setCurrentStatus(AssemblyLineStatus newStatus) {
+	public void setCurrentStatus(AssemblyLineStatus newStatus) throws InternalFailureException {
 		this.currentStatus = newStatus;
 		this.notifyObservers();
 		if(this.canAdvanceLine()) {
@@ -238,7 +239,7 @@ public class AssemblyLine implements WorkstationObserver, AssemblyLineSchedulerO
 				this.advanceLine();
 			}
 			catch(CannotAdvanceException e) {
-				// TODO InternalFailureException gooien?
+				throw new InternalFailureException("The assembly line cound't advance, even though he should have.");
 			}
 		}
 	}

@@ -198,16 +198,19 @@ public class Configuration {
 	}
 	
 	/**
-	 * TODO
+	 * Checks if this (incomplete) configuration is valid, using the policy chain.
+	 * 
 	 * @throws InvalidConfigurationException
+	 * 		If the configuration is not valid.
 	 */
 	public void checkPolicies() throws InvalidConfigurationException {
 		this.policyChain.check(this);
 	}
 	
 	/**
-	 * TODO
+	 * Checks if this (complete) configuration is valid, using the policy chain.
 	 * @throws InvalidConfigurationException
+	 * 		If the configuration is not valid.
 	 */
 	public void checkCompletePolicies() throws InvalidConfigurationException {
 		this.policyChain.checkComplete(this);

@@ -17,7 +17,6 @@ import domain.policies.Policy;
 import domain.user.CustomShopManager;
 import domain.user.GarageHolder;
 
-//TODO interface
 //TODO mss beide create..Order methodes wat refactoren? (want veel overlappende code)
 public class OrderCreator implements OrderCreatorInterface {
 
@@ -43,9 +42,6 @@ public class OrderCreator implements OrderCreatorInterface {
 		this.policyChains = policyChains;
 	}
 
-	/* (non-Javadoc)
-	 * @see domain.order.OrderCreatorInterface#createOrderList()
-	 */
 	@Override
 	public ArrayList<Order> createOrderList() throws IOException{
 		ArrayList<Order> allOrders = new ArrayList<Order>();

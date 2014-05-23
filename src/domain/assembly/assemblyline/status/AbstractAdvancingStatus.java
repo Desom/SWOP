@@ -30,7 +30,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 	 * 		The assembly line to be advanced.
 	 * @throws CannotAdvanceException
 	 * 		If the assembly line cannot advance.
-	 * @throws IllegalStateException
+	 * @throws IllegalArgumentException
 	 * 		If the assembly line can't complete the next order to be placed on the assembly line.
 	 * @throws InternalFailureException
 	 * 		If a workstation of the assembly line disappeared.
@@ -52,8 +52,8 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 		Order newOrder = notifyOrderAsked(assemblyLine);
 		
 		// Controleer of deze order wel op deze assembly line voltooid kan worden
-		if (!assemblyLine.canDoOrder(newOrder)) // TODO IllegalStateException goed?
-			throw new IllegalStateException("The assembly line can't complete the order received from its scheduler.");
+		if (!assemblyLine.canDoOrder(newOrder))
+			throw new IllegalArgumentException("The assembly line can't complete the order received from its scheduler.");
 		
 		try{		
 

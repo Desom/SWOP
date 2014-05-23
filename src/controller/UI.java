@@ -79,7 +79,6 @@ public class UI implements UIInterface{
 		return date;
 	}
 
-	// TODO de askWithPossibilities methoden hebben ook veel duplicate code, is dit erg?
 	public String askWithPossibilities(String question, List<String> possibilities){
 		System.out.println(question);
 		String possOutput = "";

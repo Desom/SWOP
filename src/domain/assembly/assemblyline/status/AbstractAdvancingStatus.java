@@ -108,6 +108,7 @@ public abstract class AbstractAdvancingStatus extends AssemblyLineStatus {
 							if(!finishedOrders.contains(assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess().getOrder())){
 								finishedOrders.add(assemblyLine.selectWorkstationById(id).getVehicleAssemblyProcess().getOrder());								
 							}
+							assemblyLine.selectWorkstationById(id).clear();
 						}
 					}
 				}

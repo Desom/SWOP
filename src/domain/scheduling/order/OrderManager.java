@@ -355,9 +355,11 @@ public class OrderManager implements OrderHandler{
 	 * @param scheduler
 	 * 		The Scheduler that will schedule the returned Orders.
 	 * @return The Orders which have to be scheduled by the given scheduler.
+	 * @throws IllegalArgumentException
+	 * 		If the order manager does not have the given scheduler.
 	 */
 	@Override
-	public ArrayList<Order> getOrdersFor(Scheduler scheduler) {
+	public ArrayList<Order> getOrdersFor(Scheduler scheduler) throws IllegalArgumentException {
 		if(!scheduler.equals(this.getScheduler())){
 			throw new IllegalArgumentException("The order manager isn't connected with the given scheduler.");
 		}

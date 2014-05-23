@@ -104,11 +104,11 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 	 * @param order
 	 * 		The Order whose AssemblyLineScheduler we want to find.
 	 * @return The AssemblyLineScheduler that has to schedule order.
+	 * @throws IllegalArgumentException
+	 * 		If this factory scheduler does not schedule the given order.
 	 * 
-	 *		TODO docs
-	 *		TODO toStrings voor FactoryScheduler en Order.
 	 */
-	private AssemblyLineScheduler findScheduler(Order order) {
+	private AssemblyLineScheduler findScheduler(Order order) throws IllegalArgumentException {
 		HashMap<AssemblyLineScheduler, ArrayList<Order>> ordersForSchedulers = this.getOrdersForSchedulers();
 		for(AssemblyLineScheduler scheduler : this.schedulerList){
 			if(ordersForSchedulers.get(scheduler).contains(order)){
@@ -199,11 +199,11 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 		this.reSchedule();
 	}
 	
-	//TODO hoe doen we dit best? (huidige code mag  veranderd worden.)
+	/**
+	 * Checks whether an order can be completed before its deadline.
+	 */
 	@Override
-	public boolean canFinishOrderBeforeDeadline(
-			SingleTaskOrder orderWithDeadline) {
-		
+	public boolean canFinishOrderBeforeDeadline(SingleTaskOrder orderWithDeadline) {
 		for(AssemblyLineScheduler scheduler : this.schedulerList){
 			if(scheduler.canFinishOrderBeforeDeadline(orderWithDeadline)){
 				return true;
@@ -245,7 +245,6 @@ public class FactoryScheduler implements Scheduler, OrderHandler, AssemblyLineOb
 				return this.getOrdersForSchedulers().get(als);
 			}
 		}
-		
 		throw new IllegalArgumentException("The factory scheduler isn't connected with the given scheduler.");
 	}
 

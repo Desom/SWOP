@@ -6,7 +6,11 @@ import java.util.LinkedList;
 public class TaskTypeCreator extends AbstractTaskTypeCreator {
 
 	LinkedList<OptionType> optionTypes = new LinkedList<OptionType>(); 
-	LinkedList<PartType> partTypes = new LinkedList<PartType>(); 
+	LinkedList<PartType> partTypes = new LinkedList<PartType>();
+	
+	/**
+	 * Constructor of TaskTypeCreator.
+	 */
 	public TaskTypeCreator(){
 		this.Body = new OptionType("Body");
 		optionTypes.add(this.Body);
@@ -90,10 +94,11 @@ public class TaskTypeCreator extends AbstractTaskTypeCreator {
 	}
 
 	/**
-	 * Returns the tasktype that has the specified name
+	 * Returns the task type that has the specified name.
 	 * 
-	 * @param name the name of the desired taskType
-	 * @return the requested tasktype, or null if it does not exist
+	 * @param name
+	 * 		The name of the desired taskType.
+	 * @return the requested task type, or null if it does not exist
 	 */
 	public TaskType getTaskType(String name) {
 		for (TaskType optionType : getAllTypes()){
@@ -103,6 +108,5 @@ public class TaskTypeCreator extends AbstractTaskTypeCreator {
 		}
 		return null;
 	}
-
 
 }

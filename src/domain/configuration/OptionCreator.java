@@ -35,9 +35,6 @@ public class OptionCreator implements OptionCreatorInterface {
 		this.dependancypath = dependancyPath;
 	}
 
-	/* (non-Javadoc)
-	 * @see domain.configuration.OptionCreatorInterface#createOptions()
-	 */
 	@Override
 	public ArrayList<Option> createOptions() throws IOException, VehicleCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(optionpath));
@@ -55,17 +52,13 @@ public class OptionCreator implements OptionCreatorInterface {
 		input = new BufferedReader(new FileReader(dependancypath));
 		inputline = input.readLine();
 		while( inputline!=null){
-			processDependancyLine(inputline);
+			processDependencyLine(inputline);
 			inputline = input.readLine();
 		}
 		input.close();
 		return new ArrayList<Option>(allOptions.values());
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see domain.configuration.OptionCreatorInterface#createParts()
-	 */
 	@Override
 	public ArrayList<Part> createParts() throws IOException, VehicleCatalogException{
 		BufferedReader input = new BufferedReader(new FileReader(optionpath));
@@ -87,23 +80,32 @@ public class OptionCreator implements OptionCreatorInterface {
 		return new ArrayList<Part>(allParts.values());
 	}
 
-	private void processDependancyLine(String inputline) throws VehicleCatalogException {
+	/**
+	 * Reads in dependencies from the given input line.
+	 * 
+	 * @param inputline
+	 * 		The input line to be read.
+	 * @throws VehicleCatalogException
+	 */
+	private void processDependencyLine(String inputline) throws VehicleCatalogException {
 		String[] input=inputline.split(";");
-		if(input.length != 2) throw new VehicleCatalogException("Dependancy: wrong input format: " + inputline);
+		if(input.length != 2) throw new VehicleCatalogException("Dependency: wrong input format: " + inputline);
 		if(!allOptions.containsKey(input[0])) throw new VehicleCatalogException("Option does not exist: " + input[0]);
 		ArrayList<String> optionNames = new ArrayList<String>();
 		for(String j:input[1].split(","))optionNames.add(j);
-		allOptions.get(input[0]).addDependancy(collectOption(optionNames));
+		allOptions.get(input[0]).addDependency(collectOption(optionNames));
 	}
+	
 	/**
 	 * Processes a line which stores the information of a single option.
+	 * 
 	 * @param inputline
 	 * 		The line to be processed.
-	 * @throws VehicleCatalogException 
-	 * 		If the option the line describes already exists
-	 * 		If the line isn't in the right format
-	 * 		If the option the line describes is of the wrong subtype
-	 * 		IF the lines use an option that does not exist
+	 * @throws VehicleCatalogException.
+	 * 		If the option the line describes already exists.
+	 * 		If the line isn't in the right format.
+	 * 		If the option the line describes is of the wrong subtype.
+	 * 		IF the lines use an option that does not exist.
 	 */
 	private void processOptionLine(String inputline) throws VehicleCatalogException   {
 		String[] input=inputline.split(";");
@@ -119,6 +121,7 @@ public class OptionCreator implements OptionCreatorInterface {
 	
 	/**
 	 * Processes a line which stores the information of a single part.
+	 * 
 	 * @param inputline
 	 * 		The line to be processed.
 	 * @throws VehicleCatalogException 
@@ -142,7 +145,6 @@ public class OptionCreator implements OptionCreatorInterface {
 	 * 		The list that will contain all options of the from list with the corresponding type.
 	 * @param typeName
 	 * 		The name of the option type which the options have to have.
-	 * 
 	 */
 	private void sameTypeFilter(ArrayList<String> from, ArrayList<String> to, String typeName) {
 		ArrayList<String> temp = new ArrayList<String>() ;

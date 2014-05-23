@@ -1,7 +1,5 @@
 package domain.configuration;
 
-
-
 public class Part implements Taskable {
 	
 	private final String description; 
@@ -25,18 +23,11 @@ public class Part implements Taskable {
 		this.type = type;
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see domain.configuration.Taskable#getDescription()
-	 */
 	@Override
 	public String getDescription(){
 		return description;
 	}
 	
-	/* (non-Javadoc)
-	 * @see domain.configuration.Taskable#getType()
-	 */
 	@Override
 	public PartType getType(){
 		return type;
@@ -46,5 +37,4 @@ public class Part implements Taskable {
 	public String toString(){
 		return description;
 	}
-
 }

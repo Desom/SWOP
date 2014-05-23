@@ -134,9 +134,9 @@ public class OrderManager implements OrderHandler{
 	/**
 	 * Calculates an estimated completion time for the given order.
 	 * 
-	 * @param 	order
-	 * 			The order whose estimated time is calculated.
-	 * @return	A GregorianCalendar representing the estimated completion date of the order.
+	 * @param order
+	 * 		The order whose estimated time is calculated.
+	 * @return A GregorianCalendar representing the estimated completion date of the order.
 	 * 			Or the actual delivery date if it was already completed.
 	 */
 	public GregorianCalendar completionEstimate(Order order) {
@@ -195,26 +195,24 @@ public class OrderManager implements OrderHandler{
 	 * 		The User that wants to call this method.
 	 * 		The User whose Orders are requested.
 	 * @return List of the pending Orders placed by the given user.
-	 * @throws UserAccessException
-	 * 		If the user is not authorized to call this method.
 	 */
 	public ArrayList<Order> getPendingOrders(User user) {
 		return getOrdersWithStatus(user, false);
 	}
 
 	/**
-	 * Give a list of all the still completed Orders placed by a given user.
+	 * Returns a list of all the still completed Orders placed by a given user.
+	 * 
 	 * @param user
-	 * 			The User that wants to call this method.
-	 * 			The User whose Orders are requested.
-	 * @return List of the completed Orders placed by the given user.
+	 * 		The user whose orders are requested.
+	 * @return List of the completed orders placed by the given user.
 	 */
 	public ArrayList<Order> getCompletedOrders(User user){
 		return getOrdersWithStatus(user,true);
 	}
 	
 	/**
-	 * Give a list of orders placed by a given user, with the boolean indicating if they have to be completed or not.
+	 * Returns a list of orders placed by a given user, with the boolean indicating if they have to be completed or not.
 	 * 
 	 * @param user
 	 * 		The User whose orders are requested.
@@ -347,7 +345,6 @@ public class OrderManager implements OrderHandler{
 		}
 		return completed;
 	}
-
 
 	/**
 	 * Returns the orders it wants the given scheduler to schedule.

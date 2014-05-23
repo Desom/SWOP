@@ -18,9 +18,9 @@ public class VehicleModel {
 	 * @param name
 	 * 		Name of the vehicle model.
 	 * @param possibleOptions
-	 * 		A list of options which are possible for this vehicle model.
-	 * @param expectedTaskTime
-	 * 		The time it normally takes to complete a task of this vehicle model.
+	 * 		The possible options for this model.
+	 * @param workstationTimes
+	 * 		The times each workstation needs to work on this model.
 	 * @throws VehicleCatalogException
 	 * 		If the name or possibleOptions equals null or if an option type is not represented in the possibleOptions.
 	 */
@@ -41,6 +41,7 @@ public class VehicleModel {
 	
 	/**
 	 * Checks if a the given option type is represented in the given list of options.
+	 * 
 	 * @param type
 	 * 		The type which has to represented.
 	 * @param options
@@ -57,7 +58,7 @@ public class VehicleModel {
 	/**
 	 * Returns a list of possible options for this vehicle model.
 	 * 
-	 * @return a list of possible options for this vehicle model
+	 * @return A list of possible options for this vehicle model.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<Option> getPossibleOptions() {
@@ -67,7 +68,7 @@ public class VehicleModel {
 	/**
 	 * Returns the name of this vehicle model.
 	 * 
-	 * @return the name of this vehicle model
+	 * @return The name of this vehicle model.
 	 */
 	public String getName() {
 		return name;
@@ -78,7 +79,7 @@ public class VehicleModel {
 	 * 
 	 * @param type
 	 * 		The type of which all possible options have to be returned.
-	 * @return all possible options of the given type
+	 * @return All possible options of the given type.
 	 */
 	public ArrayList<Option> getOfOptionType(OptionType type) {
 		ArrayList<Option> optionsOfType = new ArrayList<Option>();
@@ -90,9 +91,9 @@ public class VehicleModel {
 	}
 	
 	/**
-	 * Get the expected working time spent on a task for this model on the specified workstationType.
+	 * Returns the expected working time spent on a task for this model on the specified workstationType.
 	 * 
-	 * @return returns the expected time it takes to complete a task on the specified workstationType.
+	 * @return The expected time it takes to complete a task on the specified workstationType.
 	 */
 	public int getExpectedTaskTime(WorkstationType type){
 		Integer time = workstationTimes.get(type);
@@ -102,15 +103,14 @@ public class VehicleModel {
 	}
 	
 	/**
-	 * Get the parts this model has
+	 * Returns the parts this model has.
 	 * 
-	 * @return this models Parts
+	 * @return The parts of this model.
 	 */
 	public ArrayList<Part> getParts(){
 		return this.parts;
 	}
 	
-
 	@Override
 	public String toString(){
 		return name;

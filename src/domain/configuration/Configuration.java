@@ -21,12 +21,13 @@ public class Configuration {
 	 * 		The vehicle model used for this configuration.
 	 * @param policyChain
 	 * 		The chain of policies to check whether this configuration is conform to the company policies.
+	 * @throws IllegalArgumentException
+	 * 		If the given policy chain equals null.
 	 */
-	public Configuration(VehicleModel model, Policy policyChain) {
+	public Configuration(VehicleModel model, Policy policyChain) throws IllegalArgumentException {
 		this.model = model;
 		this.options = new ArrayList<Option>();
 		if(policyChain == null){
-			//exception docs
 			throw new IllegalArgumentException("A Configuration always needs a Policy so that it can check it's own correctness.");
 		}
 		this.policyChain = policyChain;
@@ -34,7 +35,7 @@ public class Configuration {
 	}
 	
 	/**
-	 * This method is called by to indicate that this configuration is complete.
+	 * This method is called to indicate that this configuration is complete.
 	 * It will check if this configuration is valid.
 	 * 
 	 * @throws InvalidConfigurationException
@@ -92,7 +93,7 @@ public class Configuration {
 	/**
 	 * Get the expected working time spent for this model on the specified workstationType.
 	 * 
-	 * @return returns the expected time it takes for this model to complete on the specified workstationType.
+	 * @return The expected time it takes for this model to complete on the specified workstationType.
 	 */
 	public int getExpectedWorkingTime(WorkstationType type){
 		if(this.model == null){
@@ -104,7 +105,7 @@ public class Configuration {
 	/**
 	 * Get the expected working time spent on all tasks for this model on the specified workstations.
 	 * 
-	 * @return returns the expected time it takes to complete all tasks on the specified workstations.
+	 * @return The expected time it takes to complete all tasks on the specified workstations.
 	 */
 	public int getExpectedWorkingTimes(ArrayList<Workstation> workstations){
 		int time = 0;

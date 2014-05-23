@@ -9,6 +9,7 @@ public class VehicleOrder extends Order {
 	
 	/**
 	 * Constructor of VehicleOrder.
+	 * Constructs a vehicle order which is not completed.
 	 * 
 	 * @param vehicleOrderId
 	 * 		The id of this vehicle order
@@ -25,7 +26,6 @@ public class VehicleOrder extends Order {
 
 	/**
 	 * Constructor of VehicleOrder.
-	 * Creates a vehicle using specifying it's ordered and deliveredTime
 	 * 
 	 * @param vehicleOrderId
 	 * 			The id of this vehicle order

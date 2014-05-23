@@ -30,8 +30,8 @@ public class OrderCreator implements OrderCreatorInterface {
 	 * 		The path to the file with  orders.
 	 * @param  catalog
 	 * 		The  model catalog used to convert Strings to Option and Model objects.
-	 * @param policyChain
-	 * 		The chains of policies that checks the validness of the configuration.
+	 * @param policyChains
+	 * 		The chains of policies that check the validness of the configuration.
 	 * 		1st chain : VehicleOrders
 	 * 		2nd chain : SingleTaskOrders
 	 */
@@ -83,6 +83,16 @@ public class OrderCreator implements OrderCreatorInterface {
 		return allOrders;
 	}
 
+	/**
+	 * Creates a vehicle order depending on the given input pieces.
+	 * 
+	 * @param orderPieces
+	 * 		The input pieces which define the order.
+	 * @param policyChain
+	 * 		The policy chain of the configuration of the order.
+	 * @return An order depending on the given input pieces.
+	 * @throws IOException
+	 */
 	private VehicleOrder createVehicleOrder(String[] orderPieces, Policy policyChain) throws IOException{
 
 		// Strings omvormen naar objecten
@@ -122,7 +132,16 @@ public class OrderCreator implements OrderCreatorInterface {
 
 	}
 
-
+	/**
+	 * Creates a single task order depending on the given input pieces.
+	 * 
+	 * @param orderPieces
+	 * 		The input pieces which define the order.
+	 * @param policyChain
+	 * 		The policy chain of the configuration of the order.
+	 * @return An order depending on the given input pieces.
+	 * @throws IOException
+	 */
 	private SingleTaskOrder createSingleTaskOrder(String[] orderPieces, Policy policyChain) throws IOException {
 
 		// Strings omvormen naar objecten
@@ -158,8 +177,6 @@ public class OrderCreator implements OrderCreatorInterface {
 		GregorianCalendar deadlineCalendar = this.createCalendarFor(orderPieces[7]);
 
 		return new SingleTaskOrder(OrderId, customShopManager, config, deadlineCalendar, orderedCalendar, deliveredCalendar, isDelivered);
-
-
 	}
 
 	/**
@@ -201,15 +218,15 @@ public class OrderCreator implements OrderCreatorInterface {
 	/**
 	 * Finds the  model, using the given name.
 	 * 
-	 * @param ModelName
+	 * @param modelName
 	 * 		The name of the desired  model.
 	 * @return The model associated with the given name.
 	 * @throws IOException
 	 * 		If no  model can be found.
 	 */
-	private VehicleModel findModel(String ModelName) throws IOException {
+	private VehicleModel findModel(String modelName) throws IOException {
 		for(VehicleModel model : this.catalog.getAllModels()){
-			if(model.getName().equals(ModelName))
+			if(model.getName().equals(modelName))
 				return model;
 		}
 		throw new IOException("The desired  model doesn't exist");

@@ -16,9 +16,9 @@ public class PartType implements TaskType{
 	}
 	
 	/**
-	 * Returns the name of this parttype.
+	 * Returns the name of this part type.
 	 * 
-	 * @return the name of this parttype.
+	 * @return The name of this part type.
 	 */
 	public String getName(){
 		return this.name;

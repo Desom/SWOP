@@ -56,7 +56,7 @@ public class Option implements Taskable{
 	 * @param dependency
 	 * 		The new dependency to be added.
 	 */
-	void addDependancy(ArrayList<Option> dependency){
+	void addDependency(ArrayList<Option> dependency){
 		this.dependencies.add(dependency);
 	}
 	

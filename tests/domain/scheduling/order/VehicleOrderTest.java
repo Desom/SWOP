@@ -9,10 +9,12 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import domain.assembly.workstations.WorkstationTypeCreator;
 import domain.configuration.VehicleCatalog;
 import domain.configuration.Configuration;
 import domain.configuration.taskables.Option;
 import domain.configuration.taskables.OptionType;
+import domain.configuration.taskables.TaskTypeCreator;
 import domain.configuration.models.VehicleModel;
 import domain.policies.CompletionPolicy;
 import domain.policies.ConflictPolicy;
@@ -41,14 +43,15 @@ public class VehicleOrderTest {
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
 
-		Policy pol1 = new CompletionPolicy(null,OptionType.getAllMandatoryTypes());
+		VehicleCatalog catalog = new VehicleCatalog(new WorkstationTypeCreator());
+		
+		@SuppressWarnings("static-access")
+		Policy pol1 = new CompletionPolicy(null,catalog.taskTypeCreator.getAllMandatoryTypes());
 		Policy pol2 = new ConflictPolicy(pol1);
 		Policy pol3 = new DependencyPolicy(pol2);
 		Policy pol4 = new ModelCompatibilityPolicy(pol3);
 		carOrderPolicy= pol4;
 		
-		
-		VehicleCatalog catalog = new VehicleCatalog();
 		carModel = null;
 		for(VehicleModel m : catalog.getAllModels()){
 			if(m.getName().equals("Model A")){
@@ -107,7 +110,7 @@ public class VehicleOrderTest {
 			fail();
 		}
 		catch(IllegalStateException e){
-			assertEquals("This car hasn't been delivered yet",e.getMessage());
+			assertEquals("This order hasn't been delivered yet",e.getMessage());
 		}
 		
 		try{
@@ -115,7 +118,7 @@ public class VehicleOrderTest {
 			fail();
 		}
 		catch(IllegalStateException e){
-			assertEquals("This car hasn't been delivered yet",e.getMessage());
+			assertEquals("This order hasn't been delivered yet",e.getMessage());
 		}
 	}
 

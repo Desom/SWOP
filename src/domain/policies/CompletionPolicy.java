@@ -19,12 +19,12 @@ public class CompletionPolicy extends CompletedPolicy {
 	 * 
 	 * @param successor
 	 * 		The next policy in the policy chain.
-	 * @param arrayList
+	 * @param requiredTypes
 	 * 		The option types which are required for the configuration to be complete.
 	 */
-	public CompletionPolicy(Policy successor, ArrayList<OptionType> arrayList) {
+	public CompletionPolicy(Policy successor, ArrayList<OptionType> requiredTypes) {
 		super(successor);
-		this.requiredTypes = arrayList;
+		this.requiredTypes = requiredTypes;
 	}
 
 	/**

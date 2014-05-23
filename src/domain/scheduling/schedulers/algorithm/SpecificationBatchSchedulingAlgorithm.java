@@ -23,7 +23,7 @@ public class SpecificationBatchSchedulingAlgorithm implements
 	 * @param innerAlgorithm
 	 * 		The inner algorithm of this specification batch algorithm.
 	 */
-	public SpecificationBatchSchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
+	protected SpecificationBatchSchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
 		this.batchConfiguration = null;
 		this.innerAlgorithm = innerAlgorithm;
 	}

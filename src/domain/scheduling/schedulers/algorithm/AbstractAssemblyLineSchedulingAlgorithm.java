@@ -9,6 +9,12 @@ import domain.scheduling.schedulers.AssemblyLineScheduler;
 
 public abstract class AbstractAssemblyLineSchedulingAlgorithm implements
 		AssemblyLineSchedulingAlgorithm {
+	
+	/**
+	 * Constructor of AbstractAssemblyLineSchedulingAlgorithm.
+	 */
+	protected AbstractAssemblyLineSchedulingAlgorithm() {
+	}
 
 	/**
 	 * Checks if the given list of Orders only contains null.

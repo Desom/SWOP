@@ -35,7 +35,7 @@ public class BasicSchedulingAlgorithm
 	 * @param innerAlgorithm
 	 * 		The inner algorithm of this basic factory algorithm.
 	 */
-	public BasicSchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
+	protected BasicSchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
 		this.innerAlgorithm = innerAlgorithm;
 	}
 

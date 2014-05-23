@@ -3,13 +3,8 @@ package domain.scheduling.schedulers.algorithm;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.GregorianCalendar;
-import java.util.LinkedList;
 
-import domain.assembly.assemblyline.AssemblyLine;
 import domain.scheduling.order.Order;
-import domain.scheduling.schedulers.AssemblyLineScheduler;
-import domain.scheduling.schedulers.ScheduledOrder;
 import domain.scheduling.schedulers.Scheduler;
 
 public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
@@ -19,7 +14,7 @@ public class FIFOSchedulingAlgorithm implements SchedulingAlgorithm {
 	/**
 	 * Constructor of FIFOSchedulingAlgorithm.
 	 */
-	public FIFOSchedulingAlgorithm() {
+	protected FIFOSchedulingAlgorithm() {
 		comparator = new Comparator<Order>(){
 			@Override
 			public int compare(Order order1, Order order2){

@@ -25,7 +25,7 @@ public class EfficiencySchedulingAlgorithm extends AbstractAssemblyLineSchedulin
 	 * @param innerAlgorithm
 	 * 		The inner algorithm of this efficiency scheduling algorithm.
 	 */
-	public EfficiencySchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
+	protected EfficiencySchedulingAlgorithm(SchedulingAlgorithm innerAlgorithm) {
 		this.innerAlgorithm = innerAlgorithm;
 	}
 

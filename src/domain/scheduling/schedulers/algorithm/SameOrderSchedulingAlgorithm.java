@@ -8,6 +8,12 @@ import domain.scheduling.schedulers.Scheduler;
 public class SameOrderSchedulingAlgorithm implements SchedulingAlgorithm {
 
 	/**
+	 * Constructor of SameOrderSchedulingAlgorithm.
+	 */
+	protected SameOrderSchedulingAlgorithm() {
+	}
+	
+	/**
 	 * Returns the orders in the same order as in orderList.
 	 * 
 	 * @param orderList

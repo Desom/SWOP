@@ -26,18 +26,19 @@ public class VehicleModelTest {
 	Option W;
 	String Name;
 	ArrayList<String> types;
+	TaskTypeCreator taskTypeCreator = (TaskTypeCreator) VehicleCatalog.taskTypeCreator;
 	Option Sp;
 	@Before
 	public void setUp() throws Exception {
 		a = new ArrayList<Option>();
-		A = new Option("a",new TaskTypeCreator().Airco);
-		B = new Option("b",new TaskTypeCreator().Body);
-		C = new Option("c",new TaskTypeCreator().Color);
-		E = new Option("e",new TaskTypeCreator().Engine);
-		G = new Option("g",new TaskTypeCreator().Gearbox);
-		S = new Option("s",new TaskTypeCreator().Seats);
-		W = new Option("w",new TaskTypeCreator().Wheels);
-		Sp = new Option("sp",new TaskTypeCreator().Spoiler);
+		A = new Option("a",taskTypeCreator.Airco);
+		B = new Option("b",taskTypeCreator.Body);
+		C = new Option("c",taskTypeCreator.Color);
+		E = new Option("e",taskTypeCreator.Engine);
+		G = new Option("g",taskTypeCreator.Gearbox);
+		S = new Option("s",taskTypeCreator.Seats);
+		W = new Option("w",taskTypeCreator.Wheels);
+		Sp = new Option("sp",taskTypeCreator.Spoiler);
 		Name = "BMW";
 		a.add(E);
 		a.add(A);
@@ -56,14 +57,14 @@ public class VehicleModelTest {
 		assertEquals(Name, car.getName());
 		assertEquals(a, car.getPossibleOptions());
 		assertFalse(a == car.getPossibleOptions());
-		assertTrue(car.getOfOptionType(new TaskTypeCreator().Airco).contains(A));
-		assertTrue( car.getOfOptionType(new TaskTypeCreator().Body).contains(B));
-		assertTrue(car.getOfOptionType(new TaskTypeCreator().Color).contains(C));
-		assertTrue(car.getOfOptionType(new TaskTypeCreator().Engine).contains(E));
-		assertTrue( car.getOfOptionType(new TaskTypeCreator().Gearbox).contains(G));
-		assertTrue( car.getOfOptionType(new TaskTypeCreator().Seats).contains(S));
-		assertTrue( car.getOfOptionType(new TaskTypeCreator().Wheels).contains(W));
-		assertTrue( car.getOfOptionType(new TaskTypeCreator().Spoiler).contains(Sp));
+		assertTrue(car.getOfOptionType(taskTypeCreator.Airco).contains(A));
+		assertTrue( car.getOfOptionType(taskTypeCreator.Body).contains(B));
+		assertTrue(car.getOfOptionType(taskTypeCreator.Color).contains(C));
+		assertTrue(car.getOfOptionType(taskTypeCreator.Engine).contains(E));
+		assertTrue( car.getOfOptionType(taskTypeCreator.Gearbox).contains(G));
+		assertTrue( car.getOfOptionType(taskTypeCreator.Seats).contains(S));
+		assertTrue( car.getOfOptionType(taskTypeCreator.Wheels).contains(W));
+		assertTrue( car.getOfOptionType(taskTypeCreator.Spoiler).contains(Sp));
 	}
 	@SuppressWarnings("unchecked")
 	@Test
@@ -147,7 +148,7 @@ public class VehicleModelTest {
 		} catch (VehicleCatalogException e) {
 			fail();
 		}
-		ArrayList<Option> temp = car.getOfOptionType(new TaskTypeCreator().Wheels);
+		ArrayList<Option> temp = car.getOfOptionType(taskTypeCreator.Wheels);
 		assertTrue(temp.contains(W));
 		assertFalse(temp.contains(E));
 	}

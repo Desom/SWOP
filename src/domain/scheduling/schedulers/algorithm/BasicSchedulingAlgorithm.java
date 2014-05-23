@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map.Entry;
 
+import domain.InternalFailureException;
 import domain.assembly.assemblyline.AssemblyLine;
 import domain.configuration.OptionType;
 import domain.configuration.VehicleCatalog;
@@ -234,62 +235,7 @@ public class BasicSchedulingAlgorithm
 	public ArrayList<ScheduledOrder> scheduleToScheduledOrderList(
 			ArrayList<Order> orderList, 
 			AssemblyLine assemblyLine) {
-
-		
-		//assembly represents the AssemblyLine with 3 workstations. Contains null if workstation would be empty.
-		@SuppressWarnings("unchecked")
-		LinkedList<Order> assembly = (LinkedList<Order>) assemblyLine.stateWhenAcceptingOrders().clone();
-		ArrayList<Order> sList = this.innerAlgorithm.scheduleToList(orderList, assemblyLine.getAssemblyLineScheduler());
-		GregorianCalendar movingTime = (GregorianCalendar) assemblyLine.timeWhenAcceptingOrders().clone();
-
-		ArrayList<ScheduledOrder> scheduledList = new ArrayList<ScheduledOrder>();
-
-		//Simuleer heel het toekomstig proces, waarbij aan het begin van de loop alle tasks completed zijn.
-		for(Order order : sList){
-
-			//haal de laatste order van de assemblyLine
-			assembly.removeLast();
-			//Zet volgende op assembly
-			assembly.addFirst(order);
-			//zoek hoelang het minimaal zal duren om deze order af te maken. hier wordt veronderstelt dat het een Order is.
-			int totalDuration = assemblyLine.calculateTimeTillEmptyFor(assembly);
-			//Controleer ofdat er nog genoeg tijd is om deze order af te maken.
-			if(!this.checkEnoughTimeLeftFor(movingTime, totalDuration, assemblyLine.getAssemblyLineScheduler())){
-				// haal order er weer af, omdat het toch niet gaat.
-				assembly.removeFirst();
-				// zet een null in de plaats
-				assembly.addFirst(null);
-				scheduledList.add(new ScheduledOrder(movingTime,null));
-				movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
-				
-				//Simuleer leeg maken aan het einde van de dag.
-				while(!this.isEmptyAssembly(assembly)){
-					assembly.removeLast();
-					assembly.addFirst(null);
-					scheduledList.add(new ScheduledOrder(movingTime,null));
-					movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
-				}
-				// Voeg de order voorraan toe en zet de time op het begin van de volgende dag.
-				assembly.removeLast();
-				assembly.addFirst(order);
-				movingTime = this.nextDay(movingTime);
-			}
-
-			// voeg een scheduledOrder toe, movingTime is het moment dat de order op de AssemblyLine gaat.
-			scheduledList.add(new ScheduledOrder(movingTime,order));
-			//verschuif tijd totdat alle workstations klaar zijn.
-			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
-		}
-		
-		//maak leeg wanneer er niets meer moet worden gescheduled.
-		while(!this.isEmptyAssembly(assembly)){
-			assembly.removeLast();
-			assembly.addFirst(null);
-			scheduledList.add(new ScheduledOrder(movingTime,null));
-			movingTime.add(GregorianCalendar.MINUTE, assemblyLine.calculateTimeTillAdvanceFor(assembly));
-		}
-
-		return scheduledList;
+		throw new InternalFailureException("not implemented");
 	}
 	
 	/**

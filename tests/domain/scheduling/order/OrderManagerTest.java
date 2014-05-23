@@ -135,13 +135,13 @@ public class OrderManagerTest {
 
 		Order order2_0 = orders2.get(0);
 		assertTrue(order2_0.toString().startsWith("Order: 2"));
-		assertEquals(15,orderManager.completionEstimate(order2_0).get(GregorianCalendar.HOUR_OF_DAY));
+		assertEquals(8,orderManager.completionEstimate(order2_0).get(GregorianCalendar.HOUR_OF_DAY));
 		Order order2_1 = orders2.get(1);
 		assertTrue(order2_1.toString().startsWith("Order: 3"));
-		assertEquals(16,orderManager.completionEstimate(order2_1).get(GregorianCalendar.HOUR_OF_DAY));
+		assertEquals(9,orderManager.completionEstimate(order2_1).get(GregorianCalendar.HOUR_OF_DAY));
 		Order order2_2 = orders2.get(2);
 		assertTrue(order2_2.toString().startsWith("Order: 4"));
-		assertEquals(17,orderManager.completionEstimate(order2_2).get(GregorianCalendar.HOUR_OF_DAY));
+		assertEquals(9,orderManager.completionEstimate(order2_2).get(GregorianCalendar.HOUR_OF_DAY));
 	}
 	
 	

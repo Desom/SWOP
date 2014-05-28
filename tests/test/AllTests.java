@@ -7,7 +7,6 @@ import org.junit.runners.Suite.SuiteClasses;
 import domain.StatisticsTest;
 import domain.assembly.assemblyline.AssemblyLineTest;
 import domain.assembly.workstations.AssemblyTaskTest;
-import domain.assembly.workstations.CarMechanicUseCaseTest;
 import domain.assembly.workstations.VehicleAssemblyProcessTest;
 import domain.assembly.workstations.WorkstationTest;
 import domain.configuration.OptionTest;
@@ -28,8 +27,7 @@ import domain.user.UserTest;
 	BasicSchedulingAlgorithmTest.class, AssemblyLineSchedulerTest.class, AssemblyLineTest.class, AssemblyTaskTest.class,	
 	VehicleAssemblyProcessTest.class, VehicleOrderTest.class,
 	OrderManagerTest.class,	VehicleModelTest.class, VehicleCatalogTest.class, OptionTest.class,
-	UserTest.class, WorkstationTest.class, StatisticsTest.class, PolicyTest.class,
-	CarMechanicUseCaseTest.class})
+	UserTest.class, WorkstationTest.class, StatisticsTest.class, PolicyTest.class})
 public class AllTests {
 
 }

@@ -118,22 +118,22 @@ public class AssemblyLineScheduler implements Scheduler{
 	private GregorianCalendar timeTillOrderOffAssemblyLine(int position, ArrayList<ScheduledOrder> scheduledOrders) {
 		GregorianCalendar simulTime = scheduledOrders.get(position).getScheduledTime();
 		LinkedList<Order> assembly;
-		if(position < 2){
+		if(position < this.getAssemblyLine().getNumberOfWorkstations()-1){
 			assembly = this.getAssemblyLine().getAllOrders();
-			assembly.removeLast();
-			assembly.addFirst(scheduledOrders.get(0).getScheduledOrder());
-
-			if(position == 1){
+			
+			for(int i = position ; i >= 0; i-- ){
 				assembly.removeLast();
-				assembly.addFirst(scheduledOrders.get(1).getScheduledOrder());
+				assembly.addFirst(scheduledOrders.get(position - i).getScheduledOrder());
 			}
 
 		}
 		else{
 			assembly = new LinkedList<Order>();
-			assembly.addFirst(scheduledOrders.get(position-2).getScheduledOrder());
-			assembly.addFirst(scheduledOrders.get(position-1).getScheduledOrder());
-			assembly.addFirst(scheduledOrders.get(position).getScheduledOrder());
+			for(int i = this.getAssemblyLine().getNumberOfWorkstations()-1; i >= 0; i--){
+				assembly.addFirst(scheduledOrders.get(position-i).getScheduledOrder());
+			}
+//			assembly.addFirst(scheduledOrders.get(position-1).getScheduledOrder());
+//			assembly.addFirst(scheduledOrders.get(position).getScheduledOrder());
 		}
 		for(int i = position+1; i < position + 4; i ++){
 			simulTime.add(GregorianCalendar.MINUTE, this.getAssemblyLine().calculateTimeTillAdvanceFor(assembly));

@@ -46,7 +46,7 @@ public class CheckOrderDetailsHandler {
 			if (answer < pendingOrders.size())
 				ui.displayPendingOrderInfo(pendingOrders.get(answer), completionEstimates.get(answer));
 			else
-				ui.displayCompletedOrderInfo(completedOrders.get(answer));
+				ui.displayCompletedOrderInfo(completedOrders.get(answer - pendingOrders.size()));
 
 			
 		}

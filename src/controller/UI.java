@@ -345,8 +345,8 @@ public class UI implements UIInterface{
 	@Override
 	public void displayCompletedOrderInfo(Order completedOrder) {
 		this.display(completedOrder.getConfiguration());
-		display("Order time: " + completedOrder.getOrderedTime());
-		display("Delivered time: " + completedOrder.getDeliveredTime());
+		display("Order time: " + convertCalendarToDate(completedOrder.getOrderedTime()));
+		display("Delivered time: " + convertCalendarToDate(completedOrder.getDeliveredTime()));
 		while (true)
 			if (askYesNoQuestion("Do you want to go back to the overview?"))
 				return;
